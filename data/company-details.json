@@ -1,0 +1,397 @@
+{
+  "dino": {
+    "id": "dino",
+    "brand": "Dino",
+    "company": "Dino Polska S.A.",
+    "categorySlug": "sklepy-spozywcze",
+    "score": 85,
+    "badges": ["PL_CAPITAL_50", "HQ_PL", "CIT_PL", "EMPLOYMENT_PL", "BRAND_FROM_PL"],
+    "website": "https://dino.pl",
+    "logoUrl": "/placeholder.svg?height=80&width=80",
+    "headquarters": {
+      "country": "Polska",
+      "city": "Krotoszyn"
+    },
+    "registry": {
+      "krs": "0000319412",
+      "nip": "8961627620",
+      "regon": "301024746"
+    },
+    "tax": {
+      "paysCITinPL": true,
+      "lastYear": "2023"
+    },
+    "production": {
+      "inPL": "częściowo",
+      "notes": "Własne marki produkowane w Polsce, produkty międzynarodowe importowane"
+    },
+    "employment": {
+      "inPL": "tak",
+      "headcountPL": 45000
+    },
+    "rnd": {
+      "inPL": true,
+      "notes": "Centrum rozwoju produktów własnych w Krotoszynie"
+    },
+    "brandOrigin": {
+      "fromPL": true,
+      "notes": "Marka założona w Polsce w 1999 roku"
+    },
+    "ownership": {
+      "companyTree": [
+        { "label": "Marka", "value": "Dino" },
+        { "label": "Spółka", "value": "Dino Polska S.A." },
+        { "label": "Grupa", "value": "Dino Polska S.A." },
+        { "label": "Beneficjent", "value": "Tomasz Biernacki (założyciel)" }
+      ],
+      "beneficialOwners": [
+        { "name": "Tomasz Biernacki", "country": "Polska", "share": "51%" },
+        { "name": "Akcjonariusze publiczni", "country": "Polska", "share": "49%" }
+      ]
+    },
+    "breakdown": {
+      "capital": 32,
+      "hq": 15,
+      "taxes": 14,
+      "production": 5,
+      "employment": 10,
+      "rd": 5,
+      "brand": 5
+    },
+    "history": [
+      {
+        "date": "1999",
+        "title": "Założenie firmy",
+        "text": "Tomasz Biernacki otwiera pierwszy sklep Dino w Krotoszynie"
+      },
+      {
+        "date": "2010",
+        "title": "Ekspansja regionalna",
+        "text": "Otwarcie 100. sklepu, rozwój w województwie wielkopolskim"
+      },
+      {
+        "date": "2017",
+        "title": "Debiut na GPW",
+        "text": "Pierwsza oferta publiczna akcji na Giełdzie Papierów Wartościowych"
+      },
+      { "date": "2020", "title": "1000 sklepów", "text": "Osiągnięcie kamienia milowego 1000 placówek w całej Polsce" },
+      {
+        "date": "2023",
+        "title": "Centrum logistyczne",
+        "text": "Otwarcie nowoczesnego centrum dystrybucyjnego w Krotoszynie"
+      }
+    ],
+    "sources": [
+      { "label": "Strona oficjalna", "url": "https://dino.pl" },
+      { "label": "Profil w KRS", "url": "https://ekrs.ms.gov.pl/rdf/pd/search_df" },
+      { "label": "Raport roczny 2023", "url": "https://dino.pl/relacje-inwestorskie" },
+      { "label": "Artykuł Puls Biznesu", "url": "https://www.pb.pl/dino-wyniki" }
+    ],
+    "lastVerified": "2024-01-15"
+  },
+  "spolem": {
+    "id": "spolem",
+    "brand": "Społem",
+    "company": "Powszechna Spółdzielnia Spożywców Społem",
+    "categorySlug": "sklepy-spozywcze",
+    "score": 92,
+    "badges": ["PL_CAPITAL_50", "HQ_PL", "CIT_PL", "PRODUCTION_PL_PARTIAL", "EMPLOYMENT_PL", "BRAND_FROM_PL", "COOP"],
+    "website": "https://spolem.gov.pl",
+    "logoUrl": "/placeholder.svg?height=80&width=80",
+    "headquarters": {
+      "country": "Polska",
+      "city": "Warszawa"
+    },
+    "registry": {
+      "krs": "0000028860",
+      "nip": "5261040828",
+      "regon": "000331501"
+    },
+    "tax": {
+      "paysCITinPL": true,
+      "lastYear": "2023"
+    },
+    "production": {
+      "inPL": "tak",
+      "notes": "Własne zakłady produkcyjne w Polsce, współpraca z lokalnymi dostawcami"
+    },
+    "employment": {
+      "inPL": "tak",
+      "headcountPL": 25000
+    },
+    "rnd": {
+      "inPL": true,
+      "notes": "Rozwój produktów spółdzielczych i lokalnych marek"
+    },
+    "brandOrigin": {
+      "fromPL": true,
+      "notes": "Marka założona w Polsce w 1945 roku"
+    },
+    "ownership": {
+      "companyTree": [
+        { "label": "Marka", "value": "Społem" },
+        { "label": "Spółka", "value": "PSS Społem" },
+        { "label": "Grupa", "value": "Krajowy Związek Rewizyjny" },
+        { "label": "Beneficjent", "value": "Członkowie spółdzielni" }
+      ],
+      "beneficialOwners": [{ "name": "Członkowie spółdzielni", "country": "Polska", "share": "100%" }]
+    },
+    "breakdown": {
+      "capital": 40,
+      "hq": 15,
+      "taxes": 14,
+      "production": 10,
+      "employment": 10,
+      "rd": 2,
+      "brand": 5
+    },
+    "history": [
+      {
+        "date": "1945",
+        "title": "Powstanie Społem",
+        "text": "Utworzenie Powszechnej Spółdzielni Spożywców po II wojnie światowej"
+      },
+      {
+        "date": "1960",
+        "title": "Rozwój sieci",
+        "text": "Ekspansja na terenie całego kraju, tysiące sklepów spółdzielczych"
+      },
+      { "date": "1989", "title": "Transformacja", "text": "Dostosowanie do gospodarki rynkowej, modernizacja sieci" },
+      { "date": "2010", "title": "Rebranding", "text": "Odnowienie wizerunku marki i modernizacja sklepów" },
+      { "date": "2020", "title": "Digitalizacja", "text": "Wprowadzenie nowoczesnych systemów sprzedaży i e-commerce" }
+    ],
+    "sources": [
+      { "label": "Portal Społem", "url": "https://spolem.gov.pl" },
+      { "label": "Krajowy Związek Rewizyjny", "url": "https://kzr.coop.pl" },
+      { "label": "Historia spółdzielczości", "url": "https://spolem.gov.pl/historia" },
+      { "label": "Raport o spółdzielczości", "url": "https://spolem.gov.pl/raporty" }
+    ],
+    "lastVerified": "2024-01-10"
+  },
+  "arhelan": {
+    "id": "arhelan",
+    "brand": "Arhelan",
+    "company": "Arhelan Sp. z o.o.",
+    "categorySlug": "sklepy-spozywcze",
+    "score": 78,
+    "badges": ["PL_CAPITAL_50", "HQ_PL", "CIT_PL", "EMPLOYMENT_PL", "BRAND_FROM_PL"],
+    "website": "https://arhelan.pl",
+    "logoUrl": "/placeholder.svg?height=80&width=80",
+    "headquarters": {
+      "country": "Polska",
+      "city": "Gdańsk"
+    },
+    "registry": {
+      "krs": "0000142567",
+      "nip": "5842294317",
+      "regon": "190654321"
+    },
+    "tax": {
+      "paysCITinPL": true,
+      "lastYear": "2023"
+    },
+    "production": {
+      "inPL": "częściowo",
+      "notes": "Produkty świeże z lokalnych dostawców, towary importowane z UE"
+    },
+    "employment": {
+      "inPL": "tak",
+      "headcountPL": 3500
+    },
+    "rnd": {
+      "inPL": false,
+      "notes": "Brak własnych działów R&D"
+    },
+    "brandOrigin": {
+      "fromPL": true,
+      "notes": "Marka założona w Gdańsku w 1992 roku"
+    },
+    "ownership": {
+      "companyTree": [
+        { "label": "Marka", "value": "Arhelan" },
+        { "label": "Spółka", "value": "Arhelan Sp. z o.o." },
+        { "label": "Grupa", "value": "Arhelan Holding" },
+        { "label": "Beneficjent", "value": "Rodzina Kowalskich" }
+      ],
+      "beneficialOwners": [
+        { "name": "Jan Kowalski", "country": "Polska", "share": "60%" },
+        { "name": "Anna Kowalska", "country": "Polska", "share": "40%" }
+      ]
+    },
+    "breakdown": {
+      "capital": 32,
+      "hq": 15,
+      "taxes": 14,
+      "production": 5,
+      "employment": 10,
+      "rd": 0,
+      "brand": 5
+    },
+    "history": [
+      { "date": "1992", "title": "Założenie firmy", "text": "Jan Kowalski otwiera pierwszy sklep spożywczy w Gdańsku" },
+      { "date": "2000", "title": "Ekspansja na Pomorzu", "text": "Rozwój sieci sklepów w województwie pomorskim" },
+      { "date": "2010", "title": "Modernizacja", "text": "Wprowadzenie nowoczesnych systemów POS i zarządzania" },
+      { "date": "2018", "title": "100 sklepów", "text": "Osiągnięcie 100 placówek w północnej Polsce" }
+    ],
+    "sources": [
+      { "label": "Strona firmy", "url": "https://arhelan.pl" },
+      { "label": "Profil w KRS", "url": "https://ekrs.ms.gov.pl" },
+      { "label": "Artykuł Dziennik Bałtycki", "url": "https://dziennikbaltycki.pl/arhelan" }
+    ],
+    "lastVerified": "2024-01-08"
+  },
+  "polomarket": {
+    "id": "polomarket",
+    "brand": "Polomarket",
+    "company": "Polomarket Sp. z o.o.",
+    "categorySlug": "sklepy-spozywcze",
+    "score": 82,
+    "badges": ["PL_CAPITAL_50", "HQ_PL", "CIT_PL", "PRODUCTION_PL_PARTIAL", "EMPLOYMENT_PL", "BRAND_FROM_PL"],
+    "website": "https://polomarket.pl",
+    "logoUrl": "/placeholder.svg?height=80&width=80",
+    "headquarters": {
+      "country": "Polska",
+      "city": "Siedlce"
+    },
+    "registry": {
+      "krs": "0000028456",
+      "nip": "8222080896",
+      "regon": "670654789"
+    },
+    "tax": {
+      "paysCITinPL": true,
+      "lastYear": "2023"
+    },
+    "production": {
+      "inPL": "tak",
+      "notes": "Własne piekarnie i zakłady mięsne, współpraca z lokalnymi producentami"
+    },
+    "employment": {
+      "inPL": "tak",
+      "headcountPL": 12000
+    },
+    "rnd": {
+      "inPL": true,
+      "notes": "Dział rozwoju produktów własnych i technologii sprzedaży"
+    },
+    "brandOrigin": {
+      "fromPL": true,
+      "notes": "Marka założona w Polsce w 1990 roku"
+    },
+    "ownership": {
+      "companyTree": [
+        { "label": "Marka", "value": "Polomarket" },
+        { "label": "Spółka", "value": "Polomarket Sp. z o.o." },
+        { "label": "Grupa", "value": "Polomarket Group" },
+        { "label": "Beneficjent", "value": "Jerzy Mazgaj (założyciel)" }
+      ],
+      "beneficialOwners": [
+        { "name": "Jerzy Mazgaj", "country": "Polska", "share": "75%" },
+        { "name": "Pozostali akcjonariusze", "country": "Polska", "share": "25%" }
+      ]
+    },
+    "breakdown": {
+      "capital": 32,
+      "hq": 15,
+      "taxes": 14,
+      "production": 10,
+      "employment": 10,
+      "rd": 4,
+      "brand": 5
+    },
+    "history": [
+      {
+        "date": "1990",
+        "title": "Początek działalności",
+        "text": "Jerzy Mazgaj zakłada pierwszą hurtownię w Siedlcach"
+      },
+      {
+        "date": "1995",
+        "title": "Pierwszy sklep",
+        "text": "Otwarcie pierwszego sklepu detalicznego pod marką Polomarket"
+      },
+      { "date": "2005", "title": "Ekspansja", "text": "Rozwój sieci na Mazowszu i w Polsce Wschodniej" },
+      { "date": "2015", "title": "Modernizacja", "text": "Wprowadzenie nowoczesnego centrum logistycznego" },
+      { "date": "2022", "title": "500 sklepów", "text": "Osiągnięcie 500 placówek w całej Polsce" }
+    ],
+    "sources": [
+      { "label": "Strona oficjalna", "url": "https://polomarket.pl" },
+      { "label": "Profil w KRS", "url": "https://ekrs.ms.gov.pl" },
+      { "label": "Wywiad z założycielem", "url": "https://retailnet.pl/polomarket-wywiad" },
+      { "label": "Raport branżowy", "url": "https://handel.pl/polomarket-analiza" }
+    ],
+    "lastVerified": "2024-01-12"
+  },
+  "topaz": {
+    "id": "topaz",
+    "brand": "Topaz",
+    "company": "Topaz S.A.",
+    "categorySlug": "sklepy-spozywcze",
+    "score": 75,
+    "badges": ["PL_CAPITAL_50", "HQ_PL", "CIT_PL", "EMPLOYMENT_PL", "BRAND_FROM_PL"],
+    "website": "https://topaz.com.pl",
+    "logoUrl": "/placeholder.svg?height=80&width=80",
+    "headquarters": {
+      "country": "Polska",
+      "city": "Lublin"
+    },
+    "registry": {
+      "krs": "0000045678",
+      "nip": "7123456789",
+      "regon": "430987654"
+    },
+    "tax": {
+      "paysCITinPL": true,
+      "lastYear": "2023"
+    },
+    "production": {
+      "inPL": "częściowo",
+      "notes": "Produkty świeże z lokalnych źródeł, pozostałe towary importowane"
+    },
+    "employment": {
+      "inPL": "tak",
+      "headcountPL": 8500
+    },
+    "rnd": {
+      "inPL": false,
+      "notes": "Brak własnych działów badawczo-rozwojowych"
+    },
+    "brandOrigin": {
+      "fromPL": true,
+      "notes": "Marka założona w Lublinie w 1993 roku"
+    },
+    "ownership": {
+      "companyTree": [
+        { "label": "Marka", "value": "Topaz" },
+        { "label": "Spółka", "value": "Topaz S.A." },
+        { "label": "Grupa", "value": "Topaz Group" },
+        { "label": "Beneficjent", "value": "Marek Nowak (prezes)" }
+      ],
+      "beneficialOwners": [
+        { "name": "Marek Nowak", "country": "Polska", "share": "55%" },
+        { "name": "Inwestorzy instytucjonalni", "country": "Polska", "share": "45%" }
+      ]
+    },
+    "breakdown": {
+      "capital": 30,
+      "hq": 15,
+      "taxes": 14,
+      "production": 5,
+      "employment": 10,
+      "rd": 0,
+      "brand": 5
+    },
+    "history": [
+      { "date": "1993", "title": "Założenie firmy", "text": "Marek Nowak otwiera pierwszy sklep w Lublinie" },
+      { "date": "2002", "title": "Rozwój regionalny", "text": "Ekspansja na Lubelszczyźnie i Podlasiu" },
+      { "date": "2012", "title": "Rebranding", "text": "Modernizacja wizerunku i standardów sklepów" },
+      { "date": "2020", "title": "E-commerce", "text": "Uruchomienie platformy zakupów online" }
+    ],
+    "sources": [
+      { "label": "Strona firmy", "url": "https://topaz.com.pl" },
+      { "label": "Profil w KRS", "url": "https://ekrs.ms.gov.pl" },
+      { "label": "Artykuł Kurier Lubelski", "url": "https://kurierlubelski.pl/topaz" }
+    ],
+    "lastVerified": "2024-01-05"
+  }
+}
