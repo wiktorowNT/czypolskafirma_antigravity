@@ -5,15 +5,15 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Search, X } from "lucide-react"
 import { useRouter } from "next/navigation"
-import categoriesData from "@/data/categories.json"
+import { CompanyLogo } from "@/components/company-logo"
 
 interface Company {
   id: string
   brand: string
   company: string
-  score: number
   category: string
   categorySlug: string
+  website_url?: string
 }
 
 interface CompanySearchProps {
@@ -37,21 +37,11 @@ export function CompanySearch({
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [searchResult, setSearchResult] = useState<Company | null>(null)
   const [showNoResults, setShowNoResults] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-
-  // Flatten all companies from all categories
-  const allCompanies: Company[] = Object.entries(categoriesData).flatMap(([categorySlug, category]) =>
-    category.items.map((item) => ({
-      id: item.id,
-      brand: item.brand,
-      company: item.company,
-      score: item.score,
-      category: category.name,
-      categorySlug: categorySlug,
-    })),
-  )
+  const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (query.trim().length < 2) {
@@ -60,42 +50,42 @@ export function CompanySearch({
       return
     }
 
-    const filtered = allCompanies
-      .filter(
-        (company) =>
-          company.brand.toLowerCase().includes(query.toLowerCase()) ||
-          company.company.toLowerCase().includes(query.toLowerCase()),
-      )
-      .slice(0, 8) // Limit to 8 suggestions
+    // Debounce API calls
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
 
-    setSuggestions(filtered)
-    setIsOpen(filtered.length > 0)
-    setSelectedIndex(-1)
+    debounceRef.current = setTimeout(async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch(`/api/companies/search?q=${encodeURIComponent(query)}`)
+        if (response.ok) {
+          const data = await response.json()
+          setSuggestions(data)
+          setIsOpen(data.length > 0)
+        } else {
+          setSuggestions([])
+          setIsOpen(false)
+        }
+      } catch (error) {
+        console.error("Search error:", error)
+        setSuggestions([])
+        setIsOpen(false)
+      } finally {
+        setIsLoading(false)
+      }
+      setSelectedIndex(-1)
+    }, 300)
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current)
+      }
+    }
   }, [query])
 
   const handleSearch = () => {
     if (query.trim().length === 0) return
-
-    if (onDemoSearch && showSearchResult) {
-      // Find the company that matches the search query
-      const matchedCompany = allCompanies.find(
-        (company) =>
-          company.brand.toLowerCase().includes(query.toLowerCase()) ||
-          company.company.toLowerCase().includes(query.toLowerCase()),
-      )
-
-      if (matchedCompany) {
-        setSearchResult(matchedCompany)
-        setShowNoResults(false)
-        setIsOpen(false)
-        setQuery("")
-      } else {
-        setSearchResult(null)
-        setShowNoResults(true)
-        setIsOpen(false)
-      }
-      return
-    }
 
     if (onDemoSearch) {
       onDemoSearch()
@@ -105,9 +95,6 @@ export function CompanySearch({
     // If there are suggestions and user clicks search, go to first result
     if (suggestions.length > 0) {
       handleSelectCompany(suggestions[0])
-    } else {
-      // Could navigate to a search results page in the future
-      console.log("[v0] Search query:", query)
     }
   }
 
@@ -206,9 +193,8 @@ export function CompanySearch({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className={`w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent ${
-              showButton ? "h-12 text-base" : ""
-            }`}
+            className={`w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent ${showButton ? "h-12 text-base" : ""
+              }`}
             aria-label="Wyszukaj firmę"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -247,20 +233,23 @@ export function CompanySearch({
             <button
               key={company.id}
               onClick={() => handleSelectCompany(company)}
-              className={`w-full text-left px-4 py-3 hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors ${
-                index === selectedIndex ? "bg-slate-50" : ""
-              }`}
+              className={`w-full text-left px-4 py-3 hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors ${index === selectedIndex ? "bg-slate-50" : ""
+                }`}
               role="option"
               aria-selected={index === selectedIndex}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                {/* Company Logo */}
+                <CompanyLogo
+                  websiteUrl={company.website_url}
+                  name={company.brand}
+                  size={40}
+                  className="mr-3"
+                />
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-slate-900 truncate">{company.brand}</div>
                   <div className="text-sm text-slate-500 truncate">{company.company}</div>
-                  <div className="text-xs text-slate-400 mt-1">{company.category}</div>
-                </div>
-                <div className="ml-3 flex-shrink-0">
-                  <div className={`text-sm font-medium ${getScoreColor(company.score)}`}>{company.score}/100</div>
+                  <div className="text-xs text-slate-400 mt-0.5">{company.category}</div>
                 </div>
               </div>
             </button>
@@ -280,17 +269,6 @@ export function CompanySearch({
                 <div className="text-sm text-slate-500 truncate">{searchResult.company}</div>
                 <div className="text-xs text-slate-400 mt-1">{searchResult.category}</div>
               </div>
-              <div className="ml-3 flex-shrink-0 text-right">
-                <div className={`text-xl font-bold ${getScoreColor(searchResult.score)}`}>{searchResult.score}/100</div>
-                <div className="text-xs text-slate-500">Indeks polskości</div>
-              </div>
-            </div>
-
-            <div className="w-full bg-slate-200 rounded-full h-2 mb-3">
-              <div
-                className={`h-2 rounded-full ${searchResult.score >= 70 ? "bg-green-500" : searchResult.score >= 40 ? "bg-yellow-500" : "bg-red-500"}`}
-                style={{ width: `${searchResult.score}%` }}
-              ></div>
             </div>
 
             <div className="text-xs text-slate-500">Kliknij, aby zobaczyć pełny profil firmy</div>

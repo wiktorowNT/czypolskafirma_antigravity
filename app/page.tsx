@@ -1,8 +1,6 @@
 import Hero from "@/components/hero"
 import { HowItWorks } from "@/components/how-it-works"
-import { PolishIndex } from "@/components/polish-index"
 import { Features } from "@/components/features"
-import { Categories } from "@/components/categories"
 import { Methodology } from "@/components/methodology"
 import { ReportForm } from "@/components/report-form"
 import { FAQ } from "@/components/faq"
@@ -14,9 +12,7 @@ export default function Home() {
       <main>
         <Hero />
         <HowItWorks />
-        <PolishIndex />
         <Features />
-        <Categories />
         <Methodology />
         <ReportForm />
         <FAQ />

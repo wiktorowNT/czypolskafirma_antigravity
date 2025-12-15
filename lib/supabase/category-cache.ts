@@ -46,6 +46,8 @@ function mapCompanyToItem(company: any) {
     vat_czynny: company.vat_czynny,
     rachunek_pl: company.rachunek_pl,
     founded_at: company.founded_at,
+    country_code: company.country_code,
+    website_url: company.website_url,
   }
 }
 
@@ -63,13 +65,13 @@ export async function getCachedCategoryData(categorySlug: string) {
 
     const { data: categoryData, error: categoryError } = await supabase
       .from("categories")
-      .select("id")
+      .select("id, name")
       .eq("slug", categorySlug)
       .single()
 
     if (categoryError || !categoryData) {
       console.error(`[v0] Error fetching category by slug "${categorySlug}":`, categoryError)
-      return { companies: [], categorySlug }
+      return { companies: [], categorySlug, categoryName: "", categoryShort: "" }
     }
 
     const categoryId = categoryData.id
@@ -87,6 +89,8 @@ export async function getCachedCategoryData(categorySlug: string) {
         siedziba_pl,
         vat_czynny,
         rachunek_pl,
+        country_code,
+        website_url,
         categories (
           name,
           slug
@@ -97,12 +101,17 @@ export async function getCachedCategoryData(categorySlug: string) {
 
     if (error) {
       console.error(`[v0] Error fetching category data from Supabase:`, error)
-      return { companies: [], categorySlug }
+      return { companies: [], categorySlug, categoryName: categoryData.name, categoryShort: "" }
     }
 
     const mappedCompanies = (data || []).map(mapCompanyToItem)
 
-    const result = { companies: mappedCompanies, categorySlug }
+    const result = {
+      companies: mappedCompanies,
+      categorySlug,
+      categoryName: categoryData.name,
+      categoryShort: "",
+    }
 
     cache[categorySlug] = {
       data: result,
@@ -113,7 +122,7 @@ export async function getCachedCategoryData(categorySlug: string) {
     return result
   } catch (err) {
     console.error(`[v0] Exception in getCachedCategoryData:`, err)
-    return { companies: [], categorySlug }
+    return { companies: [], categorySlug, categoryName: "", categoryShort: "" }
   }
 }
 

@@ -1,101 +1,176 @@
 "use client"
 
-import { useState } from "react"
-import Image from "next/image"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
+/**
+ * =============================================
+ * LOCAL VIP LOGOS CONFIGURATION
+ * =============================================
+ * 
+ * Aby dodać logo VIP:
+ * 1. Wrzuć plik {domena}.svg do folderu /public/logos/
+ * 2. Dodaj domenę do tablicy LOCAL_LOGOS poniżej
+ * 
+ * Przykład: Dla biedronka.pl -> /public/logos/biedronka.pl.svg
+ * =============================================
+ */
+const LOCAL_LOGOS = new Set([
+  'biedronka.pl',
+  // Dodaj więcej domen tutaj...
+])
+
 interface CompanyLogoProps {
-  id: string
-  brandName: string
-  logoUrl?: string
-  logoDarkUrl?: string
-  brandColor?: string
+  websiteUrl?: string | null
+  logoUrl?: string | null // Static logo URL (legacy support)
+  name: string
   size?: number
-  rounded?: number
   className?: string
   priority?: boolean
 }
 
-// Generate deterministic color from company ID
-function generateColorFromId(id: string): string {
+// Extract domain from URL for external logo APIs
+function getDomainFromUrl(url?: string | null): string | null {
+  if (!url) return null
+  try {
+    const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
+    const urlObj = new URL(urlWithProtocol)
+    return urlObj.hostname.replace(/^www\./, '')
+  } catch {
+    return null
+  }
+}
+
+// Generate deterministic color from company name
+function getAvatarColor(name: string): { bg: string; text: string } {
   const colors = [
-    "#DC2626",
-    "#EA580C",
-    "#D97706",
-    "#CA8A04",
-    "#65A30D",
-    "#16A34A",
-    "#059669",
-    "#0891B2",
-    "#0284C7",
-    "#2563EB",
-    "#4F46E5",
-    "#7C3AED",
-    "#9333EA",
-    "#C026D3",
-    "#DB2777",
+    { bg: "#EFF6FF", text: "#2563EB" }, // Blue
+    { bg: "#F0FDF4", text: "#16A34A" }, // Green
+    { bg: "#FEF2F2", text: "#DC2626" }, // Red
+    { bg: "#FFF7ED", text: "#EA580C" }, // Orange
+    { bg: "#FAF5FF", text: "#9333EA" }, // Purple
+    { bg: "#ECFEFF", text: "#0891B2" }, // Cyan
+    { bg: "#FDF4FF", text: "#C026D3" }, // Fuchsia
   ]
 
   let hash = 0
-  for (let i = 0; i < id.length; i++) {
-    hash = ((hash << 5) - hash + id.charCodeAt(i)) & 0xffffffff
+  for (let i = 0; i < name.length; i++) {
+    hash = ((hash << 5) - hash + name.charCodeAt(i)) & 0xffffffff
   }
 
   return colors[Math.abs(hash) % colors.length]
 }
 
-// Check if color is light or dark for contrast
-function isLightColor(color: string): boolean {
-  const hex = color.replace("#", "")
-  const r = Number.parseInt(hex.substr(0, 2), 16)
-  const g = Number.parseInt(hex.substr(2, 2), 16)
-  const b = Number.parseInt(hex.substr(4, 2), 16)
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000
-  return brightness > 155
-}
+// Logo source types for fallback chain
+type LogoSource = 'local' | 'static' | 'clearbit' | 'google' | 'fallback'
 
 export function CompanyLogo({
-  id,
-  brandName,
+  websiteUrl,
   logoUrl,
-  logoDarkUrl,
-  brandColor,
-  size = 40,
-  rounded = 8,
+  name,
+  size = 48,
   className,
   priority = false,
 }: CompanyLogoProps) {
-  const [imageError, setImageError] = useState(false)
+  const domain = getDomainFromUrl(websiteUrl)
+  const isLocalLogo = domain ? LOCAL_LOGOS.has(domain) : false
+
+  // Determine initial source based on available data
+  const getInitialSource = (): LogoSource => {
+    // Priority 1: Local VIP logos
+    if (isLocalLogo && domain) return 'local'
+    // Priority 2: Static logo URL (legacy)
+    if (logoUrl) return 'static'
+    // Priority 3: External APIs
+    if (domain) return 'clearbit'
+    // Fallback
+    return 'fallback'
+  }
+
+  const getInitialUrl = (): string | null => {
+    if (isLocalLogo && domain) return `/logos/${domain}.svg`
+    if (logoUrl) return logoUrl
+    if (domain) return `https://logo.clearbit.com/${domain}`
+    return null
+  }
+
+  const [logoSource, setLogoSource] = useState<LogoSource>(getInitialSource)
+  const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(getInitialUrl)
   const [imageLoading, setImageLoading] = useState(true)
 
-  // Use provided brand color or generate one from ID
-  const backgroundColor = brandColor || generateColorFromId(id)
-  const textColor = isLightColor(backgroundColor) ? "#000000" : "#FFFFFF"
-  const initial = brandName.charAt(0).toUpperCase()
+  // Update when props change
+  useEffect(() => {
+    const newSource = getInitialSource()
+    const newUrl = getInitialUrl()
 
-  // Show avatar if no logo URL or image failed to load
-  const showAvatar = !logoUrl || imageError
+    if (domain) {
+      console.log('CompanyLogo: Domain parsed:', domain, isLocalLogo ? '(VIP)' : '')
+    }
+
+    setLogoSource(newSource)
+    setCurrentLogoUrl(newUrl)
+    setImageLoading(true)
+  }, [websiteUrl, logoUrl, domain, isLocalLogo])
+
+  // Handle logo load error - cascade through sources
+  const handleLogoError = () => {
+    console.log(`CompanyLogo: Failed to load from ${logoSource}, trying next...`)
+
+    if (logoSource === 'local' && domain) {
+      // Local VIP failed, try Clearbit
+      console.log('CompanyLogo: Local logo failed, falling back to Clearbit')
+      setLogoSource('clearbit')
+      setCurrentLogoUrl(`https://logo.clearbit.com/${domain}`)
+    } else if (logoSource === 'static' && domain) {
+      // Static failed, try Clearbit
+      setLogoSource('clearbit')
+      setCurrentLogoUrl(`https://logo.clearbit.com/${domain}`)
+    } else if (logoSource === 'static' && !domain) {
+      // Static failed, no domain - go to fallback
+      setLogoSource('fallback')
+      setCurrentLogoUrl(null)
+    } else if (logoSource === 'clearbit' && domain) {
+      // Clearbit failed, try Google Favicons
+      console.log('CompanyLogo: Trying Google Favicons...')
+      setLogoSource('google')
+      setCurrentLogoUrl(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
+    } else if (logoSource === 'google' || logoSource === 'clearbit') {
+      // All external sources failed
+      console.log('CompanyLogo: All sources failed, using letter fallback')
+      setLogoSource('fallback')
+      setCurrentLogoUrl(null)
+    }
+  }
+
+  const handleLogoLoad = () => {
+    setImageLoading(false)
+  }
+
+  const theme = getAvatarColor(name)
+  const initial = name.charAt(0).toUpperCase()
+  const showFallback = logoSource === 'fallback' || !currentLogoUrl
 
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center overflow-hidden bg-gray-100 border border-gray-200",
+        "relative flex items-center justify-center overflow-hidden flex-shrink-0",
         className,
       )}
       style={{
         width: size,
         height: size,
-        borderRadius: rounded,
-        backgroundColor: showAvatar ? backgroundColor : undefined,
+        borderRadius: size >= 40 ? 16 : 12,
+        backgroundColor: showFallback ? theme.bg : '#ffffff',
+        border: showFallback ? 'none' : '1px solid #e2e8f0',
       }}
     >
-      {showAvatar ? (
-        // Avatar with initial
+      {showFallback ? (
+        // Letter Avatar Fallback
         <span
-          className="font-semibold select-none"
+          className="font-bold select-none"
           style={{
-            color: textColor,
-            fontSize: size * 0.4,
+            color: theme.text,
+            fontSize: size * 0.45,
           }}
           aria-hidden="true"
         >
@@ -105,28 +180,25 @@ export function CompanyLogo({
         <>
           {/* Loading skeleton */}
           {imageLoading && (
-            <div className="absolute inset-0 bg-gray-200 animate-pulse" style={{ borderRadius: rounded }} />
+            <div
+              className="absolute inset-0 bg-slate-100 animate-pulse"
+              style={{ borderRadius: size >= 40 ? 16 : 12 }}
+            />
           )}
 
           {/* Logo image */}
-          <Image
-            src={logoUrl || "/placeholder.svg"}
-            alt={`Logo ${brandName}`}
-            width={size}
-            height={size}
-            className="object-contain"
+          <img
+            src={currentLogoUrl!}
+            alt={`Logo ${name}`}
+            className="object-contain p-0.5"
             style={{
-              width: size,
-              height: size,
+              width: size - 4,
+              height: size - 4,
             }}
-            priority={priority}
-            loading={priority ? undefined : "lazy"}
+            loading={priority ? "eager" : "lazy"}
             decoding="async"
-            onLoad={() => setImageLoading(false)}
-            onError={() => {
-              setImageError(true)
-              setImageLoading(false)
-            }}
+            onLoad={handleLogoLoad}
+            onError={handleLogoError}
           />
         </>
       )}
@@ -136,20 +208,18 @@ export function CompanyLogo({
 
 // Alternative export for avatar-only use cases
 export function CompanyAvatar({
-  id,
-  brandName,
-  brandColor,
+  name,
   size = 40,
-  rounded = 8,
   className,
-}: Omit<CompanyLogoProps, "logoUrl" | "logoDarkUrl" | "priority">) {
+}: {
+  name: string
+  size?: number
+  className?: string
+}) {
   return (
     <CompanyLogo
-      id={id}
-      brandName={brandName}
-      brandColor={brandColor}
+      name={name}
       size={size}
-      rounded={rounded}
       className={className}
     />
   )

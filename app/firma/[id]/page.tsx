@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { calculateIndexBreakdown, type CompanyBreakdown } from "@/lib/company-utils"
 import CompanyProfileClient from "./CompanyProfileClient"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 
@@ -9,43 +8,49 @@ export const revalidate = 0
 
 interface CompanyDetail {
   id: string
-  brand: string
-  company: string
+  name: string
   slug: string
   categorySlug: string
-  score: number
-  badges: string[]
-  website?: string
+  categoryName: string
+  nip?: string
+  krs?: string
+  siedziba_pl: boolean
+  vat_czynny: boolean
+  rachunek_pl: boolean
+  founded_at?: string
+  age: number
+  adres?: string
+  owner_name?: string
+  parent_company_name?: string
+  ownership_type?: string
+  notes?: string
+  description?: string
   logoUrl?: string
-  headquarters?: { country: string; city: string }
-  registry?: { krs?: string; nip?: string; regon?: string }
-  tax?: { paysCITinPL?: boolean; lastYear?: string }
-  production?: { inPL?: "tak" | "częściowo" | "nie"; notes?: string }
-  employment?: { inPL?: "tak" | "częściowo" | "brak danych"; headcountPL?: number }
-  rnd?: { inPL?: boolean; notes?: string }
-  brandOrigin?: { fromPL?: boolean; notes?: string }
-  ownership?: {
-    companyTree?: Array<{ label: string; value: string }>
-    beneficialOwners?: Array<{ name: string; country?: string; share?: string }>
-  }
-  breakdown?: CompanyBreakdown
-  history?: Array<{ date: string; title: string; text?: string }>
-  sources?: Array<{ label: string; url: string }>
-  lastVerified?: string
-  age?: number
+  country_code?: string
+  website_url?: string
+  registry_url?: string
+  lastVerified: string
 }
 
 interface SupabaseCompany {
   id: string
   name: string
-  category_slug: string
-  nip: string
-  krs: string
+  slug: string
+  nip: string | null
+  krs: string | null
   siedziba_pl: boolean
   vat_czynny: boolean
   rachunek_pl: boolean
-  founded_at: string
-  slug: string
+  founded_at: string | null
+  adres: string | null
+  owner_name: string | null
+  parent_company_name: string | null
+  ownership_type: string | null
+  notes: string | null
+  description: string | null
+  country_code: string | null
+  website_url: string | null
+  registry_url: string | null
   categories?: {
     name: string
     slug: string
@@ -60,27 +65,15 @@ function calculateAge(foundedAt: string | null): number {
   const monthDiff = now.getMonth() - founded.getMonth()
   const dayDiff = now.getDate() - founded.getDate()
 
-  // Subtract 1 if birthday hasn't occurred this year yet
   if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
     return Math.max(0, years - 1)
   }
   return Math.max(0, years)
 }
 
-function calculatePolishIndex(siedzibaPl: boolean, vatCzynny: boolean, rachunekPl: boolean, age: number): number {
-  let score = 0
-  if (siedzibaPl) score += 40
-  if (vatCzynny) score += 25
-  if (rachunekPl) score += 10
-  score += Math.min(25, age)
-  return score
-}
-
-async function getCompanyData(slug: string): Promise<CompanyDetail | null> {
+async function getCompanyData(id: string): Promise<CompanyDetail | null> {
   try {
-    console.log("[v0] Fetching company with slug:", slug, "at", new Date().toISOString())
-    console.log("[v0] Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL)
-    console.log("[v0] Supabase Key exists:", !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    console.log("[v0] Fetching company with id:", id, "at", new Date().toISOString())
 
     const supabase = await getSupabaseServerClient()
 
@@ -96,12 +89,21 @@ async function getCompanyData(slug: string): Promise<CompanyDetail | null> {
         vat_czynny,
         rachunek_pl,
         founded_at,
+        adres,
+        owner_name,
+        parent_company_name,
+        ownership_type,
+        description,
+        notes,
+        country_code,
+        website_url,
+        registry_url,
         categories (
           name,
           slug
         )
       `)
-      .eq("id", slug)
+      .eq("id", id)
       .maybeSingle()
 
     console.log("[v0] Supabase response - data:", data)
@@ -113,49 +115,35 @@ async function getCompanyData(slug: string): Promise<CompanyDetail | null> {
     }
 
     if (!data) {
-      console.log("[v0] No company found for slug:", slug)
+      console.log("[v0] No company found for id:", id)
       return null
     }
 
-    const company = data as SupabaseCompany
-
+    const company = data as unknown as SupabaseCompany
     const age = calculateAge(company.founded_at)
-    const score = calculatePolishIndex(company.siedziba_pl, company.vat_czynny, company.rachunek_pl, age)
-
-    const badges: string[] = []
-    if (company.siedziba_pl) badges.push("SIEDZIBA_PL")
-    if (company.vat_czynny) badges.push("CIT_PL")
-    if (company.rachunek_pl) badges.push("KAPITAŁ_PL")
-
-    const breakdown = calculateIndexBreakdown(score, badges)
 
     return {
-      id: company.slug,
-      brand: company.slug,
-      company: company.name,
+      id: company.id,
+      name: company.name,
       slug: company.slug,
       categorySlug: company.categories?.slug || "inne",
-      score,
-      badges,
+      categoryName: company.categories?.name || "Inne",
+      nip: company.nip || undefined,
+      krs: company.krs || undefined,
+      siedziba_pl: company.siedziba_pl,
+      vat_czynny: company.vat_czynny,
+      rachunek_pl: company.rachunek_pl,
+      founded_at: company.founded_at || undefined,
       age,
-      registry: {
-        krs: company.krs || undefined,
-        nip: company.nip || undefined,
-      },
-      headquarters: company.siedziba_pl
-        ? { country: "Polska", city: "Polska" }
-        : { country: "Zagranica", city: "Zagranica" },
-      tax: {
-        paysCITinPL: company.vat_czynny,
-      },
-      breakdown,
-      history: [
-        {
-          date: company.founded_at || "Brak danych",
-          title: age > 0 ? `Założona ${age} ${age === 1 ? "rok" : age < 5 ? "lata" : "lat"} temu` : "Data założenia",
-        },
-      ],
-      sources: [{ label: "Dane z bazy Supabase", url: "#" }],
+      adres: company.adres || undefined,
+      owner_name: company.owner_name || undefined,
+      parent_company_name: company.parent_company_name || undefined,
+      ownership_type: company.ownership_type || undefined,
+      notes: company.notes || undefined,
+      description: company.description || undefined,
+      country_code: company.country_code || undefined,
+      website_url: company.website_url || undefined,
+      registry_url: company.registry_url || undefined,
       lastVerified: new Date().toISOString().split("T")[0],
     }
   } catch (err) {
@@ -175,12 +163,15 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     }
   }
 
+  const isPolish = company.siedziba_pl || company.rachunek_pl
+  const status = isPolish ? "Polska Firma" : "Firma Zagraniczna"
+
   return {
-    title: `${company.brand} — Indeks polskości | CzyPolskaFirma`,
-    description: `Sprawdź indeks polskości firmy ${company.brand} (${company.company}). Wynik: ${company.score}/100 punktów.`,
+    title: `${company.name} — ${status} | CzyPolskaFirma`,
+    description: `Sprawdź czy ${company.name} jest polską firmą. Status: ${status}. Weryfikacja kapitału, siedziby i podatków.`,
     openGraph: {
-      title: `${company.brand} — Indeks polskości ${company.score}/100`,
-      description: `Szczegółowy profil firmy ${company.brand} w serwisie CzyPolskaFirma`,
+      title: `${company.name} — ${status}`,
+      description: `Szczegółowy profil firmy ${company.name} w serwisie CzyPolskaFirma`,
       type: "website",
     },
   }
@@ -194,5 +185,5 @@ export default async function CompanyProfilePage({ params }: { params: { id: str
     notFound()
   }
 
-  return <CompanyProfileClient params={{ id }} company={company} />
+  return <CompanyProfileClient company={company} />
 }

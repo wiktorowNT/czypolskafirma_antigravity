@@ -84,7 +84,11 @@ export function Header() {
               }}
             >
               <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <span className="text-2xl">🇵🇱</span>
+                <img
+                  src="https://flagcdn.com/w40/pl.png"
+                  alt="Polska"
+                  className="w-6 h-auto rounded-sm shadow-sm"
+                />
                 CzyPolskaFirma
               </h1>
             </div>
@@ -160,9 +164,6 @@ export function Header() {
                 <Heart className="h-4 w-4" />
                 Wesprzyj projekt
               </Button>
-              <Button onClick={() => scrollToSection("newsletter")} className="bg-red-600 hover:bg-red-700 text-white">
-                Zostań beta testerem
-              </Button>
             </div>
           </div>
 
@@ -220,13 +221,6 @@ export function Header() {
               >
                 <Heart className="h-4 w-4" />
                 Wesprzyj projekt
-              </Button>
-              <Button
-                onClick={() => scrollToSection("newsletter")}
-                variant="outline"
-                className="border-red-600 text-red-600 hover:bg-red-50 mt-2"
-              >
-                Zostań beta testerem
               </Button>
             </div>
           </div>
