@@ -125,7 +125,7 @@ export default function CompanyHero({
                                 />
                             )}
 
-                            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 uppercase tracking-wide">
                                 {displayName}
                             </h1>
 
@@ -188,11 +188,11 @@ export default function CompanyHero({
                         <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
                             <Network className="w-5 h-5 text-purple-600" />
                         </div>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                             <p className="text-xs font-medium text-slate-500 tracking-wide">
                                 {ownerLabel}
                             </p>
-                            <p className="text-sm font-semibold text-slate-900 mt-0.5 truncate">
+                            <p className="text-sm font-semibold text-slate-900 mt-0.5 whitespace-normal break-words leading-snug line-clamp-2">
                                 {ownerDisplay}
                             </p>
                         </div>

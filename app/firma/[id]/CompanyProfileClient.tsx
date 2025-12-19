@@ -20,7 +20,6 @@ interface CompanyDetail {
     krs?: string
     siedziba_pl: boolean
     vat_czynny: boolean
-    rachunek_pl: boolean
     founded_at?: string
     age: number
     adres?: string

@@ -17,7 +17,11 @@ import { cn } from "@/lib/utils"
  */
 const LOCAL_LOGOS = new Set([
   'biedronka.pl',
-  // Dodaj więcej domen tutaj...
+  'mieszkaj.skanska.pl',
+  'torpol.pl',
+  'hochtief.pl',
+  'gulermak.com',
+  'ghelamco.com'
 ])
 
 interface CompanyLogoProps {

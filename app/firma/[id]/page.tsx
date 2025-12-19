@@ -16,7 +16,7 @@ interface CompanyDetail {
   krs?: string
   siedziba_pl: boolean
   vat_czynny: boolean
-  rachunek_pl: boolean
+
   founded_at?: string
   age: number
   adres?: string
@@ -40,7 +40,6 @@ interface SupabaseCompany {
   krs: string | null
   siedziba_pl: boolean
   vat_czynny: boolean
-  rachunek_pl: boolean
   founded_at: string | null
   adres: string | null
   owner_name: string | null
@@ -87,7 +86,7 @@ async function getCompanyData(id: string): Promise<CompanyDetail | null> {
         krs,
         siedziba_pl,
         vat_czynny,
-        rachunek_pl,
+
         founded_at,
         adres,
         owner_name,
@@ -132,7 +131,7 @@ async function getCompanyData(id: string): Promise<CompanyDetail | null> {
       krs: company.krs || undefined,
       siedziba_pl: company.siedziba_pl,
       vat_czynny: company.vat_czynny,
-      rachunek_pl: company.rachunek_pl,
+
       founded_at: company.founded_at || undefined,
       age,
       adres: company.adres || undefined,
@@ -163,7 +162,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     }
   }
 
-  const isPolish = company.siedziba_pl || company.rachunek_pl
+  const isPolish = company.siedziba_pl
   const status = isPolish ? "Polska Firma" : "Firma Zagraniczna"
 
   return {

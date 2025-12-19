@@ -7,7 +7,7 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "save": "git add . && git commit -m \"WIP: %date% %time%\" && git push"
+    "save": "git add . ; git commit -m \"WIP: auto-save\" ; git push"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

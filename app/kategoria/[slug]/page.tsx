@@ -2,6 +2,9 @@ import { notFound } from "next/navigation"
 import CategoryPageView from "@/components/category-page-view"
 import { getCachedCategoryData } from "@/lib/supabase/category-cache"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params
 

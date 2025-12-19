@@ -22,6 +22,8 @@ import {
   MessageSquarePlus,
 } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
+import { CompanyGrid } from "@/components/CompanyGrid"
+import { CategoryStats } from "@/components/CategoryStats"
 import ComparisonPanel from "@/components/comparison-panel"
 import { ReportDialog } from "@/components/report-dialog"
 import ComparisonBar from "@/components/comparison-bar"
@@ -455,17 +457,13 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
           </ol>
         </nav>
 
-        {/* Hero Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">{category.name}</h1>
-          <div className="flex flex-wrap items-center gap-2 text-slate-500 text-sm md:text-base">
-            <span>W bazie: <strong className="text-slate-900">{metrics.count}</strong> firm</span>
-            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-            <span>Polskie: <strong className="text-green-600">{metrics.polishCount}</strong></span>
-            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-            <span>Zagraniczne: <strong className="text-slate-900">{metrics.foreignCount}</strong></span>
-          </div>
-        </div>
+        {/* Hero Section with Stats */}
+        <CategoryStats
+          categoryName={category.name}
+          totalCompanies={metrics.count}
+          polishCompanies={metrics.polishCount}
+          foreignCompanies={metrics.foreignCount}
+        />
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Filters */}
@@ -563,7 +561,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Szukaj firmy..."
+                    placeholder={`Szukaj w kategorii ${category.name}...`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-11 pr-4 py-4 bg-white border border-slate-200 rounded-xl text-base outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all shadow-md placeholder:text-slate-400"
@@ -623,106 +621,12 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
             )}
 
             {/* Company Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {filteredAndSortedItems.map((item) => {
-                const polishComponents = getPolishIndexComponents(item)
-                const isCompared = comparedCompanies.includes(item.id)
-                const isPolish = item.country_code === "PL"
-
-                return (
-                  <div
-                    key={item.id}
-                    className="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-200 py-5 px-5 flex items-center gap-5"
-                  >
-                    {/* Logo - Fixed width */}
-                    <div className="flex-shrink-0">
-                      <CompanyLogo
-                        websiteUrl={item.website_url}
-                        logoUrl={item.logoUrl}
-                        name={item.brand}
-                        size={52}
-                      />
-                    </div>
-
-                    {/* Main Content - Vertical Stack */}
-                    <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
-                      <h3 className="text-lg font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors leading-tight">
-                        {item.brand}
-                      </h3>
-
-                      {/* Status Text (Subtle) */}
-                      {isPolish ? (
-                        <span className="text-xs font-medium text-green-600 flex items-center gap-1.5">
-                          Polska firma
-                        </span>
-                      ) : (
-                        <span className="text-xs font-medium text-slate-500 flex items-center gap-1.5">
-                          Zagraniczna firma
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Right Side - Aligned Right */}
-                    <div className="flex items-center gap-4 sm:gap-6 flex-shrink-0 ml-auto">
-                      {/* Country Flag */}
-                      {item.country_code ? (
-                        <div className="flex flex-col items-center justify-center" title={item.country_code}>
-                          <img
-                            src={`https://flagcdn.com/w80/${item.country_code.toLowerCase()}.png`}
-                            alt={item.country_code}
-                            className="w-8 h-auto rounded shadow-sm opacity-90"
-                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
-                            loading="lazy"
-                          />
-                        </div>
-                      ) : null}
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-3 pl-2 border-l border-slate-100">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            toggleCompare(item.id, item.brand);
-                          }}
-                          className={`w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 ${isCompared
-                            ? "bg-green-100 text-green-700"
-                            : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
-                            }`}
-                          title={isCompared ? "Usuń z porównania" : "Dodaj do porównania"}
-                        >
-                          {isCompared ? <Check className="w-5 h-5" /> : <Scale className="w-5 h-5" />}
-                        </button>
-
-                        <Link
-                          href={`/firma/${item.id}`}
-                          className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-50 text-slate-600 border border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-200"
-                        >
-                          <ChevronRight className="w-5 h-5" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-
-            {filteredAndSortedItems.length === 0 && (
-              <div className="text-center py-20 bg-white rounded-2xl border border-slate-100 border-dashed">
-                <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Search className="w-8 h-8 text-slate-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Brak wyników</h3>
-                <p className="text-slate-500 mb-6 max-w-xs mx-auto">
-                  Nie znaleźliśmy firm spełniających Twoje kryteria. Spróbuj zmienić filtry.
-                </p>
-                <button
-                  onClick={clearAllFilters}
-                  className="px-6 py-2.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-medium text-sm"
-                >
-                  Wyczyść wszystkie filtry
-                </button>
-              </div>
-            )}
+            <CompanyGrid
+              companies={filteredAndSortedItems}
+              categoryName={category.name}
+              searchTerm={searchTerm}
+              onClearFilters={clearAllFilters}
+            />
           </div>
         </div>
 

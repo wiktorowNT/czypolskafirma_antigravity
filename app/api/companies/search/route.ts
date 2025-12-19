@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 
     try {
         // Search for companies by name or slug using ilike
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(query)}*,slug.ilike.*${encodeURIComponent(query)}*)&limit=8`
+        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(query)}*,slug.ilike.*${encodeURIComponent(query)}*)&limit=50`
 
         const res = await fetch(url, {
             headers: {
@@ -43,6 +43,7 @@ export async function GET(request: Request) {
             category: company.categories?.name || "Inne",
             categorySlug: company.categories?.slug || "inne",
             website_url: company.website_url,
+            country_code: company.country_code,
         }))
 
         return NextResponse.json(results)

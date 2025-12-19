@@ -13,7 +13,6 @@ function calculatePolishScore(company: any): number {
   let score = 0
   if (company.siedziba_pl) score += 40
   if (company.vat_czynny) score += 25
-  if (company.rachunek_pl) score += 10
 
   if (company.founded_at) {
     const founded = new Date(company.founded_at)
@@ -30,7 +29,6 @@ function mapCompanyToItem(company: any) {
 
   if (company.siedziba_pl) badges.push("HQ_PL")
   if (company.vat_czynny) badges.push("CIT_PL")
-  if (company.rachunek_pl && company.vat_czynny) badges.push("PL_CAPITAL_50")
 
   return {
     id: company.id,
@@ -44,7 +42,6 @@ function mapCompanyToItem(company: any) {
     krs: company.krs,
     siedziba_pl: company.siedziba_pl,
     vat_czynny: company.vat_czynny,
-    rachunek_pl: company.rachunek_pl,
     founded_at: company.founded_at,
     country_code: company.country_code,
     website_url: company.website_url,
@@ -88,7 +85,7 @@ export async function getCachedCategoryData(categorySlug: string) {
         founded_at,
         siedziba_pl,
         vat_czynny,
-        rachunek_pl,
+
         country_code,
         website_url,
         categories (
@@ -98,6 +95,7 @@ export async function getCachedCategoryData(categorySlug: string) {
       `)
       .eq("category_id", categoryId)
       .order("name", { ascending: true })
+      .limit(1000)
 
     if (error) {
       console.error(`[v0] Error fetching category data from Supabase:`, error)

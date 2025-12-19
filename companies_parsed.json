@@ -1,0 +1,1442 @@
+﻿[
+    {
+        "id":  "007f3a44-0a54-4e73-bb60-f4ad0fad46fe",
+        "slug":  "eurovia",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Drogowe ramię francuskiej grupy VINCI. Kapitał w całości zagraniczny."
+    },
+    {
+        "id":  "020fa8ce-0049-45dd-84d1-a153c9089fe2",
+        "slug":  "cfe",
+        "category":  null,
+        "country_code":  "BE",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Należy do belgijskiej grupy CFE notowanej w Brukseli. Główny akcjonariusz to holding Ackermans \u0026 van Haaren."
+    },
+    {
+        "id":  "0ac2560c-c97b-4fdf-9214-891352383bbd",
+        "slug":  "polkomtel-plus",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator sieci Plus (Grupa Polsat Plus). Usługi telekomunikacyjne, 5G i media."
+    },
+    {
+        "id":  "0f2c3aaf-d8b4-4bfd-b0e0-2d7f9c753665",
+        "slug":  "gino-rossi",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Marka obuwnicza o włoskim stylu (część Grupy CCC). Oferuje skórzane buty i akcesoria."
+    },
+    {
+        "id":  "0f4c436c-6012-499d-8c41-06522592e6d3",
+        "slug":  "ziaja",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Rodzinna firma (farmaceutyki, kosmetyki). Łączy naturalne składniki z technologią, przystępne ceny."
+    },
+    {
+        "id":  "101edd73-8ef8-49ad-a75e-a46d0c0ea9a7",
+        "slug":  "aldesa",
+        "category":  null,
+        "country_code":  "CN",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Historycznie hiszpańska firma, w 2020 r. przejęta w 75% przez chiński państwowy gigant CRCC. Realizuje strategię globalną Pekinu."
+    },
+    {
+        "id":  "102192e5-4832-46fa-9b87-c4d52c48ce2f",
+        "slug":  "bielenda",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider rynku (kosmetyki naturalne). Rozwija się przez akwizycje (Soraya, Dermika) i innowacje."
+    },
+    {
+        "id":  "13929c61-30d8-45d6-8a30-987486928091",
+        "slug":  "grupa-maspex",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Spółka produkcyjna Grupy Maspex (zboża, makarony). Nowoczesne centrum produkcyjne w Wadowicach."
+    },
+    {
+        "id":  "13b40f1e-2b76-43fb-a3ce-10dfde191d4f",
+        "slug":  "pgf-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Wielki dystrybutor leków do aptek i szpitali. Usługi logistyczne i programy partnerskie dla farmaceutów."
+    },
+    {
+        "id":  "15dbc31a-1e95-4080-ad79-511ad9749e13",
+        "slug":  "dr-irena-eris",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Luksusowa marka kosmetyczna z własnym centrum badawczym. Prowadzi hotele SPA i instytuty kosmetyczne."
+    },
+    {
+        "id":  "17300dfc-4a9d-4d7d-b2ae-b4e20f423909",
+        "slug":  "opel",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Zakład produkcyjny w Gliwicach (Stellantis). Przekształcony w fabrykę dużych samochodów dostawczych."
+    },
+    {
+        "id":  "1b91ca66-1546-4968-8d5b-0720443647dc",
+        "slug":  "solaris-bus-coach",
+        "category":  null,
+        "country_code":  "ES",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Czołowy producent autobusów, trolejbusów i tramwajów (grupa CAF). Lider elektromobilności i wodoru w transporcie publicznym."
+    },
+    {
+        "id":  "1c05313a-7430-4407-ba3c-ae45229346ea",
+        "slug":  "polimex-mostostal",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Grupa inżynieryjno-budowlana (energetyka, chemia, paliwa). Generalny wykonawca bloków energetycznych."
+    },
+    {
+        "id":  "1c89897b-f3c4-492a-ac3b-8817799d9dc6",
+        "slug":  "big-star",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Renomowana marka jeansowa i casualowa. Dystrybuuje produkty przez sieć salonów własnych i franczyzowych."
+    },
+    {
+        "id":  "1cfda884-df25-48c3-b4f0-82daa8c7c97e",
+        "slug":  "leclerc",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Spółka z grupy E.Leclerc odpowiedzialna za kluczowe procesy zakupowe i handlowe."
+    },
+    {
+        "id":  "1d92a112-765e-4cd8-98d0-ec4bb096712a",
+        "slug":  "wielton",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Jeden z największych producentów naczep i przyczep w Europie. Oferuje produkty dla transportu, budownictwa i rolnictwa."
+    },
+    {
+        "id":  "1e561319-1462-49f8-a905-e2d1c1d0e1d1",
+        "slug":  "black-red-white-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Największa polska grupa meblarska. Meble skrzyniowe, kuchenne, sieć salonów i eksport."
+    },
+    {
+        "id":  "1e886715-847c-4fcb-8a22-6a26056a8553",
+        "slug":  "netto",
+        "category":  null,
+        "country_code":  "DK",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Sieć dyskontów (część Salling Group) w formacie osiedlowym. Znacząco zwiększyła udział w rynku po przejęciu Tesco Polska."
+    },
+    {
+        "id":  "2075aa7e-7c44-42bc-a87b-d2f4c9d86b66",
+        "slug":  "neuca-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Lider hurtowej dystrybucji farmaceutyków. Obsługuje apteki niezależne, rozwija telemedycynę i badania kliniczne."
+    },
+    {
+        "id":  "20b185d8-27ae-4ecd-a682-2532cb92b6f2",
+        "slug":  "ndi",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Firma rodzinna",
+        "ultimate_parent":  null,
+        "description":  "Sopocka grupa budowlana. Mimo historycznej nazwy (Nederpol), obecnie w 100% polska firma rodzinna rodziny Gajewskich."
+    },
+    {
+        "id":  "21ed4b58-099f-440e-ad4f-2dd2ee26d178",
+        "slug":  "velobank",
+        "category":  null,
+        "country_code":  "US",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Nowoczesny bank (powstały z Getin Noble). Stawia na transparentność, ekologię i technologie."
+    },
+    {
+        "id":  "26917d77-c634-40fe-9f03-20b19079482a",
+        "slug":  "x-kom",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Sprzedawca sprzętu komputerowego wywodzący się z e-commerce. Znany z fachowego doradztwa IT/gaming."
+    },
+    {
+        "id":  "2898c54b-98e9-4345-acf4-e505789366e8",
+        "slug":  "pzu",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Największa grupa ubezpieczeniowa w CEE. Oferuje ubezpieczenia majątkowe, życiowe i produkty inwestycyjne."
+    },
+    {
+        "id":  "2a45eb03-29b4-454b-ba93-18e4e63b6886",
+        "slug":  "bayer-sp-z-oo",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Polski oddział globalnego koncernu (Pharmaceuticals, Consumer Health, Crop Science). Centrum usług w Gdańsku."
+    },
+    {
+        "id":  "2c146dad-1540-46fc-8ced-d9a64cf37376",
+        "slug":  "modivo",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider sprzedaży online obuwia i odzieży (eobuwie.pl, Modivo). Należy do polskiej grupy CCC."
+    },
+    {
+        "id":  "2eec6f2d-6375-4fa6-b4d8-5b95333f34cf",
+        "slug":  "bridgestone",
+        "category":  null,
+        "country_code":  "JP",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Nowoczesny zakład produkcyjny (opony Run-Flat, High Performance). Dostawca dla marek premium."
+    },
+    {
+        "id":  "30cdea29-4fe8-40c2-9b51-3258d78ac4c8",
+        "slug":  "fabryki-mebli-forte-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Duży producent mebli do samodzielnego montażu. Eksport i współpraca z sieciami handlowymi."
+    },
+    {
+        "id":  "320ccd66-be2e-44d7-a3f6-f8e7b350267c",
+        "slug":  "wittchen",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Lider luksusowej galanterii skórzanej i bagażu. Słynie z wysokiej jakości wykonania i ekskluzywnych salonów."
+    },
+    {
+        "id":  "3315738d-2bf3-4b13-9958-6ff46de2eebc",
+        "slug":  "grupa-zywiec",
+        "category":  null,
+        "country_code":  "NL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Czołowy producent piwa (Heineken). Zarządza historycznym browarem w Żywcu."
+    },
+    {
+        "id":  "33508335-dbdf-437a-ade8-8244ec646d1f",
+        "slug":  "top-market",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Polska Grupa Supermarketów (sieć Top Market). Integruje rodzimych kupców, zapewniając wsparcie logistyczne i marketingowe."
+    },
+    {
+        "id":  "34da981b-d945-4d02-94f8-165f3c7a2cda",
+        "slug":  "netia-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator telco (internet, TV, telefon). Część Grupy Polsat Plus, rozwiązania chmurowe dla B2B."
+    },
+    {
+        "id":  "37c1bd87-3a23-4729-889b-9ca6fafbe8d2",
+        "slug":  "inter-cars",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Największy dystrybutor części zamiennych w CEE. Potężna sieć logistyczna zaopatrująca warsztaty."
+    },
+    {
+        "id":  "39522510-0d5d-4bd9-ab02-7b748040de16",
+        "slug":  "bremer",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Niemiecka firma rodzinna z Paderborn. Konkuruje na rynku hal przemysłowych."
+    },
+    {
+        "id":  "39d0d958-c87f-49fc-b6f3-06c0b0da9e91",
+        "slug":  "meble-wojcik-sp-z-oo",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Renomowany producent mebli skrzyniowych. Rodzinne tradycje i nowoczesna technologia."
+    },
+    {
+        "id":  "3a2e156b-7c94-4842-815c-05d532caf0fb",
+        "slug":  "monnari",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Polska marka odzieżowa dla kobiet (styl smart casual). Zarządza siecią salonów w prestiżowych centrach handlowych."
+    },
+    {
+        "id":  "3d47e292-c724-4f38-bc14-b29572ca5ad1",
+        "slug":  "erbud",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Grupa budowlana (kubatura, drogi, energetyka/OZE). Serwis dla przemysłu i budowa farm wiatrowych."
+    },
+    {
+        "id":  "3f9b0f5b-07c0-4321-a038-63651d6d06ef",
+        "slug":  "warbud",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Część francuskiego koncernu VINCI. Jedna z największych firm budowlanych w Polsce, sterowana z Paryża."
+    },
+    {
+        "id":  "43731c94-1f24-4109-b57c-82de99d7ba12",
+        "slug":  "goldbeck",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Niemiecka firma rodzinna z Bielefeld. Polska spółka jest bezpośrednią własnością centrali."
+    },
+    {
+        "id":  "44096f49-a22a-40e2-94d5-0958b450736a",
+        "slug":  "arhelan",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Polska sieć supermarketów z siedzibą w Bielsku Podlaskim, założona w 1991 roku przez rodzinę Burzyńskich. Firma jest oparta na polskim kapitale i zarządza ponad 100 placówkami, głównie w północno-wschodniej Polsce."
+    },
+    {
+        "id":  "447f2bd8-6dd3-48d5-91d0-f060717d6212",
+        "slug":  "scania",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Dystrybutor pojazdów ciężarowych i autobusów Scania. Nacisk na zrównoważony rozwój i efektywność paliwową."
+    },
+    {
+        "id":  "465217f6-abf5-4b33-8980-9cf0c1cea546",
+        "slug":  "cd-projekt-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Producent gier wideo (Wiedźmin, Cyberpunk). Zarządza platformą GOG.com."
+    },
+    {
+        "id":  "4821704f-8050-4fbb-addd-d637ebd8231c",
+        "slug":  "vectra-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Dostawca kablówki i internetu. Rozbudowa światłowodów i usługi VOD."
+    },
+    {
+        "id":  "487a7726-4742-4930-8048-bb1db4d95122",
+        "slug":  "agata-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Sieć wielkopowierzchniowych salonów meblowych. Szeroki wybór od wielu producentów."
+    },
+    {
+        "id":  "4d50aed2-1720-4608-a97f-d85cdeeb323d",
+        "slug":  "atal",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Ogólnopolski deweloper (mieszkania, lokale). Samodzielnie zarządza procesem od projektu po wykonawstwo."
+    },
+    {
+        "id":  "4dec23ce-75ed-4d0c-9e7d-05e7c3f20d86",
+        "slug":  "bos-bank",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Specjalizacja w finansowaniu ekologii i OZE. Produkty wspierające zrównoważony rozwój."
+    },
+    {
+        "id":  "4fb80bb8-a5ba-4683-af23-dc5f9fa66bc5",
+        "slug":  "emitel-sa",
+        "category":  null,
+        "country_code":  "UK",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator infrastruktury radiowo-telewizyjnej. Emisja sygnału RTV, rozwiązania Smart City."
+    },
+    {
+        "id":  "511ef36b-6a59-4ae8-99b5-c9f2dfd58507",
+        "slug":  "santander-bank-polska",
+        "category":  null,
+        "country_code":  "ES",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Czołowy bank komercyjny (Grupa Santander). Szeroka oferta kredytowa i nowoczesna bankowość mobilna."
+    },
+    {
+        "id":  "526be520-9c06-4aa1-bb57-77354aad63bf",
+        "slug":  "lpp",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Koncern odzieżowy (Reserved, Cropp, House, Mohito, Sinsay). Projektuje odzież i zarządza siecią salonów oraz e-commerce globalnie."
+    },
+    {
+        "id":  "53c37f20-b879-4194-b692-11db10872998",
+        "slug":  "boryszew",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Grupa przemysłowa (komponenty moto, metale nieżelazne, chemia). Dostarcza części globalnym producentom aut."
+    },
+    {
+        "id":  "55bd44aa-0c4d-468d-a928-d307878d2e25",
+        "slug":  "nestle-polska",
+        "category":  null,
+        "country_code":  "CH",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Oddział globalnego giganta (Winiary, słodycze, kawa). Fabryki w Polsce."
+    },
+    {
+        "id":  "57f1d6c1-a5a2-4fe0-acee-200e803d82a1",
+        "slug":  "loreal-polska",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider rynku beauty (marki masowe i luksusowe). Posiada pod Warszawą jedną z największych fabryk na świecie."
+    },
+    {
+        "id":  "591d0f24-2501-404b-aa0c-893575079c4b",
+        "slug":  "p4-play",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator sieci Play (Grupa iliad). Usługi mobilne i stacjonarne (po przejęciu UPC)."
+    },
+    {
+        "id":  "59ac2889-623c-444f-9999-0dc35bf2ba6c",
+        "slug":  "lavard",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Marka eleganckiej odzieży męskiej i damskiej (płaszcze, garnitury). Łączy krawiectwo z nowoczesnym wzornictwem."
+    },
+    {
+        "id":  "59eccf83-7df9-4126-8466-fea429e45111",
+        "slug":  "autopay",
+        "category":  null,
+        "country_code":  "UK",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Spółka technologiczna (płatności online, autostrady). Tworzy infrastrukturę dla e-commerce i bankowości."
+    },
+    {
+        "id":  "59edb170-4994-4378-b606-bbdbb2528e43",
+        "slug":  "fiat-fca-poland",
+        "category":  null,
+        "country_code":  "IT",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Fabryka w Tychach (Stellantis), m.in. Fiat 500. Modernizowana pod produkcję aut elektrycznych/hybrydowych (Jeep, Alfa)."
+    },
+    {
+        "id":  "5a927b5c-70ea-4671-9543-fb2c9e8c80ad",
+        "slug":  "procter-gamble",
+        "category":  null,
+        "country_code":  "US",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Dystrybucja produktów FMCG (Pampers, Ariel, Gillette). Kluczowa rola w zaopatrzeniu sieci handlowych."
+    },
+    {
+        "id":  "5abca5d8-86a5-4bd9-aa71-1ae86783ca24",
+        "slug":  "faurecia",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Producent komponentów (fotele, wnętrza, emisja). Partner koncernów motoryzacyjnych w zakresie innowacji."
+    },
+    {
+        "id":  "5b7e103d-aa1e-4b2c-8bce-8192f86be176",
+        "slug":  "duna",
+        "category":  null,
+        "country_code":  "HU",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Węgierska grupa Duna Aszfalt przejęła polskie aktywa od Mota-Engil. Zarząd węgierski."
+    },
+    {
+        "id":  "5bc35caa-1861-4076-a7b2-1ef9271ea071",
+        "slug":  "dom-development",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Wiodący deweloper mieszkaniowy (standard podwyższony). Działa w głównych aglomeracjach, znany z jakości."
+    },
+    {
+        "id":  "5d1a292e-e776-496c-abba-321c7b974beb",
+        "slug":  "pekabex",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka publiczna",
+        "ultimate_parent":  null,
+        "description":  "Lider prefabrykacji w Polsce. Główny akcjonariusz Maciej Grabski (poprzez STE Sp. z o.o.) oraz Prezes Robert Jędrzejowski kontrolują spółkę."
+    },
+    {
+        "id":  "5d420127-97b4-46c4-9d70-c7c3357dff96",
+        "slug":  "polomarket",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Zarządza siecią POLOmarket (polski kapitał). Koncentruje się na relacjach z lokalnymi społecznościami i produktach od krajowych dostawców."
+    },
+    {
+        "id":  "5df1d0cd-e3d0-4df3-a39d-61aeff14b1e1",
+        "slug":  "intercor",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Własność prywatna",
+        "ultimate_parent":  null,
+        "description":  "Cichy gigant mostownictwa z Zawiercia. Firma szczyci się całkowicie polskim kapitałem inżynierskim."
+    },
+    {
+        "id":  "5e69b9a5-ea05-43b6-b4db-c0bb8a04236e",
+        "slug":  "taranko",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Gdańska firma odzieżowa z tradycją krawiecką. Oferuje elegancką odzież wizytową i sukienki dla wymagających kobiet."
+    },
+    {
+        "id":  "625fb0fc-3d0f-431b-828c-76d60ce969e5",
+        "slug":  "alior-bank",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Łączy bankowość tradycyjną z innowacyjnością startupu. Nowatorskie produkty i technologie (blockchain)."
+    },
+    {
+        "id":  "65ad53f7-c977-4137-b8fe-7517d9da8d00",
+        "slug":  "kajima",
+        "category":  null,
+        "country_code":  "JP",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Japońska korporacja budowlana. Polska spółka należy do holdingu europejskiego, ale UBO znajduje się w Japonii."
+    },
+    {
+        "id":  "67df7b7a-70f0-4021-99e8-3d53c2d53b65",
+        "slug":  "adamed-pharma-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Firma farmaceutyczno-biotechnologiczna (polska myśl naukowa). Prace B+R w onkologii i neuropsychiatrii."
+    },
+    {
+        "id":  "67ecf1ba-bddf-4f58-912e-07447d809305",
+        "slug":  "mckb",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Własność prywatna",
+        "ultimate_parent":  null,
+        "description":  "Łódzki generalny wykonawca. W rejestrach UBO widnieją wyłącznie polskie osoby fizyczne (Grabowicz, Gromek)."
+    },
+    {
+        "id":  "690130f4-d59c-4d79-a396-cbacf3d1cccb",
+        "slug":  "comarch-sa",
+        "category":  null,
+        "country_code":  "LU",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Globalny producent systemów IT (ERP, lojalnościowe). Rozwiązania dla telco, finansów i handlu."
+    },
+    {
+        "id":  "69c9de7b-4c9f-42f8-8957-374ee2221652",
+        "slug":  "roverpol",
+        "category":  null,
+        "country_code":  "ES",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Spółka córka hiszpańskiej grupy Rover. Realizuje kontrakty morskie i inżynieryjne."
+    },
+    {
+        "id":  "6b05a2e6-2e8e-4fc3-bd4d-b10a5551b193",
+        "slug":  "alstal",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Firma rodzinna",
+        "ultimate_parent":  null,
+        "description":  "Dynamiczna firma rodzinna z Kujaw, w 100% kontrolowana przez rodzinę Szczupak. Znana z budowy obiektów sportowych i wojskowych."
+    },
+    {
+        "id":  "6b90571c-e781-475e-a576-54cb9c240a41",
+        "slug":  "bank-millennium",
+        "category":  null,
+        "country_code":  "PT",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Ogólnopolski bank uniwersalny. Znany z jakości obsługi i innowacji cyfrowych."
+    },
+    {
+        "id":  "6baca55b-9b28-4143-8f87-1cad06934aca",
+        "slug":  "hochtief",
+        "category":  null,
+        "country_code":  "ES",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Niemiecka marka, ale kapitał hiszpański. Właścicielem Hochtief AG jest Grupa ACS kierowana przez Florentino Péreza."
+    },
+    {
+        "id":  "6cf9ca44-e1ac-46c9-8a31-1d004de857da",
+        "slug":  "mirbud",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka publiczna (Kontrola założycielska)",
+        "ultimate_parent":  null,
+        "description":  "Czołowy polski generalny wykonawca. Jerzy Mirgos kontroluje 45,52% głosów. Silny udział polskich funduszy emerytalnych (NN, PZU)."
+    },
+    {
+        "id":  "6da96478-010d-4fe5-ae28-f4d92cff3fb8",
+        "slug":  "joanna",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Producent kosmetyków do włosów i ciała. Szeroki asortyment i dobra jakość w przystępnej cenie."
+    },
+    {
+        "id":  "6e603e4f-45e8-4449-ad90-bd492c1ffc50",
+        "slug":  "ccc",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Jeden z największych detalistów obuwniczych w Europie Środkowej. Działa w modelu omnikanałowym, właściciel m.in. eobuwie/Modivo."
+    },
+    {
+        "id":  "746ef5fa-a59f-4dd1-b0e9-2b514ebac7ce",
+        "slug":  "blik",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Konsorcjum",
+        "ultimate_parent":  null,
+        "description":  "Operator systemu BLIK. Standard płatności mobilnych w Polsce, ekspansja międzynarodowa."
+    },
+    {
+        "id":  "758ae8ee-dbc7-4a57-b16f-6f262a374c5b",
+        "slug":  "bytom",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Giełdowa",
+        "ultimate_parent":  null,
+        "description":  "Grupa kapitałowa zarządzająca markami: Bytom, Vistula, Wólczanka, W.KRUK, Deni Cler."
+    },
+    {
+        "id":  "7837f1bf-d338-4817-876a-fbdd63fbc3a5",
+        "slug":  "miraculum",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Jedna z najstarszych firm (Pani Walewska, Joko). Łączy tradycję z nowoczesnymi trendami."
+    },
+    {
+        "id":  "791a1581-59a5-4795-8d4b-0bf7129f0612",
+        "slug":  "delikatesy-centrum",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Sieć supermarketów (Grupa Eurocash) z naciskiem na świeże produkty (mięso/wędliny). Działa w modelu franczyzowym."
+    },
+    {
+        "id":  "7fbdad82-bfdb-4d4f-91aa-026661cf3791",
+        "slug":  "murapol",
+        "category":  null,
+        "country_code":  "US",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Aktywny deweloper mieszkaniowy (segment popularny/premium). Zintegrowany model biznesowy, duża skala realizacji."
+    },
+    {
+        "id":  "808f0a67-8135-4317-b690-0e94f22f540e",
+        "slug":  "kaufland",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operuje siecią wielkopowierzchniowych marketów z szerokim asortymentem spożywczym i AGD. Stawia na kompleksowość zakupów \u0027pod jednym dachem\u0027."
+    },
+    {
+        "id":  "86bc0e9a-ac46-4a06-9ff4-118c2398cc89",
+        "slug":  "bnp-paribas-bank-polska",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Bank uniwersalny (grupa międzynarodowa). Promuje zrównoważone finanse i transformację energetyczną."
+    },
+    {
+        "id":  "8734767d-29e4-4321-ac64-a4a55081839d",
+        "slug":  "kler-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Ekskluzywna marka mebli wypoczynkowych (skóra). Synonim elegancji i luksusu."
+    },
+    {
+        "id":  "873612c4-0ef2-4046-a868-2aeab2183e40",
+        "slug":  "fb-antczak",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Firma rodzinna",
+        "ultimate_parent":  null,
+        "description":  "Kaliska firma z 40-letnią tradycją. W pełni polski kapitał rodzinny, sukcesja w rękach Marcina Antczaka."
+    },
+    {
+        "id":  "874cb7e0-7610-480c-b3fa-550f09a44de0",
+        "slug":  "meble-vox",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Innowacyjna marka wnętrzarska (design thinking). Kompleksowe rozwiązania i unikalna estetyka."
+    },
+    {
+        "id":  "883a4752-041c-4708-af94-f8d7f41c97d6",
+        "slug":  "adamietz",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Firma rodzinna",
+        "ultimate_parent":  null,
+        "description":  "Generalny wykonawca budownictwa przemysłowego (hale, magazyny). 100% polski kapitał prywatny właściciel - Rajmund Adamietz"
+    },
+    {
+        "id":  "901b6601-02e5-4f11-96d1-da96cf62f97e",
+        "slug":  "tymbark-mws",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider soków i napojów (Grupa Maspex). Innowacyjny marketing i eksport."
+    },
+    {
+        "id":  "919fecc5-c6bd-4588-8eda-8682a13abcbb",
+        "slug":  "henkel-polska",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Działalność w klejach (Adhesive) i kosmetykach/chemii (Consumer Brands). Fabryki i centra badawcze."
+    },
+    {
+        "id":  "9666e1eb-638f-4c74-ac4e-27bdb65dc99a",
+        "slug":  "ochnik",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Rodzinna firma oferująca odzież skórzaną, galanterię i walizki. Łączy tradycję kaletniczą z nowoczesnymi trendami."
+    },
+    {
+        "id":  "9c7dea8d-7053-4211-8b24-b03ff57229e3",
+        "slug":  "lewiatan",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Największa sieć franczyzowa sklepów spożywczych w Polsce. Koordynuje marketing i markę własną dla tysięcy niezależnych przedsiębiorców."
+    },
+    {
+        "id":  "9d757d78-1ab5-4d83-90ad-de1345fd9447",
+        "slug":  "biedronka",
+        "category":  null,
+        "country_code":  "PT",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Właściciel sieci Biedronka, największej sieci detalicznej w Polsce. Koncentruje się na strategii niskich cen, gęstej sieci dystrybucji i markach własnych."
+    },
+    {
+        "id":  "9eba9af3-d53c-4969-9d9f-e3cf487e55f6",
+        "slug":  "komputronik",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Dystrybutor i detalista IT/elektroniki. Obsługuje klientów indywidualnych, biznes i administrację (integracja IT)."
+    },
+    {
+        "id":  "9f1138a6-cf15-4d42-8e24-9a827cd902be",
+        "slug":  "ghelamco",
+        "category":  null,
+        "country_code":  "BE",
+        "ownership_type":  "spółka córka",
+        "ultimate_parent":  null,
+        "description":  "Kluczowa spółka operacyjna belgijskiego dewelopera Ghelamco w Polsce. Odpowiada za realizację flagowych inwestycji biurowych, takich jak Warsaw Spire czy The Warsaw HUB. Formalnie w 99% własność cypryjskiej spółki Prieks Limited, jednak faktyczne centrum decyzyjne i kapitałowe znajduje się w Belgii."
+    },
+    {
+        "id":  "9fba2c11-cef4-447a-978d-c7ef7ea14b66",
+        "slug":  "media-markt",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Sieć marketów elektronicznych (grupa międzynarodowa). Stawia na omnikanałowość i usługi doradcze."
+    },
+    {
+        "id":  "a0fc6e8b-5fb1-4ce1-9552-e86040c34a45",
+        "slug":  "bank-pekao",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Skarbu Państwa",
+        "ultimate_parent":  null,
+        "description":  "Największy polski bank uniwersalny. Instytucja o kluczowym znaczeniu dla polskiej gospodarki."
+    },
+    {
+        "id":  "a1eb4467-ff2e-4cc2-9552-dc7bff6c06c8",
+        "slug":  "skanska",
+        "category":  null,
+        "country_code":  "SE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Deweloperskie ramię Skanska. Budowa zrównoważonych, certyfikowanych osiedli (skandynawski design)."
+    },
+    {
+        "id":  "a5082b66-3e9d-4c17-a635-84cc0452274b",
+        "slug":  "carrefour",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Multiformatowa sieć (hipermarkety, supermarkety, convenience). Promuje transformację żywieniową, produkty bio i zakupy online."
+    },
+    {
+        "id":  "a5101c0d-a0e3-455f-9bb0-7e2c9251b737",
+        "slug":  "hj-heinz-polska",
+        "category":  null,
+        "country_code":  "US",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Część Kraft Heinz (Pudliszki, sosy). Łączy globalne standardy z lokalną tradycją."
+    },
+    {
+        "id":  "a564b707-9a7c-44bb-8aaf-2e30130f4c86",
+        "slug":  "selgros",
+        "category":  null,
+        "country_code":  "CH",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator Selgros Cash \u0026 Carry i dostawca dla gastronomii (Foodservice). Kompleksowe zaopatrzenie dla klientów biznesowych."
+    },
+    {
+        "id":  "a6a480b1-1716-4d84-9f4d-3bd4ab2967c2",
+        "slug":  "oceanic",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Specjalista w kosmetykach antyalergicznych (marka AA). Produkty bezpieczne dla skóry wrażliwej."
+    },
+    {
+        "id":  "a6e7c908-1922-4708-9400-fd555e4854ac",
+        "slug":  "polpharma-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Największy polski producent leków (generyki). Inwestuje w leki biologiczne i ekspansję zagraniczną."
+    },
+    {
+        "id":  "a7c03703-a331-4e4a-9c37-808db040deee",
+        "slug":  "mostostal-zabrze",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka publiczna",
+        "ultimate_parent":  null,
+        "description":  "Legenda śląskiego budownictwa przemysłowego. Kontrolowana strategicznie przez inwestora Krzysztofa Jędrzejewskiego (KMW Investment)."
+    },
+    {
+        "id":  "a8fb04ea-8c6b-4394-9d6e-4d7f6bcfb59d",
+        "slug":  "sm-mlekpol",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Jedna z największych spółdzielni mleczarskich (marka Łaciate). Produkcja mleka UHT, serów i śmietan."
+    },
+    {
+        "id":  "ab20938f-5d12-44c7-80ee-b069fc05f2df",
+        "slug":  "answear",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Multibrandowa platforma modowa online w CEE. Oferuje marki światowe i własną linię (Answear.LAB)."
+    },
+    {
+        "id":  "ac1feb33-490b-4c73-ac24-721ea25ece86",
+        "slug":  "reckitt-poland",
+        "category":  null,
+        "country_code":  "UK",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Producent środków higieny i zdrowia (Nurofen, Finish). Nowoczesny zakład produkcyjny w Nowym Dworze."
+    },
+    {
+        "id":  "ac36f08a-bed7-464b-b2e3-c76cd9129003",
+        "slug":  "porr",
+        "category":  null,
+        "country_code":  "AT",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Austriacki koncern budowlany. Polska spółka jest bezpośrednio zależna od centrali w Wiedniu."
+    },
+    {
+        "id":  "ae30c7ca-33a9-4b12-a024-3271e9e35ec5",
+        "slug":  "diverse",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Właściciel marki Diverse (casual/streetwear). Odzież dla ludzi aktywnych, dystrybuowana w szerokiej sieci salonów."
+    },
+    {
+        "id":  "aeb087e6-1253-442d-9f1f-d377475baf11",
+        "slug":  "eurocash",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Lider hurtowej dystrybucji FMCG. Organizator sieci franczyzowych (Lewiatan, Groszek, ABC) i dostawca rozwiązań dla handlu niezależnego."
+    },
+    {
+        "id":  "b1be9608-1ed3-48f4-a2f3-9d41469c896c",
+        "slug":  "man",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Sprzedaż i serwis ciężarówek, autobusów i dostawczych MAN. Oferuje rozwiązania transportowe i telematyczne."
+    },
+    {
+        "id":  "b1d40e96-7572-4adf-bef6-675c4dd38b36",
+        "slug":  "lidl",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Zarządza siecią dyskontów oferujących artykuły spożywcze i przemysłowe (część grupy Schwarz). Kładzie duży nacisk na świeże produkty i marki własne wysokiej jakości."
+    },
+    {
+        "id":  "b4a09eea-5a04-4273-9cf9-696c7222dc53",
+        "slug":  "orange-polska-sa",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Wiodący dostawca telco (największa sieć światłowodowa). Usługi konwergentne i ICT."
+    },
+    {
+        "id":  "b7bf48a9-9dea-41ce-a9d8-fb2b1f814e8f",
+        "slug":  "nowy-styl-sp-z-oo",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Europejski lider mebli biurowych. Ergonomiczne krzesła i wyposażenie przestrzeni publicznych."
+    },
+    {
+        "id":  "b7e3fe24-2975-4de9-a53c-92cd11b35970",
+        "slug":  "pko-bank-polski",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Skarbu Państwa",
+        "ultimate_parent":  null,
+        "description":  "Największy polski bank uniwersalny. Instytucja o kluczowym znaczeniu dla polskiej gospodarki."
+    },
+    {
+        "id":  "b8f9412f-664d-44df-accc-9b96e9b3dfba",
+        "slug":  "stokrotka",
+        "category":  null,
+        "country_code":  "LT",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Dynamicznie rozwijająca się sieć (grupa Maxima) w formatach supermarket/market. Nacisk na lokalizacje osiedlowe i własną logistykę."
+    },
+    {
+        "id":  "bb38e713-0f44-429d-b0e5-612fd37248bd",
+        "slug":  "zabka",
+        "category":  null,
+        "country_code":  "US",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator największej sieci modern convenience. Wykorzystuje AI do zarządzania asortymentem i oferuje szeroki pakiet usług dodatkowych."
+    },
+    {
+        "id":  "bbebc8cf-a10e-4a05-87c5-7e67cd510b02",
+        "slug":  "media-expert",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Właściciel marki Media Expert. Rozległa sieć elektromarketów z intensywnym marketingiem i szeroką ofertą."
+    },
+    {
+        "id":  "bd4c2ef5-fbfb-47a5-8783-ade31ce0229e",
+        "slug":  "auchan",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Zarządza siecią hipermarketów i supermarketów z kompleksowym wyborem produktów. Rozwija sprzedaż e-commerce (Auchan Direct) oraz formaty sklepów osiedlowych."
+    },
+    {
+        "id":  "bfb37eb0-42ef-4c56-8999-00693099f502",
+        "slug":  "mostostal-warszawa",
+        "category":  null,
+        "country_code":  "ES",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Jedna z najstarszych firm budowlanych (Grupa Acciona). Budownictwo ogólne, inżynieryjne i energetyczne."
+    },
+    {
+        "id":  "c2055c56-21a9-464c-8cb8-a5d85476bd98",
+        "slug":  "chata-polska",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Sieć ogólnospożywcza (zachodnia Polska, polski kapitał). Model franczyzowy wspierający lokalnych przedsiębiorców i produkty regionalne."
+    },
+    {
+        "id":  "c5abe5bd-05d9-4539-8087-01a49886750b",
+        "slug":  "torpol",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Kontrola Państwowa",
+        "ultimate_parent":  null,
+        "description":  "Kluczowa spółka dla budowy Kolei Dużych Prędkości. CPK przejęło 38% akcji od TF Silesia, przejmując kontrolę operacyjną."
+    },
+    {
+        "id":  "c8f80ba7-e417-4fe0-ad3c-6143c567dd3a",
+        "slug":  "develia",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Deweloper mieszkaniowy i komercyjny. Nowoczesne osiedla i obiekty biurowe w dużych miastach."
+    },
+    {
+        "id":  "c969baf1-e760-43a5-85fb-47cd907831fd",
+        "slug":  "aldi",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Sieć dyskontów należąca do grupy ALDI Nord. Znana z prostoty zakupów, wysokiego udziału marek własnych i systematycznego zagęszczania sieci."
+    },
+    {
+        "id":  "cb0ee325-92e5-426c-b67b-2995a8b713f9",
+        "slug":  "ing-bank-slaski",
+        "category":  null,
+        "country_code":  "NL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Część grupy ING, koncentracja na bankowości cyfrowej. Promuje nowoczesne płatności i wspiera przedsiębiorczość."
+    },
+    {
+        "id":  "ce8b6d89-dde2-44c2-9466-063e996238c4",
+        "slug":  "unilever-polska",
+        "category":  null,
+        "country_code":  "UK",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Producent żywności, chemii i kosmetyków (Dove, Knorr). Zakłady produkcyjne i centrum operacyjne w Polsce."
+    },
+    {
+        "id":  "d0ab11bc-94eb-4ed3-aa99-eb6a92c69adf",
+        "slug":  "pollena-ewa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Producent z tradycją (Eva Natura). Kosmetyki oparte na naturalnych ekstraktach roślinnych."
+    },
+    {
+        "id":  "d0e33adf-561f-44ca-969b-9e355978d17f",
+        "slug":  "volkswagen",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Importer i dystrybutor marek VAG (VW, Audi, Škoda, Porsche). Zarządza siecią dealerską i serwisową."
+    },
+    {
+        "id":  "d1eee1f3-efd1-4030-9c97-1ed1fcc9cf97",
+        "slug":  "morele",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Platforma e-commerce (marketplace). Wyewoluowała ze sklepu komputerowego w szeroki asortyment (dom, sport, uroda)."
+    },
+    {
+        "id":  "d434592f-8979-40c6-9177-93448a1e9b99",
+        "slug":  "barwa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Producent mydeł i kosmetyków do włosów (Barwa Ziołowa). Tradycyjne receptury i nowoczesne technologie."
+    },
+    {
+        "id":  "d6c3c8b4-50bc-4746-971e-d3fb40a15067",
+        "slug":  "unibep",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Przedsiębiorstwo budowlane z Podlasia. Budownictwo mieszkaniowe, drogowe i modułowe domy drewniane (eksport)."
+    },
+    {
+        "id":  "d7e05426-5592-4308-bdb1-db23fcd9d387",
+        "slug":  "ikea-retail-sp-z-oo",
+        "category":  null,
+        "country_code":  "SE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Sieć sklepów szwedzkiego giganta. Funkcjonalne wyposażenie domu, demokratyczny design."
+    },
+    {
+        "id":  "da938a1e-56df-4523-b7fa-a0c4e4d9ba60",
+        "slug":  "mbank",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Ikona bankowości mobilnej/internetowej. Lider innowacji fintech i wygody użytkowania aplikacji."
+    },
+    {
+        "id":  "dc7ed099-7bcb-49f7-bb78-be54942fe7a3",
+        "slug":  "ava-laboratorium",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Firma Rodzinna",
+        "ultimate_parent":  null,
+        "description":  "Laboratorium Kosmetyczne AVA. Producent kosmetyków naturalnych i dermokosmetyków."
+    },
+    {
+        "id":  "dcc67756-2fb6-4182-91b5-f9f0c48941ba",
+        "slug":  "warta",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Jedna z najstarszych firm ubezpieczeniowych (Grupa Talanx). Rozległa sieć agentów i nowoczesna likwidacja szkód."
+    },
+    {
+        "id":  "dd02f191-7fab-41a2-b7b3-06f835823638",
+        "slug":  "spar",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Zarządza siecią w ramach międzynarodowego systemu franczyzowego SPAR. Oferuje wsparcie w zakresie zaopatrzenia i standardów operacyjnych."
+    },
+    {
+        "id":  "e252620e-fe65-41f8-afcb-f325a1351168",
+        "slug":  "sanok-rubber-company",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Producent wyrobów gumowych dla motoryzacji i budownictwa. Specjalizacja w systemach uszczelnień antywibracyjnych."
+    },
+    {
+        "id":  "e258a68c-043a-4567-85fd-c1b34736958a",
+        "slug":  "4f",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Kapitał Założycielski",
+        "ultimate_parent":  null,
+        "description":  "Właściciel marki 4F. Polski lider odzieży sportowej i marketingu olimpijskiego."
+    },
+    {
+        "id":  "e388c296-84c5-44d9-95fd-9a8b609bb2b7",
+        "slug":  "budimex",
+        "category":  null,
+        "country_code":  "ES",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Największa grupa budowlana w Polsce (infrastruktura, kolej, energetyka). Generalny wykonawca strategicznych inwestycji."
+    },
+    {
+        "id":  "e3ff3b57-440f-4f1b-92bc-ccd120012f49",
+        "slug":  "gulermak",
+        "category":  null,
+        "country_code":  "TR",
+        "ownership_type":  "Oddział zagraniczny",
+        "ultimate_parent":  null,
+        "description":  "Turecki koncern dominujący w budowie metra w Polsce. Centrala w Ankarze."
+    },
+    {
+        "id":  "e491cf2b-b742-46bc-a63d-bb3650eafdf0",
+        "slug":  "makro",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider samoobsługowego handlu hurtowego dla przedsiębiorców i HoReCa. Prowadzi hale sprzedaży i dystrybucję bezpośrednią."
+    },
+    {
+        "id":  "e5ba0837-eb51-4869-925a-ce3fcb6c2765",
+        "slug":  "intermarche",
+        "category":  null,
+        "country_code":  "SE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Centrala zakupowa i organizacyjna dla niezależnych przedsiębiorców E.Leclerc. Koordynuje politykę handlową i negocjacje dla spółdzielni."
+    },
+    {
+        "id":  "e6a5d756-336a-4059-9161-88b154e7a66e",
+        "slug":  "elektrotim",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka publiczna",
+        "ultimate_parent":  null,
+        "description":  "Spółka inżynieryjna zabezpieczona przez Fundację Rodzinną VESPER i Fundację Rodziny Foltów. Polski kapitał rodzinny na giełdzie."
+    },
+    {
+        "id":  "e6ad6b73-ba50-4c08-915b-2537adfcfdfd",
+        "slug":  "atlas-ward",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Własność prywatna",
+        "ultimate_parent":  null,
+        "description":  "Lider hal logistycznych. Spółka przeszła wykup menedżerski (MBO), kapitał należy do polskich członków zarządu (M. Górecki i partnerzy)."
+    },
+    {
+        "id":  "e6f2ad5c-fcf1-4d1c-9b02-84e1ca379875",
+        "slug":  "kompania-piwowarska",
+        "category":  null,
+        "country_code":  "JP",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider rynku piwa (Tyskie, Żubr, Lech). Część Asahi Group, stawia na zrównoważoną produkcję."
+    },
+    {
+        "id":  "e936c313-4ed1-49d9-bfba-b56787505fc0",
+        "slug":  "asseco-poland-sa",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Największa polska firma IT (zasięg globalny). Oprogramowanie dla bankowości i administracji."
+    },
+    {
+        "id":  "eaf88855-2e06-48c7-8248-3998144f2367",
+        "slug":  "trakcja",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Kontrola Państwowa",
+        "ultimate_parent":  null,
+        "description":  "Strategiczna spółka kolejowa uratowana przez państwo. PKP PLK posiada \u003e60% akcji, co oznacza pełną renacjonalizację."
+    },
+    {
+        "id":  "eb22bfad-82b5-4d80-a49c-9a130048deb4",
+        "slug":  "dekpol",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Firma rodzinna (notowana na GPW)",
+        "ultimate_parent":  null,
+        "description":  "Holding budowlano-deweloperski z Pomorza. Mariusz Tuchlin kontroluje większość głosów, traktując giełdę jako platformę wyceny, a nie dywersyfikacji kontroli."
+    },
+    {
+        "id":  "ec6e9733-e0ad-4e75-99fa-01d17d6eaf2b",
+        "slug":  "pepco",
+        "category":  null,
+        "country_code":  "ZA",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Europejska sieć dyskontów odzieżowo-przemysłowych. Oferuje produkty dla rodziny i domu w niskich cenach."
+    },
+    {
+        "id":  "f0246566-2752-4a26-9052-05b86bc9e44a",
+        "slug":  "rtv-euro-agd",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Lider sprzedaży RTV/AGD w Polsce. Łączy sprzedaż w salonach z popularnym sklepem internetowym."
+    },
+    {
+        "id":  "f02d11df-1a23-4b31-bc18-01320bd322e4",
+        "slug":  "karmar",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Spółka należy do francuskiego holdingu Bouygues Bâtiment International. Specjalizuje się w kubaturze."
+    },
+    {
+        "id":  "f1c31a56-e346-48ec-a204-f38e762a020d",
+        "slug":  "strabag",
+        "category":  null,
+        "country_code":  "AT",
+        "ownership_type":  "Spółka zależna",
+        "ultimate_parent":  null,
+        "description":  "Koncern austriacki notowany w Wiedniu. W Polsce dominuje w budownictwie autostrad. Kontrola w rękach rodziny Haselsteiner."
+    },
+    {
+        "id":  "f226d6fe-8930-4d5e-afaa-e22d2c50844a",
+        "slug":  "michelin",
+        "category":  null,
+        "country_code":  "FR",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Fabryka opon w Olsztynie (jedna z największych na świecie). Produkuje ogumienie do aut, ciężarówek i maszyn rolniczych."
+    },
+    {
+        "id":  "f44fbd46-72c7-40f5-a311-13263d86ba4a",
+        "slug":  "nasz-sklep",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Część Grupy Specjał, organizuje franczyzową sieć sklepów spożywczych. Integruje polski handel detaliczny zapewniając dostęp do dystrybucji."
+    },
+    {
+        "id":  "f4a1c839-f2cb-4c4d-9ca1-4d9cb398c085",
+        "slug":  "zue",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Spółka publiczna (Dominacja założyciela)",
+        "ultimate_parent":  null,
+        "description":  "Lider infrastruktury tramwajowej i kolejowej. Prezes Wiesław Nowak posiada 62,53% akcji, co daje mu absolutną kontrolę."
+    },
+    {
+        "id":  "f537032c-8dc5-4c1b-9f75-f91efb5da5d4",
+        "slug":  "sm-mlekovita",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Największa grupa mleczarska w Polsce. Czołowy eksporter nabiału w CEE."
+    },
+    {
+        "id":  "f5d3c0a7-ecdc-4ca4-b239-9e270cc22352",
+        "slug":  "t-mobile-polska-sa",
+        "category":  null,
+        "country_code":  "DE",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Operator mobilny i stacjonarny (Grupa Deutsche Telekom). Infrastruktura sieciowa, data center, ICT dla biznesu."
+    },
+    {
+        "id":  "f6b39703-2507-4972-935a-fc7ccc676f63",
+        "slug":  "solar",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Kapitał Prywatny",
+        "ultimate_parent":  null,
+        "description":  "Polska marka odzieżowa dla kobiet z segmentu premium. Znana z wysokiej jakości dzianin."
+    },
+    {
+        "id":  "f9649616-5eff-48de-8185-4f1c3a8125e0",
+        "slug":  "cleanic",
+        "category":  null,
+        "country_code":  "LV",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Producent artykułów higienicznych (marka Cleanic). Innowacje w oczyszczaniu skóry (płatki, chusteczki)."
+    },
+    {
+        "id":  "fa5e240c-0ef5-4021-9130-2070c1211fbb",
+        "slug":  "toyota",
+        "category":  null,
+        "country_code":  "JP",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Fabryki w Wałbrzychu i Jelczu (silniki, przekładnie hybrydowe). Kluczowy ośrodek napędów niskoemisyjnych w Europie."
+    },
+    {
+        "id":  "fe665075-2f1d-4bc3-9e19-e083e1140374",
+        "slug":  "przelewy24",
+        "category":  null,
+        "country_code":  "IT",
+        "ownership_type":  "Spółka Córka",
+        "ultimate_parent":  null,
+        "description":  "Lider płatności internetowych. Kompleksowe rozwiązania dla e-commerce i bezpieczeństwo transakcji."
+    },
+    {
+        "id":  "feae4b12-d45b-48fb-ae8d-a4109ee74e7b",
+        "slug":  "delia",
+        "category":  null,
+        "country_code":  "PL",
+        "ownership_type":  "Samodzielna",
+        "ultimate_parent":  null,
+        "description":  "Firma rodzinna (koloryzacja włosów, henna, twarz). Znaczący eksporter do kilkudziesięciu krajów."
+    }
+]

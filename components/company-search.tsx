@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Search, X } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { CompanyLogo } from "@/components/company-logo"
 
 interface Company {
@@ -31,7 +31,10 @@ export function CompanySearch({
   onDemoSearch,
   showSearchResult = true,
 }: CompanySearchProps) {
-  const [query, setQuery] = useState("")
+  const searchParams = useSearchParams()
+  const initialQuery = searchParams.get("q") || ""
+
+  const [query, setQuery] = useState(initialQuery)
   const [suggestions, setSuggestions] = useState<Company[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -92,10 +95,8 @@ export function CompanySearch({
       return
     }
 
-    // If there are suggestions and user clicks search, go to first result
-    if (suggestions.length > 0) {
-      handleSelectCompany(suggestions[0])
-    }
+    // Redirect to search results page with query
+    router.push(`/szukaj?q=${encodeURIComponent(query.trim())}`)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
