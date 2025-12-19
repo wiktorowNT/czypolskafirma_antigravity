@@ -1,6 +1,6 @@
 "use client"
 
-import { Flag, Network, Calendar, Globe, MapPin } from "lucide-react"
+import { BadgeCheck, Network, Calendar, Globe, MapPin } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 
 // Country code to name mapping
@@ -121,7 +121,7 @@ export default function CompanyHero({
                                 <img
                                     src={`https://flagcdn.com/w80/${country_code.toLowerCase()}.png`}
                                     alt={`Flaga ${countryName}`}
-                                    className="h-9 w-auto rounded-md border border-slate-100 shadow-sm"
+                                    className="h-9 w-auto rounded-sm border border-slate-200 shadow-sm"
                                 />
                             )}
 
@@ -132,7 +132,7 @@ export default function CompanyHero({
                             {/* Status Badge */}
                             {isPolish ? (
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-full">
-                                    <Flag className="w-3.5 h-3.5" />
+                                    <BadgeCheck className="w-4 h-4" />
                                     Polska Firma
                                 </span>
                             ) : (

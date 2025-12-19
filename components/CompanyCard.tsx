@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronRight, Globe } from "lucide-react"
+import { ChevronRight, Globe, BadgeCheck } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 
 export interface CompanyCardProps {
@@ -44,7 +44,8 @@ export function CompanyCard({
 
                 {/* Status Text - Subtle, smaller */}
                 {isPolish ? (
-                    <span className="text-xs text-slate-500 flex items-center gap-1.5">
+                    <span className="text-xs text-slate-600 flex items-center gap-1.5">
+                        <BadgeCheck className="w-3.5 h-3.5 text-red-600" />
                         Polska firma
                     </span>
                 ) : (
@@ -63,8 +64,7 @@ export function CompanyCard({
                         <img
                             src={`https://flagcdn.com/w80/${countryCode.toLowerCase()}.png`}
                             alt={countryCode}
-                            className="w-8 h-auto rounded shadow-sm opacity-90"
-                            style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
+                            className="w-8 h-auto rounded-[2px] border border-slate-200 shadow-sm"
                             loading="lazy"
                         />
                     </div>
