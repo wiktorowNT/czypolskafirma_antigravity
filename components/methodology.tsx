@@ -13,7 +13,7 @@ export function Methodology() {
   ]
 
   return (
-    <section id="methodology" className="py-24 bg-white">
+    <section id="methodology" className="py-24 bg-slate-50 border-t border-slate-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center justify-center p-3 bg-red-50 rounded-xl mb-6">

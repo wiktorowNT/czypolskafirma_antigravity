@@ -49,6 +49,8 @@ function mapCompanyToItem(company: any) {
 }
 
 export async function getCachedCategoryData(categorySlug: string) {
+  // Decode URL-encoded slugs (e.g. %C5%BCywno%C5%9B%C4%87 → żywność)
+  categorySlug = decodeURIComponent(categorySlug)
   const now = Date.now()
   const cached = cache[categorySlug]
 

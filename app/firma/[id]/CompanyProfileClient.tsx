@@ -8,6 +8,7 @@ import {
 import { ReportDialog } from "@/components/report-dialog"
 import CompanyHero from "@/components/CompanyHero"
 import CompanyMetaDetails from "@/components/CompanyMetaDetails"
+import PolishAlternatives from "@/components/PolishAlternatives"
 import Link from "next/link"
 
 interface CompanyDetail {
@@ -51,7 +52,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
     return (
         <main className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white">
             {/* Top Navigation - Breadcrumbs */}
-            <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200/60">
+            <div className="bg-white/80 backdrop-blur-md border-b border-slate-200/60">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-14 overflow-x-auto">
                         {/* Breadcrumbs */}
@@ -118,6 +119,14 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                     krs={company.krs}
                     website_url={company.website_url}
                     registry_url={company.registry_url}
+                />
+
+                {/* Polish Alternatives + Share */}
+                <PolishAlternatives
+                    categorySlug={company.categorySlug}
+                    categoryName={company.categoryName}
+                    companyId={company.id}
+                    isCurrentCompanyPolish={company.country_code?.toUpperCase() === "PL"}
                 />
 
                 {/* Report CTA */}

@@ -14,6 +14,7 @@ interface Company {
   category: string
   categorySlug: string
   website_url?: string
+  country_code?: string
 }
 
 interface CompanySearchProps {
@@ -248,7 +249,16 @@ export function CompanySearch({
                   className="mr-3"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-slate-900 truncate">{company.brand}</div>
+                  <div className="font-medium text-slate-900 truncate flex items-center gap-2">
+                    {company.brand}
+                    {company.country_code && (
+                      <img
+                        src={`https://flagcdn.com/w40/${company.country_code.toLowerCase()}.png`}
+                        alt={company.country_code}
+                        className="w-5 h-auto rounded-[2px] border border-slate-200 flex-shrink-0"
+                      />
+                    )}
+                  </div>
                   <div className="text-sm text-slate-500 truncate">{company.company}</div>
                   <div className="text-xs text-slate-400 mt-0.5">{company.category}</div>
                 </div>

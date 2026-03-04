@@ -32,12 +32,16 @@ export function Header() {
   }, [])
 
   const scrollToSection = (id: string) => {
-    if (pathname === "/") {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
-    } else {
-      window.location.href = `/#${id}`
-    }
     setIsMenuOpen(false)
+    setIsCategoriesOpen(false)
+    if (pathname === "/") {
+      // Small delay so mobile menu can animate closed
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+      }, 100)
+    } else {
+      router.push(`/#${id}`)
+    }
   }
 
   const handleLogoClick = () => {
@@ -71,27 +75,17 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <div
-              onClick={handleLogoClick}
-              className="cursor-pointer"
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault()
-                  handleLogoClick()
-                }
-              }}
+            <Link
+              href="/"
+              className="text-xl font-bold text-slate-900 flex items-center gap-2"
             >
-              <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <img
-                  src="https://flagcdn.com/w40/pl.png"
-                  alt="Polska"
-                  className="w-6 h-auto rounded-sm shadow-sm"
-                />
-                CzyPolskaFirma
-              </h1>
-            </div>
+              <img
+                src="https://flagcdn.com/w40/pl.png"
+                alt="Polska"
+                className="w-6 h-auto rounded-sm shadow-sm"
+              />
+              CzyPolskaFirma
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -110,12 +104,13 @@ export function Header() {
 
                 {isCategoriesOpen && (
                   <div
-                    className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-slate-200 p-4"
+                    className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-slate-200 p-4 max-h-[70vh] overflow-y-auto"
                     onMouseLeave={() => setIsCategoriesOpen(false)}
                   >
-                    <div className="grid grid-cols-1 gap-3">
+                    <div className="grid grid-cols-1 gap-1">
                       {categories.map((cat) => {
-                        const Icon = LucideIcons[cat.icon as keyof typeof LucideIcons] || LucideIcons.Tag
+                        const iconCandidate = LucideIcons[cat.icon as keyof typeof LucideIcons]
+                        const Icon = (iconCandidate && typeof iconCandidate === "function" ? iconCandidate : LucideIcons.Tag) as React.ComponentType<{ className?: string }>
                         return (
                           <Link
                             key={cat.id}

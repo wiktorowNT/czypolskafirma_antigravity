@@ -50,6 +50,7 @@ interface SupabaseCompany {
   country_code: string | null
   website_url: string | null
   registry_url: string | null
+  created_at: string | null
   categories?: {
     name: string
     slug: string
@@ -97,6 +98,7 @@ async function getCompanyData(id: string): Promise<CompanyDetail | null> {
         country_code,
         website_url,
         registry_url,
+        created_at,
         categories (
           name,
           slug
@@ -143,7 +145,9 @@ async function getCompanyData(id: string): Promise<CompanyDetail | null> {
       country_code: company.country_code || undefined,
       website_url: company.website_url || undefined,
       registry_url: company.registry_url || undefined,
-      lastVerified: new Date().toISOString().split("T")[0],
+      lastVerified: company.created_at
+        ? new Date(company.created_at).toISOString().split("T")[0]
+        : new Date().toISOString().split("T")[0],
     }
   } catch (err) {
     console.error("[v0] Error in getCompanyData:", err)

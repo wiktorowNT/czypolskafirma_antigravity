@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronRight, Globe, BadgeCheck } from "lucide-react"
+import { ChevronRight, Globe, BadgeCheck, MapPin, Receipt } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 
 export interface CompanyCardProps {
@@ -11,6 +11,8 @@ export interface CompanyCardProps {
     websiteUrl?: string
     countryCode?: string
     isPolish: boolean
+    headquartersInPL?: boolean
+    vatActive?: boolean
 }
 
 export function CompanyCard({
@@ -20,6 +22,8 @@ export function CompanyCard({
     websiteUrl,
     countryCode,
     isPolish,
+    headquartersInPL,
+    vatActive,
 }: CompanyCardProps) {
     const profileUrl = `/firma/${id}`
 
@@ -53,6 +57,30 @@ export function CompanyCard({
                         <Globe className="w-3 h-3" />
                         Zagraniczna firma
                     </span>
+                )}
+
+                {/* Badges */}
+                {(headquartersInPL !== undefined || vatActive !== undefined) && (
+                    <div className="flex flex-wrap gap-1 mt-0.5">
+                        {headquartersInPL !== undefined && (
+                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${headquartersInPL
+                                    ? "bg-green-50 text-green-700 border border-green-200"
+                                    : "bg-slate-50 text-slate-400 border border-slate-200"
+                                }`}>
+                                <MapPin className="w-2.5 h-2.5" />
+                                HQ PL
+                            </span>
+                        )}
+                        {vatActive !== undefined && (
+                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${vatActive
+                                    ? "bg-green-50 text-green-700 border border-green-200"
+                                    : "bg-slate-50 text-slate-400 border border-slate-200"
+                                }`}>
+                                <Receipt className="w-2.5 h-2.5" />
+                                VAT
+                            </span>
+                        )}
+                    </div>
                 )}
             </Link>
 

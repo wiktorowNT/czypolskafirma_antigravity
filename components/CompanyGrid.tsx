@@ -10,6 +10,8 @@ export interface CompanyGridItem {
     logoUrl?: string
     website_url?: string
     country_code?: string
+    headquartersInPL?: boolean
+    vatActive?: boolean
 }
 
 export interface CompanyGridProps {
@@ -73,6 +75,8 @@ export function CompanyGrid({
                         websiteUrl={company.website_url}
                         countryCode={company.country_code}
                         isPolish={isPolish}
+                        headquartersInPL={company.headquartersInPL}
+                        vatActive={company.vatActive}
                     />
                 )
             })}

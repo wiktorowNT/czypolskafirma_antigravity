@@ -77,7 +77,7 @@ export function Footer() {
 
           {/* Poziom 5: Legal & Copyright */}
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-xs text-slate-500">
-            <span>&copy; 2025 CzyPolskaFirma. Wszelkie prawa zastrzeżone.</span>
+            <span>&copy; {new Date().getFullYear()} CzyPolskaFirma. Wszelkie prawa zastrzeżone.</span>
             <div className="flex items-center gap-4 md:gap-8">
               <Link href="/polityka-prywatnosci" className="hover:text-slate-300 transition-colors">
                 Polityka prywatności

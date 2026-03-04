@@ -3,7 +3,8 @@
 import { useState, useEffect, useMemo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { Search, ChevronLeft, Loader2, Check, FolderOpen, MessageSquarePlus, ChevronDown } from "lucide-react"
+import { Search, ChevronLeft, Loader2, Check, FolderOpen, MessageSquarePlus, ChevronDown, Filter, X } from "lucide-react"
+import * as LucideIcons from "lucide-react"
 import { CompanyCard } from "@/components/CompanyCard"
 import { CompanyGrid } from "@/components/CompanyGrid"
 import { ReportDialog } from "@/components/report-dialog"
@@ -28,6 +29,23 @@ export default function SearchResultsClient() {
     const [searchTerm, setSearchTerm] = useState(query)
     const [capitalFilter, setCapitalFilter] = useState({ polish: false, foreign: false })
     const [sortBy, setSortBy] = useState("name-asc")
+    const [showMobileFilters, setShowMobileFilters] = useState(false)
+    const [sidebarCategories, setSidebarCategories] = useState<{ id: string, name: string, slug: string, icon?: string }[]>([])
+
+    useEffect(() => {
+        async function fetchCategories() {
+            try {
+                const res = await fetch("/api/categories")
+                if (res.ok) {
+                    const data = await res.json()
+                    setSidebarCategories(data)
+                }
+            } catch (err) {
+                console.error("Błąd ładowania kategorii:", err)
+            }
+        }
+        fetchCategories()
+    }, [])
 
     useEffect(() => {
         const fetchResults = async () => {
@@ -175,29 +193,29 @@ export default function SearchResultsClient() {
                             </div>
 
                             {/* Browse Categories */}
-                            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                                <h3 className="font-semibold text-slate-900 text-sm mb-4">Przeglądaj kategorie</h3>
-                                <div className="space-y-2">
-                                    {[
-                                        { name: "Budownictwo", slug: "budownictwo" },
-                                        { name: "Bankowość", slug: "bankowosc" },
-                                        { name: "IT & Technologie", slug: "it" },
-                                        { name: "Handel", slug: "handel" },
-                                        { name: "Energetyka", slug: "energetyka" },
-                                    ].map((cat) => (
-                                        <Link
-                                            key={cat.slug}
-                                            href={`/kategoria/${cat.slug}`}
-                                            className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group"
-                                        >
-                                            <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
-                                                <FolderOpen className="w-4 h-4" />
-                                            </div>
-                                            <span className="text-sm font-medium">{cat.name}</span>
-                                        </Link>
-                                    ))}
+                            {sidebarCategories.length > 0 && (
+                                <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                                    <h3 className="font-semibold text-slate-900 text-sm mb-4">Przeglądaj kategorie</h3>
+                                    <div className="space-y-2">
+                                        {sidebarCategories.map((cat) => {
+                                            const iconCandidate = cat.icon ? LucideIcons[cat.icon as keyof typeof LucideIcons] : null
+                                            const Icon = (iconCandidate && typeof iconCandidate === "function" ? iconCandidate : FolderOpen) as React.ComponentType<{ className?: string }>
+                                            return (
+                                                <Link
+                                                    key={cat.slug}
+                                                    href={`/kategoria/${cat.slug}`}
+                                                    className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group"
+                                                >
+                                                    <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
+                                                        <Icon className="w-4 h-4" />
+                                                    </div>
+                                                    <span className="text-sm font-medium">{cat.name}</span>
+                                                </Link>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Missing Company CTA */}
                             <div className="bg-blue-50 rounded-xl border border-blue-100 p-5">
@@ -249,6 +267,13 @@ export default function SearchResultsClient() {
                                         </select>
                                         <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-4 h-4 pointer-events-none" />
                                     </div>
+
+                                    <button
+                                        onClick={() => setShowMobileFilters(true)}
+                                        className="lg:hidden px-4 py-4 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors shadow-md"
+                                    >
+                                        <Filter className="w-5 h-5" />
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -290,6 +315,81 @@ export default function SearchResultsClient() {
                         )}
                     </div>
                 </div>
+
+                {/* Mobile Filters Drawer */}
+                {showMobileFilters && (
+                    <div className="lg:hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm">
+                        <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl overflow-y-auto">
+                            <div className="p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                                <h2 className="text-lg font-bold text-slate-900">Filtry</h2>
+                                <button
+                                    onClick={() => setShowMobileFilters(false)}
+                                    className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+                                >
+                                    <X className="w-5 h-5 text-slate-500" />
+                                </button>
+                            </div>
+                            <div className="p-5 space-y-8">
+                                <div>
+                                    <h3 className="font-semibold text-slate-900 text-sm mb-4">Rodzaj kapitału</h3>
+                                    <div className="space-y-3">
+                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300"}`}>
+                                                {capitalFilter.polish && <Check className="w-3.5 h-3.5 text-white" />}
+                                            </div>
+                                            <input
+                                                type="checkbox"
+                                                className="hidden"
+                                                checked={capitalFilter.polish}
+                                                onChange={(e) => setCapitalFilter(prev => ({ ...prev, polish: e.target.checked }))}
+                                            />
+                                            <span className="text-sm text-slate-600">Polska firma</span>
+                                        </label>
+                                        <label className="flex items-center gap-3 cursor-pointer group">
+                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300"}`}>
+                                                {capitalFilter.foreign && <Check className="w-3.5 h-3.5 text-white" />}
+                                            </div>
+                                            <input
+                                                type="checkbox"
+                                                className="hidden"
+                                                checked={capitalFilter.foreign}
+                                                onChange={(e) => setCapitalFilter(prev => ({ ...prev, foreign: e.target.checked }))}
+                                            />
+                                            <span className="text-sm text-slate-600">Zagraniczna firma</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {sidebarCategories.length > 0 && (
+                                    <div>
+                                        <h3 className="font-semibold text-slate-900 text-sm mb-4">Przeglądaj kategorie</h3>
+                                        <div className="space-y-2">
+                                            {sidebarCategories.map((cat) => (
+                                                <Link
+                                                    key={cat.slug}
+                                                    href={`/kategoria/${cat.slug}`}
+                                                    className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                                                    onClick={() => setShowMobileFilters(false)}
+                                                >
+                                                    <FolderOpen className="w-4 h-4" />
+                                                    <span className="text-sm font-medium">{cat.name}</span>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="p-5 border-t border-slate-100 sticky bottom-0 bg-white">
+                                <button
+                                    onClick={() => setShowMobileFilters(false)}
+                                    className="w-full py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors"
+                                >
+                                    Pokaż wyniki ({filteredAndSortedResults.length})
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )

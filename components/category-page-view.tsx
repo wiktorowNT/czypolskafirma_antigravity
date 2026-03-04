@@ -21,6 +21,7 @@ import {
   FolderOpen,
   MessageSquarePlus,
 } from "lucide-react"
+import * as LucideIcons from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 import { CompanyGrid } from "@/components/CompanyGrid"
 import { CategoryStats } from "@/components/CategoryStats"
@@ -147,6 +148,23 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
     ageMin: Number.parseInt(searchParams.get("ageMin") || "0"),
     ageMax: Number.parseInt(searchParams.get("ageMax") || "100"),
   })
+
+  const [sidebarCategories, setSidebarCategories] = useState<{ id: string, name: string, slug: string, icon?: string }[]>([])
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch("/api/categories")
+        if (res.ok) {
+          const data = await res.json()
+          setSidebarCategories(data.filter((cat: any) => cat.slug !== category.slug))
+        }
+      } catch (err) {
+        console.error("Błąd ładowania kategorii:", err)
+      }
+    }
+    fetchCategories()
+  }, [category.slug])
 
   const {
     comparedCompanies,
@@ -506,29 +524,29 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
               </div>
 
               {/* Other Categories */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900 text-sm mb-4">Inne kategorie</h3>
-                <div className="space-y-2">
-                  {[
-                    { name: "Bankowość", slug: "bankowosc" },
-                    { name: "IT & Technologie", slug: "it" },
-                    { name: "Handel", slug: "handel" },
-                    { name: "Energetyka", slug: "energetyka" },
-                    { name: "Transport", slug: "transport" },
-                  ].map((cat) => (
-                    <Link
-                      key={cat.slug}
-                      href={`/kategorie/${cat.slug}`}
-                      className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
-                        <FolderOpen className="w-4 h-4" />
-                      </div>
-                      <span className="text-sm font-medium">{cat.name}</span>
-                    </Link>
-                  ))}
+              {sidebarCategories.length > 0 && (
+                <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                  <h3 className="font-semibold text-slate-900 text-sm mb-4">Inne kategorie</h3>
+                  <div className="space-y-2">
+                    {sidebarCategories.map((cat) => {
+                      const iconCandidate = cat.icon ? LucideIcons[cat.icon as keyof typeof LucideIcons] : null
+                      const Icon = (iconCandidate && typeof iconCandidate === "function" ? iconCandidate : FolderOpen) as React.ComponentType<{ className?: string }>
+                      return (
+                        <Link
+                          key={cat.slug}
+                          href={`/kategoria/${cat.slug}`}
+                          className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <span className="text-sm font-medium">{cat.name}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Missing Company CTA */}
               <div className="bg-blue-50 rounded-xl border border-blue-100 p-5">
@@ -622,7 +640,12 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
 
             {/* Company Grid */}
             <CompanyGrid
-              companies={filteredAndSortedItems}
+              companies={filteredAndSortedItems.map(item => ({
+                ...item,
+                website_url: item.website_url,
+                headquartersInPL: item.badges.includes("HQ_PL"),
+                vatActive: item.badges.includes("CIT_PL"),
+              }))}
               categoryName={category.name}
               searchTerm={searchTerm}
               onClearFilters={clearAllFilters}
