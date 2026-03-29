@@ -1,0 +1,346 @@
+[
+  {
+    "slug": "Takeda",
+    "id": "71a1eabc-509e-4e52-99a4-69f2543da7d9"
+  },
+  {
+    "slug": "AstraZeneca",
+    "id": "37cb2dd1-e78b-44aa-84e0-88146f54c68b"
+  },
+  {
+    "slug": "Eli Lilly",
+    "id": "51ce7736-e6ee-4a9a-a6ae-2342cd3f5ed5"
+  },
+  {
+    "slug": "Fresenius Kabi",
+    "id": "bba9924e-5363-4c1e-92ec-8e645d3524f2"
+  },
+  {
+    "slug": "Novartis",
+    "id": "8bef90c3-0414-486a-8c8f-67cf7c3998e0"
+  },
+  {
+    "slug": "Novo Nordisk",
+    "id": "583d8c97-aa4b-463b-aba7-7d1b431d7fe1"
+  },
+  {
+    "slug": "Polfarmex",
+    "id": "3a4d205a-bd40-4c9e-a171-a8cf8d6ac845"
+  },
+  {
+    "slug": "Hasco-Lek",
+    "id": "fc013fd1-b610-4378-9231-0de84da7a5da"
+  },
+  {
+    "slug": "Roche",
+    "id": "5cae8e9f-6a09-43a9-9917-56ba1558fdd3"
+  },
+  {
+    "slug": "Accenture",
+    "id": "d5a7a141-5120-4f2b-92eb-1e6a518e4449"
+  },
+  {
+    "slug": "Asseco",
+    "id": "a28983c1-41f2-4224-b382-efd303c50822"
+  },
+  {
+    "slug": "Pfizer",
+    "id": "3cb5bd02-ddf1-4e56-9390-baa1b1449d27"
+  },
+  {
+    "slug": "USP Zdrowie",
+    "id": "e82f6856-904f-4b71-9621-f946f35affa5"
+  },
+  {
+    "slug": "10Clouds",
+    "id": "f271e51d-cb55-4130-9a8f-23aca93b1531"
+  },
+  {
+    "slug": "AbbVie",
+    "id": "071bc17a-3a7f-4749-883a-4b3219c5e143"
+  },
+  {
+    "slug": "Adamed Pharma",
+    "id": "133dabb3-b9e0-457a-8c8f-800e2bfde896"
+  },
+  {
+    "slug": "Aflofarm",
+    "id": "1ccd16e0-31ff-4abe-a9f0-685acb13bad9"
+  },
+  {
+    "slug": "Amazon Web Services",
+    "id": "16e2b9c9-bbb6-4974-a696-d29476d060ab"
+  },
+  {
+    "slug": "Amgen",
+    "id": "c5964df2-e6a7-4e86-a2a2-f2cec62dd1bb"
+  },
+  {
+    "slug": "Atos",
+    "id": "c3bc5b46-50b2-49ed-84d3-d813f3941ee4"
+  },
+  {
+    "slug": "Autopay",
+    "id": "d1e173d2-8c64-4a8d-8b12-011be3022687"
+  },
+  {
+    "slug": "Avenga",
+    "id": "92b8bd10-c009-418a-8293-d59af8ba6876"
+  },
+  {
+    "slug": "Bausch Health",
+    "id": "da7adc52-b9f5-467b-8439-08c393b3f4a1"
+  },
+  {
+    "slug": "Bayer",
+    "id": "55f6e05e-4f09-4d4b-bb70-7382ac2caa53"
+  },
+  {
+    "slug": "Berlin-Chemie Menarini",
+    "id": "62bdd07d-62fc-4d2e-a68c-dcd60b121a1c"
+  },
+  {
+    "slug": "Biofarm",
+    "id": "c22d02e9-117c-41aa-a277-46021b363bae"
+  },
+  {
+    "slug": "Bioton",
+    "id": "ea4efbac-b506-4c96-b6d5-3d41174c634c"
+  },
+  {
+    "slug": "Boehringer Ingelheim",
+    "id": "c1d97aba-dbfa-44da-8b2a-2bd245080763"
+  },
+  {
+    "slug": "Boldare",
+    "id": "5c748bcb-459a-460a-b88d-125a57129c2c"
+  },
+  {
+    "slug": "Booksy",
+    "id": "e6ebcfb3-8f8b-4c16-a7c4-6e09ce0573fd"
+  },
+  {
+    "slug": "Brainhub",
+    "id": "27b82138-e2b5-44ba-aa83-9bf46e45fdab"
+  },
+  {
+    "slug": "Brainly",
+    "id": "ecc85fd3-60fa-4fa2-b7e6-567abc8f3e5c"
+  },
+  {
+    "slug": "Brand24",
+    "id": "03fe5051-1746-4b68-a70e-774b5033f209"
+  },
+  {
+    "slug": "Bristol-Myers Squibb",
+    "id": "244534a4-80f3-4106-a8b2-0b22fd2f67d3"
+  },
+  {
+    "slug": "Capgemini",
+    "id": "de7fc6a6-3260-4062-9dcc-37dc43d498c6"
+  },
+  {
+    "slug": "Celon Pharma",
+    "id": "4946cbc7-720b-421d-b811-0c00626a1c05"
+  },
+  {
+    "slug": "Comarch",
+    "id": "bb1281ad-6ad6-4310-bd30-de86b6b3322e"
+  },
+  {
+    "slug": "DXC Technology",
+    "id": "cb741da6-9a23-4a64-9c2a-34433d0f366b"
+  },
+  {
+    "slug": "EPAM Systems",
+    "id": "71ab72c7-f5eb-4a68-b0e3-a53a97e599ff"
+  },
+  {
+    "slug": "Euvic",
+    "id": "79d65134-c2b8-4f2a-8172-6d3f423fd0bf"
+  },
+  {
+    "slug": "Fujitsu",
+    "id": "cecb1d17-4e72-409c-93a2-d0157fa2f206"
+  },
+  {
+    "slug": "Future Processing",
+    "id": "be9ca884-6673-48c0-b3ad-f9e7394092dc"
+  },
+  {
+    "slug": "Gedeon Richter",
+    "id": "a8257d8f-5e6d-4c1f-a26b-53705d628706"
+  },
+  {
+    "slug": "GetResponse",
+    "id": "66c54d2e-88c1-41b8-b49d-39f193632b73"
+  },
+  {
+    "slug": "Gilead Sciences",
+    "id": "6c476248-d8f6-488f-b02a-fb79a97de6c3"
+  },
+  {
+    "slug": "Google Cloud",
+    "id": "c9930419-e4d8-44ec-b325-734625816c41"
+  },
+  {
+    "slug": "GSK",
+    "id": "ab21f002-fe16-48c7-bb6e-28a04220a699"
+  },
+  {
+    "slug": "Haleon",
+    "id": "bbc1cb1c-28f8-4ccf-a403-e6d042bce855"
+  },
+  {
+    "slug": "IBM",
+    "id": "40727957-2f0a-4be7-ba55-bfafebf70761"
+  },
+  {
+    "slug": "Janssen-Cilag",
+    "id": "770999fb-f433-4383-82c3-0ec3b44bad6c"
+  },
+  {
+    "slug": "Tpay",
+    "id": "409d4937-44ec-4fd6-a6e3-dd10498b710f"
+  },
+  {
+    "slug": "KRKA",
+    "id": "bc65ba97-0853-4b41-9120-2717f0918f7d"
+  },
+  {
+    "slug": "Luxoft",
+    "id": "83c77bed-40b8-4119-9fbf-9c533aad58cf"
+  },
+  {
+    "slug": "Mabion",
+    "id": "225976de-9972-4089-b5ea-793f564d36f2"
+  },
+  {
+    "slug": "Merixstudio",
+    "id": "76b8ecf7-ef46-42f2-9580-2ee2cc368205"
+  },
+  {
+    "slug": "Microsoft",
+    "id": "888a9e55-f7f6-41ea-b12e-47b66fcd5bef"
+  },
+  {
+    "slug": "Miquido",
+    "id": "a8b52056-c8b8-40d5-9543-fb4528a1cfba"
+  },
+  {
+    "slug": "Monterail",
+    "id": "0311cdf4-0078-4e91-b1b6-d85a8d4b30c0"
+  },
+  {
+    "slug": "MSD",
+    "id": "0be179d3-70ea-4fe8-bc60-3ffd10e566f5"
+  },
+  {
+    "slug": "Netguru",
+    "id": "39276ec0-fcb7-4ba6-8e4f-04a07c41cab6"
+  },
+  {
+    "slug": "Objectivity",
+    "id": "5a25824c-c546-4a48-a017-80c3f70d342c"
+  },
+  {
+    "slug": "Oracle",
+    "id": "2f765807-93b5-4223-938b-95f85e328f03"
+  },
+  {
+    "slug": "Przelewy24",
+    "id": "dadcff7c-3b59-46fd-885e-a7e0a2cb84d2"
+  },
+  {
+    "slug": "PayU",
+    "id": "c055aec1-d350-4627-bc45-e3f70e25de6c"
+  },
+  {
+    "slug": "BLIK",
+    "id": "da946415-8864-485a-bf95-363c0aaf331c"
+  },
+  {
+    "slug": "Recordati",
+    "id": "58e81857-754d-4534-afbe-c1150c642815"
+  },
+  {
+    "slug": "Sandoz",
+    "id": "100feb45-0c85-44f9-8e26-5c304fedbba0"
+  },
+  {
+    "slug": "Sanofi",
+    "id": "56be7d34-ee4d-46e8-8422-585faa2d6c76"
+  },
+  {
+    "slug": "SAP",
+    "id": "5339c6bf-c24f-4fa3-9f4f-f5cdf1bcd2e9"
+  },
+  {
+    "slug": "Servier",
+    "id": "e3498eee-c35e-475d-a69a-7e360bceb2a7"
+  },
+  {
+    "slug": "Sii",
+    "id": "db2334a0-9625-4156-8330-7a7f6bf28907"
+  },
+  {
+    "slug": "SoftServe",
+    "id": "04cf6d60-f34e-4fb3-a71f-c2a99dcf5caf"
+  },
+  {
+    "slug": "Spyrosoft",
+    "id": "5498f7db-5e4a-4d3b-b9ca-3b6e11ba1b6b"
+  },
+  {
+    "slug": "STX Next",
+    "id": "45a64255-3c4c-4ae7-8bb8-4e304492c5e0"
+  },
+  {
+    "slug": "Symfonia",
+    "id": "859ed2a1-f05a-4626-a82a-767c94b8760f"
+  },
+  {
+    "slug": "Synerise",
+    "id": "8ca2f71e-e810-45e8-9318-398bfa4dad8e"
+  },
+  {
+    "slug": "Polfa Tarchomin",
+    "id": "f66e8876-6e87-466f-bf1c-f5e23d0553f2"
+  },
+  {
+    "slug": "Teva",
+    "id": "33933a41-b4ac-4ef0-8242-7de90324152e"
+  },
+  {
+    "slug": "Text (LiveChat Software)",
+    "id": "5486faef-7bba-4dd5-8d6a-4615a5d62112"
+  },
+  {
+    "slug": "The Software House",
+    "id": "13cad40b-2bad-4250-b39c-72c9b4a2e07f"
+  },
+  {
+    "slug": "Tietoevry",
+    "id": "8330a91f-5384-4d76-8568-967bde8cb1e6"
+  },
+  {
+    "slug": "Transition Technologies",
+    "id": "cd3d73b8-9b22-452f-96a9-4504609341d2"
+  },
+  {
+    "slug": "Viatris",
+    "id": "4d7b7195-9df8-4af8-bca5-5e4ad24819a2"
+  },
+  {
+    "slug": "Polpharma",
+    "id": "6e6730c3-6a0d-4ef0-a2c4-340d9b846c6e"
+  },
+  {
+    "slug": "Zentiva",
+    "id": "edc4c51a-1dc6-4ef9-8904-b47333b2ee2d"
+  },
+  {
+    "slug": "DocPlanner",
+    "id": "2fc41aa6-b222-498c-a9f8-1f2df576cf1c"
+  }
+]

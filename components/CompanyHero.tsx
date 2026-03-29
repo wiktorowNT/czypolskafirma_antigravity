@@ -1,6 +1,6 @@
 "use client"
 
-import { BadgeCheck, Network, Calendar, Globe, MapPin } from "lucide-react"
+import { BadgeCheck, Network, Calendar, Globe, MapPin, Building2, Landmark } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 
 // Country code to name mapping
@@ -32,7 +32,8 @@ interface CompanyHeroProps {
     id: string
     name: string
     slug: string
-    description?: string | null
+    business_description?: string | null
+    ownership_description?: string | null
     country_code?: string | null
     founded_at?: string | null
     parent_company_name?: string | null
@@ -70,7 +71,8 @@ export default function CompanyHero({
     id,
     name,
     slug,
-    description,
+    business_description,
+    ownership_description,
     country_code,
     founded_at,
     parent_company_name,
@@ -157,11 +159,35 @@ export default function CompanyHero({
                     </div>
                 </div>
 
-                {/* Description */}
-                {description && (
-                    <p className="mt-5 text-slate-600 leading-relaxed">
-                        {description}
-                    </p>
+                {/* Descriptions */}
+                {(business_description || ownership_description) && (
+                    <div className="mt-6 space-y-4">
+                        {/* Business Description */}
+                        {business_description && (
+                            <div className="flex gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <Building2 className="w-4 h-4 text-blue-600" />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">{business_description}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Ownership Description */}
+                        {ownership_description && (
+                            <div className="flex gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <Landmark className="w-4 h-4 text-purple-600" />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Struktura właścicielska</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">{ownership_description}</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 )}
             </div>
 

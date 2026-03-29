@@ -23,8 +23,8 @@ interface CompanyDetail {
   owner_name?: string
   parent_company_name?: string
   ownership_type?: string
-  notes?: string
-  description?: string
+  business_description?: string
+  ownership_description?: string
   logoUrl?: string
   country_code?: string
   website_url?: string
@@ -45,12 +45,13 @@ interface SupabaseCompany {
   owner_name: string | null
   parent_company_name: string | null
   ownership_type: string | null
-  notes: string | null
-  description: string | null
+  business_description: string | null
+  ownership_description: string | null
   country_code: string | null
   website_url: string | null
   registry_url: string | null
   created_at: string | null
+  verified_at: string | null
   categories?: {
     name: string
     slug: string
@@ -93,12 +94,13 @@ async function getCompanyData(id: string): Promise<CompanyDetail | null> {
         owner_name,
         parent_company_name,
         ownership_type,
-        description,
-        notes,
+        business_description,
+        ownership_description,
         country_code,
         website_url,
         registry_url,
         created_at,
+        verified_at,
         categories (
           name,
           slug
@@ -140,13 +142,13 @@ async function getCompanyData(id: string): Promise<CompanyDetail | null> {
       owner_name: company.owner_name || undefined,
       parent_company_name: company.parent_company_name || undefined,
       ownership_type: company.ownership_type || undefined,
-      notes: company.notes || undefined,
-      description: company.description || undefined,
+      business_description: company.business_description || undefined,
+      ownership_description: company.ownership_description || undefined,
       country_code: company.country_code || undefined,
       website_url: company.website_url || undefined,
       registry_url: company.registry_url || undefined,
-      lastVerified: company.created_at
-        ? new Date(company.created_at).toISOString().split("T")[0]
+      lastVerified: company.verified_at
+        ? new Date(company.verified_at).toISOString().split("T")[0]
         : new Date().toISOString().split("T")[0],
     }
   } catch (err) {

@@ -27,8 +27,8 @@ interface CompanyDetail {
     owner_name?: string
     parent_company_name?: string
     ownership_type?: string
-    notes?: string
-    description?: string
+    business_description?: string
+    ownership_description?: string
     logoUrl?: string
     country_code?: string
     website_url?: string
@@ -102,7 +102,8 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                     id={company.id}
                     name={company.name}
                     slug={company.slug}
-                    description={company.description}
+                    business_description={company.business_description}
+                    ownership_description={company.ownership_description}
                     country_code={company.country_code}
                     founded_at={company.founded_at}
                     parent_company_name={company.parent_company_name}

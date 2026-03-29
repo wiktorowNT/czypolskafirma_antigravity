@@ -1223,9 +1223,9 @@
       }
     ]
   },
-  "finanse-i-bankowość": {
-    "slug": "finanse-i-bankowość",
-    "name": "Finanse i bankowość",
+  "banki": {
+    "slug": "banki",
+    "name": "Banki",
     "short": "Banki, ubezpieczenia i inne usługi finansowe",
     "items": [
       {

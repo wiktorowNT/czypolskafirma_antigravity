@@ -85,8 +85,8 @@ export function CompanyLogo({
     if (isLocalLogo && domain) return 'local'
     // Priority 2: Static logo URL (legacy)
     if (logoUrl) return 'static'
-    // Priority 3: External APIs
-    if (domain) return 'clearbit'
+    // Priority 3: External APIs (Google Favicons first - more reliable)
+    if (domain) return 'google'
     // Fallback
     return 'fallback'
   }
@@ -94,7 +94,7 @@ export function CompanyLogo({
   const getInitialUrl = (): string | null => {
     if (isLocalLogo && domain) return `/logos/${domain}.svg`
     if (logoUrl) return logoUrl
-    if (domain) return `https://logo.clearbit.com/${domain}`
+    if (domain) return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
     return null
   }
 
@@ -121,24 +121,24 @@ export function CompanyLogo({
     console.log(`CompanyLogo: Failed to load from ${logoSource}, trying next...`)
 
     if (logoSource === 'local' && domain) {
-      // Local VIP failed, try Clearbit
-      console.log('CompanyLogo: Local logo failed, falling back to Clearbit')
-      setLogoSource('clearbit')
-      setCurrentLogoUrl(`https://logo.clearbit.com/${domain}`)
+      // Local VIP failed, try Google Favicons
+      console.log('CompanyLogo: Local logo failed, falling back to Google Favicons')
+      setLogoSource('google')
+      setCurrentLogoUrl(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
     } else if (logoSource === 'static' && domain) {
-      // Static failed, try Clearbit
-      setLogoSource('clearbit')
-      setCurrentLogoUrl(`https://logo.clearbit.com/${domain}`)
+      // Static failed, try Google Favicons
+      setLogoSource('google')
+      setCurrentLogoUrl(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
     } else if (logoSource === 'static' && !domain) {
       // Static failed, no domain - go to fallback
       setLogoSource('fallback')
       setCurrentLogoUrl(null)
-    } else if (logoSource === 'clearbit' && domain) {
-      // Clearbit failed, try Google Favicons
-      console.log('CompanyLogo: Trying Google Favicons...')
-      setLogoSource('google')
-      setCurrentLogoUrl(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
-    } else if (logoSource === 'google' || logoSource === 'clearbit') {
+    } else if (logoSource === 'google' && domain) {
+      // Google failed, try Clearbit
+      console.log('CompanyLogo: Trying Clearbit...')
+      setLogoSource('clearbit')
+      setCurrentLogoUrl(`https://logo.clearbit.com/${domain}`)
+    } else if (logoSource === 'clearbit' || logoSource === 'google') {
       // All external sources failed
       console.log('CompanyLogo: All sources failed, using letter fallback')
       setLogoSource('fallback')
