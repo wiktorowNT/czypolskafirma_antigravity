@@ -6,11 +6,13 @@ import Link from "next/link"
 import * as LucideIcons from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, ChevronDown, Heart } from "lucide-react"
+import { useBookmarks } from "@/hooks/use-bookmarks"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
+  const { count: bookmarkCount } = useBookmarks()
 
   const categoriesRef = useRef<HTMLDivElement>(null)
   const categoriesButtonRef = useRef<HTMLButtonElement>(null)
@@ -148,9 +150,20 @@ export function Header() {
             </nav>
           </div>
 
-          {/* CTA */}
           <div className="hidden md:block">
             <div className="flex items-center gap-3">
+              <Link
+                href="/ulubione"
+                className="relative p-2 text-slate-600 hover:text-red-600 transition-colors"
+                title="Ulubione firmy"
+              >
+                <Heart className={`h-5 w-5 ${bookmarkCount > 0 ? "text-red-500 fill-current" : ""}`} />
+                {bookmarkCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {bookmarkCount > 9 ? "9+" : bookmarkCount}
+                  </span>
+                )}
+              </Link>
               <Button
                 onClick={() => scrollToSection("newsletter")}
                 variant="outline"
@@ -209,6 +222,15 @@ export function Header() {
               <button onClick={() => scrollToSection("faq")} className="text-left text-slate-600 py-2">
                 FAQ
               </button>
+
+              <Link
+                href="/ulubione"
+                className="flex items-center gap-2 text-slate-600 hover:text-red-600 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Heart className={`h-4 w-4 ${bookmarkCount > 0 ? "text-red-500 fill-current" : ""}`} />
+                Ulubione {bookmarkCount > 0 && `(${bookmarkCount})`}
+              </Link>
 
               <Button
                 onClick={() => scrollToSection("newsletter")}

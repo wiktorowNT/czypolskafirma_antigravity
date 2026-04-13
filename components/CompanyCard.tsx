@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronRight, Globe, BadgeCheck, MapPin, Receipt } from "lucide-react"
+import { ChevronRight, Globe, BadgeCheck, MapPin, Receipt, Heart } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
+import { useBookmarks } from "@/hooks/use-bookmarks"
 
 export interface CompanyCardProps {
     id: string
@@ -26,6 +27,8 @@ export function CompanyCard({
     vatActive,
 }: CompanyCardProps) {
     const profileUrl = `/firma/${id}`
+    const { isBookmarked, toggleBookmark } = useBookmarks()
+    const bookmarked = isBookmarked(id)
 
     return (
         <div className="group h-full bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-slate-300 transition-all duration-200 py-5 px-5 flex items-center gap-3">
@@ -84,8 +87,25 @@ export function CompanyCard({
                 )}
             </Link>
 
-            {/* Right Side - Flag + Arrow only */}
+            {/* Right Side - Bookmark + Flag + Arrow */}
             <div className="flex items-center gap-2 flex-shrink-0">
+                {/* Bookmark Button */}
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        toggleBookmark(id)
+                    }}
+                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200 ${
+                        bookmarked
+                            ? "text-red-500 bg-red-50 hover:bg-red-100"
+                            : "text-slate-300 hover:text-red-400 hover:bg-red-50"
+                    }`}
+                    title={bookmarked ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+                    aria-label={bookmarked ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+                >
+                    <Heart className={`w-4 h-4 ${bookmarked ? "fill-current" : ""}`} />
+                </button>
+
                 {/* Country Flag */}
                 {countryCode && (
                     <div className="flex items-center justify-center" title={countryCode}>

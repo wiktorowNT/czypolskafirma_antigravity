@@ -7,11 +7,14 @@ import * as LucideIcons from "lucide-react"
 import { ChevronDown } from "lucide-react"
 import { CompanySearch } from "@/components/company-search"
 import { CategoryTabs } from "@/components/category-tabs"
+import { CompanyLogo } from "@/components/company-logo"
 
 export default function Hero() {
   const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [companyCount, setCompanyCount] = useState<number | null>(null)
+  const [popularTags, setPopularTags] = useState<{ id: string; displayName: string; website_url: string | null; country_code: string | null }[]>([])
+  const [popularLoading, setPopularLoading] = useState(true)
 
   useEffect(() => {
     async function fetchCategories() {
@@ -40,18 +43,33 @@ export default function Hero() {
       }
     }
 
+    async function fetchPopularCompanies() {
+      try {
+        const response = await fetch("/api/companies/views?top=6&days=30")
+        if (response.ok) {
+          const data = await response.json()
+          if (Array.isArray(data) && data.length > 0) {
+            setPopularTags(data.map((c: any) => ({
+              id: c.id,
+              displayName: c.slug
+                ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')
+                : c.name,
+              website_url: c.website_url || null,
+              country_code: c.country_code || null,
+            })))
+          }
+        }
+      } catch (error) {
+        console.error("Błąd pobierania popularnych firm:", error)
+      } finally {
+        setPopularLoading(false)
+      }
+    }
+
     fetchCategories()
     fetchCompanyCount()
+    fetchPopularCompanies()
   }, [])
-
-  const popularTags = [
-    { name: "Komputronik", id: "9eba9af3-d53c-4969-9d9f-e3cf487e55f6" },
-    { name: "Blik", id: "746ef5fa-a59f-4dd1-b0e9-2b514ebac7ce" },
-    { name: "mBank", id: "da938a1e-56df-4523-b7fa-a0c4e4d9ba60" },
-    { name: "Biedronka", id: "9d757d78-1ab5-4d83-90ad-de1345fd9447" },
-    { name: "Auchan", id: "bd4c2ef5-fbfb-47a5-8783-ade31ce0229e" },
-    { name: "Pepco", id: "ec6e9733-e0ad-4e75-99fa-01d17d6eaf2b" },
-  ]
 
 
 
@@ -83,19 +101,48 @@ export default function Hero() {
           </div>
 
           {/* Popular Tags */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-            <span className="text-sm text-slate-500">Popularne wyszukiwania:</span>
-            {popularTags.map((tag, index) => (
-              <Link
-                key={tag.id}
-                href={`/firma/${tag.id}`}
-                className={`px-3 py-1.5 text-sm font-medium bg-white border border-slate-200 rounded-full text-slate-700 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm${index >= 3 ? " hidden sm:inline-flex" : ""
-                  }`}
-              >
-                {tag.name}
-              </Link>
-            ))}
-          </div>
+          {popularLoading ? (
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              <span className="text-sm text-slate-500">Popularne wyszukiwania:</span>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div
+                  key={i}
+                  className={`animate-pulse inline-flex items-center gap-2 pl-1 pr-3 py-1 bg-slate-100 border border-slate-200 rounded-full shadow-sm${i >= 4 ? " hidden sm:inline-flex" : ""
+                    }`}
+                >
+                  <div className="w-6 h-6 bg-slate-200 rounded-full" />
+                  <div className="w-16 h-4 bg-slate-200 rounded" />
+                </div>
+              ))}
+            </div>
+          ) : popularTags.length > 0 ? (
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              <span className="text-sm text-slate-500">Popularne wyszukiwania:</span>
+              {popularTags.map((tag, index) => (
+                <Link
+                  key={tag.id}
+                  href={`/firma/${tag.id}`}
+                  className={`inline-flex items-center gap-1.5 pl-1 pr-3 py-1 text-sm font-medium bg-white border border-slate-200 rounded-full text-slate-700 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm${index >= 3 ? " hidden sm:inline-flex" : ""
+                    }`}
+                >
+                  <CompanyLogo
+                    websiteUrl={tag.website_url}
+                    name={tag.displayName}
+                    size={24}
+                    className="rounded-full"
+                  />
+                  {tag.displayName}
+                  {tag.country_code && (
+                    <img
+                      src={`https://flagcdn.com/w20/${tag.country_code.toLowerCase()}.png`}
+                      alt={tag.country_code}
+                      className="w-4 h-auto rounded-[1px] border border-slate-200/50"
+                    />
+                  )}
+                </Link>
+              ))}
+            </div>
+          ) : null}
 
 
 

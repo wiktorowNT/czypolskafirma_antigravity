@@ -140,6 +140,8 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [showToast, setShowToast] = useState<{ message: string; type: "success" | "error" } | null>(null)
   const [expandedFilters, setExpandedFilters] = useState<string[]>(["advanced"])
+  const [viewCounts, setViewCounts] = useState<Record<string, number>>({})
+  const [viewCountsLoading, setViewCountsLoading] = useState(false)
 
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({
     headquarters: (searchParams.get("hq") as FilterState) || "any",
@@ -150,6 +152,29 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
   })
 
   const [sidebarCategories, setSidebarCategories] = useState<{ id: string, name: string, slug: string, icon?: string }[]>([])
+
+  // Fetch view counts for popularity sorting
+  useEffect(() => {
+    if (sortBy !== "popularity") return
+    if (Object.keys(viewCounts).length > 0) return // already fetched
+
+    async function fetchViewCounts() {
+      setViewCountsLoading(true)
+      try {
+        const ids = category.items.map(item => item.id).join(",")
+        const res = await fetch(`/api/companies/view-counts?ids=${ids}&days=30`)
+        if (res.ok) {
+          const data = await res.json()
+          setViewCounts(data)
+        }
+      } catch (err) {
+        console.error("Błąd pobierania popularności:", err)
+      } finally {
+        setViewCountsLoading(false)
+      }
+    }
+    fetchViewCounts()
+  }, [sortBy, category.items, viewCounts])
 
   useEffect(() => {
     async function fetchCategories() {
@@ -301,13 +326,18 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
           const ageB = getPolishIndexComponents(b).businessAge.years || 0
           return ageB - ageA
         }
+        case "popularity": {
+          const viewsA = viewCounts[a.id] || 0
+          const viewsB = viewCounts[b.id] || 0
+          return viewsB - viewsA
+        }
         default:
           return a.brand.localeCompare(b.brand)
       }
     })
 
     return filtered
-  }, [category.items, searchTerm, sortBy, capitalFilter, advancedFilters])
+  }, [category.items, searchTerm, sortBy, capitalFilter, advancedFilters, viewCounts])
 
   const metrics = useMemo(() => {
     // Polish threshold: country_code === 'PL'
@@ -595,6 +625,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                     >
                       <option value="name-asc">Sortuj: Nazwa A-Z</option>
                       <option value="name-desc">Sortuj: Nazwa Z-A</option>
+                      <option value="popularity">Najpopularniejsze</option>
                       <option value="age-desc">Najstarsze firmy</option>
                       <option value="age-asc">Najmłodsze firmy</option>
                     </select>

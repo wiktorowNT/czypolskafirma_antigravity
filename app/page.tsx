@@ -5,12 +5,14 @@ import { Methodology } from "@/components/methodology"
 import { ReportForm } from "@/components/report-form"
 import { FAQ } from "@/components/faq"
 import { CookieBanner } from "@/components/cookie-banner"
+import { GlobalStats } from "@/components/global-stats"
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <main>
         <Hero />
+        <GlobalStats />
         <HowItWorks />
         <Features />
         <Methodology />
@@ -20,4 +22,4 @@ export default function Home() {
       <CookieBanner />
     </div>
   )
-}
+}

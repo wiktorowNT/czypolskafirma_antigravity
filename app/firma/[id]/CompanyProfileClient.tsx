@@ -1,15 +1,18 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import {
     Home,
     ChevronRight,
-    Flag
+    Flag,
+    Heart
 } from "lucide-react"
 import { ReportDialog } from "@/components/report-dialog"
 import CompanyHero from "@/components/CompanyHero"
 import CompanyMetaDetails from "@/components/CompanyMetaDetails"
 import PolishAlternatives from "@/components/PolishAlternatives"
 import Link from "next/link"
+import { useBookmarks } from "@/hooks/use-bookmarks"
 
 interface CompanyDetail {
     id: string
@@ -49,6 +52,23 @@ function formatSlugAsName(slug: string): string {
 }
 
 export default function CompanyProfileClient({ company }: CompanyProfileClientProps) {
+    const { isBookmarked, toggleBookmark } = useBookmarks()
+    const bookmarked = isBookmarked(company.id)
+
+    // Track company page view (fire-and-forget)
+    const viewTracked = useRef(false)
+    useEffect(() => {
+        if (viewTracked.current) return
+        viewTracked.current = true
+
+        fetch("/api/companies/views", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ companyId: company.id }),
+        }).catch(() => {
+            // Silently ignore tracking errors
+        })
+    }, [company.id])
     return (
         <main className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white">
             {/* Top Navigation - Breadcrumbs */}
@@ -86,10 +106,24 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                             </span>
                         </nav>
 
-                        {/* Verification Date */}
-                        <p className="text-xs text-slate-400 flex-shrink-0 ml-4">
-                            Weryfikacja: {company.lastVerified}
-                        </p>
+                        {/* Bookmark + Verification Date */}
+                        <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+                            <button
+                                onClick={() => toggleBookmark(company.id)}
+                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 border ${
+                                    bookmarked
+                                        ? "text-red-600 bg-red-50 border-red-200 hover:bg-red-100"
+                                        : "text-slate-500 bg-white border-slate-200 hover:text-red-500 hover:border-red-200 hover:bg-red-50"
+                                }`}
+                                title={bookmarked ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+                            >
+                                <Heart className={`w-3.5 h-3.5 ${bookmarked ? "fill-current" : ""}`} />
+                                {bookmarked ? "W ulubionych" : "Ulubione"}
+                            </button>
+                            <p className="text-xs text-slate-400">
+                                Weryfikacja: {company.lastVerified}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
