@@ -505,13 +505,15 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
           </ol>
         </nav>
 
-        {/* Hero Section with Stats */}
-        <CategoryStats
-          categoryName={category.name}
-          totalCompanies={metrics.count}
-          polishCompanies={metrics.polishCount}
-          foreignCompanies={metrics.foreignCount}
-        />
+        {/* Hero Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            {category.name}
+          </h1>
+          <p className="text-slate-500 text-sm">
+            Znaleziono {metrics.count} firm w tej kategorii.
+          </p>
+        </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Filters */}

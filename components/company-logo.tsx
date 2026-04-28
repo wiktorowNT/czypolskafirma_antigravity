@@ -1,28 +1,25 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { cn } from "@/lib/utils"
 
 /**
  * =============================================
- * LOCAL VIP LOGOS CONFIGURATION
+ * COMPANY LOGO COMPONENT
  * =============================================
- * 
- * Aby dodać logo VIP:
- * 1. Wrzuć plik {domena}.svg do folderu /public/logos/
- * 2. Dodaj domenę do tablicy LOCAL_LOGOS poniżej
- * 
- * Przykład: Dla biedronka.pl -> /public/logos/biedronka.pl.svg
+ *
+ * Logo są przechowywane lokalnie w /public/logos/{domena}.{ext}
+ * Pobrane automatycznie skryptem tools/fetch-logos.mjs
+ *
+ * Fallback chain:
+ *   1. Lokalne logo: /logos/{domena}.png (lub .svg, .jpg, .webp)
+ *   2. Letter avatar (pierwsza litera nazwy firmy)
+ *
+ * Aby dodać/zaktualizować logo:
+ *   - Wrzuć plik {domena}.png do /public/logos/
+ *   - Lub uruchom: node tools/fetch-logos.mjs --domain={domena}
  * =============================================
  */
-const LOCAL_LOGOS = new Set([
-  'biedronka.pl',
-  'mieszkaj.skanska.pl',
-  'torpol.pl',
-  'hochtief.pl',
-  'gulermak.com',
-  'ghelamco.com'
-])
 
 interface CompanyLogoProps {
   websiteUrl?: string | null
@@ -33,7 +30,7 @@ interface CompanyLogoProps {
   priority?: boolean
 }
 
-// Extract domain from URL for external logo APIs
+// Extract domain from URL
 function getDomainFromUrl(url?: string | null): string | null {
   if (!url) return null
   try {
@@ -65,8 +62,16 @@ function getAvatarColor(name: string): { bg: string; text: string } {
   return colors[Math.abs(hash) % colors.length]
 }
 
-// Logo source types for fallback chain
-type LogoSource = 'local' | 'static' | 'clearbit' | 'google' | 'fallback'
+/**
+ * Build local logo URL candidates for a domain.
+ * All logos are standardized to .png (with a few legacy .svg files).
+ */
+function getLocalLogoCandidates(domain: string): string[] {
+  return [
+    `/logos/${domain}.png`,
+    `/logos/${domain}.svg`,
+  ]
+}
 
 export function CompanyLogo({
   websiteUrl,
@@ -77,82 +82,57 @@ export function CompanyLogo({
   priority = false,
 }: CompanyLogoProps) {
   const domain = getDomainFromUrl(websiteUrl)
-  const isLocalLogo = domain ? LOCAL_LOGOS.has(domain) : false
 
-  // Determine initial source based on available data
-  const getInitialSource = (): LogoSource => {
-    // Priority 1: Local VIP logos
-    if (isLocalLogo && domain) return 'local'
-    // Priority 2: Static logo URL (legacy)
-    if (logoUrl) return 'static'
-    // Priority 3: External APIs (Google Favicons first - more reliable)
-    if (domain) return 'google'
-    // Fallback
-    return 'fallback'
-  }
+  // Build ordered list of URLs to try
+  const urlCandidates = useMemo(() => {
+    const candidates: string[] = []
 
-  const getInitialUrl = (): string | null => {
-    if (isLocalLogo && domain) return `/logos/${domain}.svg`
-    if (logoUrl) return logoUrl
-    if (domain) return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
-    return null
-  }
-
-  const [logoSource, setLogoSource] = useState<LogoSource>(getInitialSource)
-  const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(getInitialUrl)
-  const [imageLoading, setImageLoading] = useState(true)
-
-  // Update when props change
-  useEffect(() => {
-    const newSource = getInitialSource()
-    const newUrl = getInitialUrl()
-
+    // Priority 1: Local logo files (multiple extensions)
     if (domain) {
-      console.log('CompanyLogo: Domain parsed:', domain, isLocalLogo ? '(VIP)' : '')
+      candidates.push(...getLocalLogoCandidates(domain))
     }
 
-    setLogoSource(newSource)
-    setCurrentLogoUrl(newUrl)
+    // Priority 2: Legacy static logo URL
+    if (logoUrl) {
+      candidates.push(logoUrl)
+    }
+
+    return candidates
+  }, [domain, logoUrl])
+
+  const [candidateIndex, setCandidateIndex] = useState(0)
+  const [imageLoading, setImageLoading] = useState(true)
+  const [showFallback, setShowFallback] = useState(urlCandidates.length === 0)
+
+  // Reset when props change
+  useEffect(() => {
+    setCandidateIndex(0)
     setImageLoading(true)
-  }, [websiteUrl, logoUrl, domain, isLocalLogo])
+    setShowFallback(urlCandidates.length === 0)
+  }, [websiteUrl, logoUrl, urlCandidates.length])
 
-  // Handle logo load error - cascade through sources
+  const currentUrl = candidateIndex < urlCandidates.length ? urlCandidates[candidateIndex] : null
+
   const handleLogoError = () => {
-    console.log(`CompanyLogo: Failed to load from ${logoSource}, trying next...`)
-
-    if (logoSource === 'local' && domain) {
-      // Local VIP failed, try Google Favicons
-      console.log('CompanyLogo: Local logo failed, falling back to Google Favicons')
-      setLogoSource('google')
-      setCurrentLogoUrl(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
-    } else if (logoSource === 'static' && domain) {
-      // Static failed, try Google Favicons
-      setLogoSource('google')
-      setCurrentLogoUrl(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
-    } else if (logoSource === 'static' && !domain) {
-      // Static failed, no domain - go to fallback
-      setLogoSource('fallback')
-      setCurrentLogoUrl(null)
-    } else if (logoSource === 'google' && domain) {
-      // Google failed, try Clearbit
-      console.log('CompanyLogo: Trying Clearbit...')
-      setLogoSource('clearbit')
-      setCurrentLogoUrl(`https://logo.clearbit.com/${domain}`)
-    } else if (logoSource === 'clearbit' || logoSource === 'google') {
-      // All external sources failed
-      console.log('CompanyLogo: All sources failed, using letter fallback')
-      setLogoSource('fallback')
-      setCurrentLogoUrl(null)
+    const nextIndex = candidateIndex + 1
+    if (nextIndex < urlCandidates.length) {
+      // Try next candidate
+      setCandidateIndex(nextIndex)
+      setImageLoading(true)
+    } else {
+      // All candidates failed - show letter avatar
+      setShowFallback(true)
+      setImageLoading(false)
     }
   }
 
   const handleLogoLoad = () => {
     setImageLoading(false)
+    setShowFallback(false)
   }
 
   const theme = getAvatarColor(name)
   const initial = name.charAt(0).toUpperCase()
-  const showFallback = logoSource === 'fallback' || !currentLogoUrl
 
   return (
     <div
@@ -191,19 +171,21 @@ export function CompanyLogo({
           )}
 
           {/* Logo image */}
-          <img
-            src={currentLogoUrl!}
-            alt={`Logo ${name}`}
-            className="object-contain p-0.5"
-            style={{
-              width: size - 4,
-              height: size - 4,
-            }}
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            onLoad={handleLogoLoad}
-            onError={handleLogoError}
-          />
+          {currentUrl && (
+            <img
+              src={currentUrl}
+              alt={`Logo ${name}`}
+              className="object-contain p-0.5"
+              style={{
+                width: size - 4,
+                height: size - 4,
+              }}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              onLoad={handleLogoLoad}
+              onError={handleLogoError}
+            />
+          )}
         </>
       )}
     </div>

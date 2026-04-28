@@ -31,64 +31,76 @@ export function CompanyCard({
     const bookmarked = isBookmarked(id)
 
     return (
-        <div className="group h-full bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-slate-300 transition-all duration-200 py-5 px-5 flex items-center gap-3">
+        <div className="group bg-white rounded-full border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] hover:border-slate-300 transition-all duration-300 p-2 pr-5 flex items-center gap-3 md:gap-4 relative overflow-hidden">
             {/* Logo - Clickable */}
-            <Link href={profileUrl} className="flex-shrink-0 cursor-pointer">
-                <CompanyLogo
-                    websiteUrl={websiteUrl}
-                    logoUrl={logoUrl}
-                    name={brand}
-                    size={52}
-                />
+            <Link href={profileUrl} className="flex-shrink-0 cursor-pointer relative z-10">
+                <div className="bg-white rounded-full p-0.5 shadow-sm border border-slate-100">
+                    <CompanyLogo
+                        websiteUrl={websiteUrl}
+                        logoUrl={logoUrl}
+                        name={brand}
+                        size={48}
+                        className="rounded-full"
+                    />
+                </div>
             </Link>
 
             {/* Main Content - Clickable */}
-            <Link href={profileUrl} className="flex-1 min-w-0 flex flex-col justify-center gap-1 cursor-pointer">
-                {/* Company Name - UPPERCASE, bold, high contrast, 2-line clamp */}
-                <h3 className="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide line-clamp-2 min-h-[2.75rem] group-hover:text-red-600 transition-colors leading-tight">
-                    {brand}
-                </h3>
+            <Link href={profileUrl} className="flex-1 min-w-0 flex flex-col justify-center cursor-pointer relative z-10 py-1">
+                <div className="flex items-center gap-2">
+                    <h3 className="text-[13px] md:text-[15px] font-bold text-slate-900 uppercase tracking-wide truncate group-hover:text-red-600 transition-colors">
+                        {brand}
+                    </h3>
+                    {isPolish && (
+                        <div className="hidden sm:flex items-center justify-center w-4 h-4 rounded-full bg-red-50" title="Polska firma">
+                            <BadgeCheck className="w-3 h-3 text-red-600" />
+                        </div>
+                    )}
+                </div>
 
-                {/* Status Text - Subtle, smaller */}
-                {isPolish ? (
-                    <span className="text-xs text-slate-600 flex items-center gap-1.5">
-                        <BadgeCheck className="w-3.5 h-3.5 text-red-600" />
-                        Polska firma
-                    </span>
-                ) : (
-                    <span className="text-xs text-slate-500 flex items-center gap-1.5">
-                        <Globe className="w-3 h-3" />
-                        Zagraniczna firma
-                    </span>
-                )}
+                {/* Badges row */}
+                <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                    {/* Status Text - Subtle, smaller */}
+                    {isPolish ? (
+                        <span className="sm:hidden text-[10px] text-red-600 font-medium">Polska</span>
+                    ) : (
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1">
+                            <Globe className="w-2.5 h-2.5" />
+                            Zagraniczna
+                        </span>
+                    )}
 
-                {/* Badges */}
-                {(headquartersInPL !== undefined || vatActive !== undefined) && (
-                    <div className="flex flex-wrap gap-1 mt-0.5">
-                        {headquartersInPL !== undefined && (
-                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${headquartersInPL
-                                    ? "bg-green-50 text-green-700 border border-green-200"
-                                    : "bg-slate-50 text-slate-400 border border-slate-200"
-                                }`}>
-                                <MapPin className="w-2.5 h-2.5" />
-                                HQ PL
-                            </span>
-                        )}
-                        {vatActive !== undefined && (
-                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${vatActive
-                                    ? "bg-green-50 text-green-700 border border-green-200"
-                                    : "bg-slate-50 text-slate-400 border border-slate-200"
-                                }`}>
-                                <Receipt className="w-2.5 h-2.5" />
-                                VAT
-                            </span>
-                        )}
-                    </div>
-                )}
+                    {(headquartersInPL !== undefined || vatActive !== undefined) && (
+                        <div className="flex items-center gap-1">
+                            {headquartersInPL && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                    HQ PL
+                                </span>
+                            )}
+                            {vatActive && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                    VAT
+                                </span>
+                            )}
+                        </div>
+                    )}
+                </div>
             </Link>
 
-            {/* Right Side - Bookmark + Flag + Arrow */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Right Side - Bookmark + Flag */}
+            <div className="flex items-center gap-3 flex-shrink-0 relative z-10">
+                {/* Country Flag */}
+                {countryCode && (
+                    <div className="flex items-center justify-center" title={countryCode}>
+                        <img
+                            src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
+                            alt={countryCode}
+                            className="w-6 sm:w-7 h-auto rounded-sm border border-slate-200 shadow-sm"
+                            loading="lazy"
+                        />
+                    </div>
+                )}
+                
                 {/* Bookmark Button */}
                 <button
                     onClick={(e) => {
@@ -105,27 +117,10 @@ export function CompanyCard({
                 >
                     <Heart className={`w-4 h-4 ${bookmarked ? "fill-current" : ""}`} />
                 </button>
-
-                {/* Country Flag */}
-                {countryCode && (
-                    <div className="flex items-center justify-center" title={countryCode}>
-                        <img
-                            src={`https://flagcdn.com/w80/${countryCode.toLowerCase()}.png`}
-                            alt={countryCode}
-                            className="w-8 h-auto rounded-[2px] border border-slate-200 shadow-sm"
-                            loading="lazy"
-                        />
-                    </div>
-                )}
-
-                {/* Arrow Link */}
-                <Link
-                    href={profileUrl}
-                    className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-200"
-                >
-                    <ChevronRight className="w-5 h-5" />
-                </Link>
             </div>
+            
+            {/* Hover background effect (optional subtle indicator) */}
+            <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0 rounded-full" />
         </div>
     )
 }

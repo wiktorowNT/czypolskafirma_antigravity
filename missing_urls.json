@@ -1,242 +1,44 @@
 [
   {
-    "id": "9bc8d5d5-d2b4-40cd-a3d1-c509b8269ccd",
+    "id": "664527db-af28-4c94-82fa-293d793535af",
     "name": "",
-    "slug": "IKEA (Sklepy)",
+    "slug": "Mlekpol",
     "website_url": null
   },
   {
-    "id": "6041f41d-06ed-43e1-b9cf-d13da7d859db",
+    "id": "7e45bf6b-c178-43e9-ad78-93d8c13e05ef",
     "name": "",
-    "slug": "Black Red White",
+    "slug": "Animex Foods",
     "website_url": null
   },
   {
-    "id": "7d3c7e24-adca-459d-8052-966c0b7086f4",
+    "id": "613178e9-f6f2-48d0-992a-74869e0ed692",
     "name": "",
-    "slug": "Meblik",
+    "slug": "Sokołów",
     "website_url": null
   },
   {
-    "id": "b7a44ad5-0c67-4a86-9c49-eebee118a2b7",
+    "id": "f0bd3ead-b962-4a4a-8b5b-7a6a9458cf9d",
     "name": "",
-    "slug": "Forte",
+    "slug": "Tarczyński",
     "website_url": null
   },
   {
-    "id": "5c8d8362-155b-4f12-87fd-98f1a502dce8",
+    "id": "998a9eab-5f41-47a1-af59-928b493baa0d",
     "name": "",
-    "slug": "Nowy Styl",
+    "slug": "Nestlé",
     "website_url": null
   },
   {
-    "id": "2e6eb118-5417-430c-8e3d-d7433cccdfed",
+    "id": "a886cb5a-3e2a-4449-8c26-b3fb9d406898",
     "name": "",
-    "slug": "Meble Vox",
+    "slug": "Mondelēz",
     "website_url": null
   },
   {
-    "id": "add3e364-66f0-49d7-9259-445bfb13bbe7",
+    "id": "c4a23676-a8ad-47ae-8e14-28a01eaba73f",
     "name": "",
-    "slug": "Szynaka Meble",
-    "website_url": null
-  },
-  {
-    "id": "716cfb5a-2817-4ec2-87bf-279a16ad40ef",
-    "name": "",
-    "slug": "Meble Wójcik",
-    "website_url": null
-  },
-  {
-    "id": "966c0c27-47e0-4691-90da-05fa379454af",
-    "name": "",
-    "slug": "Bodzio",
-    "website_url": null
-  },
-  {
-    "id": "1026cc9b-55be-461a-a5b2-f5e33a1c7891",
-    "name": "",
-    "slug": "Kler",
-    "website_url": null
-  },
-  {
-    "id": "17dfe4dd-9cf7-47d0-a2f2-442b78c7caf3",
-    "name": "",
-    "slug": "Paged Meble",
-    "website_url": null
-  },
-  {
-    "id": "89fb93fc-7d8c-4bf6-8d5a-406d126798cf",
-    "name": "",
-    "slug": "Gala Collezione",
-    "website_url": null
-  },
-  {
-    "id": "3c817975-4f23-4738-9c8d-e2e56e659008",
-    "name": "",
-    "slug": "Com40",
-    "website_url": null
-  },
-  {
-    "id": "5e1c7b8a-3718-4b52-8cf1-a86f2822def1",
-    "name": "",
-    "slug": "Correct",
-    "website_url": null
-  },
-  {
-    "id": "261b7b6a-3ed7-4bf6-88ca-610567d4e11b",
-    "name": "",
-    "slug": "KAM Meble",
-    "website_url": null
-  },
-  {
-    "id": "0ce639ba-767d-452c-87ae-c19f9b01aa7c",
-    "name": "",
-    "slug": "Bydgoskie Meble",
-    "website_url": null
-  },
-  {
-    "id": "e612cba7-6cdd-4d59-89fb-de7ecff89299",
-    "name": "",
-    "slug": "Wajnert",
-    "website_url": null
-  },
-  {
-    "id": "bb55d09d-ed4d-4a7e-a866-4dc9291d8095",
-    "name": "",
-    "slug": "Polipol",
-    "website_url": null
-  },
-  {
-    "id": "80de7f99-e593-4eb7-9aca-eff3b509a024",
-    "name": "",
-    "slug": "Wersal",
-    "website_url": null
-  },
-  {
-    "id": "4ea92e2d-3dec-4b17-8edb-866e152a7af9",
-    "name": "",
-    "slug": "Halupczok",
-    "website_url": null
-  },
-  {
-    "id": "5cb78297-a534-4b1e-aa7f-70fbbcdc626f",
-    "name": "",
-    "slug": "Benix",
-    "website_url": null
-  },
-  {
-    "id": "a35ef80e-e252-48bb-acef-8dba285aa5fe",
-    "name": "",
-    "slug": "Sits",
-    "website_url": null
-  },
-  {
-    "id": "f830369e-85ad-4c7e-9c14-e25cf13eeeb6",
-    "name": "",
-    "slug": "Fameg",
-    "website_url": null
-  },
-  {
-    "id": "56dbd816-ff06-4599-b271-ab9ba94b846a",
-    "name": "",
-    "slug": "WFM Kuchnie",
-    "website_url": null
-  },
-  {
-    "id": "feb7d579-6912-4297-97b9-9e816371af48",
-    "name": "",
-    "slug": "Profim",
-    "website_url": null
-  },
-  {
-    "id": "2b21ee73-c7e8-44ec-bf9f-32fe73f0aed0",
-    "name": "",
-    "slug": "MDD",
-    "website_url": null
-  },
-  {
-    "id": "312d7e93-ed9c-43dd-b7b1-18b82e46c4f1",
-    "name": "",
-    "slug": "Bejot",
-    "website_url": null
-  },
-  {
-    "id": "504739ee-7781-4002-95d0-ce1ee70dc8c7",
-    "name": "",
-    "slug": "Balma",
-    "website_url": null
-  },
-  {
-    "id": "dfb7ea86-8fbb-4828-85b4-fcdc0a4a6d15",
-    "name": "",
-    "slug": "Noti",
-    "website_url": null
-  },
-  {
-    "id": "3478b28d-1325-47a1-a3a7-203875244169",
-    "name": "",
-    "slug": "Halmar",
-    "website_url": null
-  },
-  {
-    "id": "a34b1677-167a-4d83-8382-a9f3dbd50c19",
-    "name": "",
-    "slug": "Signal",
-    "website_url": null
-  },
-  {
-    "id": "3d4aa4a2-9597-468d-8cc3-60b92de40b0b",
-    "name": "",
-    "slug": "Taranko",
-    "website_url": null
-  },
-  {
-    "id": "9749f8ce-6b69-44ee-a17f-bf70f2ade874",
-    "name": "",
-    "slug": "Helvetia",
-    "website_url": null
-  },
-  {
-    "id": "7badb9cc-02e8-4840-b536-64e3d76ee1aa",
-    "name": "",
-    "slug": "Hilding Anders",
-    "website_url": null
-  },
-  {
-    "id": "c3d24ab5-6cbe-42bc-afac-3a4fa49111b3",
-    "name": "",
-    "slug": "Janpol",
-    "website_url": null
-  },
-  {
-    "id": "edc9e977-5912-4abc-8ce9-083a666d13f8",
-    "name": "",
-    "slug": "MK Foam Koło",
-    "website_url": null
-  },
-  {
-    "id": "4d9790fb-b33c-4b12-a76d-cc39cca4b86f",
-    "name": "",
-    "slug": "Dywilan",
-    "website_url": null
-  },
-  {
-    "id": "7d277ec2-e53f-4295-a3b5-b9b910f5992f",
-    "name": "",
-    "slug": "Agnella",
-    "website_url": null
-  },
-  {
-    "id": "bc9fa438-3dd1-4355-8249-08b56a41d00c",
-    "name": "",
-    "slug": "Dekoria",
-    "website_url": null
-  },
-  {
-    "id": "0a5d9efe-c31b-4969-b6aa-2075754036c4",
-    "name": "",
-    "slug": "BoConcept",
+    "slug": "Danone",
     "website_url": null
   },
   {
@@ -246,21 +48,189 @@
     "website_url": null
   },
   {
-    "id": "fbb669b7-78a5-4f82-82ab-3f1fd42b0d8a",
+    "id": "613cfa74-50c5-4090-8f25-0a602fcc7be3",
     "name": "",
-    "slug": "Kinnarps",
+    "slug": "Grupa Maspex",
     "website_url": null
   },
   {
-    "id": "74fd86ca-7b2e-4fcb-b4eb-db3ae9db4284",
+    "id": "d4a3b5cb-e1a9-4145-80cd-eef2f3d51755",
     "name": "",
-    "slug": "366 Concept",
+    "slug": "Mlekovita",
     "website_url": null
   },
   {
-    "id": "50a843cf-c047-4f31-959f-4eb67a752b90",
+    "id": "1f7e65f1-c1e1-4d91-a6db-46656afe4c02",
     "name": "",
-    "slug": "Comforty",
+    "slug": "Grupa Żywiec",
+    "website_url": null
+  },
+  {
+    "id": "f1eb1067-8e63-42a3-847f-4783ee287bc7",
+    "name": "",
+    "slug": "Kompania Piwowarska",
+    "website_url": null
+  },
+  {
+    "id": "c17e05ee-4856-44f5-8fb4-13f2c02054b3",
+    "name": "",
+    "slug": "Carlsberg",
+    "website_url": null
+  },
+  {
+    "id": "ed50f468-016e-4fd8-8511-5a9a9b2c6687",
+    "name": "",
+    "slug": "Ferrero",
+    "website_url": null
+  },
+  {
+    "id": "ebf795a4-304c-4aa3-989e-8461d872cd63",
+    "name": "",
+    "slug": "Wawel",
+    "website_url": null
+  },
+  {
+    "id": "592fa882-3971-4686-b42d-d902cfe041c6",
+    "name": "",
+    "slug": "Colian",
+    "website_url": null
+  },
+  {
+    "id": "9b7ab97d-1caa-4a6c-bde1-3694b4c86bab",
+    "name": "",
+    "slug": "Hortex",
+    "website_url": null
+  },
+  {
+    "id": "ab1c6b57-b050-4af4-95ff-03b8236005ea",
+    "name": "",
+    "slug": "PepsiCo",
+    "website_url": null
+  },
+  {
+    "id": "c9d2e6ff-2a9f-43ef-9988-c8173c25fd74",
+    "name": "",
+    "slug": "Cedrob",
+    "website_url": null
+  },
+  {
+    "id": "4d632304-dbf2-480b-8217-cbda4e49f4ba",
+    "name": "",
+    "slug": "OSM Piątnica",
+    "website_url": null
+  },
+  {
+    "id": "b63cdf4f-be22-4b7c-a7fa-ae971deec332",
+    "name": "",
+    "slug": "Polmlek",
+    "website_url": null
+  },
+  {
+    "id": "1f2ce9ab-c40a-4c1c-92bf-fa364c40f85f",
+    "name": "",
+    "slug": "Zott",
+    "website_url": null
+  },
+  {
+    "id": "78466394-e13f-403f-833b-bcc26c80f398",
+    "name": "",
+    "slug": "Hochland",
+    "website_url": null
+  },
+  {
+    "id": "9ff3c99c-dbb0-4903-8407-4cd6c577689b",
+    "name": "",
+    "slug": "Mars",
+    "website_url": null
+  },
+  {
+    "id": "fc893fc7-3960-4908-a4d2-cf20699aa7d5",
+    "name": "",
+    "slug": "Krajowa Grupa Spożywcza",
+    "website_url": null
+  },
+  {
+    "id": "20a80656-8c0f-4ed9-8c51-f7423b6a4f93",
+    "name": "",
+    "slug": "Bakoma",
+    "website_url": null
+  },
+  {
+    "id": "0e9726b7-e7b2-4bff-9a37-3ba6f891bf9c",
+    "name": "",
+    "slug": "FoodCare",
+    "website_url": null
+  },
+  {
+    "id": "9a42178e-cd30-4153-832b-0e4a095c9e2f",
+    "name": "",
+    "slug": "Mokate",
+    "website_url": null
+  },
+  {
+    "id": "eed95501-da61-4ce5-8280-87976db3ec9a",
+    "name": "",
+    "slug": "Prymat",
+    "website_url": null
+  },
+  {
+    "id": "e7624dcd-aec2-4ba1-b03e-bb4104841025",
+    "name": "",
+    "slug": "Dawtona",
+    "website_url": null
+  },
+  {
+    "id": "1393056e-563d-48af-b359-ea09fdde4319",
+    "name": "",
+    "slug": "Indykpol",
+    "website_url": null
+  },
+  {
+    "id": "a0db8835-bc3f-465a-a0da-845883fab7f5",
+    "name": "",
+    "slug": "Iglotex",
+    "website_url": null
+  },
+  {
+    "id": "73fa443f-65ea-4b2c-a94c-ef5c9c281903",
+    "name": "",
+    "slug": "Oshee",
+    "website_url": null
+  },
+  {
+    "id": "3768f671-e993-43a7-94dd-bbc71292ad47",
+    "name": "",
+    "slug": "Pamapol",
+    "website_url": null
+  },
+  {
+    "id": "09f096de-31cd-4a93-b8d0-277463c11818",
+    "name": "",
+    "slug": "SuperDrob",
+    "website_url": null
+  },
+  {
+    "id": "3c650bb7-9770-43bc-8ea2-80644179182c",
+    "name": "",
+    "slug": "Mieszko",
+    "website_url": null
+  },
+  {
+    "id": "1c8e2f6d-8712-48bd-8883-23fd99a4628b",
+    "name": "",
+    "slug": "PPL Koral",
+    "website_url": null
+  },
+  {
+    "id": "50538d00-f525-4d8c-8fd7-adbac9686831",
+    "name": "",
+    "slug": "OSM Krasnystaw",
+    "website_url": null
+  },
+  {
+    "id": "87da8619-ed28-4ceb-9617-fca652c00744",
+    "name": "",
+    "slug": "Nutricia",
     "website_url": null
   }
 ]

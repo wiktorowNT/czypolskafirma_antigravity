@@ -53,6 +53,9 @@ export function Header() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Prevent closing categories on mobile when clicking the toggle button
+      if (isMenuOpen) return
+
       if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
         setIsCategoriesOpen(false)
       }
@@ -69,7 +72,7 @@ export function Header() {
       document.removeEventListener("mousedown", handleClickOutside)
       document.removeEventListener("keydown", handleKeyDown)
     }
-  }, [])
+  }, [isMenuOpen])
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
@@ -135,6 +138,9 @@ export function Header() {
                 )}
               </div>
 
+              <Link href="/companies" className="text-slate-600 hover:text-slate-900 font-medium">
+                Lista firm
+              </Link>
               <button onClick={() => scrollToSection("how-it-works")} className="text-slate-600 hover:text-slate-900">
                 Jak to działa
               </button>
@@ -189,7 +195,7 @@ export function Header() {
             <div className="flex flex-col space-y-3">
               <button
                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                className="text-left text-slate-600 hover:text-slate-900 flex items-center justify-between"
+                className="text-left text-slate-600 hover:text-slate-900 flex items-center justify-between py-2"
               >
                 Kategorie
                 <ChevronDown className={`h-4 w-4 transition-transform ${isCategoriesOpen ? "rotate-180" : ""}`} />
@@ -210,6 +216,13 @@ export function Header() {
                 </div>
               )}
 
+              <Link
+                href="/companies"
+                className="text-left text-slate-600 hover:text-slate-900 py-2 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Lista firm
+              </Link>
               <button onClick={() => scrollToSection("how-it-works")} className="text-left text-slate-600 py-2">
                 Jak to działa
               </button>

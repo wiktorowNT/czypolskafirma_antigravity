@@ -108,13 +108,13 @@ export function GlobalStats() {
 
     if (loading) {
         return (
-            <section className="py-16 bg-white border-y border-slate-100">
+            <section className="py-8 bg-white border-y border-slate-100">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="animate-pulse">
-                        <div className="h-6 bg-slate-200 rounded w-48 mx-auto mb-8" />
-                        <div className="grid sm:grid-cols-3 gap-6">
+                        <div className="h-5 bg-slate-200 rounded w-48 mx-auto mb-6" />
+                        <div className="grid sm:grid-cols-3 gap-4">
                             {[1, 2, 3].map(i => (
-                                <div key={i} className="h-32 bg-slate-100 rounded-xl" />
+                                <div key={i} className="h-28 bg-slate-100 rounded-xl" />
                             ))}
                         </div>
                     </div>
@@ -126,43 +126,43 @@ export function GlobalStats() {
     if (!stats) return null
 
     return (
-        <section ref={sectionRef} className="py-16 bg-white border-y border-slate-100">
+        <section ref={sectionRef} className="py-8 bg-white border-y border-slate-100">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
-                <div className="text-center mb-10">
-                    <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">
+                <div className="text-center mb-6">
+                    <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-1">
                         Polskość w liczbach
                     </h2>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs text-slate-500">
                         Podsumowanie danych z naszej bazy
                     </p>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid sm:grid-cols-3 gap-5">
+                <div className="grid sm:grid-cols-3 gap-4">
 
                     {/* Card 1: Polish percentage */}
-                    <div className="relative overflow-hidden bg-gradient-to-br from-red-50 to-white rounded-2xl border border-red-100 p-6 text-center group hover:shadow-md transition-shadow">
+                    <div className="relative overflow-hidden bg-gradient-to-br from-red-50 to-white rounded-xl border border-red-100 p-4 text-center group hover:shadow-md transition-shadow">
                         <div className="relative z-10">
-                            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
+                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2">
                                 <img
                                     src="https://flagcdn.com/w40/pl.png"
                                     alt="PL"
-                                    className="w-6 h-auto rounded-sm"
+                                    className="w-5 h-auto rounded-sm"
                                 />
                             </div>
-                            <div className="text-4xl font-extrabold text-red-600 mb-1 tabular-nums">
+                            <div className="text-3xl font-extrabold text-red-600 mb-0.5 tabular-nums">
                                 {animatedPolishPct}%
                             </div>
-                            <p className="text-sm font-medium text-slate-700">
+                            <p className="text-xs font-medium text-slate-700">
                                 firm w bazie to <strong>polskie firmy</strong>
                             </p>
-                            <p className="text-xs text-slate-400 mt-2">
+                            <p className="text-[10px] text-slate-400 mt-1">
                                 {stats.polishCount} z {stats.total} zweryfikowanych
                             </p>
 
                             {/* Mini progress bar */}
-                            <div className="mt-3 w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div className="mt-2 w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-red-500 rounded-full transition-all duration-1000 ease-out"
                                     style={{ width: isVisible ? `${stats.polishPercentage}%` : "0%" }}
@@ -175,25 +175,25 @@ export function GlobalStats() {
                     {stats.mostPolishCategory && (
                         <Link
                             href={`/kategoria/${stats.mostPolishCategory.slug}`}
-                            className="relative overflow-hidden bg-gradient-to-br from-green-50 to-white rounded-2xl border border-green-100 p-6 text-center group hover:shadow-md transition-shadow cursor-pointer"
+                            className="relative overflow-hidden bg-gradient-to-br from-green-50 to-white rounded-xl border border-green-100 p-4 text-center group hover:shadow-md transition-shadow cursor-pointer"
                         >
                             <div className="relative z-10">
-                                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-                                    <TrendingUp className="w-6 h-6 text-green-600" />
+                                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-2">
+                                    <TrendingUp className="w-5 h-5 text-green-600" />
                                 </div>
-                                <p className="text-xs font-medium text-green-700 uppercase tracking-wider mb-1">
+                                <p className="text-[10px] font-medium text-green-700 uppercase tracking-wider mb-0.5">
                                     Najbardziej polska kategoria
                                 </p>
-                                <div className="text-xl font-bold text-slate-900 mb-1">
+                                <div className="text-lg font-bold text-slate-900 mb-0.5">
                                     {stats.mostPolishCategory.name}
                                 </div>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-xs text-slate-600">
                                     <span className="font-semibold text-green-600">{stats.mostPolishCategory.polishPercentage}%</span> polskich firm
                                 </p>
-                                <p className="text-xs text-slate-400 mt-1">
+                                <p className="text-[10px] text-slate-400 mt-1">
                                     {stats.mostPolishCategory.polish} z {stats.mostPolishCategory.total} firm
                                 </p>
-                                <div className="mt-3 flex items-center justify-center gap-1 text-xs font-medium text-green-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="mt-2 flex items-center justify-center gap-1 text-[10px] font-medium text-green-600 opacity-0 group-hover:opacity-100 transition-opacity">
                                     Sprawdź <ChevronRight className="w-3 h-3" />
                                 </div>
                             </div>
@@ -204,25 +204,25 @@ export function GlobalStats() {
                     {stats.leastPolishCategory && (
                         <Link
                             href={`/kategoria/${stats.leastPolishCategory.slug}`}
-                            className="relative overflow-hidden bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100 p-6 text-center group hover:shadow-md transition-shadow cursor-pointer"
+                            className="relative overflow-hidden bg-gradient-to-br from-amber-50 to-white rounded-xl border border-amber-100 p-4 text-center group hover:shadow-md transition-shadow cursor-pointer"
                         >
                             <div className="relative z-10">
-                                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-3">
-                                    <TrendingDown className="w-6 h-6 text-amber-600" />
+                                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-2">
+                                    <TrendingDown className="w-5 h-5 text-amber-600" />
                                 </div>
-                                <p className="text-xs font-medium text-amber-700 uppercase tracking-wider mb-1">
+                                <p className="text-[10px] font-medium text-amber-700 uppercase tracking-wider mb-0.5">
                                     Najbardziej zagraniczna kategoria
                                 </p>
-                                <div className="text-xl font-bold text-slate-900 mb-1">
+                                <div className="text-lg font-bold text-slate-900 mb-0.5">
                                     {stats.leastPolishCategory.name}
                                 </div>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-xs text-slate-600">
                                     tylko <span className="font-semibold text-amber-600">{stats.leastPolishCategory.polishPercentage}%</span> polskich firm
                                 </p>
-                                <p className="text-xs text-slate-400 mt-1">
+                                <p className="text-[10px] text-slate-400 mt-1">
                                     {stats.leastPolishCategory.polish} z {stats.leastPolishCategory.total} firm
                                 </p>
-                                <div className="mt-3 flex items-center justify-center gap-1 text-xs font-medium text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="mt-2 flex items-center justify-center gap-1 text-[10px] font-medium text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
                                     Sprawdź <ChevronRight className="w-3 h-3" />
                                 </div>
                             </div>

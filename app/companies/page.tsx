@@ -1,31 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Building2, MapPin, TrendingUp, AlertCircle } from "lucide-react"
+import { Building2, AlertCircle } from "lucide-react"
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
-
-interface Company {
-  id: number
-  name: string
-  nip: string
-  score: number
-  city: string
-}
-
-function getScoreColor(score: number): string {
-  if (score >= 70) return "bg-green-500"
-  if (score >= 40) return "bg-yellow-500"
-  return "bg-red-500"
-}
-
-function getScoreTextColor(score: number): string {
-  if (score >= 70) return "text-green-700"
-  if (score >= 40) return "text-yellow-700"
-  return "text-red-700"
-}
+import { CompanyGrid, CompanyGridItem } from "@/components/CompanyGrid"
 
 export default function CompaniesPage() {
-  const [companies, setCompanies] = useState<Company[]>([])
+  const [companies, setCompanies] = useState<CompanyGridItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -35,14 +16,24 @@ export default function CompaniesPage() {
         const supabase = getSupabaseBrowserClient()
         const { data, error: fetchError } = await supabase
           .from("companies")
-          .select("*")
-          .order("score", { ascending: false })
+          .select("id, name, slug, country_code, siedziba_pl, vat_czynny, website_url")
+          .order("name", { ascending: true })
 
         if (fetchError) {
           throw fetchError
         }
 
-        setCompanies(data || [])
+        const formattedData: CompanyGridItem[] = (data || []).map((c) => ({
+          id: c.id,
+          brand: c.slug ? c.slug.charAt(0).toUpperCase() + c.slug.slice(1) : c.name,
+          country_code: c.country_code,
+          headquartersInPL: c.siedziba_pl,
+          vatActive: c.vat_czynny,
+          logoUrl: c.logoUrl,
+          website_url: c.website_url,
+        }))
+
+        setCompanies(formattedData)
       } catch (err) {
         console.error("[v0] Error fetching companies:", err)
         setError("Nie udało się załadować danych")
@@ -57,26 +48,15 @@ export default function CompaniesPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
           <div className="mb-8">
             <div className="h-10 w-64 bg-slate-200 rounded animate-pulse mb-4" />
             <div className="h-6 w-96 bg-slate-200 rounded animate-pulse" />
           </div>
 
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="h-6 w-48 bg-slate-200 rounded animate-pulse mb-3" />
-                    <div className="flex gap-4">
-                      <div className="h-4 w-32 bg-slate-200 rounded animate-pulse" />
-                      <div className="h-4 w-24 bg-slate-200 rounded animate-pulse" />
-                    </div>
-                  </div>
-                  <div className="h-12 w-24 bg-slate-200 rounded-full animate-pulse" />
-                </div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-full h-16 shadow-sm border border-slate-200 p-2 animate-pulse" />
             ))}
           </div>
         </div>
@@ -104,70 +84,24 @@ export default function CompaniesPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">Lista firm</h1>
-          <p className="text-lg text-slate-600">Przeglądaj wszystkie firmy z bazy danych ({companies.length} firm)</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Lista wszystkich firm</h1>
+          <p className="text-base md:text-lg text-slate-600">
+            Przeglądaj wszystkie firmy zweryfikowane w naszej bazie ({companies.length})
+          </p>
         </div>
 
         {/* Companies List */}
         {companies.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-slate-200">
+          <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 border-dashed">
             <Building2 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-slate-900 mb-2">Brak firm w bazie</h3>
             <p className="text-slate-600">Nie znaleziono żadnych firm w bazie danych</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {companies.map((company) => (
-              <div
-                key={company.id}
-                className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 hover:shadow-md hover:border-slate-300 transition-all duration-200"
-              >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  {/* Company Info */}
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{company.name}</h3>
-                    <div className="flex flex-wrap gap-4 text-sm text-slate-600">
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4" />
-                        <span>{company.city}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Building2 className="w-4 h-4" />
-                        <span>NIP: {company.nip}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Score */}
-                  <div className="lg:w-48">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-slate-700 flex items-center gap-1">
-                        <TrendingUp className="w-4 h-4" />
-                        Wynik
-                      </span>
-                      <span className={`text-sm font-bold ${getScoreTextColor(company.score)}`}>
-                        {company.score}/100
-                      </span>
-                    </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2.5">
-                      <div
-                        className={`h-2.5 rounded-full ${getScoreColor(company.score)} transition-all duration-300`}
-                        style={{ width: `${company.score}%` }}
-                        role="progressbar"
-                        aria-valuenow={company.score}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        aria-label={`Wynik ${company.name}: ${company.score} na 100`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <CompanyGrid companies={companies} />
         )}
       </div>
     </div>

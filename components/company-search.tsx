@@ -216,11 +216,11 @@ export function CompanySearch({
         {showButton && (
           <button
             onClick={handleSearch}
-            className="h-12 px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-medium flex items-center gap-2"
+            className="h-12 px-4 sm:px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-medium flex items-center justify-center gap-2 flex-shrink-0"
             aria-label="Szukaj"
           >
             <Search className="h-4 w-4" />
-            Szukaj
+            <span className="hidden sm:inline">Szukaj</span>
           </button>
         )}
       </div>
