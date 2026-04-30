@@ -126,9 +126,14 @@ function getExtension(contentType) {
 
 const LOGO_SOURCES = [
   {
-    name: 'Google Favicon V2',
-    getUrl: (domain) => `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${domain}&size=128`,
+    name: 'Clearbit',
+    getUrl: (domain) => `https://logo.clearbit.com/${domain}?size=512`,
     priority: 1,
+  },
+  {
+    name: 'Google Favicon V2',
+    getUrl: (domain) => `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${domain}&size=512`,
+    priority: 2,
   },
   {
     name: 'icon.horse',
@@ -137,7 +142,7 @@ const LOGO_SOURCES = [
   },
   {
     name: 'Favicone',
-    getUrl: (domain) => `https://favicone.com/${domain}?s=128`,
+    getUrl: (domain) => `https://favicone.com/${domain}?s=512`,
     priority: 3,
   },
   {
@@ -147,7 +152,7 @@ const LOGO_SOURCES = [
   },
   {
     name: 'Google s2',
-    getUrl: (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    getUrl: (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=512`,
     priority: 5,
   },
 ]
@@ -199,7 +204,7 @@ async function main() {
   const args = process.argv.slice(2)
   const force = args.includes('--force')
   const domainArg = args.find(a => a.startsWith('--domain='))
-  const singleDomain = domainArg ? domainArg.split('=')[1] : null
+  const selectedDomains = domainArg ? new Set(domainArg.split('=')[1].split(',')) : null
 
   // Ensure logos directory exists
   if (!fs.existsSync(LOGOS_DIR)) {
@@ -231,7 +236,7 @@ async function main() {
       continue
     }
 
-    if (singleDomain && domain !== singleDomain) continue
+    if (selectedDomains && !selectedDomains.has(domain)) continue
 
     domainToCompany.set(domain, company)
     domainsToFetch.push(domain)
@@ -330,6 +335,9 @@ async function main() {
   const totalLogos = fs.readdirSync(LOGOS_DIR).filter(f => !f.startsWith('.')).length
   console.log(`📁 Łącznie plików w /public/logos/: ${totalLogos}`)
   console.log('═'.repeat(60))
+  console.log('\n💡 Aby odświeżyć podgląd w audycie, wpisz teraz:')
+  console.log('   node tools/generate-logo-audit.mjs')
+  console.log('   (następnie odśwież stronę w przeglądarce klawiszem F5)\n')
 }
 
 main().catch(console.error)

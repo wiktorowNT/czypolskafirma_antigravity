@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Building2, AlertCircle } from "lucide-react"
+import { Building2, AlertCircle, ArrowUpDown } from "lucide-react"
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import { CompanyGrid, CompanyGridItem } from "@/components/CompanyGrid"
 
@@ -9,6 +9,7 @@ export default function CompaniesPage() {
   const [companies, setCompanies] = useState<CompanyGridItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [sortBy, setSortBy] = useState<string>("name-asc")
 
   useEffect(() => {
     async function fetchCompanies() {
@@ -44,6 +45,25 @@ export default function CompaniesPage() {
 
     fetchCompanies()
   }, [])
+
+  const sortedCompanies = [...companies].sort((a, b) => {
+    switch (sortBy) {
+      case "name-asc":
+        return a.brand.localeCompare(b.brand)
+      case "name-desc":
+        return b.brand.localeCompare(a.brand)
+      case "polish-first":
+        if (a.country_code === "PL" && b.country_code !== "PL") return -1
+        if (a.country_code !== "PL" && b.country_code === "PL") return 1
+        return a.brand.localeCompare(b.brand)
+      case "foreign-first":
+        if (a.country_code !== "PL" && b.country_code === "PL") return -1
+        if (a.country_code === "PL" && b.country_code !== "PL") return 1
+        return a.brand.localeCompare(b.brand)
+      default:
+        return 0
+    }
+  })
 
   if (loading) {
     return (
@@ -86,11 +106,36 @@ export default function CompaniesPage() {
     <div className="min-h-screen bg-slate-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Lista wszystkich firm</h1>
-          <p className="text-base md:text-lg text-slate-600">
-            Przeglądaj wszystkie firmy zweryfikowane w naszej bazie ({companies.length})
-          </p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Lista wszystkich firm</h1>
+            <p className="text-base md:text-lg text-slate-600">
+              Przeglądaj wszystkie firmy zweryfikowane w naszej bazie ({companies.length})
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <ArrowUpDown className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+              </div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all appearance-none cursor-pointer min-w-[200px]"
+              >
+                <option value="name-asc">Nazwa (A-Z)</option>
+                <option value="name-desc">Nazwa (Z-A)</option>
+                <option value="polish-first">Najpierw polskie</option>
+                <option value="foreign-first">Najpierw zagraniczne</option>
+              </select>
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Companies List */}
@@ -101,7 +146,7 @@ export default function CompaniesPage() {
             <p className="text-slate-600">Nie znaleziono żadnych firm w bazie danych</p>
           </div>
         ) : (
-          <CompanyGrid companies={companies} />
+          <CompanyGrid companies={sortedCompanies} />
         )}
       </div>
     </div>

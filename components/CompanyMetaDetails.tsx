@@ -64,7 +64,7 @@ export default function CompanyMetaDetails({
                     {hasAddress && (
                         <div>
                             <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
-                                Adres Siedziby
+                                Adres Siedziby w Polsce
                             </h4>
                             <div className="flex items-start gap-2">
                                 <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />

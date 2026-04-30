@@ -1,61 +1,95 @@
-import Link from "next/link"
+import { Metadata } from "next"
 
-export const metadata = {
-    title: "Polityka Prywatności | CzyPolskaFirma",
-    description: "Polityka prywatności serwisu CzyPolskaFirma.pl — informacje o przetwarzaniu danych osobowych.",
+export const metadata: Metadata = {
+  title: "Polityka Prywatności | CzyPolskaFirma.pl",
+  description: "Polityka prywatności i pliki cookies serwisu CzyPolskaFirma.pl",
 }
 
-export default function PolitykaPrywatnosci() {
-    return (
-        <main className="min-h-screen bg-white">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-                <h1 className="text-3xl font-bold text-slate-900 mb-8">Polityka Prywatności</h1>
+export default function PrivacyPolicyPage() {
+  return (
+    <main className="min-h-screen bg-slate-50 py-12 sm:py-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="mb-12">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Polityka Prywatności
+          </h1>
+          <p className="text-sm text-slate-500">Ostatnia aktualizacja: [WSTAW_DATE_NP_28.04.2026]</p>
+        </div>
 
-                <div className="prose prose-slate max-w-none space-y-6 text-slate-600 leading-relaxed">
-                    <p>Ostatnia aktualizacja: {new Date().toLocaleDateString("pl-PL")}</p>
+        {/* Content */}
+        <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-sm border border-slate-200">
+          <div className="space-y-8 text-slate-600 leading-relaxed">
+            
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">1. Informacje ogólne</h3>
+              <p>
+                Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych przekazanych przez Użytkowników 
+                w związku z korzystaniem przez nich z serwisu internetowego CzyPolskaFirma.pl (dalej: "Serwis").
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">1. Administrator danych</h2>
-                    <p>
-                        Administratorem danych osobowych jest zespół CzyPolskaFirma. Kontakt z administratorem możliwy jest
-                        za pośrednictwem formularza kontaktowego dostępnego na stronie.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">2. Administrator Danych Osobowych</h3>
+              <p>
+                Administratorem danych osobowych zawartych w serwisie jest <strong>[TWOJE_IMIĘ_I_NAZWISKO_LUB_NAZWA_FIRMY]</strong> z siedzibą 
+                w <strong>[TWÓJ_ADRES_LUB_MIEJSCOWOŚĆ]</strong>, NIP: <strong>[TWÓJ_NIP_JEŚLI_DOTYCZY]</strong>. <br/>
+                Kontakt z Administratorem możliwy jest pod adresem e-mail: <strong>[TWÓJ_ADRES_EMAIL]</strong>.
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">2. Zakres zbieranych danych</h2>
-                    <p>
-                        Serwis zbiera wyłącznie dane niezbędne do świadczenia usługi:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                        <li>Dane analityczne (anonimowe statystyki ruchu za pomocą Vercel Analytics)</li>
-                        <li>Pliki cookies niezbędne do funkcjonowania strony</li>
-                        <li>Dane podane dobrowolnie w formularzach kontaktowych (e-mail, treść wiadomości)</li>
-                    </ul>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">3. Cele i podstawy przetwarzania danych</h3>
+              <p className="mb-3">Administrator przetwarza dane osobowe w następujących celach:</p>
+              <ul className="list-disc list-outside ml-5 space-y-2">
+                <li><strong>Analityka i statystyka:</strong> w celu analizy ruchu na stronie i poprawy jej funkcjonalności (podstawa: prawnie uzasadniony interes Administratora).</li>
+                <li><strong>Kontakt:</strong> w przypadku kontaktu mailowego z Administratorem, w celu obsługi zapytania (podstawa: zgoda użytkownika lub prawnie uzasadniony interes).</li>
+                <li><strong>Zapewnienie bezpieczeństwa:</strong> w celu zapewnienia sprawnego i bezpiecznego działania Serwisu (np. logi serwera).</li>
+              </ul>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">3. Pliki cookies</h2>
-                    <p>
-                        Serwis wykorzystuje pliki cookies w celach funkcjonalnych (zapamiętanie preferencji użytkownika)
-                        oraz analitycznych. Użytkownik może zarządzać ustawieniami cookies za pomocą bannera wyświetlanego
-                        przy pierwszej wizycie.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">4. Jakie dane zbieramy?</h3>
+              <p>
+                Podczas korzystania z Serwisu automatycznie zbierane są tzw. dane eksploatacyjne (logi serwera), w tym: 
+                adres IP, data i czas wizyty, informacje o przeglądarce i systemie operacyjnym. Zbieramy również 
+                anonimowe dane analityczne dotyczące sposobu korzystania z Serwisu (np. odwiedzane podstrony).
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">4. Prawa użytkownika</h2>
-                    <p>
-                        Zgodnie z RODO, każdy użytkownik ma prawo do: dostępu do swoich danych, ich sprostowania, usunięcia,
-                        ograniczenia przetwarzania, przenoszenia danych oraz wniesienia sprzeciwu wobec przetwarzania.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">5. Odbiorcy danych</h3>
+              <p>
+                Dane Użytkowników mogą być powierzane podmiotom zewnętrznym świadczącym usługi na rzecz Administratora, 
+                w tym przede wszystkim: dostawcom usług hostingowych oraz dostawcom narzędzi analitycznych (np. Google Analytics, Vercel).
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">5. Źródła danych o firmach</h2>
-                    <p>
-                        Dane o firmach prezentowane w serwisie pochodzą wyłącznie z publicznych rejestrów (KRS, CEIDG, GUS, CRBR)
-                        i nie stanowią danych osobowych w rozumieniu RODO.
-                    </p>
-                </div>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">6. Prawa użytkowników (RODO)</h3>
+              <p className="mb-3">Zgodnie z RODO, każdy Użytkownik ma prawo do:</p>
+              <ul className="list-disc list-outside ml-5 space-y-2">
+                <li>Dostępu do swoich danych oraz otrzymania ich kopii.</li>
+                <li>Sprostowania (poprawiania) swoich danych.</li>
+                <li>Usunięcia danych lub ograniczenia ich przetwarzania.</li>
+                <li>Wniesienia sprzeciwu wobec przetwarzania danych.</li>
+                <li>Wniesienia skargi do organu nadzorczego (Prezes Urzędu Ochrony Danych Osobowych).</li>
+              </ul>
+            </section>
 
-                <div className="mt-12 pt-6 border-t border-slate-200">
-                    <Link href="/" className="text-sm text-red-600 hover:text-red-700 font-medium">
-                        ← Wróć na stronę główną
-                    </Link>
-                </div>
-            </div>
-        </main>
-    )
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">7. Pliki Cookies (Ciasteczka)</h3>
+              <p>
+                Serwis korzysta z plików cookies. Są to niewielkie pliki tekstowe wysyłane przez serwer www i przechowywane 
+                na urządzeniu końcowym Użytkownika. Wykorzystujemy je w celach technicznych (niezbędne do działania strony) 
+                oraz statystycznych. Użytkownik może w każdej chwili samodzielnie zarządzać plikami cookies zmieniając ustawienia swojej przeglądarki.
+              </p>
+            </section>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  )
 }

@@ -162,19 +162,6 @@ export default function CompanyHero({
                 {/* Descriptions */}
                 {(business_description || ownership_description) && (
                     <div className="mt-6 space-y-4">
-                        {/* Business Description */}
-                        {business_description && (
-                            <div className="flex gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <Building2 className="w-4 h-4 text-blue-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</p>
-                                    <p className="text-sm text-slate-600 leading-relaxed">{business_description}</p>
-                                </div>
-                            </div>
-                        )}
-
                         {/* Ownership Description */}
                         {ownership_description && (
                             <div className="flex gap-3">
@@ -184,6 +171,19 @@ export default function CompanyHero({
                                 <div>
                                     <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Struktura właścicielska</p>
                                     <p className="text-sm text-slate-600 leading-relaxed">{ownership_description}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Business Description */}
+                        {business_description && (
+                            <div className="flex gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <Building2 className="w-4 h-4 text-blue-600" />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">{business_description}</p>
                                 </div>
                             </div>
                         )}

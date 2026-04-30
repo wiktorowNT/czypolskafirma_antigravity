@@ -1,4 +1,4 @@
-import { Search, BarChart3, Lightbulb } from "lucide-react"
+import { Search, Globe2, Lightbulb } from "lucide-react"
 
 export function HowItWorks() {
   const steps = [
@@ -8,9 +8,9 @@ export function HowItWorks() {
       description: "Wyszukaj firmę",
     },
     {
-      icon: BarChart3,
+      icon: Globe2,
       title: "Zobacz wynik",
-      description: "Indeks polskości, właściciele, źródła",
+      description: "Kraj pochodzenia i struktura właścicielska",
     },
     {
       icon: Lightbulb,

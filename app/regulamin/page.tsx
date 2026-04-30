@@ -1,58 +1,91 @@
-import Link from "next/link"
+import { Metadata } from "next"
 
-export const metadata = {
-    title: "Regulamin | CzyPolskaFirma",
-    description: "Regulamin korzystania z serwisu CzyPolskaFirma.pl.",
+export const metadata: Metadata = {
+  title: "Regulamin | CzyPolskaFirma.pl",
+  description: "Regulamin korzystania z serwisu informacyjnego CzyPolskaFirma.pl",
 }
 
-export default function Regulamin() {
-    return (
-        <main className="min-h-screen bg-white">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-                <h1 className="text-3xl font-bold text-slate-900 mb-8">Regulamin</h1>
+export default function TermsPage() {
+  return (
+    <main className="min-h-screen bg-slate-50 py-12 sm:py-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="mb-12">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Regulamin Serwisu
+          </h1>
+          <p className="text-sm text-slate-500">Ostatnia aktualizacja: [WSTAW_DATE_NP_28.04.2026]</p>
+        </div>
 
-                <div className="prose prose-slate max-w-none space-y-6 text-slate-600 leading-relaxed">
-                    <p>Ostatnia aktualizacja: {new Date().toLocaleDateString("pl-PL")}</p>
+        {/* Content */}
+        <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-sm border border-slate-200">
+          <div className="space-y-8 text-slate-600 leading-relaxed">
+            
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">1. Postanowienia ogólne</h3>
+              <p>
+                Niniejszy Regulamin określa zasady funkcjonowania i korzystania z serwisu internetowego 
+                dostępnego pod adresem CzyPolskaFirma.pl (dalej: "Serwis"). Właścicielem i Administratorem 
+                Serwisu jest <strong>[TWOJE_IMIĘ_I_NAZWISKO_LUB_NAZWA_FIRMY]</strong>.
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">1. Postanowienia ogólne</h2>
-                    <p>
-                        Serwis CzyPolskaFirma.pl jest bezpłatną usługą informacyjną umożliwiającą weryfikację struktury
-                        właścicielskiej i pochodzenia kapitału firm działających w Polsce.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">2. Rodzaj i zakres świadczonych usług</h3>
+              <p>
+                Serwis CzyPolskaFirma.pl jest darmowym portalem informacyjnym, który udostępnia użytkownikom bazę danych 
+                zawierającą informacje o strukturze właścicielskiej oraz kraju pochodzenia kapitału firm operujących na polskim rynku. 
+                Korzystanie z Serwisu jest dobrowolne, całkowicie bezpłatne i nie wymaga rejestracji konta.
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">2. Źródła danych</h2>
-                    <p>
-                        Wszystkie prezentowane informacje opierają się na publicznych źródłach danych, w szczególności:
-                        Krajowy Rejestr Sądowy (KRS), Centralny Rejestr Beneficjentów Rzeczywistych (CRBR),
-                        Centralna Ewidencja i Informacja o Działalności Gospodarczej (CEIDG), GUS oraz oficjalne strony podmiotów.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">3. Wyłączenie odpowiedzialności (Disclaimer)</h3>
+              <p className="mb-3">
+                Wszelkie dane prezentowane w Serwisie, w tym przypisany status "Polska Firma" oraz informacje o właścicielach, 
+                mają charakter wyłącznie informacyjny, poglądowy i edukacyjny. Zespół Serwisu dokłada wszelkich starań, aby dane były rzetelne, 
+                aktualne i oparte na publicznie dostępnych rejestrach (np. KRS, CRBR), jednakże:
+              </p>
+              <ul className="list-disc list-outside ml-5 space-y-2">
+                <li>Struktury własnościowe mogą ulegać dynamicznym zmianom, dlatego Administrator nie gwarantuje, że dane są w 100% poprawne i aktualne w każdym momencie.</li>
+                <li>Administrator nie ponosi odpowiedzialności cywilnej ani karnej za jakiekolwiek decyzje konsumenckie, biznesowe czy inwestycyjne podjęte przez Użytkowników na podstawie informacji zawartych w Serwisie.</li>
+                <li>Dane publikowane na stronie nie stanowią oficjalnej opinii prawnej ani porady gospodarczej.</li>
+              </ul>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">3. Ograniczenie odpowiedzialności</h2>
-                    <p>
-                        Informacje prezentowane w serwisie mają charakter wyłącznie informacyjny i nie stanowią porady prawnej,
-                        finansowej ani inwestycyjnej. Zespół CzyPolskaFirma dokłada wszelkich starań, aby dane były aktualne
-                        i rzetelne, jednak nie ponosi odpowiedzialności za ich kompletność i dokładność.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">4. Prawa autorskie i ochrona bazy danych</h3>
+              <p>
+                Wszelkie treści udostępniane w Serwisie, włączając w to koncepcję, układ graficzny, logo oraz 
+                zgromadzoną i skompilowaną bazę danych, podlegają ochronie prawnej praw autorskich i praw pokrewnych. 
+                Zabrania się zautomatyzowanego pobierania danych (tzw. web scraping), masowego kopiowania oraz 
+                wykorzystywania danych bazy do celów komercyjnych bez wyraźnej, pisemnej zgody Administratora.
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">4. Zgłaszanie błędów</h2>
-                    <p>
-                        Użytkownicy mogą zgłaszać błędy i nieścisłości za pomocą formularza „Zgłoś firmę lub poprawkę"
-                        dostępnego na stronie każdej firmy. Zgłoszenia wymagają podania źródła potwierdzającego zmianę.
-                    </p>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">5. Zgłaszanie błędów i weryfikacja</h3>
+              <p>
+                W przypadku dostrzeżenia nieścisłości lub nieaktualnych informacji w profilach poszczególnych firm, 
+                Użytkownik ma możliwość zgłoszenia poprawki poprzez przycisk "Zgłoś uwagi" w profilu firmy lub mailowo na adres: 
+                <strong>[TWÓJ_ADRES_EMAIL]</strong>. Administrator zastrzega sobie prawo do weryfikacji każdego zgłoszenia 
+                przed wprowadzeniem zmian do bazy danych, bez podawania przyczyny odrzucenia zgłoszenia.
+              </p>
+            </section>
 
-                    <h2 className="text-xl font-semibold text-slate-900 mt-8">5. Prawa autorskie</h2>
-                    <p>
-                        Struktura serwisu, układ graficzny oraz opracowania tekstowe są chronione prawem autorskim.
-                        Kopiowanie treści w celach komercyjnych wymaga pisemnej zgody administratora.
-                    </p>
-                </div>
+            <section>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">6. Postanowienia końcowe</h3>
+              <p>
+                Administrator zastrzega sobie prawo do wprowadzania zmian w niniejszym Regulaminie (np. ze względu na zmiany w prawie lub rozwój Serwisu). 
+                Korzystanie z Serwisu po wprowadzeniu zmian oznacza ich akceptację. W sprawach nieuregulowanych niniejszym Regulaminem 
+                zastosowanie mają odpowiednie przepisy powszechnie obowiązującego prawa polskiego.
+              </p>
+            </section>
 
-                <div className="mt-12 pt-6 border-t border-slate-200">
-                    <Link href="/" className="text-sm text-red-600 hover:text-red-700 font-medium">
-                        ← Wróć na stronę główną
-                    </Link>
-                </div>
-            </div>
-        </main>
-    )
+          </div>
+        </div>
+      </div>
+    </main>
+  )
 }

@@ -19,7 +19,7 @@ export function Footer() {
 
           {/* Poziom 2: Główna nawigacja */}
           <nav className="flex flex-col md:flex-row items-center gap-6 md:gap-10 text-sm font-medium text-slate-300">
-            <Link href="/o-nas" className="hover:text-white transition-colors">
+            <Link href="/o-projekcie" className="hover:text-white transition-colors">
               O projekcie
             </Link>
             <Link href="/metodologia" className="hover:text-white transition-colors">
