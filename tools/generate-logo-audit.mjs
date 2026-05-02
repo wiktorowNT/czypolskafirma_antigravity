@@ -56,20 +56,20 @@ async function main() {
         ? c.slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
         : c.name;
 
-    const fileName = `${domain}.png`; 
-    const hasFile = fileSet.has(fileName) || fileSet.has(`${domain}.svg`) || fileSet.has(`${domain}.jpg`);
+    const extensions = ['.png', '.svg', '.jpg', '.jpeg', '.webp'];
+    const actualFile = existingFiles.find(f => extensions.some(ext => f === domain + ext));
+    const hasFile = !!actualFile;
 
     const companyData = {
       id: c.id,
       name: displayName,
       fullName: c.name,
       domain: domain,
-      fileName: fileName,
+      fileName: actualFile || `${domain}.png`,
       url: c.website_url
     };
 
     if (hasFile) {
-        const actualFile = existingFiles.find(f => f.startsWith(domain + '.'));
         foundLogos.push({ ...companyData, actualFile });
     } else {
         missingLogos.push(companyData);
@@ -137,7 +137,7 @@ async function main() {
                         </svg>
                     </div>
                     <div class="flex-1 flex items-center justify-center w-full mb-3 bg-slate-50 rounded-lg p-2 min-h-[100px]">
-                        <img src="../public/logos/${c.actualFile}" alt="${c.domain}" class="logo-img drop-shadow-sm" loading="lazy">
+                        <img src="../public/logos/${c.actualFile}?v=${Date.now()}" alt="${c.domain}" class="logo-img drop-shadow-sm" loading="lazy">
                     </div>
                     <div class="w-full">
                         <p class="text-[10px] font-bold text-slate-900 truncate mb-0.5 leading-tight" title="${c.name}">${c.name}</p>

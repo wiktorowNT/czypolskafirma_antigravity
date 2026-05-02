@@ -20,11 +20,13 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://czypolskafirma.pl"),
   title: "CzyPolskaFirma — sprawdzaj polskość firm i marek",
   description: "Wybieraj świadomie. Indeks polskości, właściciele, publiczne źródła. Dołącz do listy oczekujących.",
   openGraph: {
     title: "CzyPolskaFirma — sprawdzaj polskość firm i marek",
     description: "Wybieraj świadomie. Indeks polskości, właściciele, publiczne źródła. Dołącz do listy oczekujących.",
+    url: "https://czypolskafirma.pl",
     type: "website",
     locale: "pl_PL",
     siteName: "CzyPolskaFirma",

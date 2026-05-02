@@ -7,6 +7,7 @@ import * as LucideIcons from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, ChevronDown, Heart } from "lucide-react"
 import { useBookmarks } from "@/hooks/use-bookmarks"
+import { CompanySearch } from "@/components/company-search"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -77,25 +78,33 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link
-              href="/"
-              className="text-xl font-bold text-slate-900 flex items-center gap-2"
-            >
-              <img
-                src="https://flagcdn.com/w40/pl.png"
-                alt="Polska"
-                className="w-6 h-auto rounded-sm shadow-sm"
-              />
-              CzyPolskaFirma
-            </Link>
+        <div className="flex items-center justify-between h-16 gap-4">
+          {/* Logo & Search */}
+          <div className="flex items-center gap-4 lg:gap-8 flex-1">
+            <div className="flex-shrink-0">
+              <Link
+                href="/"
+                className="text-xl font-bold text-slate-900 flex items-center gap-2"
+              >
+                <img
+                  src="https://flagcdn.com/w40/pl.png"
+                  alt="Polska"
+                  className="w-6 h-auto rounded-sm shadow-sm"
+                />
+                <span className="hidden sm:block md:hidden lg:block">CzyPolskaFirma</span>
+              </Link>
+            </div>
+
+            {pathname !== "/" && (
+              <div className="hidden lg:block flex-1 max-w-sm">
+                <CompanySearch placeholder="Szukaj firmy..." variant="minimal" />
+              </div>
+            )}
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            <nav className="flex items-center space-x-8">
+          <div className="hidden md:flex items-center">
+            <nav className="flex items-center space-x-4 lg:space-x-6">
               <div className="relative" ref={categoriesRef}>
                 <button
                   ref={categoriesButtonRef}
@@ -193,6 +202,11 @@ export function Header() {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-slate-200">
             <div className="flex flex-col space-y-3">
+              {pathname !== "/" && (
+                <div className="mb-2 px-2">
+                  <CompanySearch placeholder="Szukaj firmy..." variant="minimal" />
+                </div>
+              )}
               <button
                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
                 className="text-left text-slate-600 hover:text-slate-900 flex items-center justify-between py-2"

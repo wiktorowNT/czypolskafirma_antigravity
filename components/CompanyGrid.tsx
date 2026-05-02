@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { CompanyCard } from "@/components/CompanyCard"
 import { Search } from "lucide-react"
+import { ReportDialog } from "@/components/report-dialog"
 
 export interface CompanyGridItem {
     id: string
@@ -34,20 +35,31 @@ export function CompanyGrid({
                     <Search className="w-6 h-6 md:w-8 md:h-8 text-slate-400" />
                 </div>
                 <h3 className="text-base md:text-lg font-semibold text-slate-900 mb-2">
-                    Brak wyników w tej kategorii
+                    {categoryName ? "Brak wyników w tej kategorii" : "Brak wyników"}
                 </h3>
                 <p className="text-sm md:text-base text-slate-500 mb-6 max-w-sm mx-auto px-4">
-                    Nie znaleźliśmy tej firmy w kategorii{" "}
-                    <strong className="text-slate-700">{categoryName || "tej"}</strong>.
-                    Firma może istnieć w innej kategorii.
+                    {categoryName ? (
+                        <>
+                            Nie znaleźliśmy tej firmy w kategorii <strong className="text-slate-700">{categoryName}</strong>. Firma może istnieć w innej kategorii.
+                        </>
+                    ) : (
+                        "Nie znaleźliśmy tej firmy w naszej bazie. Sprawdź pisownię lub zgłoś ją do dodania."
+                    )}
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4">
-                    <Link
-                        href={searchTerm ? `/?q=${encodeURIComponent(searchTerm)}` : "/"}
-                        className="w-full sm:w-auto px-6 py-2.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-medium text-sm text-center"
-                    >
-                        Szukaj w całej bazie
-                    </Link>
+                    {categoryName && (
+                        <Link
+                            href={searchTerm ? `/szukaj?q=${encodeURIComponent(searchTerm)}` : "/szukaj"}
+                            className="w-full sm:w-auto px-6 py-2.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-medium text-sm text-center"
+                        >
+                            Szukaj w całej bazie
+                        </Link>
+                    )}
+                    <ReportDialog defaultBrandName={searchTerm || ""}>
+                        <button className="w-full sm:w-auto px-6 py-2.5 bg-white text-blue-700 border border-blue-200 rounded-xl hover:bg-blue-50 transition-colors font-medium text-sm text-center shadow-sm">
+                            Zgłoś firmę
+                        </button>
+                    </ReportDialog>
                     {onClearFilters && (
                         <button
                             onClick={onClearFilters}

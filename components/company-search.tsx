@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Search, X } from "lucide-react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { CompanyLogo } from "@/components/company-logo"
 
 interface Company {
@@ -23,6 +23,7 @@ interface CompanySearchProps {
   showButton?: boolean
   onDemoSearch?: () => void
   showSearchResult?: boolean
+  variant?: "default" | "minimal"
 }
 
 export function CompanySearch({
@@ -31,11 +32,21 @@ export function CompanySearch({
   showButton = false,
   onDemoSearch,
   showSearchResult = true,
+  variant = "default",
 }: CompanySearchProps) {
   const searchParams = useSearchParams()
-  const initialQuery = searchParams.get("q") || ""
+  const pathname = usePathname()
+  const initialQuery = pathname === "/szukaj" ? (searchParams.get("q") || "") : ""
 
   const [query, setQuery] = useState(initialQuery)
+
+  useEffect(() => {
+    if (pathname === "/szukaj") {
+      setQuery(searchParams.get("q") || "")
+    } else {
+      setQuery("")
+    }
+  }, [searchParams, pathname])
   const [suggestions, setSuggestions] = useState<Company[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -187,7 +198,7 @@ export function CompanySearch({
     <div className={`relative ${className}`}>
       <div className={`relative ${showButton ? "flex gap-2" : ""}`}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className={`absolute top-1/2 transform -translate-y-1/2 text-slate-400 ${variant === "minimal" ? "left-3 h-4 w-4" : "left-3 h-4 w-4"}`} />
           <input
             ref={inputRef}
             type="text"
@@ -195,8 +206,11 @@ export function CompanySearch({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className={`w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent ${showButton ? "h-12 text-base" : ""
-              }`}
+            className={`w-full focus:outline-none transition-all duration-200 ${
+              variant === "minimal"
+                ? "py-2 pl-9 pr-9 bg-slate-100/70 border border-transparent rounded-full text-sm hover:bg-slate-100 focus:bg-white focus:border-slate-200 focus:shadow-sm"
+                : "py-2 pl-10 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            } ${showButton && variant !== "minimal" ? "h-12 text-base" : ""}`}
             aria-label="Wyszukaj firmę"
             aria-expanded={isOpen}
             aria-haspopup="listbox"

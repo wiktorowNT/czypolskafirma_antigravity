@@ -70,6 +70,9 @@ function getLocalLogoCandidates(domain: string): string[] {
   return [
     `/logos/${domain}.png`,
     `/logos/${domain}.svg`,
+    `/logos/${domain}.jpg`,
+    `/logos/${domain}.jpeg`,
+    `/logos/${domain}.webp`,
   ]
 }
 
