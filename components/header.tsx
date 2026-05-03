@@ -229,7 +229,7 @@ export function Header() {
           <>
             {/* Full-screen overlay to catch taps outside menu */}
             <div
-              className="fixed inset-0 top-16 z-40 bg-black/20 md:hidden"
+              className="fixed inset-0 top-16 z-40 md:hidden"
               onClick={() => { setIsMenuOpen(false); setIsCategoriesOpen(false) }}
               aria-hidden="true"
             />
