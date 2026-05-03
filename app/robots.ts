@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/narzedzia/", "/szukaj/"],
+        disallow: ["/api/", "/narzedzia/", "/szukaj/", "/companies/"],
       },
     ],
     sitemap: "https://czypolskafirma.pl/sitemap.xml",

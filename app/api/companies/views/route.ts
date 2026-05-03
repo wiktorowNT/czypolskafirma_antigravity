@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 // POST — record a company page view
 export async function POST(request: Request) {
+    // Rate limit: 30 view recordings per minute per IP
+    const ip = getClientIp(request)
+    const { allowed } = checkRateLimit(ip, "views-post", { maxRequests: 30, windowSeconds: 60 })
+    if (!allowed) {
+        return NextResponse.json({ error: "Too many requests" }, { status: 429 })
+    }
+
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
         return NextResponse.json({ error: "Missing env vars" }, { status: 500 })
     }

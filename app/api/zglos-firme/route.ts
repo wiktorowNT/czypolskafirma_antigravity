@@ -1,8 +1,30 @@
 import { NextResponse } from "next/server"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1448458696844775596/7ZQ69lp5clGYH0TNUEFcGUC6S8Fx9JHJEln-Fo6k7EONfO_UJl_7SGWp3MJSbnLGK6zu"
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 export async function POST(request: Request) {
+    // Rate limit: 5 submissions per minute per IP
+    const ip = getClientIp(request)
+    const { allowed, resetInSeconds } = checkRateLimit(ip, "zglos-firme", {
+        maxRequests: 5,
+        windowSeconds: 60,
+    })
+    if (!allowed) {
+        return NextResponse.json(
+            { success: false, message: "Zbyt wiele zgłoszeń. Spróbuj ponownie później." },
+            { status: 429, headers: { "Retry-After": String(resetInSeconds) } }
+        )
+    }
+
+    if (!DISCORD_WEBHOOK_URL) {
+        console.error("[zglos-firme] Missing DISCORD_WEBHOOK_URL env var")
+        return NextResponse.json(
+            { success: false, message: "Konfiguracja serwera nieprawidłowa." },
+            { status: 500 }
+        )
+    }
+
     try {
         const formData = await request.formData()
         const requestType = formData.get("requestType") as string

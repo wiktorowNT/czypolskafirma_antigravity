@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export async function GET(request: Request) {
+    // Rate limit: 30 searches per minute per IP
+    const ip = getClientIp(request)
+    const { allowed } = checkRateLimit(ip, "search", { maxRequests: 30, windowSeconds: 60 })
+    if (!allowed) {
+        return NextResponse.json([], { status: 429 })
+    }
+
     const { searchParams } = new URL(request.url)
     const query = searchParams.get("q")
 
