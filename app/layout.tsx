@@ -21,11 +21,11 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://czypolskafirma.pl"),
-  title: "CzyPolskaFirma — sprawdzaj polskość firm i marek",
-  description: "Wybieraj świadomie. Indeks polskości, właściciele, publiczne źródła. Dołącz do listy oczekujących.",
+  title: "CzyPolskaFirma — sprawdź z jakiego kraju jest firma",
+  description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
   openGraph: {
-    title: "CzyPolskaFirma — sprawdzaj polskość firm i marek",
-    description: "Wybieraj świadomie. Indeks polskości, właściciele, publiczne źródła. Dołącz do listy oczekujących.",
+    title: "CzyPolskaFirma — sprawdź z jakiego kraju jest firma",
+    description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
     url: "https://czypolskafirma.pl",
     type: "website",
     locale: "pl_PL",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
       "@type": "WebSite",
       name: "CzyPolskaFirma",
       url: "https://czypolskafirma.pl",
-      description: "Sprawdzaj polskość firm i marek na podstawie transparentnego indeksu",
+      description: "Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
       potentialAction: {
         "@type": "SearchAction",
         target: "https://czypolskafirma.pl/search?q={search_term_string}",
