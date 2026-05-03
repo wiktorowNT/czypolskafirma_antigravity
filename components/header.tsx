@@ -1,21 +1,24 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import * as LucideIcons from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Menu, X, ChevronDown, Heart } from "lucide-react"
+import { Menu, X, ChevronDown, Heart, Search } from "lucide-react"
 import { useBookmarks } from "@/hooks/use-bookmarks"
 import { CompanySearch } from "@/components/company-search"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
   const [categories, setCategories] = useState<any[]>([])
   const { count: bookmarkCount } = useBookmarks()
 
   const categoriesRef = useRef<HTMLDivElement>(null)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null)
   const categoriesButtonRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
   const router = useRouter()
@@ -52,11 +55,33 @@ export function Header() {
     else router.push("/")
   }
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    if (!isMenuOpen) return
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(target) &&
+        mobileMenuButtonRef.current &&
+        !mobileMenuButtonRef.current.contains(target)
+      ) {
+        setIsMenuOpen(false)
+        setIsCategoriesOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("touchstart", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("touchstart", handleClickOutside)
+    }
+  }, [isMenuOpen])
+
+  // Close desktop categories dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Prevent closing categories on mobile when clicking the toggle button
       if (isMenuOpen) return
-
       if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
         setIsCategoriesOpen(false)
       }
@@ -64,6 +89,7 @@ export function Header() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsCategoriesOpen(false)
+        setIsMenuOpen(false)
         categoriesButtonRef.current?.focus()
       }
     }
@@ -91,7 +117,7 @@ export function Header() {
                   alt="Polska"
                   className="w-6 h-auto rounded-sm shadow-sm"
                 />
-                <span className="hidden sm:block md:hidden lg:block">CzyPolskaFirma</span>
+                <span className="text-base sm:text-xl">CzyPolskaFirma</span>
               </Link>
             </div>
 
@@ -190,23 +216,30 @@ export function Header() {
             </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button variant="ghost" size="sm" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {/* Mobile actions */}
+          <div className="md:hidden flex items-center gap-1">
+            {pathname !== "/" && !isMobileSearchOpen && (
+              <Button variant="ghost" size="sm" onClick={() => { setIsMobileSearchOpen(true); setIsMenuOpen(false) }}>
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
+            <Button ref={mobileMenuButtonRef} variant="ghost" size="sm" onClick={() => { setIsMenuOpen(!isMenuOpen); setIsMobileSearchOpen(false) }}>
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
 
+        {/* Mobile Search Bar */}
+        {isMobileSearchOpen && pathname !== "/" && (
+          <div className="md:hidden py-3 px-2 border-t border-slate-200">
+            <CompanySearch placeholder="Szukaj firmy..." variant="minimal" />
+          </div>
+        )}
+
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-200">
+          <div ref={mobileMenuRef} className="md:hidden py-4 border-t border-slate-200">
             <div className="flex flex-col space-y-3">
-              {pathname !== "/" && (
-                <div className="mb-2 px-2">
-                  <CompanySearch placeholder="Szukaj firmy..." variant="minimal" />
-                </div>
-              )}
               <button
                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
                 className="text-left text-slate-600 hover:text-slate-900 flex items-center justify-between py-2"
