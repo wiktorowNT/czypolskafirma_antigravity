@@ -55,27 +55,15 @@ export function Header() {
     else router.push("/")
   }
 
-  // Close mobile menu when clicking outside
+  // Close mobile menu on scroll
   useEffect(() => {
     if (!isMenuOpen) return
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const target = event.target as Node
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(target) &&
-        mobileMenuButtonRef.current &&
-        !mobileMenuButtonRef.current.contains(target)
-      ) {
-        setIsMenuOpen(false)
-        setIsCategoriesOpen(false)
-      }
+    const handleScroll = () => {
+      setIsMenuOpen(false)
+      setIsCategoriesOpen(false)
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    document.addEventListener("touchstart", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-      document.removeEventListener("touchstart", handleClickOutside)
-    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [isMenuOpen])
 
   // Close desktop categories dropdown when clicking outside
@@ -238,69 +226,77 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div ref={mobileMenuRef} className="md:hidden py-4 border-t border-slate-200">
-            <div className="flex flex-col space-y-3">
-              <button
-                onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                className="text-left text-slate-600 hover:text-slate-900 flex items-center justify-between py-2"
-              >
-                Kategorie
-                <ChevronDown className={`h-4 w-4 transition-transform ${isCategoriesOpen ? "rotate-180" : ""}`} />
-              </button>
+          <>
+            {/* Full-screen overlay to catch taps outside menu */}
+            <div
+              className="fixed inset-0 top-16 z-40 bg-black/20 md:hidden"
+              onClick={() => { setIsMenuOpen(false); setIsCategoriesOpen(false) }}
+              aria-hidden="true"
+            />
+            <div ref={mobileMenuRef} className="relative z-50 md:hidden py-4 border-t border-slate-200">
+              <div className="flex flex-col space-y-3">
+                <button
+                  onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                  className="text-left text-slate-600 hover:text-slate-900 flex items-center justify-between py-2"
+                >
+                  Kategorie
+                  <ChevronDown className={`h-4 w-4 transition-transform ${isCategoriesOpen ? "rotate-180" : ""}`} />
+                </button>
 
-              {isCategoriesOpen && (
-                <div className="pl-4 space-y-2">
-                  {categories.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/kategoria/${cat.slug}`}
-                      className="block text-slate-500 hover:text-slate-700 py-1"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
+                {isCategoriesOpen && (
+                  <div className="pl-4 space-y-2">
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        href={`/kategoria/${cat.slug}`}
+                        className="block text-slate-500 hover:text-slate-700 py-1"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
 
-              <Link
-                href="/companies"
-                className="text-left text-slate-600 hover:text-slate-900 py-2 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Lista firm
-              </Link>
-              <button onClick={() => scrollToSection("how-it-works")} className="text-left text-slate-600 py-2">
-                Jak to działa
-              </button>
-              <button onClick={() => scrollToSection("methodology")} className="text-left text-slate-600 py-2">
-                Metodologia
-              </button>
-              <button onClick={() => scrollToSection("features")} className="text-left text-slate-600 py-2">
-                Funkcje
-              </button>
-              <button onClick={() => scrollToSection("faq")} className="text-left text-slate-600 py-2">
-                FAQ
-              </button>
+                <Link
+                  href="/companies"
+                  className="text-left text-slate-600 hover:text-slate-900 py-2 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Lista firm
+                </Link>
+                <button onClick={() => scrollToSection("how-it-works")} className="text-left text-slate-600 py-2">
+                  Jak to działa
+                </button>
+                <button onClick={() => scrollToSection("methodology")} className="text-left text-slate-600 py-2">
+                  Metodologia
+                </button>
+                <button onClick={() => scrollToSection("features")} className="text-left text-slate-600 py-2">
+                  Funkcje
+                </button>
+                <button onClick={() => scrollToSection("faq")} className="text-left text-slate-600 py-2">
+                  FAQ
+                </button>
 
-              <Link
-                href="/ulubione"
-                className="flex items-center gap-2 text-slate-600 hover:text-red-600 py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Heart className={`h-4 w-4 ${bookmarkCount > 0 ? "text-red-500 fill-current" : ""}`} />
-                Ulubione {bookmarkCount > 0 && `(${bookmarkCount})`}
-              </Link>
+                <Link
+                  href="/ulubione"
+                  className="flex items-center gap-2 text-slate-600 hover:text-red-600 py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Heart className={`h-4 w-4 ${bookmarkCount > 0 ? "text-red-500 fill-current" : ""}`} />
+                  Ulubione {bookmarkCount > 0 && `(${bookmarkCount})`}
+                </Link>
 
-              <Button
-                onClick={() => scrollToSection("newsletter")}
-                className="bg-red-600 hover:bg-red-700 text-white mt-4 flex items-center gap-2"
-              >
-                <Heart className="h-4 w-4" />
-                Wesprzyj projekt
-              </Button>
+                <Button
+                  onClick={() => scrollToSection("newsletter")}
+                  className="bg-red-600 hover:bg-red-700 text-white mt-4 flex items-center gap-2"
+                >
+                  <Heart className="h-4 w-4" />
+                  Wesprzyj projekt
+                </Button>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </header>
