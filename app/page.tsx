@@ -6,6 +6,7 @@ import { ReportForm } from "@/components/report-form"
 import { FAQ } from "@/components/faq"
 import { CookieBanner } from "@/components/cookie-banner"
 import { GlobalStats } from "@/components/global-stats"
+import { SupportSection } from "@/components/support-section"
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <Features />
         <Methodology />
         <ReportForm />
+        <SupportSection />
         <FAQ />
       </main>
       <CookieBanner />

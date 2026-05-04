@@ -193,14 +193,15 @@ export function Header() {
                   </span>
                 )}
               </Link>
-              <Button
-                onClick={() => scrollToSection("newsletter")}
-                variant="outline"
-                className="border-red-600 text-red-600 hover:bg-red-50 flex items-center gap-2"
+              <a
+                href="https://buycoffee.to/czypolskafirma.pl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 border border-red-600 text-red-600 hover:bg-red-50 h-9 px-4 py-2 gap-2"
               >
                 <Heart className="h-4 w-4" />
                 Wesprzyj projekt
-              </Button>
+              </a>
             </div>
           </div>
 
@@ -287,13 +288,15 @@ export function Header() {
                   Ulubione {bookmarkCount > 0 && `(${bookmarkCount})`}
                 </Link>
 
-                <Button
-                  onClick={() => scrollToSection("newsletter")}
-                  className="bg-red-600 hover:bg-red-700 text-white mt-4 flex items-center gap-2"
+                <a
+                  href="https://buycoffee.to/czypolskafirma.pl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-red-600 hover:bg-red-700 text-white mt-4 flex items-center justify-center gap-2 py-3 rounded-lg font-bold transition-colors"
                 >
                   <Heart className="h-4 w-4" />
                   Wesprzyj projekt
-                </Button>
+                </a>
               </div>
             </div>
           </>
