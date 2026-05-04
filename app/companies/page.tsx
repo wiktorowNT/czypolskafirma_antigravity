@@ -26,7 +26,7 @@ export default function CompaniesPage() {
 
         const formattedData: CompanyGridItem[] = (data || []).map((c) => ({
           id: c.id,
-          brand: c.name || (c.slug ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Nieznana firma'),
+          brand: c.slug ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : c.name,
           country_code: c.country_code,
           headquartersInPL: c.siedziba_pl,
           vatActive: c.vat_czynny,

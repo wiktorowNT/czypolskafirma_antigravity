@@ -32,7 +32,7 @@ function mapCompanyToItem(company: any) {
 
   return {
     id: company.id,
-    brand: company.name || (company.slug ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Nieznana firma'),
+    brand: company.slug ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : company.name,
     company: company.name,
     score: score,
     badges: badges,
