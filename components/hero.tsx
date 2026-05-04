@@ -51,9 +51,9 @@ export default function Hero() {
           if (Array.isArray(data) && data.length > 0) {
             setPopularTags(data.map((c: any) => ({
               id: c.id,
-              displayName: c.slug
+              displayName: c.name || (c.slug
                 ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')
-                : c.name,
+                : 'Nieznana firma'),
               website_url: c.website_url || null,
               country_code: c.country_code || null,
             })))
