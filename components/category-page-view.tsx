@@ -20,6 +20,7 @@ import {
   Scale,
   FolderOpen,
   MessageSquarePlus,
+  Globe,
 } from "lucide-react"
 import * as LucideIcons from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
@@ -30,6 +31,7 @@ import { ReportDialog } from "@/components/report-dialog"
 import ComparisonBar from "@/components/comparison-bar"
 import { useComparison } from "@/hooks/use-comparison"
 import companyDetailsData from "@/data/company-details.json"
+import { countryNames } from "@/lib/countries"
 
 interface CategoryItem {
   id: string
@@ -132,6 +134,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
   const searchParams = useSearchParams()
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "")
+  const [countryQuery, setCountryQuery] = useState("")
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "name-asc")
   const [capitalFilter, setCapitalFilter] = useState<{ polish: boolean; foreign: boolean }>({
     polish: searchParams.get("capital") === "polish" || searchParams.get("capital") === "all" || false,
@@ -251,15 +254,19 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
         return false
       }
 
+      // Country filter
+      if (countryQuery.trim()) {
+        const query = countryQuery.toLowerCase().trim()
+        const countryName = countryNames[item.country_code || ""]?.toLowerCase() || ""
+        const countryCode = item.country_code?.toLowerCase() || ""
+        if (!countryName.includes(query) && countryCode !== query) {
+          return false
+        }
+      }
+
       const isPolish = item.country_code === "PL"
       if (capitalFilter.polish && !capitalFilter.foreign && !isPolish) return false
       if (!capitalFilter.polish && capitalFilter.foreign && isPolish) return false
-      // If both are true or both are false (default state or clear), show all
-      // Actually, if both are false, we usually show all. Let's make sure "both false" means "all" effectively, or "none"?
-      // Usually filters are additive or restrictive. 
-      // User requirement: checkboxes. If I uncheck both, should I see nothing? 
-      // Typically if nothing is selected, everything is shown OR nothing is shown. 
-      // Let's assume: unchecked = don't filter by this. But wait, if they are checkboxes "Polski", "Zagraniczny", usually:
       // - [ ] Polski -> Show polish
       // - [ ] Zagraniczny -> Show foreign
       // - [x] Polski, [ ] Zagraniczny -> Show Polish only
@@ -619,6 +626,19 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                 </div>
 
                 <div className="flex items-center gap-3 self-end md:self-auto">
+                  <div className="relative group flex-1 md:min-w-[200px]">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                      <Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Kraj (np. Niemcy)..."
+                      value={countryQuery}
+                      onChange={(e) => setCountryQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-4 bg-white border border-slate-200 rounded-xl text-base outline-none focus:ring-2 focus:ring-slate-900 transition-all shadow-md placeholder:text-slate-400"
+                    />
+                  </div>
+
                   <div className="relative">
                     <select
                       value={sortBy}

@@ -4,12 +4,15 @@ import { useEffect, useState } from "react"
 import { Building2, AlertCircle, ArrowUpDown } from "lucide-react"
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import { CompanyGrid, CompanyGridItem } from "@/components/CompanyGrid"
+import { countryNames } from "@/lib/countries"
+import { Search, Globe } from "lucide-react"
 
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<CompanyGridItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<string>("name-asc")
+  const [countryQuery, setCountryQuery] = useState<string>("")
 
   useEffect(() => {
     async function fetchCompanies() {
@@ -46,7 +49,18 @@ export default function CompaniesPage() {
     fetchCompanies()
   }, [])
 
-  const sortedCompanies = [...companies].sort((a, b) => {
+  const filteredCompanies = companies.filter(company => {
+    if (!countryQuery.trim()) return true
+    
+    const query = countryQuery.toLowerCase().trim()
+    // Check if input matches country name or country code
+    const countryName = countryNames[company.country_code || ""]?.toLowerCase() || ""
+    const countryCode = company.country_code?.toLowerCase() || ""
+    
+    return countryName.includes(query) || countryCode === query
+  })
+
+  const sortedCompanies = [...filteredCompanies].sort((a, b) => {
     switch (sortBy) {
       case "name-asc":
         return a.brand.localeCompare(b.brand)
@@ -114,7 +128,20 @@ export default function CompaniesPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative group flex-1 sm:min-w-[240px]">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+              </div>
+              <input
+                type="text"
+                placeholder="Filtruj wg kraju (np. Niemcy)..."
+                value={countryQuery}
+                onChange={(e) => setCountryQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all"
+              />
+            </div>
+
             <div className="relative group">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <ArrowUpDown className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
