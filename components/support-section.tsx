@@ -27,9 +27,9 @@ export function SupportSection() {
                 <span className="text-red-500">Wesprzyj nasze działania!</span>
               </h2>
               <p className="text-lg text-slate-300 mb-8 leading-relaxed">
-                CzyPolskaFirma.pl to darmowe narzędzie stworzone z pasji do polskiej gospodarki. 
-                Twoje wsparcie pomaga nam opłacić serwery, weryfikować kolejne firmy w KRSie 
-                i utrzymywać stronę bez żadnych reklam.
+                CzyPolskaFirma.pl to niezależna inicjatywa stworzona dla każdego, kto chce kupować świadomie. 
+                Twoje wsparcie pomaga nam rozwijać bazę danych, docierać do rzetelnych informacji 
+                o strukturach własnościowych i budować największy w Polsce portal o pochodzeniu marek.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
