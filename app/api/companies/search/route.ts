@@ -46,7 +46,7 @@ export async function GET(request: Request) {
         // Map to search result format
         const results = data.map((company: any) => ({
             id: company.id, // This is the UUID
-            brand: company.slug?.charAt(0).toUpperCase() + company.slug?.slice(1) || company.name,
+            brand: company.slug ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : company.name,
             company: company.name,
             category: company.categories?.name || "Inne",
             categorySlug: company.categories?.slug || "inne",
