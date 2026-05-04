@@ -344,7 +344,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
     })
 
     return filtered
-  }, [category.items, searchTerm, sortBy, capitalFilter, advancedFilters, viewCounts])
+  }, [category.items, searchTerm, sortBy, capitalFilter, advancedFilters, viewCounts, countryQuery])
 
   const metrics = useMemo(() => {
     // Polish threshold: country_code === 'PL'
