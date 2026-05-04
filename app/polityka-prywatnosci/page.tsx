@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
             Polityka Prywatności
           </h1>
-          <p className="text-sm text-slate-500">Ostatnia aktualizacja: [WSTAW_DATE_NP_28.04.2026]</p>
+          <p className="text-sm text-slate-500">Ostatnia aktualizacja: 04.05.2026</p>
         </div>
 
         {/* Content */}
@@ -31,11 +31,9 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">2. Administrator Danych Osobowych</h3>
               <p>
-                Administratorem danych osobowych zawartych w serwisie jest <strong>[TWOJE_IMIĘ_I_NAZWISKO_LUB_NAZWA_FIRMY]</strong> z siedzibą 
-                w <strong>[TWÓJ_ADRES_LUB_MIEJSCOWOŚĆ]</strong>, NIP: <strong>[TWÓJ_NIP_JEŚLI_DOTYCZY]</strong>. <br/>
-                Kontakt z Administratorem możliwy jest pod adresem e-mail: <strong>[TWÓJ_ADRES_EMAIL]</strong>.
+                Administratorem danych osobowych zawartych w serwisie jest <strong>Zespół CzyPolskaFirma.pl</strong>. <br/>
+                Kontakt z Administratorem możliwy jest pod adresem e-mail: <strong>kontakt@czypolskafirma.pl</strong>.
               </p>
             </section>
 

@@ -15,7 +15,7 @@ export default function TermsPage() {
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
             Regulamin Serwisu
           </h1>
-          <p className="text-sm text-slate-500">Ostatnia aktualizacja: [WSTAW_DATE_NP_28.04.2026]</p>
+          <p className="text-sm text-slate-500">Ostatnia aktualizacja: 04.05.2026</p>
         </div>
 
         {/* Content */}
@@ -27,7 +27,7 @@ export default function TermsPage() {
               <p>
                 Niniejszy Regulamin określa zasady funkcjonowania i korzystania z serwisu internetowego 
                 dostępnego pod adresem CzyPolskaFirma.pl (dalej: "Serwis"). Właścicielem i Administratorem 
-                Serwisu jest <strong>[TWOJE_IMIĘ_I_NAZWISKO_LUB_NAZWA_FIRMY]</strong>.
+                Serwisu jest <strong>Zespół CzyPolskaFirma.pl</strong>.
               </p>
             </section>
 
@@ -69,7 +69,7 @@ export default function TermsPage() {
               <p>
                 W przypadku dostrzeżenia nieścisłości lub nieaktualnych informacji w profilach poszczególnych firm, 
                 Użytkownik ma możliwość zgłoszenia poprawki poprzez przycisk "Zgłoś uwagi" w profilu firmy lub mailowo na adres: 
-                <strong>[TWÓJ_ADRES_EMAIL]</strong>. Administrator zastrzega sobie prawo do weryfikacji każdego zgłoszenia 
+                <strong>kontakt@czypolskafirma.pl</strong>. Administrator zastrzega sobie prawo do weryfikacji każdego zgłoszenia 
                 przed wprowadzeniem zmian do bazy danych, bez podawania przyczyny odrzucenia zgłoszenia.
               </p>
             </section>
