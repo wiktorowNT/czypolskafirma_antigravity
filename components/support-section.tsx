@@ -29,7 +29,7 @@ export function SupportSection() {
               <p className="text-lg text-slate-300 mb-8 leading-relaxed">
                 CzyPolskaFirma.pl to niezależna inicjatywa stworzona dla każdego, kto chce kupować świadomie. 
                 Twoje wsparcie pomaga nam rozwijać bazę danych, docierać do rzetelnych informacji 
-                o strukturach własnościowych i budować największy w Polsce portal o pochodzeniu marek.
+                o strukturach własnościowych i budować największy w Polsce portal o pochodzeniu firm.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
