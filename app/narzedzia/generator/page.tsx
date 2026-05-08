@@ -29,6 +29,7 @@ export default function GeneratorPage() {
   const [selectedCompanies, setSelectedCompanies] = useState<SelectedCompany[]>([])
   const [title, setTitle] = useState("SPOŻYWCZE W POLSCE")
   const [subtitle, setSubtitle] = useState("DYSKONTY")
+  const [description, setDescription] = useState("Sprawdzamy kto stoi za popularnymi markami")
   const [theme, setTheme] = useState<ThemeMode>('pro')
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('shops')
   const printRef = useRef<HTMLDivElement>(null)
@@ -140,8 +141,8 @@ export default function GeneratorPage() {
               <h2 className="text-[#0f172a] font-black uppercase text-5xl tracking-tight mb-2">{subtitle}</h2>
               <h1 className="text-[#dc143c] font-black uppercase text-6xl tracking-tight mb-6">{title}</h1>
               <div className="text-slate-600 text-xl font-medium flex items-center gap-2">
-                Sprawdzamy kto stoi za popularnymi markami
-                <div className="h-0.5 w-16 bg-[#dc143c] ml-2"></div>
+                {description}
+                {description && <div className="h-0.5 w-16 bg-[#dc143c] ml-2"></div>}
               </div>
             </div>
             
@@ -466,6 +467,15 @@ export default function GeneratorPage() {
                   type="text" 
                   value={subtitle} 
                   onChange={(e) => setSubtitle(e.target.value)}
+                  className="w-full p-2 border border-slate-300 rounded-md bg-white"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Opis pod tytułem (Trzecia linia)</label>
+                <input 
+                  type="text" 
+                  value={description} 
+                  onChange={(e) => setDescription(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
