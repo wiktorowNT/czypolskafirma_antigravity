@@ -162,36 +162,41 @@ export default function GeneratorPage() {
             {selectedCompanies.map((company) => {
               const isPolish = company.country_code?.toLowerCase() === 'pl'
               return (
-                <div key={company.id} className="bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border border-slate-100 flex flex-col p-6 relative">
+                <div key={company.id} className={`bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border flex flex-col p-6 relative transition-all ${isPolish ? 'border-green-200 shadow-green-100/50' : 'border-slate-100'}`}>
                   
                   {/* PRO Card Content */}
                   <div className="flex-1 flex flex-col">
-                    <div className="h-32 mb-6 flex items-center justify-center">
+                    <div className={`h-32 mb-6 flex items-center justify-center relative rounded-3xl border-4 transition-all ${isPolish ? 'border-green-400 bg-white ring-8 ring-green-50' : 'border-slate-50 bg-slate-50/50'}`}>
+                      {isPolish && (
+                        <div className="absolute -top-4 -right-4 bg-[#00c853] text-white px-4 py-1 rounded-full font-black uppercase tracking-widest text-[10px] shadow-lg z-10 border-2 border-white">
+                          Polska Firma
+                        </div>
+                      )}
                        {layoutMode === 'products' && company.customImage ? (
                           <img src={company.customImage} alt={company.brand} className="max-h-full max-w-full object-contain filter drop-shadow-lg" />
                        ) : (
-                          <CompanyLogo websiteUrl={company.website_url} name={company.brand} size={110} className="shadow-none border-0" />
+                          <CompanyLogo websiteUrl={company.website_url} name={company.brand} size={90} className="shadow-none border-0 bg-transparent" />
                        )}
                     </div>
                     
-                    <h2 className="text-3xl font-black text-slate-900 truncate mb-2">{company.brand}</h2>
-                    <div className="text-xs text-slate-400 font-medium">Właściciel:</div>
-                    <div className="text-xs text-slate-500 font-bold uppercase tracking-wider truncate mb-6">{company.company}</div>
+                    <h2 className="text-3xl font-black text-slate-900 truncate mb-1">{company.brand}</h2>
+                    <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Właściciel:</div>
+                    <div className="text-[11px] text-slate-500 font-extrabold uppercase tracking-wider truncate mb-4">{company.company}</div>
                     
                     {/* PRO Capital Pill */}
-                    <div className="mt-auto bg-[#f8fafc] rounded-2xl p-4 px-5 flex items-center justify-between border border-slate-100/50">
+                    <div className={`mt-auto rounded-2xl p-3 px-4 flex items-center justify-between border transition-all ${isPolish ? 'bg-green-50/50 border-green-100' : 'bg-slate-50/50 border-slate-100/50'}`}>
                       <div className="flex items-center gap-3">
                         {isPolish ? (
-                           <svg viewBox="0 0 1024 1024" className="w-6 h-6 fill-green-500 opacity-80"><g transform="translate(0,1024) scale(0.1,-0.1)"><path d={polandSvgPath}/></g></svg>
+                           <svg viewBox="0 0 1024 1024" className="w-5 h-5 fill-green-500 opacity-80"><g transform="translate(0,1024) scale(0.1,-0.1)"><path d={polandSvgPath}/></g></svg>
                         ) : (
-                           <Globe className="w-6 h-6 text-red-500 opacity-80" />
+                           <Globe className="w-5 h-5 text-red-500 opacity-80" />
                         )}
                         <div>
-                          <div className={`text-[10px] uppercase font-black tracking-widest ${isPolish ? 'text-green-600' : 'text-red-500'}`}>KAPITAŁ</div>
-                          <div className="text-lg font-black text-slate-900 leading-tight">{getCountryName(company.country_code)}</div>
+                          <div className={`text-[9px] uppercase font-black tracking-widest ${isPolish ? 'text-green-600' : 'text-red-500'}`}>KAPITAŁ</div>
+                          <div className="text-base font-black text-slate-900 leading-tight">{getCountryName(company.country_code)}</div>
                         </div>
                       </div>
-                      {company.country_code && <img src={`https://flagcdn.com/w80/${company.country_code.toLowerCase()}.png`} className="h-8 rounded shadow-sm border border-slate-200" alt={company.country_code} />}
+                      {company.country_code && <img src={`https://flagcdn.com/w80/${company.country_code.toLowerCase()}.png`} className="h-6 rounded shadow-sm border border-slate-200" alt={company.country_code} />}
                     </div>
                   </div>
                 </div>
