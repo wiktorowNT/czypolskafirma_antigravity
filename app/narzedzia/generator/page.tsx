@@ -162,20 +162,21 @@ export default function GeneratorPage() {
             {selectedCompanies.map((company) => {
               const isPolish = company.country_code?.toLowerCase() === 'pl'
               return (
-                <div key={company.id} className={`bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border flex flex-col p-6 relative transition-all ${isPolish ? 'border-green-200 shadow-green-100/50' : 'border-slate-100'}`}>
+                <div key={company.id} className={`bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border-4 flex flex-col p-6 relative transition-all ${isPolish ? 'border-[#00c853] shadow-[0_20px_50px_-15px_rgba(0,200,83,0.2)] ring-8 ring-green-50' : 'border-slate-100 shadow-sm'}`}>
                   
+                  {isPolish && (
+                    <div className="absolute -top-4 -right-4 bg-[#00c853] text-white px-5 py-2 rounded-full font-black uppercase tracking-widest text-[11px] shadow-lg z-30 border-2 border-white">
+                      Polska Firma
+                    </div>
+                  )}
+
                   {/* PRO Card Content */}
                   <div className="flex-1 flex flex-col">
-                    <div className={`h-32 mb-6 flex items-center justify-center relative rounded-3xl border-4 transition-all ${isPolish ? 'border-green-400 bg-white ring-8 ring-green-50' : 'border-slate-50 bg-slate-50/50'}`}>
-                      {isPolish && (
-                        <div className="absolute -top-4 -right-4 bg-[#00c853] text-white px-4 py-1 rounded-full font-black uppercase tracking-widest text-[10px] shadow-lg z-10 border-2 border-white">
-                          Polska Firma
-                        </div>
-                      )}
+                    <div className={`h-32 mb-6 flex items-center justify-center relative rounded-3xl transition-all ${isPolish ? 'bg-white' : 'bg-slate-50/50'}`}>
                        {layoutMode === 'products' && company.customImage ? (
                           <img src={company.customImage} alt={company.brand} className="max-h-full max-w-full object-contain filter drop-shadow-lg" />
                        ) : (
-                          <CompanyLogo websiteUrl={company.website_url} name={company.brand} size={90} className="shadow-none border-0 bg-transparent" />
+                          <CompanyLogo websiteUrl={company.website_url} name={company.brand} size={100} className="shadow-none border-0 bg-transparent" />
                        )}
                     </div>
                     
@@ -203,18 +204,18 @@ export default function GeneratorPage() {
               )
             })}
           </div>
-
+ 
           {/* PRO FOOTER */}
           <div className="mx-12 mb-10 bg-white rounded-3xl p-5 px-8 flex justify-between items-center shadow-sm border border-slate-100 relative z-20">
             <div className="flex items-center gap-4">
               <img src="https://flagcdn.com/w80/pl.png" className="h-8 rounded shadow-sm" alt="PL" />
               <span className="text-2xl font-black text-slate-900">CzyPolskaFirma.pl</span>
               <div className="w-px h-6 bg-slate-200 mx-2"></div>
-              <span className="text-slate-500 font-medium text-sm">Wspieraj lokalny rynek</span>
+              <span className="text-slate-500 font-medium text-sm">Wspieraj polskie firmy</span>
             </div>
             <div className="flex items-center gap-3 text-slate-500 text-sm font-medium">
               <Heart className="w-5 h-5 text-red-500" />
-              Wybieraj świadomie. Wspieraj lokalnie.
+              Wspieraj to, co nasze. Kupuj świadomie.
             </div>
           </div>
         </div>
