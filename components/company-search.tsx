@@ -21,9 +21,9 @@ interface CompanySearchProps {
   className?: string
   placeholder?: string
   showButton?: boolean
-  onDemoSearch?: () => void
   showSearchResult?: boolean
   variant?: "default" | "minimal"
+  onSelect?: (company: Company) => void
 }
 
 export function CompanySearch({
@@ -33,6 +33,7 @@ export function CompanySearch({
   onDemoSearch,
   showSearchResult = true,
   variant = "default",
+  onSelect,
 }: CompanySearchProps) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -149,7 +150,11 @@ export function CompanySearch({
     setQuery("")
     setIsOpen(false)
     setSelectedIndex(-1)
-    router.push(`/firma/${company.id}`)
+    if (onSelect) {
+      onSelect(company)
+    } else {
+      router.push(`/firma/${company.id}`)
+    }
   }
 
   const clearSearch = () => {
@@ -186,7 +191,11 @@ export function CompanySearch({
   const handleSearchResultClick = (company: Company) => {
     setSearchResult(null)
     setShowNoResults(false)
-    router.push(`/firma/${company.id}`)
+    if (onSelect) {
+      onSelect(company)
+    } else {
+      router.push(`/firma/${company.id}`)
+    }
   }
 
   const closeSearchResult = () => {

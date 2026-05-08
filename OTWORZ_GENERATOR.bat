@@ -1,0 +1,3 @@
+@echo off
+echo Otwieram Generator Grafik Social Media...
+start http://localhost:3000/narzedzia/generator

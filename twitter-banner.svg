@@ -1,0 +1,15 @@
+<svg width="1500" height="500" viewBox="0 0 1500 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1500" height="500" fill="#ffffff" />
+  
+  <g transform="translate(350, 200)">
+    <g transform="translate(0, 10)">
+      <!-- Cień flagi -->
+      <rect width="120" height="80" rx="12" fill="#000000" opacity="0.1" transform="translate(0, 3)" filter="blur(3px)" />
+      <!-- Flaga -->
+      <rect width="120" height="80" rx="12" fill="#ffffff" stroke="#f1f5f9" stroke-width="2"/>
+      <path d="M 0 40 L 120 40 L 120 68 A 12 12 0 0 1 108 80 L 12 80 A 12 12 0 0 1 0 68 Z" fill="#dc143c" />
+    </g>
+    <!-- Tekst -->
+    <text x="150" y="72" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="76" fill="#0f172a" letter-spacing="-1">CzyPolskaFirma</text>
+  </g>
+</svg>

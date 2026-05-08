@@ -1,0 +1,10 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#ffffff" />
+  <g transform="translate(100, 140)">
+    <!-- Cień -->
+    <rect width="200" height="120" rx="16" fill="#000000" opacity="0.1" transform="translate(0, 4)" filter="blur(4px)" />
+    <!-- Flaga -->
+    <rect width="200" height="120" rx="16" fill="#ffffff" stroke="#f1f5f9" stroke-width="2"/>
+    <path d="M 0 60 L 200 60 L 200 104 A 16 16 0 0 1 184 120 L 16 120 A 16 16 0 0 1 0 104 Z" fill="#dc143c" />
+  </g>
+</svg>

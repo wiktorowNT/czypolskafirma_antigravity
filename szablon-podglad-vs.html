@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background: #334155; display: flex; justify-content: center; padding: 40px; }
+  .canvas { width: 1080px; height: 1080px; position: relative; overflow: hidden; display: flex; }
+</style>
+</head>
+<body>
+<div class="canvas shadow-2xl flex flex-row rounded-xl">
+  
+  <!-- LEWA STRONA (ZAGRANICA) -->
+  <div class="w-1/2 bg-slate-900 text-white flex flex-col pt-12 px-10 relative">
+    <div class="text-center mb-10">
+      <div class="text-red-500 font-bold tracking-widest uppercase text-xl mb-2">Unikaj</div>
+      <h1 class="text-5xl font-black uppercase">Zagraniczny<br>Kapitał</h1>
+    </div>
+
+    <!-- Produkt 1 -->
+    <div class="flex-1 flex flex-col items-center justify-center bg-slate-800/50 rounded-3xl mb-8 p-6 border border-slate-700">
+      <div class="h-40 w-full bg-slate-800 rounded-xl mb-4 flex items-center justify-center text-slate-500">[Zdjęcie]</div>
+      <h2 class="text-4xl font-bold mb-2">Pudliszki</h2>
+      <div class="flex items-center gap-4 bg-slate-900 px-6 py-3 rounded-full mt-auto border border-slate-700">
+        <span class="text-xl text-slate-400">USA</span>
+        <img src="https://flagcdn.com/w80/us.png" class="h-8 rounded">
+      </div>
+    </div>
+
+    <!-- Produkt 2 -->
+    <div class="flex-1 flex flex-col items-center justify-center bg-slate-800/50 rounded-3xl mb-12 p-6 border border-slate-700">
+      <div class="h-40 w-full bg-slate-800 rounded-xl mb-4 flex items-center justify-center text-slate-500">[Zdjęcie]</div>
+      <h2 class="text-4xl font-bold mb-2">Tortex</h2>
+      <div class="flex items-center gap-4 bg-slate-900 px-6 py-3 rounded-full mt-auto border border-slate-700">
+        <span class="text-xl text-slate-400">Wielka Brytania</span>
+        <img src="https://flagcdn.com/w80/gb.png" class="h-8 rounded">
+      </div>
+    </div>
+  </div>
+
+  <!-- PRAWA STRONA (POLSKA) -->
+  <div class="w-1/2 bg-white text-slate-900 flex flex-col pt-12 px-10 relative">
+    <div class="text-center mb-10">
+      <div class="text-green-600 font-bold tracking-widest uppercase text-xl mb-2">Wybieraj</div>
+      <h1 class="text-5xl font-black uppercase text-green-700">Polska<br>Firma</h1>
+    </div>
+
+    <!-- Produkt 1 -->
+    <div class="flex-1 flex flex-col items-center justify-center bg-slate-50 rounded-3xl mb-8 p-6 border-2 border-green-500 shadow-xl shadow-green-100 relative">
+      <div class="absolute -top-4 bg-green-500 text-white px-6 py-1 rounded-full font-bold uppercase tracking-widest">Dobry Wybór</div>
+      <div class="h-40 w-full bg-white rounded-xl mb-4 flex items-center justify-center text-slate-300">[Zdjęcie]</div>
+      <h2 class="text-4xl font-bold mb-2">Włocławek</h2>
+      <div class="flex items-center gap-4 bg-green-50 px-6 py-3 rounded-full mt-auto border border-green-200">
+        <span class="text-xl text-green-800 font-bold">Polska</span>
+        <img src="https://flagcdn.com/w80/pl.png" class="h-8 rounded shadow-sm border border-slate-200">
+      </div>
+    </div>
+
+    <!-- Produkt 2 -->
+    <div class="flex-1 flex flex-col items-center justify-center bg-slate-50 rounded-3xl mb-12 p-6 border-2 border-green-500 shadow-xl shadow-green-100 relative">
+      <div class="absolute -top-4 bg-green-500 text-white px-6 py-1 rounded-full font-bold uppercase tracking-widest">Dobry Wybór</div>
+      <div class="h-40 w-full bg-white rounded-xl mb-4 flex items-center justify-center text-slate-300">[Zdjęcie]</div>
+      <h2 class="text-4xl font-bold mb-2">Kotlin</h2>
+      <div class="flex items-center gap-4 bg-green-50 px-6 py-3 rounded-full mt-auto border border-green-200">
+        <span class="text-xl text-green-800 font-bold">Polska</span>
+        <img src="https://flagcdn.com/w80/pl.png" class="h-8 rounded shadow-sm border border-slate-200">
+      </div>
+    </div>
+  </div>
+
+  <!-- ŚRODEK (VS) -->
+  <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-[#dc143c] rounded-full border-8 border-[#334155] flex items-center justify-center text-white text-5xl font-black italic shadow-2xl z-50">
+    VS
+  </div>
+
+  <!-- STOPKA GLOBALNA NA DOLE -->
+  <div class="absolute bottom-0 left-0 right-0 h-16 bg-[#0f172a] flex justify-center items-center gap-4 z-50">
+     <span class="text-white text-xl tracking-widest uppercase font-bold">Sprawdź więcej na: czypolskafirma.pl</span>
+  </div>
+
+</div>
+</body>
+</html>

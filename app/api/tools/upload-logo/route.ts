@@ -5,12 +5,6 @@ import path from 'path';
 const ADMIN_KEY = process.env.ADMIN_SECRET_KEY;
 
 export async function POST(req: NextRequest) {
-  // Auth check — only allow requests with valid admin key
-  const providedKey = req.headers.get('x-admin-key');
-  if (!ADMIN_KEY || providedKey !== ADMIN_KEY) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;

@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html class="no-js" lang="pl-PL">
+
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<script>
+  document.documentElement.classList.remove("no-js");
+</script>
+
+<link rel=" apple-touch-icon " sizes="180x180 " href="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/favicon/safari-pinned-tab.svg" color="#e31119">
+<meta name="apple-mobile-web-app-title" content="JANPOL">
+<meta name="application-name" content="JANPOL">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+<meta name="format-detection" content="telephone=no">
+
+<meta name='robots' content='max-image-preview:large, index, follow, max-snippet:-1, max-video-preview:-1' />
+<div class="container">
+    <div class="eu-image-row" style="margin: 25px 0;">
+        <a href="https://www.janpol.pl/projekt-unijny/" role="link" aria-label="Projekt Unijny" style="display: flex; justify-content: center; align-items: center;">
+            <picture>
+                <source media="(max-width: 1370px)" srcset="https://www.janpol.pl/wp-content/uploads/2024/06/strona-janpol-baner-projekt-unijny-3840-x-400-px.png">
+                <img src="https://www.janpol.pl/wp-content/uploads/2024/12/strona-janpol-baner-wide-2projekt-unijny-3840-x-400-px.jpg" style="width: 100%; height: auto;" alt="Logo row">
+            </picture>
+        </a>
+    </div>
+</div>
+
+            <script data-no-defer="1" data-ezscrex="false" data-cfasync="false" data-pagespeed-no-defer>
+                const ctPublicFunctions = {"_ajax_nonce":"b6509fb5d6","_rest_nonce":"72c6c66e8e","_ajax_url":"\/wp-admin\/admin-ajax.php","_rest_url":"https:\/\/www.janpol.pl\/wp-json\/","data__cookies_type":"native","data__ajax_type":"rest","text__wait_for_decoding":"Decoding the contact data, let us a few seconds to finish. Anti-Spam by CleanTalk","cookiePrefix":""}
+            </script>
+        
+            <script data-no-defer="1" data-ezscrex="false" data-cfasync="false" data-pagespeed-no-defer>
+                const ctPublic = {"_ajax_nonce":"b6509fb5d6","settings__forms__check_internal":"0","settings__forms__check_external":"0","settings__forms__search_test":"1","blog_home":"https:\/\/www.janpol.pl\/","pixel__setting":"3","pixel__enabled":true,"pixel__url":"https:\/\/moderate3-v4.cleantalk.org\/pixel\/05bbe135d4e793ce7536b86cb5d21218.gif","data__email_check_before_post":"1","data__cookies_type":"native","data__key_is_ok":true,"data__visible_fields_required":true,"data__to_local_storage":[],"wl_brandname":"Anti-Spam by CleanTalk","wl_brandname_short":"CleanTalk","ct_checkjs_key":"eb8dfad106693243dc3841da24a209ef4550bf6dcf396e399ab53884e7e5f722"}
+            </script>
+        
+	<!-- This site is optimized with the Yoast SEO Premium plugin v15.9.1 - https://yoast.com/wordpress/plugins/seo/ -->
+	<title>Materace i łóżka - Fabryka Materacy JANPOL</title>
+	<meta name="description" content="Materace, łóżka, stelaże, poduszki i inne dodatki. Możliwość zakupu materaca w niestandardowym rozmiarze. Polski producent materacy. Wybierz swój materac," />
+	<link rel="canonical" href="https://www.janpol.pl/" />
+	<meta property="og:locale" content="pl_PL" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Materace i łóżka - Fabryka Materacy Janpol" />
+	<meta property="og:description" content="Materace, stelaże, łóżka, poduszki i inne dodatki. Polskie materace. Możliwość zakupu materaca w niestandardowym rozmiarze. Polski producent materacy." />
+	<meta property="og:url" content="https://www.janpol.pl/" />
+	<meta property="og:site_name" content="Fabryka Materacy JANPOL" />
+	<meta property="article:publisher" content="https://www.facebook.com/janpolfabrykamateracy/" />
+	<meta property="article:modified_time" content="2026-04-01T04:23:14+00:00" />
+	<meta property="og:image" content="https://www.janpol.pl/wp-content/uploads/2020/04/11_materac_z_profilu.jpg" />
+	<meta property="og:image:width" content="1500" />
+	<meta property="og:image:height" content="1500" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.janpol.pl/#organization","name":"Fabryka Materacy JANPOL sp. z o.o.","url":"https://www.janpol.pl/","sameAs":["https://www.facebook.com/janpolfabrykamateracy/","https://www.instagram.com/janpolfabrykamateracy/","https://www.youtube.com/user/materaceJANPOL"],"logo":{"@type":"ImageObject","@id":"https://www.janpol.pl/#logo","inLanguage":"pl-PL","url":"https://www.janpol.pl/wp-content/uploads/2019/08/instat\u0142o.png","width":731,"height":731,"caption":"Fabryka Materacy JANPOL sp. z o.o."},"image":{"@id":"https://www.janpol.pl/#logo"}},{"@type":"WebSite","@id":"https://www.janpol.pl/#website","url":"https://www.janpol.pl/","name":"Fabryka Materacy JANPOL","description":"Materace i \u0142\u00f3\u017cka","publisher":{"@id":"https://www.janpol.pl/#organization"},"potentialAction":[{"@type":"SearchAction","target":"https://www.janpol.pl/?s={search_term_string}","query-input":"required name=search_term_string"}],"inLanguage":"pl-PL"},{"@type":"WebPage","@id":"https://www.janpol.pl/#webpage","url":"https://www.janpol.pl/","name":"Materace i \u0142\u00f3\u017cka - Fabryka Materacy JANPOL","isPartOf":{"@id":"https://www.janpol.pl/#website"},"about":{"@id":"https://www.janpol.pl/#organization"},"datePublished":"2022-11-14T08:00:48+00:00","dateModified":"2026-04-01T04:23:14+00:00","description":"Materace, \u0142\u00f3\u017cka, stela\u017ce, poduszki i inne dodatki. Mo\u017cliwo\u015b\u0107 zakupu materaca w niestandardowym rozmiarze. Polski producent materacy. Wybierz sw\u00f3j materac,","breadcrumb":{"@id":"https://www.janpol.pl/#breadcrumb"},"inLanguage":"pl-PL","potentialAction":[{"@type":"ReadAction","target":["https://www.janpol.pl/"]}]},{"@type":"BreadcrumbList","@id":"https://www.janpol.pl/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://www.janpol.pl/","url":"https://www.janpol.pl/","name":"Home"}}]}]}</script>
+	<!-- / Yoast SEO Premium plugin. -->
+
+
+		<!-- This site uses the Google Analytics by MonsterInsights plugin v8.17 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+		<!-- Note: MonsterInsights is not currently configured on this site. The site owner needs to authenticate with Google Analytics in the MonsterInsights settings panel. -->
+					<!-- No tracking code set -->
+				<!-- / Google Analytics by MonsterInsights -->
+		<link rel='stylesheet' id='classic-theme-styles-css' href='https://www.janpol.pl/wp-includes/css/classic-themes.min.css' type='text/css' media='all' />
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0,44rem;--wp--preset--spacing--30: 0,67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1,5rem;--wp--preset--spacing--60: 2,25rem;--wp--preset--spacing--70: 3,38rem;--wp--preset--spacing--80: 5,06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='ct_public_css-css' href='https://www.janpol.pl/wp-content/plugins/cleantalk-spam-protect/css/cleantalk-public.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='menu-image-css' href='https://www.janpol.pl/wp-content/plugins/menu-image/includes/css/menu-image.css' type='text/css' media='all' />
+<link rel='stylesheet' id='dashicons-css' href='https://www.janpol.pl/wp-includes/css/dashicons.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='pojo-a11y-css' href='https://www.janpol.pl/wp-content/plugins/pojo-accessibility/assets/css/style.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='algolia-autocomplete-css' href='https://www.janpol.pl/wp-content/plugins/search-by-algolia-instant-relevant-results/includes/../css/algolia-autocomplete.css' type='text/css' media='screen' />
+<link rel='stylesheet' id='leonardo-css' href='https://www.janpol.pl/wp-content/themes/leonardo/assets/css/style.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='leonardos-css' href='https://www.janpol.pl/wp-content/themes/leonardo/assets/css/up.css' type='text/css' media='all' />
+<script type='text/javascript' src='https://www.janpol.pl/wp-includes/js/jquery/jquery.min.js' id='jquery-core-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-includes/js/jquery/jquery-migrate.min.js' id='jquery-migrate-js'></script>
+<script type='text/javascript' data-pagespeed-no-defer src='https://www.janpol.pl/wp-content/plugins/cleantalk-spam-protect/js/apbct-public-bundle.min.js' id='ct_public_functions-js'></script>
+<script type='text/javascript' id='ajax-script-js-extra'>
+/* <![CDATA[ */
+var janpol_ajax = {"ajax_url":"https:\/\/www.janpol.pl\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/themes/leonardo/assets/js/search-mattresses.js' id='ajax-script-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-includes/js/underscore.min.js' id='underscore-js'></script>
+<script type='text/javascript' id='wp-util-js-extra'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-includes/js/wp-util.min.js' id='wp-util-js'></script>
+<script type='text/javascript' id='algolia-search-js-before'>
+var current_locale = "pl_PL";
+</script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/plugins/search-by-algolia-instant-relevant-results/includes/../js/algoliasearch/algoliasearch.jquery.min.js' id='algolia-search-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/plugins/search-by-algolia-instant-relevant-results/includes/../js/autocomplete.js/autocomplete.min.js' id='algolia-autocomplete-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/plugins/search-by-algolia-instant-relevant-results/includes/../js/autocomplete-noconflict.js' id='algolia-autocomplete-noconflict-js'></script>
+<link rel="https://api.w.org/" href="https://www.janpol.pl/wp-json/" /><link rel="alternate" type="application/json" href="https://www.janpol.pl/wp-json/wp/v2/pages/2" />
+<link rel="alternate" type="application/json+oembed" href="https://www.janpol.pl/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.janpol.pl%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.janpol.pl/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.janpol.pl%2F&#038;format=xml" />
+<!-- start Simple Custom CSS and JS -->
+<script type="text/javascript">
+ 
+
+document.addEventListener('DOMContentLoaded', function () {
+  // tabindex fix
+  var skip = document.getElementById('pojo-a11y-skip-content');
+  if (skip) skip.setAttribute('tabindex', '0');
+
+  // aria-label fix
+  var toolbar = document.getElementById('pojo-a11y-toolbar');
+  if (toolbar) toolbar.setAttribute('aria-label', 'Accessibility Toolbar');
+
+  // h3 → h2 fix
+  document.querySelectorAll('h3.hero-intro__subtitle').forEach(function (h3) {
+    var h2 = document.createElement('h2');
+    h2.className = h3.className;
+    h2.innerHTML = h3.innerHTML;
+    h3.parentNode.replaceChild(h2, h3);
+  });
+
+  // target="_blank" aria-label fix
+  document.querySelectorAll('a[target="_blank"]').forEach(function (a) {
+    var label = a.getAttribute('aria-label') || a.textContent.trim();
+    a.setAttribute('aria-label', label + ' (otwiera się w nowej karcie)');
+  });
+});</script>
+<!-- end Simple Custom CSS and JS -->
+<!-- start Simple Custom CSS and JS -->
+<style type="text/css">
+/* Dodaj swój kod CSS tutaj.
+                     
+Na przykład:
+.przyklad {
+    color: red;
+}
+
+Sprawdź poniższą stronę, jeśli chcesz poszerzyć swoją wiedzę nt. CSS:
+http://www.w3schools.com/css/css_syntax.asp
+
+Koniec komentarza */ 
+
+.footer-main {
+    background: #000000!important;
+}
+
+.footer-main a {
+	color: #ffffff!important;
+}
+
+.footer-main a:hover {
+	color: #ff0000!important;
+}
+
+.text-heading__subtitle {
+    font-size: 17px;
+    color: #000000!important;
+}
+
+.meta-label--warranty {
+    border-color: #138c00!important;
+    background: #fff;
+    color: #138c00!important;
+}
+
+
+.label__legal {
+    color: #000000!important;
+    line-height: 1.5;
+}
+
+.attr__desc, .product-meta__name {
+    font-weight: 700;
+    color: #000000!important;
+    line-height: 1.2;
+}
+
+.product-category-content__badge {
+    background: #000000;
+}
+
+    .gmap__stores {
+        min-height: 0;
+    }
+</style>
+<!-- end Simple Custom CSS and JS -->
+<!-- start Simple Custom CSS and JS -->
+<style type="text/css">
+/* Dodaj swój kod CSS tutaj.
+                     
+Na przykład:
+.przyklad {
+    color: red;
+}
+
+Sprawdź poniższą stronę, jeśli chcesz poszerzyć swoją wiedzę nt. CSS:
+http://www.w3schools.com/css/css_syntax.asp
+
+Koniec komentarza */ 
+
+
+.footer-logos{
+  display: none!important;
+}
+.label__legal{
+  font-size: 11px!important;
+}
+@media screen and (min-width: 1280px){
+  .box-ico--left {
+    padding-right: 80px;
+}
+}
+
+.disp-none {
+    display: none;
+}
+
+.eu-flag .ico {
+    background-size: cover!important;
+    width: 70px;
+    height: 60px;
+    background-position: center!important;
+}
+
+.link-image {
+    max-width: none;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+}
+
+.link-image img {
+    width: 100%;
+}
+@media screen and (min-width: 1024px){
+  body{
+        padding-top: 96px;
+  }
+}
+
+@media screen and (min-width: 968px){
+  body{
+        padding-top: 66px;
+  }
+}</style>
+<!-- end Simple Custom CSS and JS -->
+<!-- start Simple Custom CSS and JS -->
+<style type="text/css">
+.navigation__header--primary li{
+  padding:0px 15px;
+}
+
+.lottery1 a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: #e31119;
+  border-radius: 50px;
+  color:#ffff;
+  background:#e31119;
+  align-self:center;
+  height:30px;
+  padding-left:16px;
+  padding-right:16px;
+  padding-bottom:7px;
+  color:#ffff!important;
+}
+
+.lottery1{
+  display:flex;
+  align-items:center;
+}
+
+html body lottery1 a:hover{
+  background:white;
+  border:2px solid  #e31119;
+
+}
+
+
+@media only screen and (max-width: 1854px) {
+  html .mobile-only .navigation__header--partners-zone li, .navigation__header--primary li{
+    padding:0px 12px;
+  }
+  
+}
+
+@media only screen and (max-width: 1699px) {
+ html .mobile-only .navigation__header--partners-zone li, .navigation__header--primary li{
+    padding:0px 10px;
+  }
+  
+}
+@media only screen and (max-width: 1381px) {
+ html .mobile-only .navigation__header--partners-zone li, .navigation__header--primary li{
+    padding:0px 10px;
+  }
+  html body .navigation__header{
+    flex-wrap:no-wrap!important;
+    margin-left:5px;
+    width:110%;
+  }
+  
+}
+
+@media only screen and (max-width: 1279px) {
+  .lottery1 a{ 
+    padding-top:5px;
+  }
+}
+
+
+@media only screen and (max-width: 1369px) {
+
+.navigation__header--additional{
+  transform:scale(0.85);
+
+}
+  .b-header__navigation{
+    flex-wrap:wrap;   
+    flex-direction:column;
+        align-items: flex-end;
+  }
+  
+}
+  
+  
+@media only screen and (max-width: 1015px) {
+   html .mobile-only .navigation__header--partners-zone li, .navigation__header--primary li{
+    padding:0px 5px;
+  }
+  
+  .mobile-only .navigation__header--partners-zone a, .navigation__header--primary a{
+    font-size:13px;
+  }
+  
+}
+@media only screen and (max-width: 1015px) {
+html .mobile-only .navigation__header--partners-zone li, .navigation__header--primary li{
+  display:flex;
+  align-items:center;
+}
+  html body .navigation__header{
+    display:flex!important;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+    .mobile-only .navigation__header--partners-zone a, .navigation__header--primary a{
+    font-size:12px;
+  }
+     html .mobile-only .navigation__header--partners-zone li, .navigation__header--primary li{
+    padding:0px 4px;
+  }
+}
+@media only screen and (max-width: 700px) {
+  
+    .mobile-only .navigation__header--partners-zone a, .navigation__header--primary a{
+    font-size:16px;
+  }
+  
+  .navigation__header--additional{
+    transform:none!important;
+  }
+  
+}
+</style>
+<!-- end Simple Custom CSS and JS -->
+<style type="text/css">
+#pojo-a11y-toolbar .pojo-a11y-toolbar-toggle a{ background-color: #4054b2;	color: #ffffff;}
+#pojo-a11y-toolbar .pojo-a11y-toolbar-overlay, #pojo-a11y-toolbar .pojo-a11y-toolbar-overlay ul.pojo-a11y-toolbar-items.pojo-a11y-links{ border-color: #4054b2;}
+body.pojo-a11y-focusable a:focus{ outline-style: solid !important;	outline-width: 1px !important;	outline-color: #FF0000 !important;}
+#pojo-a11y-toolbar{ top: 100px !important;}
+#pojo-a11y-toolbar .pojo-a11y-toolbar-overlay{ background-color: #ffffff;}
+#pojo-a11y-toolbar .pojo-a11y-toolbar-overlay ul.pojo-a11y-toolbar-items li.pojo-a11y-toolbar-item a, #pojo-a11y-toolbar .pojo-a11y-toolbar-overlay p.pojo-a11y-toolbar-title{ color: #333333;}
+#pojo-a11y-toolbar .pojo-a11y-toolbar-overlay ul.pojo-a11y-toolbar-items li.pojo-a11y-toolbar-item a.active{ background-color: #4054b2;	color: #ffffff;}
+@media (max-width: 767px) { #pojo-a11y-toolbar { top: 50px !important; } }</style><script type="text/javascript">var algolia = {"debug":false,"application_id":"60CAEQ369G","search_api_key":"86d6e6b00b75c5395f4e8913b2233888","powered_by_enabled":true,"query":"","autocomplete":{"sources":[{"index_id":"posts_cpt_products","index_name":"prod_posts_cpt_products","label":"Produkty","admin_name":"Produkty","position":10,"max_suggestions":5,"tmpl_suggestion":"autocomplete-post-suggestion","enabled":true},{"index_id":"terms_ct_products_category","index_name":"prod_terms_ct_products_category","label":"Kategorie","admin_name":"Kategorie","position":20,"max_suggestions":3,"tmpl_suggestion":"autocomplete-term-suggestion","enabled":true}],"input_selector":"input[name='s']:not('.no-autocomplete')"},"indices":{"posts_cpt_products":{"name":"prod_posts_cpt_products","id":"posts_cpt_products","enabled":true,"replicas":[]},"terms_ct_products_category":{"name":"prod_terms_ct_products_category","id":"terms_ct_products_category","enabled":true,"replicas":[]}}};</script>	<!-- Fonts Plugin CSS - https://fontsplugin.com/ -->
+	<style>
+			</style>
+	<!-- Fonts Plugin CSS -->
+	<script type="text/html" id="tmpl-autocomplete-header">
+  <div class="autocomplete-header">
+    <div class="autocomplete-header-title">{{{ data.label }}}</div>
+    <div class="clear"></div>
+  </div>
+</script>
+
+<script type="text/html" id="tmpl-autocomplete-post-suggestion">
+  <a class="suggestion-link" href="{{ data.permalink }}" title="{{ data.post_title }}">
+    <# if ( data.images.thumbnail ) { #>
+      <img class="suggestion-post-thumbnail" src="{{ data.images.thumbnail.url }}" alt="{{ data.post_title }}">
+      <# } #>
+        <div class="suggestion-post-attributes">
+          <span class="suggestion-post-title">{{{ data._highlightResult.post_title.value }}}</span>
+          <# if ( data._snippetResult['content'] ) { #>
+            <span class="suggestion-post-content">{{{ data._snippetResult['content'].value }}}</span>
+            <# } #>
+        </div>
+  </a>
+</script>
+
+<script type="text/html" id="tmpl-autocomplete-term-suggestion">
+  <a class="suggestion-link" href="{{ data.permalink }}" title="{{ data.name }}">
+    <svg viewBox="0 0 21 21" width="21" height="21">
+      <svg width="21" height="21" viewBox="0 0 21 21">
+        <path d="M4.662 8.72l-1.23 1.23c-.682.682-.68 1.792.004 2.477l5.135 5.135c.7.693 1.8.688 2.48.005l1.23-1.23 5.35-5.346c.31-.31.54-.92.51-1.36l-.32-4.29c-.09-1.09-1.05-2.06-2.15-2.14l-4.3-.33c-.43-.03-1.05.2-1.36.51l-.79.8-2.27 2.28-2.28 2.27zm9.826-.98c.69 0 1.25-.56 1.25-1.25s-.56-1.25-1.25-1.25-1.25.56-1.25 1.25.56 1.25 1.25 1.25z" fill-rule="evenodd"></path>
+      </svg>
+    </svg>
+    <span class="suggestion-post-title">{{{ data._highlightResult.name.value }}}</span>
+  </a>
+</script>
+
+<script type="text/html" id="tmpl-autocomplete-user-suggestion">
+  <a class="suggestion-link user-suggestion-link" href="{{ data.posts_url }}" title="{{ data.display_name }}">
+    <# if ( data.avatar_url ) { #>
+      <img class="suggestion-user-thumbnail" src="{{ data.avatar_url }}" alt="{{ data.display_name }}">
+      <# } #>
+
+        <span class="suggestion-post-title">{{{ data._highlightResult.display_name.value }}}</span>
+  </a>
+</script>
+
+<script type="text/html" id="tmpl-autocomplete-footer">
+  <div class="autocomplete-footer">
+    <div class="autocomplete-footer-branding">
+      <a href="#" class="algolia-powered-by-link" title="Algolia">
+        <svg width="130" viewBox="0 0 130 18" xmlns="http://www.w3.org/2000/svg">
+          <title>Search by Algolia</title>
+          <defs>
+            <linearGradient x1="-36.868%" y1="134.936%" x2="129.432%" y2="-27.7%" id="a">
+              <stop stop-color="#00AEFF" offset="0%" />
+              <stop stop-color="#3369E7" offset="100%" />
+            </linearGradient>
+          </defs>
+          <g fill="none" fill-rule="evenodd">
+            <path d="M59.399.022h13.299a2.372 2.372 0 0 1 2.377 2.364V15.62a2.372 2.372 0 0 1-2.377 2.364H59.399a2.372 2.372 0 0 1-2.377-2.364V2.381A2.368 2.368 0 0 1 59.399.022z" fill="url(#a)" />
+            <path d="M66.257 4.56c-2.815 0-5.1 2.272-5.1 5.078 0 2.806 2.284 5.072 5.1 5.072 2.815 0 5.1-2.272 5.1-5.078 0-2.806-2.279-5.072-5.1-5.072zm0 8.652c-1.983 0-3.593-1.602-3.593-3.574 0-1.972 1.61-3.574 3.593-3.574 1.983 0 3.593 1.602 3.593 3.574a3.582 3.582 0 0 1-3.593 3.574zm0-6.418v2.664c0 .076.082.131.153.093l2.377-1.226c.055-.027.071-.093.044-.147a2.96 2.96 0 0 0-2.465-1.487c-.055 0-.11.044-.11.104l.001-.001zm-3.33-1.956l-.312-.311a.783.783 0 0 0-1.106 0l-.372.37a.773.773 0 0 0 0 1.101l.307.305c.049.049.121.038.164-.011.181-.245.378-.479.597-.697.225-.223.455-.42.707-.599.055-.033.06-.109.016-.158h-.001zm5.001-.806v-.616a.781.781 0 0 0-.783-.779h-1.824a.78.78 0 0 0-.783.779v.632c0 .071.066.12.137.104a5.736 5.736 0 0 1 1.588-.223c.52 0 1.035.071 1.534.207a.106.106 0 0 0 .131-.104z" fill="#FFF" />
+            <path d="M102.162 13.762c0 1.455-.372 2.517-1.123 3.193-.75.676-1.895 1.013-3.44 1.013-.564 0-1.736-.109-2.673-.316l.345-1.689c.783.163 1.819.207 2.361.207.86 0 1.473-.174 1.84-.523.367-.349.548-.866.548-1.553v-.349a6.374 6.374 0 0 1-.838.316 4.151 4.151 0 0 1-1.194.158 4.515 4.515 0 0 1-1.616-.278 3.385 3.385 0 0 1-1.254-.817 3.744 3.744 0 0 1-.811-1.351c-.192-.539-.29-1.504-.29-2.212 0-.665.104-1.498.307-2.054a3.925 3.925 0 0 1 .904-1.433 4.124 4.124 0 0 1 1.441-.926 5.31 5.31 0 0 1 1.945-.365c.696 0 1.337.087 1.961.191a15.86 15.86 0 0 1 1.588.332v8.456h-.001zm-5.954-4.206c0 .893.197 1.885.592 2.299.394.414.904.621 1.528.621.34 0 .663-.049.964-.142a2.75 2.75 0 0 0 .734-.332v-5.29a8.531 8.531 0 0 0-1.413-.18c-.778-.022-1.369.294-1.786.801-.411.507-.619 1.395-.619 2.223zm16.12 0c0 .719-.104 1.264-.318 1.858a4.389 4.389 0 0 1-.904 1.52c-.389.42-.854.746-1.402.975-.548.229-1.391.36-1.813.36-.422-.005-1.26-.125-1.802-.36a4.088 4.088 0 0 1-1.397-.975 4.486 4.486 0 0 1-.909-1.52 5.037 5.037 0 0 1-.329-1.858c0-.719.099-1.411.318-1.999.219-.588.526-1.09.92-1.509.394-.42.865-.741 1.402-.97a4.547 4.547 0 0 1 1.786-.338 4.69 4.69 0 0 1 1.791.338c.548.229 1.019.55 1.402.97.389.42.69.921.909 1.509.23.588.345 1.28.345 1.999h.001zm-2.191.005c0-.921-.203-1.689-.597-2.223-.394-.539-.948-.806-1.654-.806-.707 0-1.26.267-1.654.806-.394.539-.586 1.302-.586 2.223 0 .932.197 1.558.592 2.098.394.545.948.812 1.654.812.707 0 1.26-.272 1.654-.812.394-.545.592-1.166.592-2.098h-.001zm6.962 4.707c-3.511.016-3.511-2.822-3.511-3.274L113.583.926l2.142-.338v10.003c0 .256 0 1.88 1.375 1.885v1.792h-.001zm3.774 0h-2.153V5.072l2.153-.338v9.534zm-1.079-10.542c.718 0 1.304-.578 1.304-1.291 0-.714-.581-1.291-1.304-1.291-.723 0-1.304.578-1.304 1.291 0 .714.586 1.291 1.304 1.291zm6.431 1.013c.707 0 1.304.087 1.786.262.482.174.871.42 1.156.73.285.311.488.735.608 1.182.126.447.186.937.186 1.476v5.481a25.24 25.24 0 0 1-1.495.251c-.668.098-1.419.147-2.251.147a6.829 6.829 0 0 1-1.517-.158 3.213 3.213 0 0 1-1.178-.507 2.455 2.455 0 0 1-.761-.904c-.181-.37-.274-.893-.274-1.438 0-.523.104-.855.307-1.215.208-.36.487-.654.838-.883a3.609 3.609 0 0 1 1.227-.49 7.073 7.073 0 0 1 2.202-.103c.263.027.537.076.833.147v-.349c0-.245-.027-.479-.088-.697a1.486 1.486 0 0 0-.307-.583c-.148-.169-.34-.3-.581-.392a2.536 2.536 0 0 0-.915-.163c-.493 0-.942.06-1.353.131-.411.071-.75.153-1.008.245l-.257-1.749c.268-.093.668-.185 1.183-.278a9.335 9.335 0 0 1 1.66-.142l-.001-.001zm.181 7.731c.657 0 1.145-.038 1.484-.104v-2.168a5.097 5.097 0 0 0-1.978-.104c-.241.033-.46.098-.652.191a1.167 1.167 0 0 0-.466.392c-.121.169-.175.267-.175.523 0 .501.175.79.493.981.323.196.75.289 1.293.289h.001zM84.109 4.794c.707 0 1.304.087 1.786.262.482.174.871.42 1.156.73.29.316.487.735.608 1.182.126.447.186.937.186 1.476v5.481a25.24 25.24 0 0 1-1.495.251c-.668.098-1.419.147-2.251.147a6.829 6.829 0 0 1-1.517-.158 3.213 3.213 0 0 1-1.178-.507 2.455 2.455 0 0 1-.761-.904c-.181-.37-.274-.893-.274-1.438 0-.523.104-.855.307-1.215.208-.36.487-.654.838-.883a3.609 3.609 0 0 1 1.227-.49 7.073 7.073 0 0 1 2.202-.103c.257.027.537.076.833.147v-.349c0-.245-.027-.479-.088-.697a1.486 1.486 0 0 0-.307-.583c-.148-.169-.34-.3-.581-.392a2.536 2.536 0 0 0-.915-.163c-.493 0-.942.06-1.353.131-.411.071-.75.153-1.008.245l-.257-1.749c.268-.093.668-.185 1.183-.278a8.89 8.89 0 0 1 1.66-.142l-.001-.001zm.186 7.736c.657 0 1.145-.038 1.484-.104v-2.168a5.097 5.097 0 0 0-1.978-.104c-.241.033-.46.098-.652.191a1.167 1.167 0 0 0-.466.392c-.121.169-.175.267-.175.523 0 .501.175.79.493.981.318.191.75.289 1.293.289h.001zm8.682 1.738c-3.511.016-3.511-2.822-3.511-3.274L89.461.926l2.142-.338v10.003c0 .256 0 1.88 1.375 1.885v1.792h-.001z" fill="#182359" />
+            <path d="M5.027 11.025c0 .698-.252 1.246-.757 1.644-.505.397-1.201.596-2.089.596-.888 0-1.615-.138-2.181-.414v-1.214c.358.168.739.301 1.141.397.403.097.778.145 1.125.145.508 0 .884-.097 1.125-.29a.945.945 0 0 0 .363-.779.978.978 0 0 0-.333-.747c-.222-.204-.68-.446-1.375-.725-.716-.29-1.221-.621-1.515-.994-.294-.372-.44-.82-.44-1.343 0-.655.233-1.171.698-1.547.466-.376 1.09-.564 1.875-.564.752 0 1.5.165 2.245.494l-.408 1.047c-.698-.294-1.321-.44-1.869-.44-.415 0-.73.09-.945.271a.89.89 0 0 0-.322.717c0 .204.043.379.129.524.086.145.227.282.424.411.197.129.551.299 1.063.51.577.24.999.464 1.268.671.269.208.466.442.591.704.125.261.188.569.188.924l-.001.002zm3.98 2.24c-.924 0-1.646-.269-2.167-.808-.521-.539-.782-1.281-.782-2.226 0-.97.242-1.733.725-2.288.483-.555 1.148-.833 1.993-.833.784 0 1.404.238 1.858.714.455.476.682 1.132.682 1.966v.682H7.357c.018.577.174 1.02.467 1.329.294.31.707.465 1.241.465.351 0 .678-.033.98-.099a5.1 5.1 0 0 0 .975-.33v1.026a3.865 3.865 0 0 1-.935.312 5.723 5.723 0 0 1-1.08.091l.002-.001zm-.231-5.199c-.401 0-.722.127-.964.381s-.386.625-.432 1.112h2.696c-.007-.491-.125-.862-.354-1.115-.229-.252-.544-.379-.945-.379l-.001.001zm7.692 5.092l-.252-.827h-.043c-.286.362-.575.608-.865.739-.29.131-.662.196-1.117.196-.584 0-1.039-.158-1.367-.473-.328-.315-.491-.761-.491-1.337 0-.612.227-1.074.682-1.386.455-.312 1.148-.482 2.079-.51l1.026-.032v-.317c0-.38-.089-.663-.266-.851-.177-.188-.452-.282-.824-.282-.304 0-.596.045-.876.134a6.68 6.68 0 0 0-.806.317l-.408-.902a4.414 4.414 0 0 1 1.058-.384 4.856 4.856 0 0 1 1.085-.132c.756 0 1.326.165 1.711.494.385.329.577.847.577 1.552v4.002h-.902l-.001-.001zm-1.88-.859c.458 0 .826-.128 1.104-.384.278-.256.416-.615.416-1.077v-.516l-.763.032c-.594.021-1.027.121-1.297.298s-.406.448-.406.814c0 .265.079.47.236.615.158.145.394.218.709.218h.001zm7.557-5.189c.254 0 .464.018.628.054l-.124 1.176a2.383 2.383 0 0 0-.559-.064c-.505 0-.914.165-1.227.494-.313.329-.47.757-.47 1.284v3.105h-1.262V7.218h.988l.167 1.047h.064c.197-.354.454-.636.771-.843a1.83 1.83 0 0 1 1.023-.312h.001zm4.125 6.155c-.899 0-1.582-.262-2.049-.787-.467-.525-.701-1.277-.701-2.259 0-.999.244-1.767.733-2.304.489-.537 1.195-.806 2.119-.806.627 0 1.191.116 1.692.349l-.381 1.015c-.534-.208-.974-.312-1.321-.312-1.028 0-1.542.682-1.542 2.046 0 .666.128 1.166.384 1.501.256.335.631.502 1.125.502a3.23 3.23 0 0 0 1.595-.419v1.101a2.53 2.53 0 0 1-.722.285 4.356 4.356 0 0 1-.932.086v.002zm8.277-.107h-1.268V9.506c0-.458-.092-.8-.277-1.026-.184-.226-.477-.338-.878-.338-.53 0-.919.158-1.168.475-.249.317-.373.848-.373 1.593v2.949h-1.262V4.801h1.262v2.122c0 .34-.021.704-.064 1.09h.081a1.76 1.76 0 0 1 .717-.666c.306-.158.663-.236 1.072-.236 1.439 0 2.159.725 2.159 2.175v3.873l-.001-.001zm7.649-6.048c.741 0 1.319.269 1.732.806.414.537.62 1.291.62 2.261 0 .974-.209 1.732-.628 2.275-.419.542-1.001.814-1.746.814-.752 0-1.336-.27-1.751-.811h-.086l-.231.704h-.945V4.801h1.262v1.987l-.021.655-.032.553h.054c.401-.591.992-.886 1.772-.886zm-.328 1.031c-.508 0-.875.149-1.098.448-.224.299-.339.799-.346 1.501v.086c0 .723.115 1.247.344 1.571.229.324.603.486 1.123.486.448 0 .787-.177 1.018-.532.231-.354.346-.867.346-1.536 0-1.35-.462-2.025-1.386-2.025l-.001.001zm3.244-.924h1.375l1.209 3.368c.183.48.304.931.365 1.354h.043c.032-.197.091-.436.177-.717.086-.281.541-1.616 1.364-4.004h1.364l-2.541 6.73c-.462 1.235-1.232 1.853-2.31 1.853-.279 0-.551-.03-.816-.091v-.999c.19.043.406.064.65.064.609 0 1.037-.353 1.284-1.058l.22-.559-2.385-5.941h.001z" fill="#1D3657" />
+          </g>
+        </svg>
+      </a>
+    </div>
+  </div>
+</script>
+
+<script type="text/html" id="tmpl-autocomplete-empty">
+  <div class="autocomplete-empty">
+    No results matched your query     <span class="empty-query">"{{ data.query }}"</span>
+  </div>
+</script>
+
+<script type="text/javascript">
+  jQuery(function() {
+    /* init Algolia client */
+    var client = algoliasearch(algolia.application_id, algolia.search_api_key);
+
+    /* setup default sources */
+    var sources = [];
+    jQuery.each(algolia.autocomplete.sources, function(i, config) {
+      var suggestion_template = wp.template(config['tmpl_suggestion']);
+      sources.push({
+        source: algoliaAutocomplete.sources.hits(client.initIndex(config['index_name']), {
+          hitsPerPage: config['max_suggestions'],
+          attributesToSnippet: [
+            'content:10'
+          ],
+          highlightPreTag: '__ais-highlight__',
+          highlightPostTag: '__/ais-highlight__',
+          filters: 'wpml.locale:"' + current_locale + '"',
+          // filters: 'wpml.locale: "pl"'
+        }),
+        templates: {
+          header: function() {
+            return wp.template('autocomplete-header')({
+              label: _.escape(config['label'])
+            });
+          },
+          suggestion: function(hit) {
+            if (hit.escaped === true) {
+              return suggestion_template(hit);
+            }
+            hit.escaped = true;
+
+            for (var key in hit._highlightResult) {
+              /* We do not deal with arrays. */
+              if (typeof hit._highlightResult[key].value !== 'string') {
+                continue;
+              }
+              hit._highlightResult[key].value = _.escape(hit._highlightResult[key].value);
+              hit._highlightResult[key].value = hit._highlightResult[key].value.replace(/__ais-highlight__/g, '<em>').replace(/__\/ais-highlight__/g, '</em>');
+            }
+
+            for (var key in hit._snippetResult) {
+              /* We do not deal with arrays. */
+              if (typeof hit._snippetResult[key].value !== 'string') {
+                continue;
+              }
+
+              hit._snippetResult[key].value = _.escape(hit._snippetResult[key].value);
+              hit._snippetResult[key].value = hit._snippetResult[key].value.replace(/__ais-highlight__/g, '<em>').replace(/__\/ais-highlight__/g, '</em>');
+            }
+
+            return suggestion_template(hit);
+          }
+        }
+      });
+
+    });
+
+    /* Setup dropdown menus */
+    jQuery(algolia.autocomplete.input_selector).each(function(i) {
+      var $searchInput = jQuery(this);
+
+      var config = {
+        debug: algolia.debug,
+        hint: false,
+        openOnFocus: true,
+        appendTo: 'body',
+        templates: {
+          empty: wp.template('autocomplete-empty')
+        }
+      };
+
+      if (algolia.powered_by_enabled) {
+        config.templates.footer = wp.template('autocomplete-footer');
+      }
+
+      /* Instantiate autocomplete.js */
+      var autocomplete = algoliaAutocomplete($searchInput[0], config, sources)
+        .on('autocomplete:selected', function(e, suggestion) {
+          /* Redirect the user when we detect a suggestion selection. */
+          window.location.href = suggestion.permalink;
+        });
+
+      /* Force the dropdown to be re-drawn on scroll to handle fixed containers. */
+      jQuery(window).scroll(function() {
+        if (autocomplete.autocomplete.getWrapper().style.display === "block") {
+          autocomplete.autocomplete.close();
+          autocomplete.autocomplete.open();
+        }
+      });
+    });
+
+    jQuery(document).on("click", ".algolia-powered-by-link", function(e) {
+      e.preventDefault();
+      window.location = "https://www.algolia.com/?utm_source=WordPress&utm_medium=extension&utm_content=" + window.location.hostname + "&utm_campaign=poweredby";
+    });
+  });
+</script>  <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+
+<body data-rsssl=1>
+  <div class="animsition_">
+    <header class="header-main" id="main-header" >
+  <div class="container container--fluid">
+    <div class="row">
+      <div class="column column-12">
+        <div class="header-wrapper">
+          <div class="b-header__logo">
+            <a href="https://www.janpol.pl">
+              <img src="https://www.janpol.pl/wp-content/uploads/2021/03/svgjanpol-2.svg" width="278" height="52" alt="Fabryka Materacy JANPOL sp. z o.o." />
+            </a>
+            <div class="toggler" id="toggler">
+              <span class="toggler__line"></span>
+              <span class="toggler__line"></span>
+              <span class="toggler__line"></span>
+            </div>
+          </div>
+          <nav class="b-header__navigation desctoper" id="nav">
+            <div class="b-menu">
+  <ul id="menu-menu-glowne" class="navigation navigation__header navigation__header--primary"><li id="menu-item-11349" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-11349"><a>Oferta</a>
+<ul class="sub-menu">
+	<li id="menu-item-71" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-71"><a href="https://www.janpol.pl/kategoria-produktu/materace/">Materace</a></li>
+	<li id="menu-item-72" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-72"><a href="https://www.janpol.pl/kategoria-produktu/lozka-i-stelaze/">Łóżka i&nbsp;stelaże</a></li>
+	<li id="menu-item-73" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-73"><a href="https://www.janpol.pl/kategoria-produktu/poduszki/">Poduszki</a></li>
+	<li id="menu-item-8233" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-8233"><a href="https://www.janpol.pl/kategoria-produktu/akcesoria/">Akcesoria</a></li>
+</ul>
+</li>
+<li id="menu-item-11801" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11801"><a href="https://bosquo.pl/">Oferta hotelowa</a></li>
+<li id="menu-item-13651" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13651"><a href="https://www.janpol.pl/kategoria-produktu/dla-szpitali/">Dla Szpitali</a></li>
+<li id="menu-item-16537" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16537"><a href="https://www.janpol.pl/gdzie-kupic-v1/">Gdzie Kupić</a></li>
+<li id="menu-item-15363" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15363"><a href="https://www.janpol.pl/AKTUALNOSCI">Aktualności</a></li>
+<li id="menu-item-1620" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1620"><a target="_blank" rel="noopener" href="https://www.janpol.pl/wp-content/uploads/2025/02/Ulotka-skladana-materace-Janpol-2025-—-WEB.pdf">Katalog</a>
+<ul class="sub-menu">
+	<li id="menu-item-15736" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15736"><a href="https://www.janpol.pl/wp-content/uploads/2025/02/Kolekcja-materacy-bosquo-—-WEB.pdf">Kolekcja materacy Bosquo</a></li>
+	<li id="menu-item-15457" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15457"><a href="https://www.janpol.pl/wp-content/uploads/2025/02/Ulotka-skladana-materace-PREMIUM-Janpol-2025-—-WEB.pdf">Materace PREMIUM</a></li>
+	<li id="menu-item-11802" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11802"><a href="https://www.janpol.pl/wp-content/uploads/2025/02/Ulotka-skladana-C-200x200-Kolekcja-dla-hoteli-—-WEB.pdf">Kolekcja dla hoteli</a></li>
+	<li id="menu-item-15766" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15766"><a href="https://www.janpol.pl/wp-content/uploads/2025/03/Ulotka-skladana-Kolekcja-dla-hoteli-2025-EN-—-WEB.pdf">Collection for hotels &#8211; EN</a></li>
+	<li id="menu-item-15765" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15765"><a href="https://www.janpol.pl/wp-content/uploads/2025/03/Ulotka-skladana-Kolekcja-dla-hoteli-2025-DE-—-WEB.pdf">Kollektion für Hotels &#8211; DE</a></li>
+	<li id="menu-item-13139" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13139"><a href="https://drive.google.com/drive/folders/14HgScYAWUpEhjEtkqfLqi3Kjsm9i8vSS?usp=sharing">Grafiki produktów</a></li>
+	<li id="menu-item-14593" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-14593"><a href="https://bosquo.pl/zaufali-nam/">Realizacje Hotelowe</a></li>
+	<li id="menu-item-11769" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11769"><a href="https://sketchfab.com/janpolfabrykamateracy/models">Biblioteka &#8211; VR</a></li>
+	<li id="menu-item-14619" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14619"><a href="https://www.janpol.pl/vr-wizualizacje/">VR Wizualizacje</a></li>
+</ul>
+</li>
+<li id="menu-item-14813" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14813"><a href="https://www.janpol.pl/do-pobrania-2/">Do&nbsp;pobrania</a></li>
+<li id="menu-item-4764" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4764"><a href="https://www.janpol.pl/o-nas/">O&nbsp;nas</a></li>
+<li id="menu-item-68" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-68"><a href="https://www.janpol.pl/?page_id=10">Kontakt</a></li>
+</ul></div>            <div class="b-menu">
+  <ul id="menu-menu-dodatkowe" class="navigation navigation__header navigation__header--additional"><li id="menu-item-69" class="disp-none menu-item menu-item-type-custom menu-item-object-custom menu-item-69"><a target="_blank" rel="noopener" href="https://www.facebook.com/janpolfabrykamateracy/"><span style="background: url(https://www.janpol.pl/wp-content/themes/leonardo/assets/img/svg/optimized/social-fb.svg);" class="ico ico-soc ico-soc__fb"></span></a></li>
+<li id="menu-item-70" class="disp-none menu-item menu-item-type-custom menu-item-object-custom menu-item-70"><a target="_blank" rel="noopener" href="https://www.youtube.com/user/materaceJANPOL"><span style="background: url(https://www.janpol.pl/wp-content/themes/leonardo/assets/img/svg/optimized/social-yt.svg);" class="ico ico-soc ico-soc__yt"></span></a></li>
+<li id="menu-item-4910" class="disp-none menu-item menu-item-type-custom menu-item-object-custom menu-item-4910"><a target="_blank" rel="noopener" href="https://www.instagram.com/janpolfabrykamateracy/"><span style="background: url(https://www.janpol.pl/wp-content/themes/leonardo/assets/img/svg/optimized/social-insta.svg);" class="ico ico-soc ico-soc__ig"></span></a></li>
+<li id="menu-item-11294" class="eu-flag menu-item menu-item-type-custom menu-item-object-custom menu-item-11294"><a href="https://www.janpol.pl/projekt-unijny/"><span aria-label="Projekt Unijny" style="background: url(https://www.janpol.pl/wp-content/uploads/2023/09/EU_Logosy-scaled.jpg);" class="ico ico-soc"></span></a></li>
+</ul></div>                      </nav>
+          <nav class="b-header__navigation mobiler" id="nav">
+                                              </nav>
+        </div>
+      </div>
+    </div>
+      </div>
+</header>    <main id="main">
+<style>
+  .hero-slider__slide {
+    min-height: calc(100vw / 1);
+  }
+
+@media screen and (min-width: 768px) {
+  .hero-slider__slide {
+    min-height: calc(100vw / 2);
+  }
+}
+
+@media screen and (min-width: 1280px) {
+
+  .hero-slider__slide {
+    min-height: calc(100vw / 2.4);
+  }
+}</style>
+    <section class="section section__hero-slider" id="hero-slider">
+        <div class="hero-slider__container swiper-container">
+            <div class="swiper-wrapper">
+                
+<style>
+
+  .hero-slider__slide-1 {
+    background-image: url("https://www.janpol.pl/wp-content/uploads/2025/01/mobile-Nowa-odslona-poduszek-Fabryka-Materacy-Janpol-.jpg");
+  }
+
+    @media (min-width: 768px) {
+    .hero-slider__slide-1 {
+      background-image: url("https://www.janpol.pl/wp-content/uploads/2025/01/tablet-Letnia-promocja-Fabryka-Materacy-Janpol-.jpg");
+    }
+  }
+  
+    @media (min-width: 1280px) {
+    .hero-slider__slide-1 {
+      background-image: url("https://www.janpol.pl/wp-content/uploads/2025/01/desktop-Nowa-odslona-poduszek-Fabryka-Materacy-Janpol-.jpg");
+    }
+  }
+  </style>
+
+<div class="hero-slider__slide hero-slider__slide-1 swiper-slide">
+    </div>
+<style>
+
+  .hero-slider__slide-2 {
+    background-image: url("https://www.janpol.pl/wp-content/uploads/2025/01/mobile-Nowa-rodzina-materacy-Fabryka-Materacy-Janpol-.jpg");
+  }
+
+    @media (min-width: 768px) {
+    .hero-slider__slide-2 {
+      background-image: url("https://www.janpol.pl/wp-content/uploads/2025/01/tablet-Nowa-rodzina-materacy-Fabryka-Materacy-Janpol--scaled.jpg");
+    }
+  }
+  
+    @media (min-width: 1280px) {
+    .hero-slider__slide-2 {
+      background-image: url("https://www.janpol.pl/wp-content/uploads/2025/01/desktop-Nowa-rodzina-materacy-Fabryka-Materacy-Janpol--scaled.jpg");
+    }
+  }
+  </style>
+
+<div class="hero-slider__slide hero-slider__slide-2 swiper-slide">
+    </div>            </div>
+        </div>
+    </section>
+
+<section class="section section__product-categories bg-lines bg-lines--center bg-lines--half">
+  <div class="container">
+
+    
+    <div class="row">
+      <div class="column column-12">
+        <div class="text-heading text-heading--center">
+          <div class="text-heading__main text-heading__main-ornament">
+            <div class="text-heading__title-container">
+              <h2 class="text-heading__title">
+                <span class="text-heading__ornament">Kategorie <span>produktów</span></span>
+              </h2>
+            </div>
+            <p class="text-heading__subtitle">Wybierz interesującą Cię kategorię produktów</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column column-12">
+        <div class="product-categories__boxes product-categories__boxes--squared">
+          
+        <div class="product-category__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/materace/">
+                <div class="product-category__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_materace_400x400.jpg"></div>
+                <noscript>
+                    <div class="product-category__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_materace_400x400.jpg)"></div>
+                </noscript>
+                <div class="product-category-content">
+                    <div class="product-category-content__top">
+                        <figure>
+                            <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Materace" width="88" height="58" data-src="https://www.janpol.pl/wp-content/uploads/2019/02/category-mattresses.svg" />
+                            <noscript>
+                                <img alt="Materace" width="88" height="58" src="https://www.janpol.pl/wp-content/uploads/2019/02/category-mattresses.svg" />
+                            </noscript>
+                        </figure>
+                        <h3 class="product-category__title">Materace</h3>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-category__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/lozka-i-stelaze/">
+                <div class="product-category__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_lozka_i_stelaze_400x400.jpg"></div>
+                <noscript>
+                    <div class="product-category__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_lozka_i_stelaze_400x400.jpg)"></div>
+                </noscript>
+                <div class="product-category-content">
+                    <div class="product-category-content__top">
+                        <figure>
+                            <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Łóżka i stelaże" width="104" height="56" data-src="https://www.janpol.pl/wp-content/uploads/2019/03/janpol-02.svg" />
+                            <noscript>
+                                <img alt="Łóżka i stelaże" width="104" height="56" src="https://www.janpol.pl/wp-content/uploads/2019/03/janpol-02.svg" />
+                            </noscript>
+                        </figure>
+                        <h3 class="product-category__title">Łóżka i stelaże</h3>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-category__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/poduszki/">
+                <div class="product-category__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_poduszki_400x400.jpg"></div>
+                <noscript>
+                    <div class="product-category__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_poduszki_400x400.jpg)"></div>
+                </noscript>
+                <div class="product-category-content">
+                    <div class="product-category-content__top">
+                        <figure>
+                            <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Poduszki" width="81" height="61" data-src="https://www.janpol.pl/wp-content/uploads/2019/03/janpol-03.svg" />
+                            <noscript>
+                                <img alt="Poduszki" width="81" height="61" src="https://www.janpol.pl/wp-content/uploads/2019/03/janpol-03.svg" />
+                            </noscript>
+                        </figure>
+                        <h3 class="product-category__title">Poduszki</h3>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-category__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/akcesoria/">
+                <div class="product-category__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_akcesoria_400x400.jpg"></div>
+                <noscript>
+                    <div class="product-category__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2019/03/janpol_kategoria_akcesoria_400x400.jpg)"></div>
+                </noscript>
+                <div class="product-category-content">
+                    <div class="product-category-content__top">
+                        <figure>
+                            <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Akcesoria" width="90" height="66" data-src="https://www.janpol.pl/wp-content/uploads/2019/03/category-accessories.svg" />
+                            <noscript>
+                                <img alt="Akcesoria" width="90" height="66" src="https://www.janpol.pl/wp-content/uploads/2019/03/category-accessories.svg" />
+                            </noscript>
+                        </figure>
+                        <h3 class="product-category__title">Akcesoria</h3>
+                    </div>
+                    
+                </div>
+            </a>
+        </div>
+                </div>
+        <div class="product-categories__boxes product-categories__boxes--alt">
+          
+<div class="product-category__box product-category__box--alt ">
+  <a href="https://www.janpol.pl/kategoria-produktu/dla-szpitali/" >
+    <div class="product-category__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/12/Sensi-by-Janpol.jpg"></div>
+    <noscript>
+      <div class="product-category__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/12/Sensi-by-Janpol.jpg)"></div>
+    </noscript>
+    <div class="product-category-content">
+      <div class="product-category-content__badge">
+        <h3 class="product-category__title">Dla szpitali</h3>
+              </div>
+    </div>
+  </a>
+</div>
+<div class="product-category__box product-category__box--alt product-category__box--right">
+  <a href="http://www.bosquo.pl/"  target="_blank">
+    <div class="product-category__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/12/Bosquo-by-Janpol.jpg"></div>
+    <noscript>
+      <div class="product-category__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/12/Bosquo-by-Janpol.jpg)"></div>
+    </noscript>
+    <div class="product-category-content">
+      <div class="product-category-content__badge">
+        <h3 class="product-category__title">Dla hoteli</h3>
+              </div>
+    </div>
+  </a>
+</div>        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section__bestsellers">
+  <div class="container">
+    <div class="row">
+      <div class="column column-12">
+        <div class="text-heading">
+          <div class="text-heading__main text-heading__main-ornament">
+            <div class="text-heading__title-container">
+              <h2 class="text-heading__title text-heading__title--lines text-heading__title--lines-right">
+                <span class="text-heading__ornament">
+                  Bestsellery</span>
+              </h2>
+            </div>
+            <p class="text-heading__subtitle">Zobacz nasze najpopularniejsze produkty</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column column-12">
+        <div class="product-boxes">
+          <div class="product-box">
+  <a href="https://www.janpol.pl/produkty/materac-enyo/">
+    <h3 class="product-box__category">Materace</h3>
+    <figure class="product-box__img">
+      <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="7360" height="4912" data-src="https://www.janpol.pl/wp-content/uploads/2025/10/Komfort-Enyo-Tencel-SC-2025.png" alt="Materac rehabilitacyjny Enyo" />
+      <noscript>
+        <img width="7360" height="4912" src="https://www.janpol.pl/wp-content/uploads/2025/10/Komfort-Enyo-Tencel-SC-2025.png" alt="Materac rehabilitacyjny Enyo" /></noscript>
+    </figure>
+    <h2 class="product-box__title">Materac rehabilitacyjny Enyo</h2>
+  </a>
+</div><div class="product-box">
+  <a href="https://www.janpol.pl/produkty/materac-jan/">
+    <h3 class="product-box__category">Materace</h3>
+    <figure class="product-box__img">
+      <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="7360" height="4912" data-src="https://www.janpol.pl/wp-content/uploads/2021/03/Premium-Jan-Adaptive-Beige-.png" alt="Materac Jan" />
+      <noscript>
+        <img width="7360" height="4912" src="https://www.janpol.pl/wp-content/uploads/2021/03/Premium-Jan-Adaptive-Beige-.png" alt="Materac Jan" /></noscript>
+    </figure>
+    <h2 class="product-box__title">Materac Jan</h2>
+  </a>
+</div><div class="product-box">
+  <a href="https://www.janpol.pl/produkty/materac-fides/">
+    <h3 class="product-box__category">Materace</h3>
+    <figure class="product-box__img">
+      <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="7360" height="4912" data-src="https://www.janpol.pl/wp-content/uploads/2019/02/Premium-Fides-Adaptive-Beige-.png" alt="Materac rehabilitacyjny Fides" />
+      <noscript>
+        <img width="7360" height="4912" src="https://www.janpol.pl/wp-content/uploads/2019/02/Premium-Fides-Adaptive-Beige-.png" alt="Materac rehabilitacyjny Fides" /></noscript>
+    </figure>
+    <h2 class="product-box__title">Materac rehabilitacyjny Fides</h2>
+  </a>
+</div><div class="product-box">
+  <a href="https://www.janpol.pl/produkty/materac-sirona/">
+    <h3 class="product-box__category">Materace</h3>
+    <figure class="product-box__img">
+      <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="7360" height="4912" data-src="https://www.janpol.pl/wp-content/uploads/2019/02/Premium-Sirona-Adaptive-Beige-.png" alt="Materac rehabilitacyjny Sirona" />
+      <noscript>
+        <img width="7360" height="4912" src="https://www.janpol.pl/wp-content/uploads/2019/02/Premium-Sirona-Adaptive-Beige-.png" alt="Materac rehabilitacyjny Sirona" /></noscript>
+    </figure>
+    <h2 class="product-box__title">Materac rehabilitacyjny Sirona</h2>
+  </a>
+</div>        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section section__subcategory">
+  <div class="container">
+    <div class="row">
+      <div class="column column-12">
+        <div class="text-heading">
+          <div class="text-heading__main text-heading__main-ornament">
+            <div class="text-heading__title-container">
+              <h2 class="text-heading__title text-heading__title--lines text-heading__title--lines-right">
+                <span class="text-heading__ornament">Linie <span>materacy</span></span>
+              </h2>
+            </div>
+            <p class="text-heading__subtitle">Wybierz interesującą Cię grupę materacy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column column-12">
+        <div class="product-categories__boxes product-categories__boxes--1-3">
+          
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/bosquo-by-janpol/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/04/Bosquo-scaled.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/04/Bosquo-scaled.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #002e4c">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/BOSQUO-1.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/BOSQUO-1.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/premium/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/04/Premium-scaled.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/04/Premium-scaled.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #12304a">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/PREMIUM-1.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/PREMIUM-1.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/komfort/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/04/Komfort-scaled.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/04/Komfort-scaled.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #e31119">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/KOMFORT-1.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/KOMFORT-1.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/standard/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/04/Standard-scaled.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/04/Standard-scaled.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #dd0d26">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/STANDARD-1.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/STANDARD-1.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/klasyczne/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/04/Klasyczne-scaled.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/04/Klasyczne-scaled.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #e31119">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/KLASYCZNE.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/KLASYCZNE.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/mlodziezowe/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2024/04/Mlodziezowe-scaled.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2024/04/Mlodziezowe-scaled.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #dd0d26">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/MLODZIEZOWE-1.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/MLODZIEZOWE-1.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/dzieciece/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2019/03/janpol_linia_kids_755x400.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2019/03/janpol_linia_kids_755x400.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #e31119">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/DZIECIECE-1.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/DZIECIECE-1.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/szpitalne/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2019/03/janpol_dla_szpitali_700x325.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2019/03/janpol_dla_szpitali_700x325.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #05b0ad">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="284" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/07/SZPITALNE.svg" alt="alt" />
+                        <noscript>
+                            <img width="284" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/07/SZPITALNE.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+        
+        <div class="product-subcategory__box">
+            <a href="https://www.janpol.pl/kategoria-produktu/materace-poslaniowe/">
+                <div class="product-subcategory__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2021/03/ECO-400x400-1.jpg"></div>
+                <noscript class="product-subcategory__bg">
+                    <div class="product-subcategory__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2021/03/ECO-400x400-1.jpg)"></div>
+                </noscript>
+                <div class="product-subcategory-content" style="background: #e31119">
+                    <figure>
+                        <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="283" height="57" data-src="https://www.janpol.pl/wp-content/uploads/2023/01/POSLANIOWE-2.svg" alt="alt" />
+                        <noscript>
+                            <img width="283" height="57" src="https://www.janpol.pl/wp-content/uploads/2023/01/POSLANIOWE-2.svg" alt="alt" />
+                        </noscript>
+                    </figure>
+                </div>
+            </a>
+        </div>
+                </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="section section__tips">
+    <div class="container">
+      <div class="row">
+    <div class="column column-12">
+        <div class="text-heading">
+            <div class="text-heading__main text-heading__main-ornament">
+                <div class="text-heading__title-container">
+                    <h2 class="text-heading__title text-heading__title--red text-heading__title--lines text-heading__title--lines-right"><span class="text-heading__ornament">Porady</span></h2>
+                    <div class="text-heading__btn"><a class="btn btn--secondary btn--more" href="https://www.janpol.pl/porady/">Więcej porad</a></div>
+                </div>
+                <!-- <p class="text-heading__subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p> -->
+            </div>
+        </div>
+    </div>
+</div>      <div class="row">
+        <div class="column column-12">
+          <div class="articles articles--extended">
+            <div class="articles__col articles__col--featured"><article class="article-box article-box--featured">
+    <a href="https://www.janpol.pl/porady/dlaczego-materac/">
+        <div class="article-box__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2020/04/AdobeStock_183426232-scaled.jpeg"></div>
+        <noscript class="article-box__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2020/04/AdobeStock_183426232-scaled.jpeg);"></noscript>
+        <div class="article-box__text">
+            <div class="article-box__header">
+                <div class="article-box__meta">
+                    <h3 class="article-box__category">sypialnia</h3><time class="article-box__date" datetime="2020-04-27T12:17:14+02:00">27.04.2020</time>
+                </div>
+                <h2 class="article-box__title">Dlaczego materac?</h2>
+            </div>
+        </div>
+    </a>
+</article></div><!-- /.articles__col --><div class="articles__col articles__col--list"><article class="article-box article-box--thmb">
+    <a href="https://www.janpol.pl/porady/historia-materaca-poznaj-ja-z-nami/">
+        <div class="article-box__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2020/04/11_materac_z_profilu.jpg"></div>
+        <noscript class="article-box__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2020/04/11_materac_z_profilu.jpg);"></noscript>
+        <div class="article-box__text">
+            <div class="article-box__header">
+                <div class="article-box__meta">
+                    <h3 class="article-box__category">sypialnia</h3><time class="article-box__date" datetime="2020-04-02T14:59:50+02:00">02.04.2020</time>
+                </div>
+                <h2 class="article-box__title">Historia materaca &#8211; Poznaj ją z&nbsp;nami</h2>
+            </div>
+        </div>
+    </a>
+</article><article class="article-box article-box--thmb">
+    <a href="https://www.janpol.pl/porady/jak-dbac-o-materac/">
+        <div class="article-box__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2020/07/AdobeStock_244530746-scaled.jpeg"></div>
+        <noscript class="article-box__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2020/07/AdobeStock_244530746-scaled.jpeg);"></noscript>
+        <div class="article-box__text">
+            <div class="article-box__header">
+                <div class="article-box__meta">
+                    <h3 class="article-box__category">sypialnia</h3><time class="article-box__date" datetime="2020-07-14T13:24:24+02:00">14.07.2020</time>
+                </div>
+                <h2 class="article-box__title">Jak zadbać o&nbsp;materac</h2>
+            </div>
+        </div>
+    </a>
+</article><article class="article-box article-box--thmb">
+    <a href="https://www.janpol.pl/porady/jak-wybrac-materac/">
+        <div class="article-box__bg" style="background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==)" data-lazybg="https://www.janpol.pl/wp-content/uploads/2020/08/AdobeStock_242217577-scaled.jpeg"></div>
+        <noscript class="article-box__bg" style="background-image: url(https://www.janpol.pl/wp-content/uploads/2020/08/AdobeStock_242217577-scaled.jpeg);"></noscript>
+        <div class="article-box__text">
+            <div class="article-box__header">
+                <div class="article-box__meta">
+                    <h3 class="article-box__category">sypialnia</h3><time class="article-box__date" datetime="2020-08-18T11:51:36+02:00">18.08.2020</time>
+                </div>
+                <h2 class="article-box__title">Jaki materac wybrać?</h2>
+            </div>
+        </div>
+    </a>
+</article></div><!-- /.articles__col -->          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section section__news section__bg-lines section__bg-lines--bottom l-b">
+    <div class="container">
+      <div class="row">
+        <div class="column column-12">
+          <div class="text-heading">
+            <div class="text-heading__main text-heading__main-ornament">
+              <div class="text-heading__title-container">
+                <h2 class="text-heading__title text-heading__title--red text-heading__title--lines text-heading__title--lines-right">
+                  <span class="text-heading__ornament">Aktualności</span>
+                </h2>
+                <div class="text-heading__btn">
+                  <a class="btn btn--secondary btn--more" href="https://www.janpol.pl/aktualnosci/">Więcej aktualności</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column column-12">
+          <div class="articles articles--default">
+            <article class="article-box">
+  <a href="https://www.janpol.pl/aktualnosci/13160/">
+    <div class="article-box__text">
+      <div class="article-box__header">
+        <div class="article-box__meta">
+          <time class="article-box__date" datetime="2023-04-28T13:58:39+02:00">28.04.2023</time>
+        </div>
+        <h2 class="article-box__title"></h2>
+      </div>
+      <div class="article-box__content">
+              </div>
+      <div class="article-box__footer"><span class="ico ico-arrow-right--red"></span></div>
+    </div>
+  </a>
+</article>          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<section class="section section__instant-contact">
+  <div class="container">
+    <div class="row">
+      <div class="column column-12">
+        <div class="text-heading text-heading--center text-heading__main-ornament">
+          <div class="text-heading__main">
+            <div class="text-heading__title-container">
+              <h2 class="text-heading__title"><span class="text-heading__ornament text-heading__ornament--white">Szybki <span>kontakt</span></span></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column column-12 column-6--xsm">
+<!--         <div class="box-ico box-ico--left">
+          <div class="box-ico__ico"><span class="ico ico-instant-newsletter"></span></div>
+          <div class="box-ico__header">
+            <h4 class="box-ico__title">Newsletter</h4>
+            <p class="box-ico__desc">Chcesz być na bieżąco z&nbsp;naszą ofertą i&nbsp;aktualnymi promocjami?<br />Zapisz się do newslettera.</p>
+          </div>
+          <div class="box-ico__content">
+            <form class="form form-newsletter form-glued" method="post" action="https://app.freshmail.com/pl/actions/subscribe/" id="form-newsletter" name="newsletter" data-parsley-validate="">
+              <input type="hidden" name="subscribers_list_hash" value="txmit9kbox" />
+              <div class="form-section">
+                <div class="form-row form-row--no-margin">
+                  <div class="form-col"><input class="form-glued__input" type="email" placeholder="Wpisz swój e-mail" required id="freshmail_email" name="freshmail_email"></div>
+                  <div class="form-col form-col--auto"><button class="form-glued__btn" type="submit">Zapisz się</button></div>
+                </div>
+                <div class="form-row"><label class="label"><input type="checkbox" name="form-legal" value required><span class="label__legal">W świetle art. 13 Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016r. Fabryka Materacy JANPOL Sp. z o. o. z siedzibą w Orzeszu, ul. Cynkowa 2 A, 43-180 Orzesze uprzejmie informuje, że z chwilą pozyskania Państwa danych osobowych (jako naszych Klientów), staje się ich administratorem. Przetwarzamy Państwa dane osobowe w celu realizacji złożonego zamówienia, zawarcia i wykonania umowy czy spełnienia ciążących na nas obowiązków prawnych. Podanie danych osobowych jest niezbędne do celów określonych powyżej. Państwa dane osobowe mogą być przekazywane innym odbiorcom danych, aczkolwiek tylko i wyłącznie w celu prawidłowej realizacji złożonego zamówienia, realizacji postanowień umownych oraz spełnienia obowiązków leżących po naszej stronie. Państwa dane osobowe są przechowywane do momentu osiągnięcia celu, dla którego zostały zebrane oraz przez okres czasu przewidziany przepisami szczególnymi. Przysługuje Państwu prawo dostępu do swoich danych osobowych, ich sprostowania, usunięcia lub ograniczenia przetwarzania, wniesienia sprzeciwu wobec przetwarzania, przeniesienia danych, a także prawo wniesienia skargi do organu nadzorczego.</span></label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div> -->
+      </div>
+      <div class="column column-12 column-6--xsm">
+        <div class="box-ico box-ico--right">
+          <div class="box-ico__ico"><span class="ico ico-instant-mail"></span></div>
+          <div class="box-ico__header">
+            <h4 class="box-ico__title">Formularz kontaktowy</h4>
+            <p class="box-ico__desc">Masz pytania? Potrzebujesz pomocy?<br />Napisz do nas.</p>
+          </div>
+          <div class="box-ico__content"><a class="btn btn--primary" href="https://www.janpol.pl/?page_id=10">Kontakt</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<div class="container">
+   <div class="eu-image-row" style="margin: 30px 0;">
+	   <a href="https://www.janpol.pl/projekt-unijny/" style="display: flex; justify-content: center; align-items: center;">         
+	        <img src="https://www.janpol.pl/wp-content/uploads/2023/09/EU_Logosy-scaled.jpg" style="width: 100%; height: auto;" alt="Logo row" loading="lazy" />
+       </a>
+   </div>
+</div>
+<footer class="footer-main">
+  <div class="container">
+    <div class="footer-main__top">
+      <div class="row">
+        <div class="column column-12 column-6--md footer-main__top-left">
+          <div class="row">
+            <div class="column column-12">
+              <div class="block block__logo">
+                <a href="https://www.janpol.pl">
+                  <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/logo-janpol-white.svg" width="187" height="35" alt="Janpol" />
+                  <noscript>
+                    <img src="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/logo-janpol-white.svg" width="187" height="35" alt="Janpol" />
+                  </noscript>
+                </a>
+              </div>
+            </div>
+            <div class="column column-12 column-6--xsm">
+              <div class="block">
+                <h3 class="block__title">
+                  Fabryka Materacy JANPOL sp. z o.o.                </h3>
+                <p>ul. Cynkowa 2a, 43-180 Orzesze, woj. śląskie<br /><a href="mailto:biuro@janpol.pl" class="text--theme">biuro@janpol.pl</a></p>
+              </div>
+            </div>
+            <div class="column column-12 column-6--xsm">
+              <div class="block">
+                <div class="block__prefix">
+                  <p><span class="prefix">tel:</span> <a href="tel:+48322180900">+48 (32) 218 09 00</a><br /><a href="tel:+48324207600">+48 (32) 420 76 00</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column column-12">
+              <div class="footer-logos">
+                                  <div class="footer-logos__item">
+                    <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/DM_PL.png" width="80" height="80" alt="Polska Dobra Marka 2020" />
+                    <noscript>
+                      <img src="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/DM_PL.png" width="80" height="80" alt="Polska Dobra Marka 2020" />
+                    </noscript>
+                  </div>
+                                <div class="footer-logos__item">
+                  <img class="l-i" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/PDM.png" width="152" height="60" alt="Polska Dobra Marka 2020" />
+                  <noscript>
+                    <img src="https://www.janpol.pl/wp-content/themes/leonardo/assets/img/PDM.png" width="152" height="60" alt="Polska Dobra Marka 2020" />
+                  </noscript>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column column-12 column-6--md column-5--lg footer-main__top-right">
+          <div class="row">
+            <div class="column column-12 column-4--xsm"><ul id="menu-menu-stopka-1" class="navigation navigation__footer"><li id="menu-item-321" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-321"><a href="https://www.janpol.pl/kategoria-produktu/materace/">Materace</a></li>
+<li id="menu-item-322" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-322"><a href="https://www.janpol.pl/kategoria-produktu/lozka-i-stelaze/">Łóżka i&nbsp;stelaże</a></li>
+<li id="menu-item-323" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-323"><a href="https://www.janpol.pl/kategoria-produktu/poduszki/">Poduszki</a></li>
+<li id="menu-item-324" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-324"><a href="https://www.janpol.pl/kategoria-produktu/akcesoria/">Akcesoria</a></li>
+<li id="menu-item-10637" class="menu-item menu-item-type-taxonomy menu-item-object-ct_products_category menu-item-10637"><a href="https://www.janpol.pl/kategoria-produktu/dla-szpitali/">Dla szpitali</a></li>
+<li id="menu-item-10638" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10638"><a href="https://bosquo.pl">Dla hoteli</a></li>
+</ul></div><div class="column column-12 column-4--xsm"><ul id="menu-menu-stopka-2" class="navigation navigation__footer"><li id="menu-item-333" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-333"><a href="https://www.janpol.pl/?page_id=16">Gdzie kupić</a></li>
+<li id="menu-item-10793" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10793"><a target="_blank" rel="noopener" href="https://sklep.janpol.pl">Sklep</a></li>
+<li id="menu-item-8205" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8205"><a href="https://www.janpol.pl/porady/">Porady</a></li>
+<li id="menu-item-1682" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1682"><a target="_blank" rel="noopener" href="https://www.flipsnack.com/BCFED69C5A8/katalog-janpol-1-2021-wersja-flipsnack/full-view.html">Katalog</a></li>
+<li id="menu-item-10639" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10639"><a href="https://www.janpol.pl/do-pobrania-2/">Do&nbsp;pobrania</a></li>
+</ul></div><div class="column column-12 column-4--xsm"><ul id="menu-menu-stopka-3" class="navigation navigation__footer"><li id="menu-item-4765" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4765"><a href="https://www.janpol.pl/o-nas/">O&nbsp;nas</a></li>
+<li id="menu-item-1044" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1044"><a href="https://www.janpol.pl/aktualnosci/">aktualności</a></li>
+<li id="menu-item-330" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-330"><a href="https://www.janpol.pl/?page_id=10">Kontakt</a></li>
+<li id="menu-item-10635" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-10635"><a rel="privacy-policy" href="https://www.janpol.pl/polityka-prywatnosci/">Polityka prywatności</a></li>
+<li id="menu-item-10636" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10636"><a href="https://www.janpol.pl/klauzula-informacyjna-rodo/">Klauzula informacyjna RODO</a></li>
+</ul></div>          </div>
+        </div>
+      </div>
+              <div class="row">
+          <div class="column column-12">
+            <div class="clause">
+              <p>Producent zastrzega sobie prawo do wprowadzenia zmian w kolorystyce, wzornictwie i wymiarach prezentowanych wyrobów. <br />
+Oferta na stronie publikowana jest w celach informacyjnych i nie stanowi oferty handlowej w rozumieniu art. 66, §1 Kodeksu Cywilnego. </p>
+            </div>
+          </div>
+        </div>
+          </div>
+    <div class=" footer-main__bottom">
+      <div class="row">
+        <div class="column column-12 column-6--xsm column-8--lg">
+          <div class="block block__copyrights">
+            <p>&copy;
+              Fabryka Materacy JANPOL sp. z o.o.            </p>
+          </div>
+        </div>
+        <!-- --<div class="column column-12 column-6--xsm column-4--lg">
+          <div class="block block__developer">
+            <p>nice things by <a href="//leonardo.pl/" target="_blank" rel="noopener"><span>Grupa Leonardo</span></a></p>
+          </div>
+        </div> ---->
+      </div>
+    </div>
+  </div>
+  <style>
+    @media screen and (max-width: 1370px) {
+      .b-header__logo img {
+        margin-top: -30px !important;
+      }
+    }
+
+    .mobiler {
+      display: none;
+    }
+
+    /** Hide newwsletter section */
+    .section__instant-contact {
+      display: none;
+    }
+
+    /** end */
+
+    .sub-menu {
+      display: none;
+      position: absolute;
+      background: #fff;
+      padding: 10px;
+      left: -10px;
+      transition: all 1s ease;
+      overflow: hidden;
+      width: 200%;
+    }
+
+    .sub-menu li {
+      padding: 0;
+    }
+
+    .opened .sub-menu {
+      display: block;
+    }
+
+    .menu-item-has-children:hover {
+      cursor: pointer;
+    }
+
+    .navigation li.current-menu-parent .sub-menu a {
+      color: #4f4f4f !important;
+    }
+
+    .navigation .sub-menu li.current-menu-item a {
+      color: #e31119 !important
+    }
+
+    .sub-menu &nbsp {
+      display: none;
+    }
+
+    .menu-item-has-children:hover .sub-menu {
+      display: block;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    @media screen and (max-width: 1015px) {
+      .navigation__header--primary li {
+        display: block;
+      }
+    }
+
+    @media screen and (max-width: 1024px) {
+
+
+      .b-header__navigation {
+        display: none !important;
+      }
+
+      .b-header__navigation--active {
+        display: flex !important;
+      }
+
+      .sub-menu {
+        position: inherit;
+        display: block !important;
+        left: 0;
+      }
+
+      .navigation__header--primary a {
+        font-size: 22px !important;
+      }
+
+      .navigation__header--primary .sub-menu a {
+        font-size: 20px !important;
+      }
+
+      .toggler {
+        display: flex !important;
+        height: 32px;
+        width: 38px;
+        padding: 10px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -ms-flex-line-pack: justify;
+        align-content: space-between;
+      }
+
+
+      .b-header__logo img {
+        margin-top: 0px !important;
+      }
+
+      .b-header__logo {
+        width: 100%;
+      }
+
+      .b-header__navigation {
+        padding-bottom: 80px;
+      }
+
+      html body .navigation__header {
+        margin-bottom: 15px;
+      }
+
+      .b-header__navigation--active {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex !important;
+        width: 100%;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .header-wrapper {
+        display: block;
+        display: block;
+
+        width: 100%;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+      }
+
+      .b-header__navigation {
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+      }
+
+      html body .navigation__header {
+        margin-left: 5px;
+        width: 110%;
+        flex-direction: column !important;
+      }
+
+      html .mobile-only .navigation__header--partners-zone li,
+      .navigation__header--primary li {
+        padding: 0px 4px !important;
+      }
+
+      html body #menu-menu-dodatkowe {
+        flex-direction: row !important;
+      }
+
+      html body #menu-menu-dodatkowe-angielski {
+        flex-direction: row !important;
+      }
+
+      html body #menu-menu-dodatkowe-niemiecki {
+        flex-direction: row !important;
+      }
+
+      .b-menu:nth-child(2) {
+        margin-left: -15px;
+      }
+
+    }
+
+    .b-header__navigation{
+      max-height: unset;
+    overflow: initial;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    }
+
+    .b-header__navigation.mobiler {
+      display: none;
+    }
+    @media only screen and (max-width: 1369px){
+
+    .b-header__navigation{
+      align-items: flex-end;
+    }
+  }
+
+
+    @media screen and (max-width: 700px) {
+      .b-menu:nth-child(2) {
+        margin-left: 0px;
+      }
+    }
+
+    @media screen and (max-width: 768px) {}
+	  .eu-flag .ico{
+		  width: 60px;
+		      background-position: right!important;
+	  }
+  </style>
+</footer>
+
+</div>
+
+<div class="bar-c" id="c_notify">
+    <div class="container container--xl">
+        <div class="row">
+            <div class="column column-12">
+                <div class="bar-c__wrapper">
+                    <p>Na swoich stronach wykorzystujemy pliki cookies. Jeśli korzystasz z naszych stron bez zmiany ustawień przeglądarki, zostaną one zapisane w pamięci urządzenia.</p>
+                    <p>
+                        <button class="btn btn--primary btn--slim" id="accept-cookies" type="button">OK</button>
+                        <a class="btn btn--secondary btn--slim" target="_blank" href="https://www.janpol.pl/polityka-prywatnosci/">Polityka prywatności</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="oldBrowser" class="oldBrowser">
+    <div class="container">
+        <div class="row">
+            <div class="col col-12">
+                <div class="oldBrowser__content">
+                    <p><strong>Uwaga!</strong></p>
+                    <p><strong>Przeglądarka internetowa</strong> z której korzystasz jest <strong>przestarzała</strong> przez co strona może <strong>nie</strong> wyświetlać się w prawidłowy sposób.<br /> Zalecane przeglądarki: Chrome, Firefox, Opera</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><a title="WordPress PopUp" style="display:none;" rel="nofollow"  href="https://supsystic.com/plugins/popup-plugin/?utm_medium=love_link" target="_blank">WordPress PopUp</a><script>				
+                    document.addEventListener('DOMContentLoaded', function () {
+                        setTimeout(function(){
+                            if( document.querySelectorAll('[name^=ct_checkjs]').length > 0 ) {
+                                apbct_public_sendREST(
+                                    'js_keys__get',
+                                    { callback: apbct_js_keys__set_input_value }
+                                )
+                            }
+                        },0)					    
+                    })				
+                </script><script type='text/javascript' id='pojo-a11y-js-extra'>
+/* <![CDATA[ */
+var PojoA11yOptions = {"focusable":"","remove_link_target":"","add_role_links":"1","enable_save":"1","save_expiration":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/plugins/pojo-accessibility/assets/js/app.min.js' id='pojo-a11y-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/themes/leonardo/assets/js/vendors.min.js' id='leonardo-vendors-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/themes/leonardo/assets/js/i18n/pl.js' id='leonardo-parsleylang-js'></script>
+<script type='text/javascript' src='https://www.janpol.pl/wp-content/themes/leonardo/assets/js/app.min.js?1234' id='leonardo-app-js'></script>
+		<a id="pojo-a11y-skip-content" class="pojo-skip-link pojo-skip-content" tabindex="1" accesskey="s" href="#content">Skip to content</a>
+				<nav id="pojo-a11y-toolbar" class="pojo-a11y-toolbar-left pojo-a11y-" role="navigation">
+			<div class="pojo-a11y-toolbar-toggle">
+				<a class="pojo-a11y-toolbar-link pojo-a11y-toolbar-toggle-link" href="javascript:void(0);" title="Accessibility Tools" role="button">
+					<span class="pojo-sr-only sr-only">Open toolbar</span>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor" width="1em">
+						<title>Accessibility Tools</title>
+						<path d="M50 .8c5.7 0 10.4 4.7 10.4 10.4S55.7 21.6 50 21.6s-10.4-4.7-10.4-10.4S44.3.8 50 .8zM92.2 32l-21.9 2.3c-2.6.3-4.6 2.5-4.6 5.2V94c0 2.9-2.3 5.2-5.2 5.2H60c-2.7 0-4.9-2.1-5.2-4.7l-2.2-24.7c-.1-1.5-1.4-2.5-2.8-2.4-1.3.1-2.2 1.1-2.4 2.4l-2.2 24.7c-.2 2.7-2.5 4.7-5.2 4.7h-.5c-2.9 0-5.2-2.3-5.2-5.2V39.4c0-2.7-2-4.9-4.6-5.2L7.8 32c-2.6-.3-4.6-2.5-4.6-5.2v-.5c0-2.6 2.1-4.7 4.7-4.7h.5c19.3 1.8 33.2 2.8 41.7 2.8s22.4-.9 41.7-2.8c2.6-.2 4.9 1.6 5.2 4.3v1c-.1 2.6-2.1 4.8-4.8 5.1z"/>					</svg>
+				</a>
+			</div>
+			<div class="pojo-a11y-toolbar-overlay">
+				<div class="pojo-a11y-toolbar-inner">
+					<p class="pojo-a11y-toolbar-title">Accessibility Tools</p>
+					
+					<ul class="pojo-a11y-toolbar-items pojo-a11y-tools">
+																			<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-resize-font pojo-a11y-btn-resize-plus" data-action="resize-plus" data-action-group="resize" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Increase Text</title><path fill="currentColor" d="M256 200v16c0 4.25-3.75 8-8 8h-56v56c0 4.25-3.75 8-8 8h-16c-4.25 0-8-3.75-8-8v-56h-56c-4.25 0-8-3.75-8-8v-16c0-4.25 3.75-8 8-8h56v-56c0-4.25 3.75-8 8-8h16c4.25 0 8 3.75 8 8v56h56c4.25 0 8 3.75 8 8zM288 208c0-61.75-50.25-112-112-112s-112 50.25-112 112 50.25 112 112 112 112-50.25 112-112zM416 416c0 17.75-14.25 32-32 32-8.5 0-16.75-3.5-22.5-9.5l-85.75-85.5c-29.25 20.25-64.25 31-99.75 31-97.25 0-176-78.75-176-176s78.75-176 176-176 176 78.75 176 176c0 35.5-10.75 70.5-31 99.75l85.75 85.75c5.75 5.75 9.25 14 9.25 22.5z"></path></svg></span><span class="pojo-a11y-toolbar-text">Increase Text</span>								</a>
+							</li>
+							
+							<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-resize-font pojo-a11y-btn-resize-minus" data-action="resize-minus" data-action-group="resize" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Decrease Text</title><path fill="currentColor" d="M256 200v16c0 4.25-3.75 8-8 8h-144c-4.25 0-8-3.75-8-8v-16c0-4.25 3.75-8 8-8h144c4.25 0 8 3.75 8 8zM288 208c0-61.75-50.25-112-112-112s-112 50.25-112 112 50.25 112 112 112 112-50.25 112-112zM416 416c0 17.75-14.25 32-32 32-8.5 0-16.75-3.5-22.5-9.5l-85.75-85.5c-29.25 20.25-64.25 31-99.75 31-97.25 0-176-78.75-176-176s78.75-176 176-176 176 78.75 176 176c0 35.5-10.75 70.5-31 99.75l85.75 85.75c5.75 5.75 9.25 14 9.25 22.5z"></path></svg></span><span class="pojo-a11y-toolbar-text">Decrease Text</span>								</a>
+							</li>
+						
+													<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-background-group pojo-a11y-btn-grayscale" data-action="grayscale" data-action-group="schema" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Grayscale</title><path fill="currentColor" d="M15.75 384h-15.75v-352h15.75v352zM31.5 383.75h-8v-351.75h8v351.75zM55 383.75h-7.75v-351.75h7.75v351.75zM94.25 383.75h-7.75v-351.75h7.75v351.75zM133.5 383.75h-15.5v-351.75h15.5v351.75zM165 383.75h-7.75v-351.75h7.75v351.75zM180.75 383.75h-7.75v-351.75h7.75v351.75zM196.5 383.75h-7.75v-351.75h7.75v351.75zM235.75 383.75h-15.75v-351.75h15.75v351.75zM275 383.75h-15.75v-351.75h15.75v351.75zM306.5 383.75h-15.75v-351.75h15.75v351.75zM338 383.75h-15.75v-351.75h15.75v351.75zM361.5 383.75h-15.75v-351.75h15.75v351.75zM408.75 383.75h-23.5v-351.75h23.5v351.75zM424.5 383.75h-8v-351.75h8v351.75zM448 384h-15.75v-352h15.75v352z"></path></svg></span><span class="pojo-a11y-toolbar-text">Grayscale</span>								</a>
+							</li>
+						
+													<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-background-group pojo-a11y-btn-high-contrast" data-action="high-contrast" data-action-group="schema" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>High Contrast</title><path fill="currentColor" d="M192 360v-272c-75 0-136 61-136 136s61 136 136 136zM384 224c0 106-86 192-192 192s-192-86-192-192 86-192 192-192 192 86 192 192z"></path></svg></span><span class="pojo-a11y-toolbar-text">High Contrast</span>								</a>
+							</li>
+						
+													<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-background-group pojo-a11y-btn-negative-contrast" data-action="negative-contrast" data-action-group="schema" tabindex="-1" role="button">
+
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Negative Contrast</title><path fill="currentColor" d="M416 240c-23.75-36.75-56.25-68.25-95.25-88.25 10 17 15.25 36.5 15.25 56.25 0 61.75-50.25 112-112 112s-112-50.25-112-112c0-19.75 5.25-39.25 15.25-56.25-39 20-71.5 51.5-95.25 88.25 42.75 66 111.75 112 192 112s149.25-46 192-112zM236 144c0-6.5-5.5-12-12-12-41.75 0-76 34.25-76 76 0 6.5 5.5 12 12 12s12-5.5 12-12c0-28.5 23.5-52 52-52 6.5 0 12-5.5 12-12zM448 240c0 6.25-2 12-5 17.25-46 75.75-130.25 126.75-219 126.75s-173-51.25-219-126.75c-3-5.25-5-11-5-17.25s2-12 5-17.25c46-75.5 130.25-126.75 219-126.75s173 51.25 219 126.75c3 5.25 5 11 5 17.25z"></path></svg></span><span class="pojo-a11y-toolbar-text">Negative Contrast</span>								</a>
+							</li>
+						
+													<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-background-group pojo-a11y-btn-light-background" data-action="light-background" data-action-group="schema" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Light Background</title><path fill="currentColor" d="M184 144c0 4.25-3.75 8-8 8s-8-3.75-8-8c0-17.25-26.75-24-40-24-4.25 0-8-3.75-8-8s3.75-8 8-8c23.25 0 56 12.25 56 40zM224 144c0-50-50.75-80-96-80s-96 30-96 80c0 16 6.5 32.75 17 45 4.75 5.5 10.25 10.75 15.25 16.5 17.75 21.25 32.75 46.25 35.25 74.5h57c2.5-28.25 17.5-53.25 35.25-74.5 5-5.75 10.5-11 15.25-16.5 10.5-12.25 17-29 17-45zM256 144c0 25.75-8.5 48-25.75 67s-40 45.75-42 72.5c7.25 4.25 11.75 12.25 11.75 20.5 0 6-2.25 11.75-6.25 16 4 4.25 6.25 10 6.25 16 0 8.25-4.25 15.75-11.25 20.25 2 3.5 3.25 7.75 3.25 11.75 0 16.25-12.75 24-27.25 24-6.5 14.5-21 24-36.75 24s-30.25-9.5-36.75-24c-14.5 0-27.25-7.75-27.25-24 0-4 1.25-8.25 3.25-11.75-7-4.5-11.25-12-11.25-20.25 0-6 2.25-11.75 6.25-16-4-4.25-6.25-10-6.25-16 0-8.25 4.5-16.25 11.75-20.5-2-26.75-24.75-53.5-42-72.5s-25.75-41.25-25.75-67c0-68 64.75-112 128-112s128 44 128 112z"></path></svg></span><span class="pojo-a11y-toolbar-text">Light Background</span>								</a>
+							</li>
+						
+													<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-links-underline" data-action="links-underline" data-action-group="toggle" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Links Underline</title><path fill="currentColor" d="M364 304c0-6.5-2.5-12.5-7-17l-52-52c-4.5-4.5-10.75-7-17-7-7.25 0-13 2.75-18 8 8.25 8.25 18 15.25 18 28 0 13.25-10.75 24-24 24-12.75 0-19.75-9.75-28-18-5.25 5-8.25 10.75-8.25 18.25 0 6.25 2.5 12.5 7 17l51.5 51.75c4.5 4.5 10.75 6.75 17 6.75s12.5-2.25 17-6.5l36.75-36.5c4.5-4.5 7-10.5 7-16.75zM188.25 127.75c0-6.25-2.5-12.5-7-17l-51.5-51.75c-4.5-4.5-10.75-7-17-7s-12.5 2.5-17 6.75l-36.75 36.5c-4.5 4.5-7 10.5-7 16.75 0 6.5 2.5 12.5 7 17l52 52c4.5 4.5 10.75 6.75 17 6.75 7.25 0 13-2.5 18-7.75-8.25-8.25-18-15.25-18-28 0-13.25 10.75-24 24-24 12.75 0 19.75 9.75 28 18 5.25-5 8.25-10.75 8.25-18.25zM412 304c0 19-7.75 37.5-21.25 50.75l-36.75 36.5c-13.5 13.5-31.75 20.75-50.75 20.75-19.25 0-37.5-7.5-51-21.25l-51.5-51.75c-13.5-13.5-20.75-31.75-20.75-50.75 0-19.75 8-38.5 22-52.25l-22-22c-13.75 14-32.25 22-52 22-19 0-37.5-7.5-51-21l-52-52c-13.75-13.75-21-31.75-21-51 0-19 7.75-37.5 21.25-50.75l36.75-36.5c13.5-13.5 31.75-20.75 50.75-20.75 19.25 0 37.5 7.5 51 21.25l51.5 51.75c13.5 13.5 20.75 31.75 20.75 50.75 0 19.75-8 38.5-22 52.25l22 22c13.75-14 32.25-22 52-22 19 0 37.5 7.5 51 21l52 52c13.75 13.75 21 31.75 21 51z"></path></svg></span><span class="pojo-a11y-toolbar-text">Links Underline</span>								</a>
+							</li>
+						
+													<li class="pojo-a11y-toolbar-item">
+								<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-readable-font" data-action="readable-font" data-action-group="toggle" tabindex="-1" role="button">
+									<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Readable Font</title><path fill="currentColor" d="M181.25 139.75l-42.5 112.5c24.75 0.25 49.5 1 74.25 1 4.75 0 9.5-0.25 14.25-0.5-13-38-28.25-76.75-46-113zM0 416l0.5-19.75c23.5-7.25 49-2.25 59.5-29.25l59.25-154 70-181h32c1 1.75 2 3.5 2.75 5.25l51.25 120c18.75 44.25 36 89 55 133 11.25 26 20 52.75 32.5 78.25 1.75 4 5.25 11.5 8.75 14.25 8.25 6.5 31.25 8 43 12.5 0.75 4.75 1.5 9.5 1.5 14.25 0 2.25-0.25 4.25-0.25 6.5-31.75 0-63.5-4-95.25-4-32.75 0-65.5 2.75-98.25 3.75 0-6.5 0.25-13 1-19.5l32.75-7c6.75-1.5 20-3.25 20-12.5 0-9-32.25-83.25-36.25-93.5l-112.5-0.5c-6.5 14.5-31.75 80-31.75 89.5 0 19.25 36.75 20 51 22 0.25 4.75 0.25 9.5 0.25 14.5 0 2.25-0.25 4.5-0.5 6.75-29 0-58.25-5-87.25-5-3.5 0-8.5 1.5-12 2-15.75 2.75-31.25 3.5-47 3.5z"></path></svg></span><span class="pojo-a11y-toolbar-text">Readable Font</span>								</a>
+							</li>
+																		<li class="pojo-a11y-toolbar-item">
+							<a href="#" class="pojo-a11y-toolbar-link pojo-a11y-btn-reset" data-action="reset" tabindex="-1" role="button">
+								<span class="pojo-a11y-toolbar-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" viewBox="0 0 448 448"><title>Reset</title><path fill="currentColor" d="M384 224c0 105.75-86.25 192-192 192-57.25 0-111.25-25.25-147.75-69.25-2.5-3.25-2.25-8 0.5-10.75l34.25-34.5c1.75-1.5 4-2.25 6.25-2.25 2.25 0.25 4.5 1.25 5.75 3 24.5 31.75 61.25 49.75 101 49.75 70.5 0 128-57.5 128-128s-57.5-128-128-128c-32.75 0-63.75 12.5-87 34.25l34.25 34.5c4.75 4.5 6 11.5 3.5 17.25-2.5 6-8.25 10-14.75 10h-112c-8.75 0-16-7.25-16-16v-112c0-6.5 4-12.25 10-14.75 5.75-2.5 12.75-1.25 17.25 3.5l32.5 32.25c35.25-33.25 83-53 132.25-53 105.75 0 192 86.25 192 192z"></path></svg></span>
+								<span class="pojo-a11y-toolbar-text">Reset</span>
+							</a>
+						</li>
+					</ul>
+									</div>
+			</div>
+		</nav>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-37026741-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-37026741-1');
+
+
+
+  var target = document.querySelector(".menu-item-has-children");
+  target.addEventListener("mouseover", mOver, false);
+  target.addEventListener("mouseout", mOut, false);
+
+  function mOver() {
+    element.classList.add('opened');
+  }
+
+  function mOut() {
+    element.classList.remove('opened');
+  }
+</script>
+</body>
+
+
+
+</html>
+
+<!-- Page supported by LiteSpeed Cache 5.5 on 2026-04-30 16:31:24 -->

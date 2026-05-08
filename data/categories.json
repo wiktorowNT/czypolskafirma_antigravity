@@ -1326,9 +1326,9 @@
         "scoreBreakdown": { "capital": 0, "hq": 0, "taxes": 15, "production": 8, "employment": 15, "rd": 5, "brand": 5 }
       },
       {
-        "id": "santander",
-        "brand": "Santander Bank Polska",
-        "company": "Santander Bank Polska S.A.",
+        "id": "erste-bank",
+        "brand": "Erste Bank Polska",
+        "company": "Erste Bank Polska S.A.",
         "score": 45,
         "badges": ["EMPLOYMENT_PL"],
         "history": "Krótka historia firmy (w trakcie weryfikacji).",

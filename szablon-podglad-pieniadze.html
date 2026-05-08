@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background: #e2e8f0; display: flex; justify-content: center; padding: 40px; }
+  .canvas { width: 1080px; height: 1080px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; }
+  
+  /* Animacja strzałek */
+  .arrow-move-red {
+    animation: moveRightRed 2s infinite linear;
+  }
+  .arrow-move-green {
+    animation: moveRightGreen 2s infinite linear;
+  }
+  
+  @keyframes moveRightRed {
+    0% { transform: translateX(0); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(50px); opacity: 0; }
+  }
+  
+  @keyframes moveRightGreen {
+    0% { transform: translateX(0); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(50px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="canvas shadow-2xl rounded-xl border border-slate-200">
+  
+  <div class="bg-white p-12 text-center relative z-10 border-b-2 border-slate-100">
+    <div class="text-slate-400 font-bold tracking-widest uppercase text-xl mb-2">Gdzie trafiają Twoje pieniądze?</div>
+    <h1 class="text-6xl font-black uppercase tracking-tight text-slate-900">Śledzimy Kapitał</h1>
+  </div>
+
+  <div class="flex-1 flex flex-col justify-center px-12 py-8 relative z-0 bg-slate-50 gap-8">
+    
+    <!-- SCENARIUSZ 1: KUPUJESZ ZAGRANICZNE -->
+    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 p-8 flex items-center justify-between relative overflow-hidden">
+      <!-- Użytkownik -->
+      <div class="flex flex-col items-center z-10 w-40">
+        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-3">
+          <span class="text-4xl">🛒</span>
+        </div>
+        <div class="font-bold text-slate-500 text-center">Kupujesz<br>w sklepie</div>
+      </div>
+
+      <!-- Krok 1: Pieniądze do kasy -->
+      <div class="flex-1 flex items-center justify-center relative px-4">
+         <div class="w-full h-2 bg-slate-200 rounded-full relative"></div>
+      </div>
+
+      <!-- Produkt -->
+      <div class="flex flex-col items-center z-10 w-48">
+        <div class="h-32 w-32 bg-slate-100 rounded-2xl border border-slate-200 flex items-center justify-center font-bold text-slate-400 mb-3 shadow-inner">
+          [Pudliszki]
+        </div>
+        <div class="font-black text-2xl text-slate-800">Pudliszki</div>
+      </div>
+
+      <!-- Krok 2: Ucieczka pieniędzy -->
+      <div class="flex-1 flex flex-col items-center justify-center relative px-4 text-red-500 font-black text-4xl">
+         <div class="w-full h-4 bg-red-100 rounded-full relative overflow-hidden mb-2">
+            <!-- Pasek postępu -->
+            <div class="absolute top-0 left-0 bottom-0 bg-red-500 rounded-full w-1/2"></div>
+         </div>
+         <div class="flex items-center gap-2">
+           <svg class="w-8 h-8 arrow-move-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+           <svg class="w-8 h-8 arrow-move-red" style="animation-delay: 0.2s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+           <svg class="w-8 h-8 arrow-move-red" style="animation-delay: 0.4s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+         </div>
+         <div class="text-sm uppercase tracking-widest font-bold mt-2 text-red-500">Zysk opuszcza kraj</div>
+      </div>
+
+      <!-- Ostateczny Kraj -->
+      <div class="flex flex-col items-center z-10 w-40">
+        <img src="https://flagcdn.com/w160/us.png" class="h-20 w-20 object-cover rounded-full border-4 border-red-100 shadow-md mb-3">
+        <div class="font-black text-3xl text-slate-900">USA</div>
+      </div>
+    </div>
+
+
+    <!-- SCENARIUSZ 2: KUPUJESZ POLSKIE -->
+    <div class="bg-white rounded-3xl shadow-xl border-2 border-green-500 p-8 flex items-center justify-between relative overflow-hidden transform scale-[1.02]">
+      <!-- Użytkownik -->
+      <div class="flex flex-col items-center z-10 w-40">
+        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-3">
+          <span class="text-4xl">🛒</span>
+        </div>
+        <div class="font-bold text-slate-500 text-center">Kupujesz<br>w sklepie</div>
+      </div>
+
+      <!-- Krok 1: Pieniądze do kasy -->
+      <div class="flex-1 flex items-center justify-center relative px-4">
+         <div class="w-full h-2 bg-slate-200 rounded-full relative"></div>
+      </div>
+
+      <!-- Produkt -->
+      <div class="flex flex-col items-center z-10 w-48 relative">
+        <div class="absolute -top-4 -right-4 bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl shadow">✓</div>
+        <div class="h-32 w-32 bg-slate-100 rounded-2xl border border-slate-200 flex items-center justify-center font-bold text-slate-400 mb-3 shadow-inner">
+          [Włocławek]
+        </div>
+        <div class="font-black text-2xl text-slate-800">Włocławek</div>
+      </div>
+
+      <!-- Krok 2: Pieniądze zostają w pl -->
+      <div class="flex-1 flex flex-col items-center justify-center relative px-4 text-green-500 font-black text-4xl">
+         <div class="w-full h-4 bg-green-100 rounded-full relative overflow-hidden mb-2">
+            <!-- Pasek postępu -->
+            <div class="absolute top-0 left-0 bottom-0 bg-green-500 rounded-full w-full"></div>
+         </div>
+         <div class="flex items-center gap-2 text-green-500">
+           <svg class="w-8 h-8 arrow-move-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+           <svg class="w-8 h-8 arrow-move-green" style="animation-delay: 0.2s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+           <svg class="w-8 h-8 arrow-move-green" style="animation-delay: 0.4s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+         </div>
+         <div class="text-sm uppercase tracking-widest font-bold mt-2 text-green-600">Zysk buduje Polskę</div>
+      </div>
+
+      <!-- Ostateczny Kraj -->
+      <div class="flex flex-col items-center z-10 w-40">
+        <img src="https://flagcdn.com/w160/pl.png" class="h-20 w-20 object-cover rounded-full border-4 border-green-200 shadow-lg mb-3">
+        <div class="font-black text-3xl text-slate-900">POLSKA</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bg-slate-900 p-6 flex justify-between items-center text-white px-12">
+    <div class="text-2xl font-black flex items-center gap-3">
+      <img src="https://flagcdn.com/w80/pl.png" class="h-6 rounded">
+      CzyPolskaFirma.pl
+    </div>
+    <div class="text-slate-400 font-bold uppercase tracking-widest text-sm">Wspieraj lokalną gospodarkę</div>
+  </div>
+
+</div>
+</body>
+</html>
