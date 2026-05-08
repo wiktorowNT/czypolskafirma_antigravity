@@ -8,7 +8,20 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
-    const domain = formData.get('domain') as string;
+    let domainInput = (formData.get('domain') as string || '').trim();
+    
+    // If user pasted a full URL, extract only the domain
+    let domain = domainInput;
+    if (domainInput.includes('://') || domainInput.includes('/')) {
+      try {
+        const urlString = domainInput.startsWith('http') ? domainInput : `https://${domainInput}`;
+        const urlObj = new URL(urlString);
+        domain = urlObj.hostname.replace(/^www\./, '');
+      } catch (e) {
+        // Fallback to basic cleaning if URL parsing fails
+        domain = domainInput.replace(/\/+$/, '').replace(/^https?:\/\//, '').replace(/^www\./, '');
+      }
+    }
 
     if (!file || !domain) {
       return NextResponse.json({ error: 'Missing file or domain' }, { status: 400 });

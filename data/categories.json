@@ -1032,27 +1032,7 @@
           "brand": 5
         }
       },
-      {
-        "id": "tolpa",
-        "brand": "tołpa",
-        "company": "Tołpa Sp. z o.o.",
-        "score": 80,
-        "badges": ["RD_PL"],
-        "history": "Krótka historia firmy (w trakcie weryfikacji).",
-        "ownership": "Struktura weryfikowana.",
-        "sources": ["https://krs.ms.gov.pl"],
-        "verificationDate": "2023-12-01",
-        "facts": ["Brak danych", "W trakcie weryfikacji"],
-        "scoreBreakdown": {
-          "capital": 30,
-          "hq": 15,
-          "taxes": 15,
-          "production": 0,
-          "employment": 10,
-          "rd": 10,
-          "brand": 0
-        }
-      },
+
       {
         "id": "sylveco",
         "brand": "Sylveco",
