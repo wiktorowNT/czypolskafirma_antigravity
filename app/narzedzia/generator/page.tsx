@@ -215,7 +215,7 @@ export default function GeneratorPage() {
             </div>
             <div className="flex items-center gap-3 text-slate-500 text-sm font-medium">
               <Heart className="w-5 h-5 text-red-500" />
-              Wspieraj to, co nasze. Kupuj świadomie.
+              Wspieraj lokalnie, kupuj świadomie.
             </div>
           </div>
         </div>
