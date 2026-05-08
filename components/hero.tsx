@@ -93,11 +93,52 @@ export default function Hero() {
 
 
 
-          <div className="max-w-2xl mx-auto mb-4">
-            <CompanySearch
-              placeholder="Szukaj firmy..."
-              showButton={true}
-            />
+          <div className="max-w-2xl mx-auto mb-4 flex flex-col sm:flex-row gap-3">
+            <div className="flex-1">
+              <CompanySearch
+                placeholder="Szukaj firmy..."
+                showButton={false}
+              />
+            </div>
+            <div className="relative group w-full sm:w-[200px]">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <LucideIcons.Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+              </div>
+              <input
+                type="text"
+                placeholder="Kraj (np. Niemcy)..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const val = (e.target as HTMLInputElement).value
+                    if (val.trim()) {
+                      window.location.href = `/companies?country=${encodeURIComponent(val.trim())}`
+                    }
+                  }
+                }}
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all h-12"
+              />
+            </div>
+            <button
+              onClick={() => {
+                const searchInput = document.querySelector('input[aria-label="Wyszukaj firmę"]') as HTMLInputElement
+                const countryInput = document.querySelector('input[placeholder="Kraj (np. Niemcy)..."]') as HTMLInputElement
+                
+                let url = "/companies"
+                const params = new URLSearchParams()
+                if (searchInput?.value) params.set("q", searchInput.value)
+                if (countryInput?.value) params.set("country", countryInput.value)
+                
+                if (params.toString()) {
+                  window.location.href = `${url}?${params.toString()}`
+                } else {
+                  window.location.href = url
+                }
+              }}
+              className="h-12 px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2"
+            >
+              <LucideIcons.Search className="h-4 w-4" />
+              <span>Szukaj</span>
+            </button>
           </div>
 
           {/* Popular Tags */}

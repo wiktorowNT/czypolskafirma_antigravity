@@ -24,11 +24,18 @@ export async function GET(request: Request) {
     }
 
     try {
-        // Prepare query by replacing spaces with wildcards to handle hyphens/spaces consistently
-        const formattedQuery = query.trim().replace(/\s+/g, "*")
-
-        // Search for companies by name, slug, NIP or KRS using ilike
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=50`
+        const { getCountryCode } = await import("@/lib/countries")
+        const countryCode = getCountryCode(query)
+        
+        let url: string
+        if (countryCode) {
+            // If it's a country search, filter by country_code
+            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
+        } else {
+            // Standard search by name, slug, NIP or KRS
+            const formattedQuery = query.trim().replace(/\s+/g, "*")
+            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=50`
+        }
 
         const res = await fetch(url, {
             headers: {
