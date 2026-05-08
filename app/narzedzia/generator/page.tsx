@@ -6,6 +6,7 @@ import { CompanyLogo } from "@/components/company-logo"
 import * as htmlToImage from "html-to-image"
 import { Download, X, LayoutTemplate, Globe, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { countryNames } from "@/lib/countries"
 
 interface Company {
   id: string
@@ -75,22 +76,11 @@ export default function GeneratorPage() {
     }
   }
 
+
   const getCountryName = (code?: string) => {
     if (!code) return "Brak danych"
-    if (code.toLowerCase() === "pl") return "Polska"
-    if (code.toLowerCase() === "us") return "USA"
-    if (code.toLowerCase() === "gb") return "Wlk. Brytania"
-    if (code.toLowerCase() === "de") return "Niemcy"
-    if (code.toLowerCase() === "fr") return "Francja"
-    if (code.toLowerCase() === "it") return "Włochy"
-    if (code.toLowerCase() === "es") return "Hiszpania"
-    if (code.toLowerCase() === "cn") return "Chiny"
-    if (code.toLowerCase() === "ch") return "Szwajcaria"
-    if (code.toLowerCase() === "nl") return "Holandia"
-    if (code.toLowerCase() === "se") return "Szwecja"
-    if (code.toLowerCase() === "pt") return "Portugalia"
-    if (code.toLowerCase() === "dk") return "Dania"
-    return code.toUpperCase()
+    const normalizedCode = code.toUpperCase()
+    return countryNames[normalizedCode] || normalizedCode
   }
 
   const getGridCols = () => {
