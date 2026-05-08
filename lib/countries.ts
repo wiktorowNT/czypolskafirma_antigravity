@@ -27,6 +27,9 @@ export const countryMap: Record<string, string> = {
   "indie": "IN",
   "izrael": "IL",
   "israel": "IL",
+  "portugalia": "PT",
+  "irlandia": "IE",
+  "grecja": "GR",
 }
 
 export function getCountryCode(input: string): string | null {
@@ -59,4 +62,7 @@ export const countryNames: Record<string, string> = {
   "BR": "Brazylia",
   "IN": "Indie",
   "IL": "Izrael",
+  "PT": "Portugalia",
+  "IE": "Irlandia",
+  "GR": "Grecja",
 }
