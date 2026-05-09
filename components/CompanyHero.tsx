@@ -172,7 +172,7 @@ export default function CompanyHero({
                             {isPolish ? (
                                 <span className="font-bold text-red-600">polska firma</span>
                             ) : (
-                                <span className="font-bold text-slate-900">firma z zagranicznym kapitałem</span>
+                                <span className="font-bold text-slate-900">firma zagraniczna</span>
                             )}
                             <span className="text-slate-400 mx-2">|</span>
                             <span className="text-slate-600">Kraj pochodzenia: <strong>{countryName}</strong></span>
