@@ -64,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           ? new Date(company.verified_at)
           : new Date(),
         changeFrequency: "weekly" as const,
-        priority: 0.8,
+        priority: 0.9, // Higher priority for company profiles
       }))
     }
 
@@ -78,13 +78,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       categoryPages = categories.map((category) => ({
         url: `${BASE_URL}/kategoria/${category.slug}`,
         lastModified: new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
+        changeFrequency: "daily" as const,
+        priority: 0.8,
       }))
     }
   } catch (error) {
     console.error("[sitemap] Error fetching data from Supabase:", error)
   }
 
-  return [...staticPages, ...categoryPages, ...companyPages]
+  // Sort by priority for cleaner sitemap
+  return [...staticPages, ...companyPages, ...categoryPages].sort((a, b) => (b.priority || 0) - (a.priority || 0))
 }

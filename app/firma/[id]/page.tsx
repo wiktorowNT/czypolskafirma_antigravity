@@ -168,16 +168,21 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     }
   }
 
-  const isPolish = company.siedziba_pl
+  const isPolish = company.country_code?.toUpperCase() === "PL"
   const status = isPolish ? "Polska Firma" : "Firma Zagraniczna"
+  const countryName = isPolish ? "Polski" : (company.country_code || "Zagraniczny")
 
   return {
-    title: `${company.name} — ${status} | CzyPolskaFirma`,
-    description: `Sprawdź czy ${company.name} jest polską firmą. Status: ${status}. Weryfikacja kapitału, siedziby i podatków.`,
+    title: `Czy ${company.name} to polska firma? Sprawdź kapitał i właściciela`,
+    description: `Dowiedz się, czy ${company.name} posiada polski kapitał. Status: ${status}. Sprawdź strukturę właścicielską, siedzibę i pochodzenie firmy ${company.name}.`,
+    alternates: {
+      canonical: `https://czypolskafirma.pl/firma/${company.id}`,
+    },
     openGraph: {
-      title: `${company.name} — ${status}`,
-      description: `Szczegółowy profil firmy ${company.name} w serwisie CzyPolskaFirma`,
+      title: `Czy ${company.name} to polska firma?`,
+      description: `Sprawdź pochodzenie kapitału i właściciela firmy ${company.name}. Aktualny status: ${status}.`,
       type: "website",
+      url: `https://czypolskafirma.pl/firma/${company.id}`,
     },
   }
 }
@@ -190,5 +195,68 @@ export default async function CompanyProfilePage({ params }: { params: { id: str
     notFound()
   }
 
-  return <CompanyProfileClient company={company} />
+  const isPolish = company.country_code?.toUpperCase() === "PL"
+  const status = isPolish ? "polska firma" : "firma zagraniczna"
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": company.name,
+        "url": company.website_url || `https://czypolskafirma.pl/firma/${company.id}`,
+        "logo": company.logoUrl,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": company.adres,
+          "addressCountry": company.country_code
+        },
+        "description": company.business_description
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [{
+          "@type": "Question",
+          "name": `Czy ${company.name} to polska firma?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `${company.name} to ${status}. ${company.ownership_description || ""}`
+          }
+        }]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Start",
+            "item": "https://czypolskafirma.pl"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": company.categoryName,
+            "item": `https://czypolskafirma.pl/kategoria/${company.categorySlug}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": company.name,
+            "item": `https://czypolskafirma.pl/firma/${company.id}`
+          }
+        ]
+      }
+    ]
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <CompanyProfileClient company={company} />
+    </>
+  )
 }

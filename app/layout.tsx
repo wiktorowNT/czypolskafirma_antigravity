@@ -22,31 +22,30 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://czypolskafirma.pl"),
-  title: "CzyPolskaFirma — sprawdź z jakiego kraju jest firma",
-  description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
+  title: {
+    default: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
+    template: "%s | CzyPolskaFirma",
+  },
+  description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska. Baza danych polskiego kapitału.",
+  keywords: ["polska firma", "kapitał polski", "pochodzenie firmy", "patriotyzm gospodarczy", "właściciel firmy"],
   openGraph: {
-    title: "CzyPolskaFirma — sprawdź z jakiego kraju jest firma",
+    title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
     description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
     url: "https://czypolskafirma.pl",
     type: "website",
     locale: "pl_PL",
     siteName: "CzyPolskaFirma",
   },
-  other: {
-    "application/ld+json": JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "CzyPolskaFirma",
-      url: "https://czypolskafirma.pl",
-      description: "Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://czypolskafirma.pl/search?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
-    }),
+  twitter: {
+    card: "summary_large_image",
+    title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
+    description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
+    creator: "@CzyPolskaFirma",
   },
-  generator: "v0.app",
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({
@@ -54,8 +53,27 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CzyPolskaFirma",
+    "url": "https://czypolskafirma.pl",
+    "description": "Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://czypolskafirma.pl/szukaj?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+
   return (
     <html lang="pl-PL" className={`${inter.variable} ${playfair.variable} antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+      </head>
       <body className="font-sans">
         <Suspense fallback={<div>Loading...</div>}>
           <Header />
