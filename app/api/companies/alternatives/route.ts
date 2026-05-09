@@ -53,6 +53,7 @@ export async function GET(request: Request) {
 
         const results = data.map((company: any) => ({
             id: company.id,
+            slug: company.slug,
             brand: company.slug
                 ?.split("-")
                 .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
