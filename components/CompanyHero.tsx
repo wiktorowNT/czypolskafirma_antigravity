@@ -162,17 +162,20 @@ export default function CompanyHero({
                 {/* Descriptions & Verdict */}
                 <div className="mt-6 space-y-6">
                     {/* Verdict Section - Optimized for AI & Featured Snippets */}
-                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-5">
-                        <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                             <BadgeCheck className={`w-4 h-4 ${isPolish ? "text-red-600" : "text-slate-400"}`} />
-                            Czy {displayName} to polska firma?
+                            Werdykt: Czy {displayName} to polska firma?
                         </h2>
-                        <p className="text-base text-slate-700 leading-relaxed">
-                            <strong>{displayName}</strong> to {isPolish ? <span className="text-red-700 font-semibold underline decoration-red-200 underline-offset-4">polska firma</span> : <span className="text-slate-700 font-semibold">firma z zagranicznym kapitałem</span>}.
-                            {isPolish
-                                ? ` Spółka posiada główną siedzibę w Polsce (${countryName}) i jest częścią polskiego systemu gospodarczego.`
-                                : ` Kapitał dominujący pochodzi z kraju: ${countryName}.`}
-                            {ownership_description && ` ${ownership_description}`}
+                        <p className="text-lg text-slate-900 leading-tight">
+                            <span className="font-medium text-slate-500">{displayName} to </span>
+                            {isPolish ? (
+                                <span className="font-bold text-red-600">polska firma</span>
+                            ) : (
+                                <span className="font-bold text-slate-900">firma z zagranicznym kapitałem</span>
+                            )}
+                            <span className="text-slate-400 mx-2">|</span>
+                            <span className="text-slate-600">Kraj pochodzenia: <strong>{countryName}</strong></span>
                         </p>
                     </div>
 
