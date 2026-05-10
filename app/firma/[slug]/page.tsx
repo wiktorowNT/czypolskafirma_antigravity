@@ -74,12 +74,13 @@ function calculateAge(foundedAt: string | null): number {
 
 async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
   try {
-    console.log("[v0] Fetching company with slugOrId:", slugOrId, "at", new Date().toISOString())
+    const decoded = decodeURIComponent(slugOrId)
+    console.log("[v0] Fetching company with slugOrId:", decoded, "at", new Date().toISOString())
 
     const supabase = await getSupabaseServerClient()
 
-    // Check if it's a UUID
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slugOrId)
+    // Detect if it's a UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded)
 
     let query = supabase
       .from("companies")
@@ -111,9 +112,11 @@ async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
       `)
 
     if (isUuid) {
-      query = query.eq("id", slugOrId)
+      query = query.eq("id", decoded)
     } else {
-      query = query.eq("slug", slugOrId)
+      // Normalize slug: lowercase and spaces to hyphens
+      const normalizedSlug = decoded.toLowerCase().trim().replace(/\s+/g, "-")
+      query = query.eq("slug", normalizedSlug)
     }
 
     const { data, error } = await query.maybeSingle()
@@ -205,9 +208,11 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
     notFound()
   }
 
-  // Handle redirect from UUID to slug
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug)
-  if (isUuid && company.slug) {
+  // Handle redirect from UUID or non-normalized slug to canonical slug
+  const decoded = decodeURIComponent(slug)
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded)
+
+  if ((isUuid || decoded !== company.slug) && company.slug) {
     redirect(`/firma/${company.slug}`)
   }
 
