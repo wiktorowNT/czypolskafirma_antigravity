@@ -51,21 +51,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const supabase = await getSupabaseServerClient()
 
-    // Fetch all company IDs for /firma/[id] pages
+    // Fetch all company IDs and slugs for /firma/[slug] pages
     const { data: companies, error: companiesError } = await supabase
       .from("companies")
-      .select("id, verified_at")
+      .select("id, slug, verified_at")
       .order("name", { ascending: true })
 
     if (!companiesError && companies) {
-      companyPages = companies.map((company) => ({
-        url: `${BASE_URL}/firma/${company.id}`,
-        lastModified: company.verified_at
-          ? new Date(company.verified_at)
-          : new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.8,
-      }))
+      companyPages = companies.map((company) => {
+        const displaySlug = company.slug || company.id
+        return {
+          url: `${BASE_URL}/firma/${displaySlug}`,
+          lastModified: company.verified_at
+            ? new Date(company.verified_at)
+            : new Date(),
+          changeFrequency: "weekly" as const,
+          priority: 0.9, // Higher priority for company profiles
+        }
+      })
     }
 
     // Fetch all category slugs for /kategoria/[slug] pages
@@ -78,13 +81,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       categoryPages = categories.map((category) => ({
         url: `${BASE_URL}/kategoria/${category.slug}`,
         lastModified: new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
+        changeFrequency: "daily" as const,
+        priority: 0.8,
       }))
     }
   } catch (error) {
     console.error("[sitemap] Error fetching data from Supabase:", error)
   }
 
-  return [...staticPages, ...categoryPages, ...companyPages]
+  // Sort by priority for cleaner sitemap
+  return [...staticPages, ...companyPages, ...categoryPages].sort((a, b) => (b.priority || 0) - (a.priority || 0))
 }

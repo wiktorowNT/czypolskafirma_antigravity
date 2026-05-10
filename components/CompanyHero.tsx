@@ -159,9 +159,27 @@ export default function CompanyHero({
                     </div>
                 </div>
 
-                {/* Descriptions */}
-                {(business_description || ownership_description) && (
-                    <div className="mt-6 space-y-4">
+                {/* Descriptions & Verdict */}
+                <div className="mt-6 space-y-6">
+                    {/* Verdict Section - Optimized for AI & Featured Snippets */}
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <BadgeCheck className={`w-4 h-4 ${isPolish ? "text-red-600" : "text-slate-400"}`} />
+                            Werdykt: Czy {displayName} to polska firma?
+                        </h2>
+                        <p className="text-lg text-slate-900 leading-tight">
+                            <span className="font-medium text-slate-500">{displayName} to </span>
+                            {isPolish ? (
+                                <span className="font-bold text-red-600">polska firma</span>
+                            ) : (
+                                <span className="font-bold text-slate-900">firma zagraniczna</span>
+                            )}
+                            <span className="text-slate-400 mx-2">|</span>
+                            <span className="text-slate-600">Kraj pochodzenia: <strong>{countryName}</strong></span>
+                        </p>
+                    </div>
+
+                    <div className="space-y-4">
                         {/* Ownership Description */}
                         {ownership_description && (
                             <div className="flex gap-3">
@@ -169,7 +187,7 @@ export default function CompanyHero({
                                     <Landmark className="w-4 h-4 text-purple-600" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Struktura właścicielska</p>
+                                    <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Struktura właścicielska</h3>
                                     <p className="text-sm text-slate-600 leading-relaxed">{ownership_description}</p>
                                 </div>
                             </div>
@@ -182,13 +200,13 @@ export default function CompanyHero({
                                     <Building2 className="w-4 h-4 text-blue-600" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</p>
+                                    <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</h3>
                                     <p className="text-sm text-slate-600 leading-relaxed">{business_description}</p>
                                 </div>
                             </div>
                         )}
                     </div>
-                )}
+                </div>
             </div>
 
             {/* Section 2: Insights (Bottom) */}

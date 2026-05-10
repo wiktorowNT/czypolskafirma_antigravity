@@ -9,6 +9,7 @@ import { CompanyLogo } from "@/components/company-logo"
 
 interface Company {
   id: string
+  slug: string
   brand: string
   company: string
   category: string
@@ -153,7 +154,8 @@ export function CompanySearch({
     if (onSelect) {
       onSelect(company)
     } else {
-      router.push(`/firma/${company.id}`)
+      const target = company.slug || company.id
+      router.push(`/firma/${target}`)
     }
   }
 
@@ -194,7 +196,8 @@ export function CompanySearch({
     if (onSelect) {
       onSelect(company)
     } else {
-      router.push(`/firma/${company.id}`)
+      const target = company.slug || company.id
+      router.push(`/firma/${target}`)
     }
   }
 
