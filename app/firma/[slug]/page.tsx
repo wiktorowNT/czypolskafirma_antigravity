@@ -114,9 +114,12 @@ async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
     if (isUuid) {
       query = query.eq("id", decoded)
     } else {
-      // Normalize slug: lowercase and spaces to hyphens
+      // Normalized version for standard SEO slugs
       const normalizedSlug = decoded.toLowerCase().trim().replace(/\s+/g, "-")
-      query = query.eq("slug", normalizedSlug)
+      
+      // We try: exact match, normalized match, or case-insensitive match
+      // This covers weird cases like "Erste Bank" in DB but "erste-bank" in logic
+      query = query.or(`slug.eq."${decoded}",slug.eq."${normalizedSlug}",slug.ilike."${decoded}"`)
     }
 
     const { data, error } = await query.maybeSingle()
