@@ -3,7 +3,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 
 const BASE_URL = "https://czypolskafirma.pl"
 
-export const revalidate = 3600 // Revalidate at most every hour
+export const revalidate = 0 // Disable cache for sitemap to force fresh generation
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
