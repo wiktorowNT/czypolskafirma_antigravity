@@ -1,9 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Building2, AlertCircle, ArrowUpDown, Globe } from "lucide-react"
 import { CompanyGrid, CompanyGridItem } from "@/components/CompanyGrid"
 import { countryNames } from "@/lib/countries"
+
+const SCROLL_KEY = "companies-list-scroll"
 
 export function CompaniesList() {
   const [companies, setCompanies] = useState<CompanyGridItem[]>([])
@@ -11,6 +13,30 @@ export function CompaniesList() {
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<string>("name-asc")
   const [countryQuery, setCountryQuery] = useState<string>("")
+  const hasRestoredScroll = useRef(false)
+
+  // Save scroll position before navigating away
+  useEffect(() => {
+    const saveScroll = () => {
+      sessionStorage.setItem(SCROLL_KEY, String(window.scrollY))
+    }
+
+    // Save on any click (catches link navigations)
+    const handleClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement).closest("a")
+      if (link && link.href && !link.href.startsWith("#")) {
+        saveScroll()
+      }
+    }
+
+    document.addEventListener("click", handleClick, true)
+    window.addEventListener("beforeunload", saveScroll)
+
+    return () => {
+      document.removeEventListener("click", handleClick, true)
+      window.removeEventListener("beforeunload", saveScroll)
+    }
+  }, [])
 
   useEffect(() => {
     // Manual sync to avoid Suspense issues
@@ -67,6 +93,23 @@ export function CompaniesList() {
       clearTimeout(timeoutId)
     }
   }, [])
+
+  // Restore scroll position after data has loaded
+  useEffect(() => {
+    if (!loading && companies.length > 0 && !hasRestoredScroll.current) {
+      hasRestoredScroll.current = true
+      const savedScroll = sessionStorage.getItem(SCROLL_KEY)
+      if (savedScroll) {
+        // Wait for the DOM to render the full list before scrolling
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.scrollTo(0, parseInt(savedScroll, 10))
+            sessionStorage.removeItem(SCROLL_KEY)
+          })
+        })
+      }
+    }
+  }, [loading, companies])
 
   const filteredCompanies = companies.filter(company => {
     const query = countryQuery.toLowerCase().trim()
