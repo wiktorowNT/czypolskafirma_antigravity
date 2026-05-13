@@ -23,11 +23,14 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://czypolskafirma.pl"),
   title: {
-    default: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
-    template: "%s | CzyPolskaFirma",
+    default: "CzyPolskaFirma — baza firm i kapitału polskiego",
+    template: "%s | CzyPolskaFirma.pl",
   },
-  description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska. Baza danych polskiego kapitału.",
-  keywords: ["polska firma", "kapitał polski", "pochodzenie firmy", "patriotyzm gospodarczy", "właściciel firmy"],
+  description: "Wybieraj świadomie polskie produkty. Sprawdź pochodzenie kapitału, strukturę właścicielską i podatki ponad 500 firm w Polsce. Twoje pieniądze mają moc!",
+  keywords: ["polska firma", "kapitał polski", "pochodzenie firmy", "patriotyzm gospodarczy", "właściciel firmy", "polskie marki"],
+  alternates: {
+    canonical: "https://czypolskafirma.pl",
+  },
   openGraph: {
     title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
     description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
@@ -45,6 +48,13 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 }
 

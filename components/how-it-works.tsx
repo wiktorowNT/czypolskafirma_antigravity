@@ -19,8 +19,26 @@ export function HowItWorks() {
     },
   ]
 
+  const howToJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Jak sprawdzić pochodzenie firmy na CzyPolskaFirma.pl",
+    "description": "Prosta instrukcja jak w trzech krokach zweryfikować kapitał firmy i znaleźć polskie alternatywy.",
+    "step": steps.map((step, index) => ({
+      "@type": "HowToStep",
+      "position": index + 1,
+      "name": step.title,
+      "text": step.description,
+      "url": "https://czypolskafirma.pl#how-it-works"
+    }))
+  }
+
   return (
     <section id="how-it-works" className="py-20 bg-slate-50 border-t border-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+      />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Jak to działa</h2>
