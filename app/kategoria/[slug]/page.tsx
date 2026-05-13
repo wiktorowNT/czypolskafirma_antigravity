@@ -3,8 +3,7 @@ import { notFound } from "next/navigation"
 import CategoryPageView from "@/components/category-page-view"
 import { getCachedCategoryData } from "@/lib/supabase/category-cache"
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+export const revalidate = 3600 // ISR: revalidate every hour
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = params

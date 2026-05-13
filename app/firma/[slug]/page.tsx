@@ -3,8 +3,7 @@ import { notFound, redirect } from "next/navigation"
 import CompanyProfileClient from "./CompanyProfileClient"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+export const revalidate = 3600 // ISR: revalidate every hour
 
 interface CompanyDetail {
   id: string
@@ -240,14 +239,40 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
       },
       {
         "@type": "FAQPage",
-        "mainEntity": [{
-          "@type": "Question",
-          "name": `Czy ${company.name} to polska firma?`,
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": `${company.name} to ${status}. ${company.ownership_description || ""}`
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": `Czy ${company.name} to polska firma?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `${company.name} to ${status}. ${company.ownership_description || ""}`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": `Kto jest właścicielem ${company.name}?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": company.ownership_description || `Informacje o strukturze właścicielskiej ${company.name} są dostępne na stronie CzyPolskaFirma.pl.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": `Z jakiego kraju pochodzi ${company.name}?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `${company.name} to ${status} z siedzibą ${company.adres ? `pod adresem ${company.adres}` : `w kraju: ${company.country_code || "brak danych"}`}. ${company.business_description || ""}`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": `Czy ${company.name} płaci podatki w Polsce?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": company.nip ? `${company.name} posiada polski NIP (${company.nip}), co oznacza, że jest zarejestrowana jako podatnik w Polsce.` : `Informacja o statusie podatkowym ${company.name} w Polsce wymaga dodatkowej weryfikacji.`
+            }
           }
-        }]
+        ]
       },
       {
         "@type": "BreadcrumbList",
