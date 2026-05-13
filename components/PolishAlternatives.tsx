@@ -128,7 +128,7 @@ export default function PolishAlternatives({
                         {alternatives.map((alt) => (
                             <Link
                                 key={alt.id}
-                                href={`/firma/${alt.slug || alt.id}`}
+                                href={`/firma/${encodeURIComponent(alt.slug || alt.id)}`}
                                 className="group flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:border-slate-300 hover:shadow-sm transition-all"
                             >
                                 <CompanyLogo

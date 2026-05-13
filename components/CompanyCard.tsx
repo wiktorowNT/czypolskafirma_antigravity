@@ -7,6 +7,7 @@ import { useBookmarks } from "@/hooks/use-bookmarks"
 
 export interface CompanyCardProps {
     id: string
+    slug?: string
     brand: string
     logoUrl?: string
     websiteUrl?: string
@@ -18,6 +19,7 @@ export interface CompanyCardProps {
 
 export function CompanyCard({
     id,
+    slug,
     brand,
     logoUrl,
     websiteUrl,
@@ -26,7 +28,7 @@ export function CompanyCard({
     headquartersInPL,
     vatActive,
 }: CompanyCardProps) {
-    const profileUrl = `/firma/${id}`
+    const profileUrl = `/firma/${slug || id}`
     const { isBookmarked, toggleBookmark } = useBookmarks()
     const bookmarked = isBookmarked(id)
 

@@ -152,15 +152,22 @@ export default function LogoFixer() {
             )}
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
+          <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
             <button 
               onClick={() => {
-                fetch('/api/tools/upload-logo', { method: 'GET' }) // just a ping or do something else
+                window.location.reload();
+              }}
+              className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-200"
+            >
+              Odśwież widok
+            </button>
+            <button 
+              onClick={() => {
                 alert('Pamiętaj, aby na koniec odświeżyć audyt terminalem: node tools/generate-logo-audit.mjs');
               }}
               className="bg-gray-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800"
             >
-              Odśwież narzędzia po zakończeniu
+              Zakończ i przejdź do audytu
             </button>
           </div>
 
