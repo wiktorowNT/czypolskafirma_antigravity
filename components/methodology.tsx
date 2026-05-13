@@ -21,7 +21,7 @@ export function Methodology() {
           </div>
           <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-6">Metodologia i źródła</h2>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Korzystamy wyłącznie z publicznych lub oficjalnych źródeł. Każda informacja ma link i datę weryfikacji.
+            Nasze definicje i weryfikację opieramy na wytycznych <a href="https://stat.gov.pl/" className="text-red-600 hover:underline" target="_blank" rel="noopener noreferrer">Głównego Urzędu Statystycznego (GUS)</a> oraz publicznych rejestrach państwowych zgodnie z <a href="https://isap.sejm.gov.pl/" className="text-red-600 hover:underline" target="_blank" rel="noopener noreferrer">Ustawą o swobodzie działalności gospodarczej</a>. Każda informacja ma link i datę weryfikacji.
           </p>
         </div>
 

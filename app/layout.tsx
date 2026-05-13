@@ -65,15 +65,30 @@ export default function RootLayout({
 }) {
   const websiteJsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "CzyPolskaFirma",
-    "url": "https://czypolskafirma.pl",
-    "description": "Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://czypolskafirma.pl/szukaj?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "CzyPolskaFirma",
+        "url": "https://czypolskafirma.pl",
+        "description": "Niezależna baza danych polskiego kapitału i struktury właścicielskiej firm.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://czypolskafirma.pl/szukaj?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "CzyPolskaFirma",
+        "url": "https://czypolskafirma.pl",
+        "logo": "https://czypolskafirma.pl/logo.png",
+        "foundingDate": "2023",
+        "description": "Niezależny projekt obywatelski promujący patriotyzm gospodarczy poprzez dostarczanie sprawdzonych informacji o pochodzeniu kapitału przedsiębiorstw działających w Polsce.",
+        "sameAs": [
+          "https://x.com/czypolskafirma"
+        ]
+      }
+    ]
   }
 
   return (

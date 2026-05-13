@@ -188,11 +188,15 @@ export default function CompanyHero({
                                 </div>
                                 <div>
                                     <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Struktura właścicielska</h3>
-                                    <p className="text-sm text-slate-600 leading-relaxed">{ownership_description}</p>
+                                    <div className="text-sm text-slate-600 leading-relaxed space-y-2">
+                                        {ownership_description.split('\n').filter(p => p.trim()).map((para, i) => (
+                                            <p key={i}>{para.trim()}</p>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
-
+ 
                         {/* Business Description */}
                         {business_description && (
                             <div className="flex gap-3">
@@ -201,7 +205,11 @@ export default function CompanyHero({
                                 </div>
                                 <div>
                                     <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</h3>
-                                    <p className="text-sm text-slate-600 leading-relaxed">{business_description}</p>
+                                    <div className="text-sm text-slate-600 leading-relaxed space-y-2">
+                                        {business_description.split('\n').filter(p => p.trim()).map((para, i) => (
+                                            <p key={i}>{para.trim()}</p>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
