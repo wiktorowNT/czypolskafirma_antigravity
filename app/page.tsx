@@ -7,6 +7,7 @@ import { FAQ } from "@/components/faq"
 import { CookieBanner } from "@/components/cookie-banner"
 import { GlobalStats } from "@/components/global-stats"
 import { SupportSection } from "@/components/support-section"
+import { WhyPolish } from "@/components/WhyPolish"
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <HowItWorks />
         <Features />
         <Methodology />
+        <WhyPolish />
         <ReportForm />
         <SupportSection />
         <FAQ />
