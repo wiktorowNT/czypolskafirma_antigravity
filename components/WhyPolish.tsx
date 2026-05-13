@@ -10,22 +10,22 @@ export function WhyPolish() {
     {
       title: "Podatki zostają w Polsce",
       icon: TrendingUp,
-      content: "Wybierając firmy z polskim kapitałem, masz pewność, że wypracowany zysk oraz podatki (w tym CIT) trafiają do polskiego budżetu. Te środki finansują naszą infrastrukturę, służbę zdrowia oraz edukację. Patriotyzm gospodarczy to najprostszy sposób na realne wsparcie lokalnych społeczności."
+      content: "Wybierając firmy z polskim kapitałem, masz pewność, że wypracowany zysk oraz podatki (w tym CIT) trafiają do polskiego budżetu. Te środki finansują naszą infrastrukturę, służbę zdrowia oraz edukację. Patriotyzm gospodarczy to prosty sposób na realne wsparcie rozwoju Polski."
     },
     {
       title: "Stabilne miejsca pracy",
       icon: Users,
-      content: "Rodzime przedsiębiorstwa są fundamentem polskiego rynku pracy. W przeciwieństwie do globalnych korporacji, które mogą przenieść produkcję do tańszych krajów w poszukiwaniu optymalizacji kosztów, polskie firmy są silnie związane z regionem. Inwestują w rozwój pracowników i budują stabilność gospodarczą kraju."
+      content: "Polskie przedsiębiorstwa są fundamentem rodzimego rynku pracy. W przeciwieństwie do globalnych korporacji, które mogą przenieść produkcję do tańszych krajów w poszukiwaniu optymalizacji kosztów, polskie firmy są silniej związane z Polską. Inwestują w rozwój pracowników i budują stabilność gospodarczą kraju."
     },
     {
       title: "Rozwój innowacji i technologii",
       icon: Lightbulb,
-      content: "Wspierając polskie marki, dajesz im kapitał na badania i rozwój. Dzięki temu nasze firmy mogą konkurować na rynkach międzynarodowych, promując polską myśl techniczną i design. Każdy zakup to \"głos\" oddany na rozwój polskiej marki, która może stać się globalnym liderem."
+      content: "Wybierając rodzime marki, dostarczasz im kapitał niezbędny do prowadzenia badań i wdrażania nowych technologii. Dzięki temu polskie firmy skutecznie konkurują na międzynarodowych rynkach, promując polską myśl techniczną. Twój zakup to realne wsparcie, które pozwala lokalnym przedsiębiorstwom stawać się globalnymi liderami."
     },
     {
       title: "Bezpieczeństwo łańcucha dostaw",
       icon: ShieldCheck,
-      content: "Korzystanie z usług lokalnych dostawców skraca łańcuchy dostaw, co jest kluczowe w dobie globalnych kryzysów. Polskie firmy produkujące na miejscu są bardziej odporne na zawirowania polityczne i transportowe, co gwarantuje nam wszystkim większe bezpieczeństwo konsumenckie."
+      content: "Korzystanie z usług lokalnych dostawców skraca łańcuchy dostaw, co jest kluczowe w dobie globalnych kryzysów. Polskie firmy produkujące na miejscu są bardziej odporne na zawirowania geopolityczne, co gwarantuje nam wszystkim większe bezpieczeństwo konsumenckie."
     }
   ]
 
@@ -62,7 +62,7 @@ export function WhyPolish() {
             ))}
             <div className="text-center mt-4 p-6 bg-red-50 rounded-2xl border border-red-100">
               <p className="text-sm text-red-800 font-medium">
-                Wspieranie polskiego biznesu to inwestycja w naszą wspólną przyszłość. 
+                Wspieranie polskiego biznesu to inwestycja w naszą wspólną przyszłość.
                 Twoje codzienne wybory zakupowe mają realny wpływ na siłę polskiej gospodarki.
               </p>
             </div>
