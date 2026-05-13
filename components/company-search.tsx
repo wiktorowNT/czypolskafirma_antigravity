@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Search, X } from "lucide-react"
-import { useRouter, useSearchParams, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { CompanyLogo } from "@/components/company-logo"
 
 interface Company {
@@ -36,19 +36,11 @@ export function CompanySearch({
   variant = "default",
   onSelect,
 }: CompanySearchProps) {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
-  const initialQuery = pathname === "/szukaj" ? (searchParams.get("q") || "") : ""
-
-  const [query, setQuery] = useState(initialQuery)
+  const [query, setQuery] = useState("")
 
   useEffect(() => {
-    if (pathname === "/szukaj") {
-      setQuery(searchParams.get("q") || "")
-    } else {
-      setQuery("")
-    }
-  }, [searchParams, pathname])
+    // Sync logic removed for debugging
+  }, [])
   const [suggestions, setSuggestions] = useState<Company[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
@@ -228,7 +220,12 @@ export function CompanySearch({
             aria-haspopup="listbox"
             role="combobox"
           />
-          {query && (
+          {isLoading && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-red-600"></div>
+            </div>
+          )}
+          {!isLoading && query && (
             <button
               onClick={clearSearch}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
@@ -254,7 +251,7 @@ export function CompanySearch({
       {isOpen && suggestions.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-[100] max-h-80 overflow-y-auto"
           role="listbox"
         >
           {suggestions.map((company, index) => (

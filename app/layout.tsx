@@ -67,21 +67,19 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="pl-PL" className={`${inter.variable} ${playfair.variable} antialiased`}>
+    <html lang="pl-PL" className={`${inter.variable} ${playfair.variable} antialiased`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
-      <body className="font-sans">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Header />
-          {children}
-          <Footer />
-          <Analytics />
-          <SpeedInsights />
-        </Suspense>
+      <body className="font-sans" suppressHydrationWarning>
+        <Header />
+        {children}
+        <Footer />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

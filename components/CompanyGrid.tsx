@@ -7,6 +7,7 @@ import { ReportDialog } from "@/components/report-dialog"
 
 export interface CompanyGridItem {
     id: string
+    slug?: string
     brand: string
     logoUrl?: string
     website_url?: string
@@ -82,6 +83,7 @@ export function CompanyGrid({
                     <CompanyCard
                         key={company.id}
                         id={company.id}
+                        slug={company.slug}
                         brand={company.brand}
                         logoUrl={company.logoUrl}
                         websiteUrl={company.website_url}

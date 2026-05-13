@@ -67,6 +67,12 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@swc/cli": "^0.8.1",
+    "@swc/core": "^1.15.33",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^18",
