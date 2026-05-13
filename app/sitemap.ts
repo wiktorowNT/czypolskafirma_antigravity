@@ -61,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       companyPages = companies.map((company) => {
         const displaySlug = company.slug || company.id
         return {
-          url: `${BASE_URL}/firma/${displaySlug}`,
+          url: `${BASE_URL}/firma/${encodeURIComponent(displaySlug)}`,
           lastModified: company.verified_at
             ? new Date(company.verified_at)
             : new Date(),
@@ -79,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (!categoriesError && categories) {
       categoryPages = categories.map((category) => ({
-        url: `${BASE_URL}/kategoria/${category.slug}`,
+        url: `${BASE_URL}/kategoria/${encodeURIComponent(category.slug)}`,
         lastModified: new Date(),
         changeFrequency: "daily" as const,
         priority: 0.8,
