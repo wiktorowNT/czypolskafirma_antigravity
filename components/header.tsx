@@ -101,9 +101,9 @@ export function Header() {
                 className="text-xl font-bold text-slate-900 flex items-center gap-2"
               >
                 <img
-                  src="https://flagcdn.com/w40/pl.png"
-                  alt="Polska"
-                  className="w-6 h-auto rounded-sm shadow-sm"
+                  src="/logo.png"
+                  alt="CzyPolskaFirma Logo"
+                  className="w-8 h-8 rounded-sm"
                 />
                 <span className="text-base sm:text-xl">CzyPolskaFirma</span>
               </Link>
