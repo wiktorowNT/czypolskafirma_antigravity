@@ -103,7 +103,7 @@ export function Header() {
                 <img
                   src="/logo.png"
                   alt="CzyPolskaFirma Logo"
-                  className="w-8 h-8 rounded-sm"
+                  className="h-8 w-auto flex-shrink-0 object-contain"
                 />
                 <span className="text-base sm:text-xl">CzyPolskaFirma</span>
               </Link>
