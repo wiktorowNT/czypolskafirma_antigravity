@@ -23,7 +23,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://czypolskafirma.pl"),
   title: {
-    default: "CzyPolskaFirma — baza firm i kapitału polskiego",
+    default: "CzyPolskaFirma — sprawdź, czy firma jest polska",
     template: "%s | CzyPolskaFirma.pl",
   },
   description: "Wybieraj świadomie polskie produkty. Sprawdź pochodzenie kapitału, strukturę właścicielską i podatki ponad 500 firm w Polsce. Twoje pieniądze mają moc!",
@@ -55,6 +55,10 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 }
 

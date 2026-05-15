@@ -98,12 +98,12 @@ export function Header() {
             <div className="flex-shrink-0">
               <Link
                 href="/"
-                className="text-xl font-bold text-slate-900 flex items-center gap-2"
+                className="text-xl font-bold text-slate-900 flex items-center gap-3"
               >
                 <img
-                  src="https://flagcdn.com/w40/pl.png"
-                  alt="Polska"
-                  className="w-6 h-auto rounded-sm shadow-sm"
+                  src="/logo.png"
+                  alt="CzyPolskaFirma Logo"
+                  className="h-8 w-auto flex-shrink-0"
                 />
                 <span className="text-base sm:text-xl">CzyPolskaFirma</span>
               </Link>
