@@ -1,27 +1,12 @@
 [
   {
-    "domain": "multimedia.pl",
-    "slug": "Multimedia",
-    "name": ""
+    "domain": "pkp.pl",
+    "slug": "PKP",
+    "name": "POLSKIE KOLEJE PAŃSTWOWE SPÓŁKA AKCYJNA"
   },
   {
-    "domain": "myphone.pl",
-    "slug": "mptech-myphone",
-    "name": ""
-  },
-  {
-    "domain": "ospel.com.pl",
-    "slug": "adam-dudek",
-    "name": "ADAM DUDEK"
-  },
-  {
-    "domain": "colgatepalmolive.pl",
-    "slug": "colgate-palmolive",
-    "name": "COLGATE-PALMOLIVE MANUFACTURING (POLAND) SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ"
-  },
-  {
-    "domain": "sgbbank.com.pl",
-    "slug": "SGB",
-    "name": "SGB-BANK SPÓŁKA AKCYJNA"
+    "domain": "totalizator.pl",
+    "slug": "Totalizator Sportowy",
+    "name": "TOTALIZATOR SPORTOWY SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ"
   }
 ]
