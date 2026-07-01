@@ -132,7 +132,7 @@ async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
     }
 
     if (!data) {
-      console.log("[v0] No company found for id:", id)
+      console.log("[v0] No company found for id:", decoded)
       return null
     }
 

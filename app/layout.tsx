@@ -38,12 +38,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pl_PL",
     siteName: "CzyPolskaFirma",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CzyPolskaFirma Banner",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
     description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
     creator: "@CzyPolskaFirma",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -98,6 +107,7 @@ export default function RootLayout({
   return (
     <html lang="pl-PL" className={`${inter.variable} ${playfair.variable} antialiased`} suppressHydrationWarning>
       <head>
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="d7fcfe14-5859-4a38-9101-1ea0565f2b4e"></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
