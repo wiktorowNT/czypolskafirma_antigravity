@@ -22,8 +22,16 @@ function getCountryName(code?: string | null): string {
     return countryNames[code.toUpperCase()] || code.toUpperCase()
 }
 
+// Format slug as display name: "zara" -> "Zara", "polkomtel-plus" -> "Polkomtel Plus"
+function formatSlugAsName(slug: string): string {
+    return slug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')
+}
+
 interface CompanyFAQProps {
-    name: string
+    slug: string
     country_code?: string | null
     ownership_description?: string | null
     owner_name?: string | null
@@ -37,7 +45,7 @@ interface CompanyFAQProps {
 }
 
 export default function CompanyFAQ({
-    name,
+    slug,
     country_code,
     ownership_description,
     owner_name,
@@ -49,6 +57,7 @@ export default function CompanyFAQ({
     founded_at,
     age,
 }: CompanyFAQProps) {
+    const name = formatSlugAsName(slug)
     const isPolish = country_code?.toUpperCase() === "PL"
     const countryName = getCountryName(country_code)
     const ownerDisplay = owner_name || parent_company_name

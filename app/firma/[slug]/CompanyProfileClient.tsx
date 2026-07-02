@@ -184,7 +184,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
 
                 {/* SEO Content — subtle bottom sections for Google indexing */}
                 <CompanyFAQ
-                    name={company.name}
+                    slug={company.slug}
                     country_code={company.country_code}
                     ownership_description={company.ownership_description}
                     owner_name={company.owner_name}
@@ -198,7 +198,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                 />
 
                 <CompanyArticle
-                    name={company.name}
+                    slug={company.slug}
                     country_code={company.country_code}
                     ownership_description={company.ownership_description}
                     owner_name={company.owner_name}
