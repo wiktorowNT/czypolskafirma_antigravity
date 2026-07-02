@@ -11,6 +11,8 @@ import { ReportDialog } from "@/components/report-dialog"
 import CompanyHero from "@/components/CompanyHero"
 import CompanyMetaDetails from "@/components/CompanyMetaDetails"
 import PolishAlternatives from "@/components/PolishAlternatives"
+import CompanyFAQ from "@/components/CompanyFAQ"
+import CompanyArticle from "@/components/CompanyArticle"
 import Link from "next/link"
 import { useBookmarks } from "@/hooks/use-bookmarks"
 
@@ -180,7 +182,38 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                     </div>
                 </div>
 
+                {/* SEO Content — subtle bottom sections for Google indexing */}
+                <CompanyFAQ
+                    slug={company.slug}
+                    country_code={company.country_code}
+                    ownership_description={company.ownership_description}
+                    owner_name={company.owner_name}
+                    parent_company_name={company.parent_company_name}
+                    business_description={company.business_description}
+                    categoryName={company.categoryName}
+                    adres={company.adres}
+                    siedziba_pl={company.siedziba_pl}
+                    founded_at={company.founded_at}
+                    age={company.age}
+                />
+
+                <CompanyArticle
+                    slug={company.slug}
+                    country_code={company.country_code}
+                    ownership_description={company.ownership_description}
+                    owner_name={company.owner_name}
+                    parent_company_name={company.parent_company_name}
+                    business_description={company.business_description}
+                    categoryName={company.categoryName}
+                    adres={company.adres}
+                    siedziba_pl={company.siedziba_pl}
+                    founded_at={company.founded_at}
+                    age={company.age}
+                    ownership_type={company.ownership_type}
+                />
+
             </div>
         </main >
     )
 }
+
