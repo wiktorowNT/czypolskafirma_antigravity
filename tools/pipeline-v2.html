@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CzyPolskaFirma · Pipeline v2</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #222;
+  --border: #2e2e2e; --border2: #3a3a3a;
+  --text: #f0f0f0; --text2: #888; --text3: #555;
+  --accent: #c8f060; --accent-dim: #8aaa30;
+  --ok: #4ade80; --ok-bg: #0f2a1a;
+  --warn: #fbbf24; --warn-bg: #2a1f0a;
+  --err: #f87171; --err-bg: #2a0f0f;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Syne', sans-serif;
+}
+html { font-size: 15px; }
+body { font-family: var(--mono); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+h1, h2, h3 { font-family: var(--sans); }
+button { font-family: var(--mono); cursor: pointer; border: none; border-radius: 6px; padding: 10px 18px; font-size: .85rem; transition: all .15s; }
+input, textarea, select { font-family: var(--mono); background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; font-size: .85rem; outline: none; transition: border-color .15s; }
+input:focus, textarea:focus, select:focus { border-color: var(--accent-dim); }
+textarea { resize: vertical; min-height: 200px; width: 100%; }
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+
+/* Layout */
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.logo { font-family: var(--sans); font-weight: 800; font-size: 1.2rem; color: var(--accent); }
+.logo span { color: var(--text2); font-weight: 400; font-size: .75rem; display: block; font-family: var(--mono); }
+main { flex: 1; max-width: 1100px; width: 100%; margin: 0 auto; padding: 28px 24px 100px; }
+footer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 28px; font-size: .75rem; color: var(--text3); display: flex; justify-content: space-between; z-index: 100; }
+
+/* Progress bar */
+.progress { display: flex; gap: 4px; margin-bottom: 32px; }
+.progress-step { flex: 1; display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; transition: all .2s; }
+.progress-step.active { border-color: var(--accent-dim); background: var(--surface2); }
+.progress-step.done { border-color: var(--ok); background: var(--ok-bg); }
+.step-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 600; background: var(--border); color: var(--text2); flex-shrink: 0; }
+.progress-step.active .step-num { background: var(--accent); color: var(--bg); }
+.progress-step.done .step-num { background: var(--ok); color: var(--bg); }
+.step-label { font-size: .75rem; color: var(--text2); }
+.progress-step.active .step-label { color: var(--text); }
+.progress-step.done .step-label { color: var(--ok); }
+
+/* Section */
+.step-section { display: none; }
+.step-section.active { display: block; }
+.section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+.section-sub { color: var(--text2); font-size: .85rem; margin-bottom: 24px; }
+
+/* Model cards */
+.model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.model-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; }
+.model-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.model-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.model-card-header input { flex: 1; font-weight: 600; background: transparent; border: 1px solid transparent; padding: 4px 8px; }
+.model-card-header input:hover { border-color: var(--border); }
+.model-card-header input:focus { border-color: var(--accent-dim); background: var(--surface2); }
+.row-count { font-size: .7rem; color: var(--text3); margin-top: 6px; }
+.row-count.has-data { color: var(--ok); }
+.btn-remove-model { position: absolute; top: 10px; right: 12px; background: none; color: var(--text3); font-size: 1rem; padding: 2px 6px; }
+.btn-remove-model:hover { color: var(--err); }
+
+/* Buttons */
+.btn-primary { background: var(--accent); color: var(--bg); font-weight: 600; }
+.btn-primary:hover { background: var(--accent-dim); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--border2); background: var(--border); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px dashed var(--border); }
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+.btn-danger { background: var(--err-bg); color: var(--err); border: 1px solid #5a2020; }
+.btn-danger:hover { background: #3a1515; }
+.btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+
+/* Error / info boxes */
+.msg-box { padding: 10px 14px; border-radius: 6px; font-size: .8rem; margin-top: 12px; display: none; }
+.msg-box.err { display: block; background: var(--err-bg); color: var(--err); border: 1px solid #5a2020; }
+.msg-box.ok { display: block; background: var(--ok-bg); color: var(--ok); border: 1px solid #1a4a2a; }
+.msg-box.warn { display: block; background: var(--warn-bg); color: var(--warn); border: 1px solid #5a4a10; }
+
+/* Toast */
+.toast { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ok-bg); color: var(--ok); border: 1px solid #1a4a2a; padding: 10px 24px; border-radius: 8px; font-size: .85rem; opacity: 0; transition: all .3s; z-index: 200; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Step 2 */
+.konsylium-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+.konsylium-box h3 { font-size: 1rem; margin-bottom: 12px; }
+.summary-stat { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; font-size: .8rem; margin-right: 8px; margin-bottom: 8px; }
+.summary-stat b { color: var(--accent); }
+.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+/* Step 3 table */
+.import-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+.import-toolbar label { font-size: .8rem; color: var(--text2); }
+.stats-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.stat-chip { font-size: .8rem; padding: 5px 12px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); }
+.stat-chip b { margin-right: 4px; }
+.import-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; }
+table.import-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+table.import-table th { background: var(--surface2); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); white-space: nowrap; }
+table.import-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+table.import-table tr:last-child td { border-bottom: none; }
+table.import-table tr.is-dup { opacity: .5; }
+table.import-table td input[type="text"] { width: 110px; padding: 4px 8px; font-size: .78rem; }
+table.import-table td select { width: 140px; padding: 4px 8px; font-size: .78rem; }
+table.import-table td input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
+.flag { margin-right: 4px; }
+.dup-badge { font-size: .65rem; background: var(--warn-bg); color: var(--warn); padding: 2px 8px; border-radius: 4px; }
+.new-badge { font-size: .65rem; background: var(--ok-bg); color: var(--ok); padding: 2px 8px; border-radius: 4px; }
+
+/* Progress import bar */
+.import-progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 12px 0; display: none; }
+.import-progress.show { display: block; }
+.import-progress-bar { height: 100%; background: var(--accent); width: 0; transition: width .2s; border-radius: 3px; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: none; align-items: center; justify-content: center; z-index: 300; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 28px; max-width: 440px; width: 90%; }
+.modal h3 { margin-bottom: 12px; font-size: 1.1rem; }
+.modal p { color: var(--text2); font-size: .85rem; margin-bottom: 20px; }
+.modal .btn-row { justify-content: flex-end; }
+
+/* Preview table */
+.preview-wrap { max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; margin-top: 12px; }
+.preview-wrap table { width: 100%; border-collapse: collapse; font-size: .75rem; }
+.preview-wrap th { background: var(--surface2); padding: 6px 10px; text-align: left; position: sticky; top: 0; }
+.preview-wrap td { padding: 5px 10px; border-bottom: 1px solid var(--border); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .model-grid { grid-template-columns: 1fr; }
+  .progress { flex-direction: column; }
+  main { padding: 16px 12px 100px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CzyPolskaFirma<span>pipeline v2 · konsylium &amp; import</span></div>
+  <div style="font-size:.7rem;color:var(--text3)">v2.0</div>
+</header>
+
+<main>
+  <div class="progress" id="progressBar">
+    <div class="progress-step active" data-step="1"><div class="step-num">1</div><div class="step-label">Wklej dane</div></div>
+    <div class="progress-step" data-step="2"><div class="step-num">2</div><div class="step-label">Konsylium</div></div>
+    <div class="progress-step" data-step="3"><div class="step-num">3</div><div class="step-label">Import</div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="step-section active" id="step1">
+    <h2 class="section-title">Wklej dane z modeli</h2>
+    <p class="section-sub">Wklej wyniki analizy ze swoich modeli AI — każda tabela Markdown w osobne pole.</p>
+    <div class="model-grid" id="modelGrid"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" id="btnAddModel">+ Dodaj model</button>
+      <div style="flex:1"></div>
+      <button class="btn-primary" id="btnParse1">Parsuj i dalej →</button>
+    </div>
+    <div class="msg-box" id="msg1"></div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step-section" id="step2">
+    <h2 class="section-title">Konsylium</h2>
+    <p class="section-sub">Wygeneruj prompt dla AI, a potem wklej wynik konsylium.</p>
+
+    <div class="konsylium-box">
+      <h3>A. Generuj prompt konsylium</h3>
+      <div id="summaryStats"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn-primary" id="btnCopyPrompt">📋 Kopiuj prompt konsylium</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="konsylium-box">
+      <h3>B. Wklej wynik konsylium</h3>
+      <textarea id="konsyliumResult" placeholder="Wklej tutaj wynik konsylium z AI (tabela 5-kolumnowa)"></textarea>
+      <div class="btn-row">
+        <button class="btn-secondary" id="btnBack2">← Wstecz</button>
+        <div style="flex:1"></div>
+        <button class="btn-primary" id="btnParse2">Parsuj wynik →</button>
+      </div>
+      <div class="msg-box" id="msg2"></div>
+      <div class="preview-wrap" id="preview2" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step-section" id="step3">
+    <h2 class="section-title">Import do Supabase</h2>
+    <p class="section-sub">Sprawdź dane, ustaw kategorie i zaimportuj firmy.</p>
+
+    <div class="import-toolbar">
+      <label>Ustaw kategorię dla wszystkich:</label>
+      <select id="batchCategory"><option value="">— wybierz —</option></select>
+      <button class="btn-secondary" id="btnCheckDups">🔍 Sprawdź duplikaty</button>
+      <button class="btn-secondary" id="btnBack3">← Wstecz</button>
+    </div>
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="import-table-wrap"><table class="import-table" id="importTable"><thead></thead><tbody></tbody></table></div>
+    <div class="import-progress" id="importProgress"><div class="import-progress-bar" id="importProgressBar"></div></div>
+    <div class="btn-row">
+      <button class="btn-primary" id="btnImport">🚀 Importuj do Supabase</button>
+    </div>
+    <div class="msg-box" id="msg3"></div>
+  </section>
+</main>
+
+<footer>
+  <div id="footerLeft">Krok 1 z 3</div>
+  <div id="footerRight">Gotowy</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p id="modalBody"></p>
+    <div class="btn-row">
+      <button class="btn-secondary" id="modalCancel">Anuluj</button>
+      <button class="btn-primary" id="modalConfirm">Potwierdź</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://bwciuhgrcibtjhhksjqk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3Y2l1aGdyY2lidGpoaGtzanFrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODk5MDc2MCwiZXhwIjoyMDc0NTY2NzYwfQ.M6iXQ6b7Y0cMLLAMX1EAQHmy-o05Wr--mznYNyUFUbI';
+const MODEL_COLORS = ['#c8f060','#60a5fa','#f87171','#fbbf24','#a78bfa'];
+const DEFAULT_MODELS = ['Grok','Perplexity','Claude','Gemini'];
+
+const HEADER_MAP = {
+  name: 'name', nazwa: 'name', firma: 'name', company: 'name', 'company name': 'name', 'company_name': 'name',
+  ultimate_owner: 'ultimate_owner', owner: 'ultimate_owner', właściciel: 'ultimate_owner', 'ultimate owner': 'ultimate_owner',
+  country_code: 'country_code', countrycode: 'country_code', country: 'country_code', kod: 'country_code', 'country code': 'country_code', kod_kraju: 'country_code',
+  ownership_description: 'ownership_description', opis: 'ownership_description', 'ownership description': 'ownership_description', 'opis_własności': 'ownership_description', opis_wlasnosci: 'ownership_description',
+  business_description: 'business_description', 'business description': 'business_description', opis_biznesu: 'business_description', biznes: 'business_description',
+};
+
+let currentStep = 1;
+let modelInputs = []; // [{name, rawText}]
+let parsedModels = []; // [{name, rows:[{name,ultimate_owner,country_code,ownership_description}]}]
+let consensusRows = []; // [{name,ultimate_owner,country_code,ownership_description,business_description}]
+let importRows = []; // [{...consensusRow, slug, nip, category_id, isDup, include}]
+let categories = [];
+let existingSlugs = new Set();
+let existingNips = new Set();
+
+/* ===== UTILS ===== */
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function slugify(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[łŁ]/g,'l').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function titleCase(s) { return s.replace(/\b\w/g, c => c.toUpperCase()); }
+function countryFlag(code) { if (!code || code.length !== 2) return ''; const c = code.toUpperCase(); return String.fromCodePoint(...[...c].map(ch => 0x1f1e6 + ch.charCodeAt(0) - 65)); }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+function setMsg(id, text, type) { const el = document.getElementById(id); el.className = 'msg-box ' + type; el.textContent = text; }
+function clearMsg(id) { const el = document.getElementById(id); el.className = 'msg-box'; el.textContent = ''; }
+
+function sbHeaders() { return { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' }; }
+
+/* ===== NAVIGATION ===== */
+function goStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.step-section').forEach((s, i) => s.classList.toggle('active', i + 1 === n));
+  document.querySelectorAll('.progress-step').forEach((s, i) => {
+    s.classList.remove('active','done');
+    if (i + 1 === n) s.classList.add('active');
+    else if (i + 1 < n) s.classList.add('done');
+  });
+  document.getElementById('footerLeft').textContent = `Krok ${n} z 3`;
+}
+
+/* ===== STEP 1: MODEL CARDS ===== */
+function renderModelCards() {
+  const grid = document.getElementById('modelGrid');
+  grid.innerHTML = '';
+  modelInputs.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'model-card';
+    card.innerHTML = `
+      <div class="model-card-header">
+        <div class="model-dot" style="background:${MODEL_COLORS[i % MODEL_COLORS.length]}"></div>
+        <input type="text" value="${esc(m.name)}" data-idx="${i}" class="model-name-input" spellcheck="false">
+      </div>
+      ${modelInputs.length > 1 ? `<button class="btn-remove-model" data-idx="${i}" title="Usuń">×</button>` : ''}
+      <textarea data-idx="${i}" class="model-textarea" placeholder="Wklej tabelę Markdown z ${esc(m.name)}">${esc(m.rawText)}</textarea>
+      <div class="row-count" data-idx="${i}"></div>`;
+    grid.appendChild(card);
+  });
+  bindCardEvents();
+  updateRowCounts();
+}
+
+function bindCardEvents() {
+  document.querySelectorAll('.model-name-input').forEach(el => {
+    el.addEventListener('change', e => {
+      modelInputs[+e.target.dataset.idx].name = e.target.value;
+      const ta = document.querySelector(`.model-textarea[data-idx="${e.target.dataset.idx}"]`);
+      if (ta) ta.placeholder = `Wklej tabelę Markdown z ${e.target.value}`;
+    });
+  });
+  document.querySelectorAll('.model-textarea').forEach(el => {
+    el.addEventListener('blur', e => { modelInputs[+e.target.dataset.idx].rawText = e.target.value; updateRowCounts(); });
+    el.addEventListener('input', e => { modelInputs[+e.target.dataset.idx].rawText = e.target.value; });
+  });
+  document.querySelectorAll('.btn-remove-model').forEach(el => {
+    el.addEventListener('click', e => { modelInputs.splice(+e.target.dataset.idx, 1); renderModelCards(); });
+  });
+}
+
+function updateRowCounts() {
+  document.querySelectorAll('.row-count').forEach(el => {
+    const i = +el.dataset.idx;
+    const text = modelInputs[i].rawText.trim();
+    if (!text) { el.textContent = ''; el.className = 'row-count'; return; }
+    try {
+      const rows = parseMarkdownTable(text, false);
+      el.textContent = `${rows.length} wierszy wykrytych`;
+      el.className = 'row-count has-data';
+    } catch { el.textContent = 'Błąd parsowania'; el.className = 'row-count'; }
+  });
+}
+
+document.getElementById('btnAddModel').addEventListener('click', () => {
+  if (modelInputs.length >= 5) { showToast('Maks. 5 modeli'); return; }
+  modelInputs.push({ name: `Model ${modelInputs.length + 1}`, rawText: '' });
+  renderModelCards();
+});
+
+/* ===== MARKDOWN PARSER ===== */
+function parseMarkdownTable(text, fiveCols = false) {
+  let lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('```'));
+  const tableLines = lines.filter(l => l.includes('|'));
+  if (tableLines.length < 2) throw new Error('Nie znaleziono tabeli Markdown');
+
+  let headerLine = tableLines[0];
+  let dataStart = 1;
+  // skip separator line
+  if (tableLines[1] && /^[\s|:-]+$/.test(tableLines[1])) dataStart = 2;
+
+  const parseCells = line => line.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim().replace(/\*\*/g, ''));
+
+  const rawHeaders = parseCells(headerLine).map(h => h.toLowerCase().trim());
+  const colMap = rawHeaders.map(h => HEADER_MAP[h] || null);
+
+  const requiredCols = fiveCols
+    ? ['name','ultimate_owner','country_code','ownership_description','business_description']
+    : ['name','ultimate_owner','country_code','ownership_description'];
+
+  const missing = requiredCols.filter(r => !colMap.includes(r));
+  if (missing.length) throw new Error(`Brakujące kolumny: ${missing.join(', ')}`);
+
+  const rows = [];
+  for (let i = dataStart; i < tableLines.length; i++) {
+    const cells = parseCells(tableLines[i]);
+    if (cells.length < rawHeaders.length) continue;
+    if (/^[\s:-]+$/.test(cells.join(''))) continue;
+    const row = {};
+    colMap.forEach((key, ci) => { if (key) row[key] = cells[ci] || ''; });
+    if (row.name && row.name !== '---') rows.push(row);
+  }
+  if (!rows.length) throw new Error('Tabela jest pusta — brak wierszy danych');
+  return rows;
+}
+
+/* ===== STEP 1 → STEP 2 ===== */
+document.getElementById('btnParse1').addEventListener('click', () => {
+  clearMsg('msg1');
+  parsedModels = [];
+  const errors = [];
+  modelInputs.forEach((m, i) => {
+    if (!m.rawText.trim()) return;
+    try {
+      const rows = parseMarkdownTable(m.rawText, false);
+      parsedModels.push({ name: m.name, rows, rawText: m.rawText });
+    } catch (e) { errors.push(`${m.name}: ${e.message}`); }
+  });
+  if (parsedModels.length === 0) { setMsg('msg1', errors.length ? errors.join('\n') : 'Wklej dane do co najmniej jednego modelu.', 'err'); return; }
+  if (errors.length) { setMsg('msg1', `Uwaga: ${errors.join('; ')}. Kontynuuję z ${parsedModels.length} modeli.`, 'warn'); }
+
+  // Build step 2 summary
+  const totalRows = parsedModels.reduce((s, m) => s + m.rows.length, 0);
+  const uniqueNames = new Set(parsedModels.flatMap(m => m.rows.map(r => r.name.toLowerCase())));
+  document.getElementById('summaryStats').innerHTML =
+    `<div class="summary-stat">Firmy: <b>${uniqueNames.size}</b></div>` +
+    `<div class="summary-stat">Modele: <b>${parsedModels.length}</b></div>` +
+    `<div class="summary-stat">Łączne wiersze: <b>${totalRows}</b></div>`;
+
+  goStep(2);
+  document.getElementById('footerRight').textContent = `${parsedModels.length} modeli, ${uniqueNames.size} unikalnych firm`;
+});
+
+/* ===== STEP 2A: COPY PROMPT ===== */
+document.getElementById('btnCopyPrompt').addEventListener('click', () => {
+  const superPrompt = `Jesteś starszym analitykiem finansowym i ekspertem wywiadu gospodarczego. Poniżej znajdziesz wyniki analizy struktury właścicielskiej firm z kilku modeli AI.
+
+Twoim zadaniem jest:
+1. Porównaj wyniki WSZYSTKICH modeli poniżej
+2. Stwórz JEDNĄ finalną, najdokładniejszą tabelę
+3. Dla ownership_description — wybierz najdokładniejszy opis, uzupełnij brakującymi faktami z innych modeli. Ton: suchy, encyklopedyczny. Jeśli polska marka została przejęta, podaj rok i przez kogo.
+4. Dla business_description — napisz krótki (2-3 zdania) opis tego czym firma się ZAJMUJE (produkty, usługi). CAŁKOWICIE ZIGNORUJ kwestie właścicielskie w tym opisie. Styl: profesjonalny, zwięzły, bez pustych frazesów.
+
+MUSISZ stosować te zasady:
+- Zasada Ostatecznego Właściciela: Ignoruj wehikuły inwestycyjne i raje podatkowe. Patrz na szczyt piramidy.
+- Zasada Efektywnej Kontroli: Kto ma >50% udziałów lub największy pakiet?
+- Zasada Złotej Klatki: Historyczne pochodzenie nie ma znaczenia — liczy się OBECNY właściciel.
+- Klasyfikacja Binarna: Polska firma TYLKO gdy ostateczny właściciel jest polski.
+
+Zwróć JEDNĄ tabelę Markdown z DOKŁADNIE 5 kolumnami:
+name | ultimate_owner | country_code | ownership_description | business_description
+
+Nie dodawaj ŻADNEGO tekstu przed ani po tabeli.
+
+=== WYNIKI MODELI ===
+
+`;
+  let body = '';
+  parsedModels.forEach(m => { body += `### ${m.name}\n${m.rawText.trim()}\n\n`; });
+  navigator.clipboard.writeText(superPrompt + body).then(() => showToast('Skopiowano!')).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea'); ta.value = superPrompt + body; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('Skopiowano!');
+  });
+});
+
+/* ===== STEP 2B: PARSE CONSENSUS ===== */
+document.getElementById('btnParse2').addEventListener('click', () => {
+  clearMsg('msg2');
+  const text = document.getElementById('konsyliumResult').value.trim();
+  if (!text) { setMsg('msg2', 'Wklej wynik konsylium.', 'err'); return; }
+  try {
+    consensusRows = parseMarkdownTable(text, true);
+    setMsg('msg2', `Sparsowano ${consensusRows.length} firm`, 'ok');
+    renderPreview();
+    buildImportRows();
+    goStep(3);
+    renderImportTable();
+    loadCategories();
+  } catch (e) { setMsg('msg2', e.message, 'err'); }
+});
+
+function renderPreview() {
+  const wrap = document.getElementById('preview2');
+  wrap.style.display = 'block';
+  let html = '<table><thead><tr><th>Nazwa</th><th>Właściciel</th><th>Kraj</th><th>Opis własności</th><th>Opis biznesu</th></tr></thead><tbody>';
+  consensusRows.forEach(r => {
+    html += `<tr><td>${esc(r.name)}</td><td>${esc(r.ultimate_owner)}</td><td>${esc(r.country_code)}</td><td>${esc(r.ownership_description)}</td><td>${esc(r.business_description)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+/* ===== STEP 3: IMPORT TABLE ===== */
+function buildImportRows() {
+  importRows = consensusRows.map(r => ({
+    ...r, slug: slugify(r.name), nip: '', category_id: '', isDup: false, include: true
+  }));
+}
+
+async function loadCategories() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=id,name,slug&order=name`, { headers: sbHeaders() });
+    if (!res.ok) throw new Error(res.statusText);
+    categories = await res.json();
+    const options = categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    document.getElementById('batchCategory').innerHTML = '<option value="">— wybierz —</option>' + options;
+    document.querySelectorAll('.cat-select').forEach(sel => { sel.innerHTML = '<option value="">—</option>' + options; });
+  } catch (e) { setMsg('msg3', `Błąd ładowania kategorii: ${e.message}`, 'warn'); }
+}
+
+function renderImportTable() {
+  const thead = document.querySelector('#importTable thead');
+  const tbody = document.querySelector('#importTable tbody');
+  thead.innerHTML = '<tr><th>✓</th><th>Nazwa</th><th>Slug</th><th>Kraj</th><th>NIP</th><th>Kategoria</th><th>Status</th></tr>';
+  const catOpts = categories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  tbody.innerHTML = importRows.map((r, i) => `
+    <tr class="${r.isDup ? 'is-dup' : ''}" data-idx="${i}">
+      <td><input type="checkbox" class="row-check" data-idx="${i}" ${r.include ? 'checked' : ''}></td>
+      <td>${esc(r.name)}</td>
+      <td style="color:var(--text2);font-size:.75rem">${esc(r.slug)}</td>
+      <td><span class="flag">${countryFlag(r.country_code)}</span>${esc(r.country_code)}</td>
+      <td><input type="text" class="nip-input" data-idx="${i}" value="${esc(r.nip)}" placeholder="—"></td>
+      <td><select class="cat-select" data-idx="${i}"><option value="">—</option>${catOpts}</select></td>
+      <td>${r.isDup ? '<span class="dup-badge">duplikat</span>' : '<span class="new-badge">nowa</span>'}</td>
+    </tr>`).join('');
+
+  // Restore selected categories
+  importRows.forEach((r, i) => { if (r.category_id) { const s = tbody.querySelector(`select[data-idx="${i}"]`); if (s) s.value = r.category_id; } });
+
+  // Bind events
+  tbody.querySelectorAll('.row-check').forEach(el => el.addEventListener('change', e => { importRows[+e.target.dataset.idx].include = e.target.checked; updateStats(); }));
+  tbody.querySelectorAll('.nip-input').forEach(el => el.addEventListener('change', e => { importRows[+e.target.dataset.idx].nip = e.target.value.trim(); }));
+  tbody.querySelectorAll('.cat-select').forEach(el => el.addEventListener('change', e => { importRows[+e.target.dataset.idx].category_id = e.target.value; }));
+  updateStats();
+}
+
+function updateStats() {
+  const total = importRows.length;
+  const dups = importRows.filter(r => r.isDup).length;
+  const toImport = importRows.filter(r => r.include).length;
+  document.getElementById('statsBar').innerHTML =
+    `<div class="stat-chip"><b style="color:var(--text)">${total}</b> łącznie</div>` +
+    `<div class="stat-chip"><b style="color:var(--ok)">${total - dups}</b> nowe</div>` +
+    `<div class="stat-chip"><b style="color:var(--warn)">${dups}</b> duplikaty</div>` +
+    `<div class="stat-chip"><b style="color:var(--accent)">${toImport}</b> do importu</div>`;
+}
+
+/* Batch category */
+document.getElementById('batchCategory').addEventListener('change', e => {
+  const val = e.target.value;
+  if (!val) return;
+  importRows.forEach(r => r.category_id = val);
+  document.querySelectorAll('.cat-select').forEach(s => s.value = val);
+});
+
+/* Check duplicates */
+document.getElementById('btnCheckDups').addEventListener('click', async () => {
+  try {
+    document.getElementById('footerRight').textContent = 'Sprawdzanie duplikatów…';
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/companies?select=slug,nip`, { headers: sbHeaders() });
+    if (!res.ok) throw new Error(res.statusText);
+    const existing = await res.json();
+    existingSlugs = new Set(existing.map(e => e.slug));
+    existingNips = new Set(existing.filter(e => e.nip).map(e => e.nip));
+    importRows.forEach(r => {
+      r.isDup = existingSlugs.has(r.slug) || (r.nip && existingNips.has(r.nip));
+      if (r.isDup) r.include = false;
+    });
+    renderImportTable();
+    document.getElementById('footerRight').textContent = 'Duplikaty sprawdzone';
+    showToast(`Znaleziono ${importRows.filter(r => r.isDup).length} duplikatów`);
+  } catch (e) { setMsg('msg3', `Błąd: ${e.message}`, 'err'); document.getElementById('footerRight').textContent = 'Błąd'; }
+});
+
+/* ===== MODAL ===== */
+function showModal(title, body) {
+  return new Promise(resolve => {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modal').classList.add('show');
+    const confirm = document.getElementById('modalConfirm');
+    const cancel = document.getElementById('modalCancel');
+    const cleanup = (val) => { document.getElementById('modal').classList.remove('show'); confirm.replaceWith(confirm.cloneNode(true)); cancel.replaceWith(cancel.cloneNode(true)); resolve(val); };
+    document.getElementById('modalConfirm').addEventListener('click', () => cleanup(true), { once: true });
+    document.getElementById('modalCancel').addEventListener('click', () => cleanup(false), { once: true });
+  });
+}
+
+/* ===== IMPORT ===== */
+document.getElementById('btnImport').addEventListener('click', async () => {
+  clearMsg('msg3');
+  const toImport = importRows.filter(r => r.include);
+  if (!toImport.length) { setMsg('msg3', 'Brak firm do importu.', 'err'); return; }
+  const noCat = toImport.filter(r => !r.category_id);
+  if (noCat.length) { setMsg('msg3', `${noCat.length} firm bez kategorii — ustaw kategorię.`, 'err'); return; }
+
+  const catName = categories.find(c => c.id === toImport[0].category_id)?.name || '';
+  const ok = await showModal('Potwierdzenie importu', `Importować ${toImport.length} firm? Kategoria: ${catName || 'różne'}`);
+  if (!ok) return;
+
+  const bar = document.getElementById('importProgress');
+  const barInner = document.getElementById('importProgressBar');
+  bar.classList.add('show');
+  let added = 0, skipped = 0, errored = 0;
+
+  for (let i = 0; i < toImport.length; i++) {
+    const r = toImport[i];
+    barInner.style.width = `${((i + 1) / toImport.length * 100).toFixed(0)}%`;
+    document.getElementById('footerRight').textContent = `Import ${i + 1}/${toImport.length}…`;
+    try {
+      const body = {
+        name: titleCase(r.slug.replace(/-/g, ' ')),
+        slug: r.slug,
+        nip: r.nip || null,
+        owner_name: r.ultimate_owner,
+        country_code: r.country_code.toUpperCase(),
+        ownership_description: r.ownership_description,
+        business_description: r.business_description || null,
+        category_id: r.category_id
+      };
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/companies`, {
+        method: 'POST',
+        headers: { ...sbHeaders(), Prefer: 'return=minimal' },
+        body: JSON.stringify(body)
+      });
+      if (res.status === 409 || res.status === 23505) { skipped++; }
+      else if (!res.ok) { const t = await res.text(); console.error(r.slug, t); errored++; }
+      else { added++; }
+    } catch (e) { console.error(r.slug, e); errored++; }
+  }
+
+  bar.classList.remove('show');
+  const parts = [];
+  if (added) parts.push(`${added} dodano`);
+  if (skipped) parts.push(`${skipped} pominięto (duplikaty)`);
+  if (errored) parts.push(`${errored} błędów`);
+  setMsg('msg3', parts.join(', '), errored ? 'warn' : 'ok');
+  document.getElementById('footerRight').textContent = parts.join(' · ');
+  showToast(`Import zakończony: ${added} dodano`);
+});
+
+/* ===== BACK BUTTONS ===== */
+document.getElementById('btnBack2').addEventListener('click', () => goStep(1));
+document.getElementById('btnBack3').addEventListener('click', () => goStep(2));
+
+/* ===== KEYBOARD SHORTCUT ===== */
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    if (currentStep === 1) document.getElementById('btnParse1').click();
+    else if (currentStep === 2) document.getElementById('btnParse2').click();
+  }
+});
+
+/* ===== INIT ===== */
+DEFAULT_MODELS.forEach(name => modelInputs.push({ name, rawText: '' }));
+renderModelCards();
+</script>
+</body>
+</html>
