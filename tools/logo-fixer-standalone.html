@@ -40,8 +40,26 @@
                 localStorage.setItem('logoFixerDomains', list.join(','));
             };
 
-            const uploadFile = async (file, domain) => {
-                setStatus(prev => ({ ...prev, [domain]: 'uploading' }));
+            const getDomainFromUrl = (url) => {
+                if (!url) return "";
+                try {
+                    const clean = url.trim();
+                    const withProtocol = clean.startsWith('http') ? clean : `https://${clean}`;
+                    const urlObj = new URL(withProtocol);
+                    return urlObj.hostname.replace(/^www\./, '');
+                } catch (e) {
+                    return url.replace(/\/+$/, '').replace(/^https?:\/\//, '').replace(/^www\./, '');
+                }
+            };
+
+            const uploadFile = async (file, rawDomain) => {
+                const domain = getDomainFromUrl(rawDomain);
+                if (!domain) {
+                    alert("Nieprawidłowa domena!");
+                    return;
+                }
+
+                setStatus(prev => ({ ...prev, [rawDomain]: 'uploading' }));
                 
                 const reader = new FileReader();
                 reader.readAsDataURL(file);

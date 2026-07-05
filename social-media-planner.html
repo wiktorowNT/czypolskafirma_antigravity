@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CzyPolskaFirma — Social Media Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; margin: 0; }
+        .tab-active { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; }
+        .copy-flash { animation: flash 0.5s ease-out; }
+        @keyframes flash { 0% { background-color: #22c55e; color: white; } 100% { background-color: transparent; } }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        textarea:focus, input:focus, select:focus { outline: none; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3); }
+        .comment-variant { border-left: 3px solid #e2e8f0; transition: border-color 0.2s; }
+        .comment-variant:hover { border-left-color: #dc2626; }
+        .char-warn { color: #f59e0b; }
+        .char-over { color: #dc2626; font-weight: 600; }
+        .calendar-today { outline: 2px solid #dc2626; outline-offset: 2px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .glass { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); }
+        #generatorFrame { width: 100%; border: none; min-height: calc(100vh - 100px); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- HEADER + TABS -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50 glass">
+    <div class="max-w-[1800px] mx-auto px-4 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-white font-bold text-sm">🇵🇱</div>
+            <h1 class="text-base font-bold text-slate-900 hidden sm:block">Social Media Planner</h1>
+        </div>
+        <nav class="flex gap-1">
+            <button onclick="switchTab('generator')" id="tab-generator" class="tab-btn tab-active px-3 py-1.5 rounded-lg text-sm font-medium transition-all">🎨 Generator</button>
+            <button onclick="switchTab('comments')" id="tab-comments" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">💬 Komentarze</button>
+            <button onclick="switchTab('calendar')" id="tab-calendar" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">📅 Kalendarz</button>
+            <button onclick="switchTab('templates')" id="tab-templates" class="tab-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">📋 Szablony</button>
+        </nav>
+        <div class="text-xs text-slate-400 hidden sm:block">
+            CzyPolskaFirma.pl
+        </div>
+    </div>
+</header>
+
+<!-- TAB 1: GENERATOR (iframe) -->
+<div id="panel-generator" class="tab-panel">
+    <iframe id="generatorFrame" src="Generator.html" title="Generator Grafik Social Media"></iframe>
+</div>
+
+<!-- TAB 2: COMMENTS -->
+<div id="panel-comments" class="tab-panel hidden">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                    <h3 class="font-semibold text-slate-900 mb-4">💬 Kontekst komentarza</h3>
+                    <p class="text-xs text-slate-500 mb-3">Wybierz typ wpisu, pod którym chcesz skomentować. Dostaniesz gotowe komentarze do skopiowania i lekkiego dostosowania.</p>
+                    <div class="space-y-1.5 mb-4">
+                        <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="commentCtx" value="shopping" checked onchange="renderComments()" class="accent-red-600"> 
+                            <span class="text-sm">🛒 Pod wpisem o zakupach / cenach</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="commentCtx" value="company" onchange="renderComments()" class="accent-red-600"> 
+                            <span class="text-sm">🏢 Pod wpisem o konkretnej firmie</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="commentCtx" value="economy" onchange="renderComments()" class="accent-red-600"> 
+                            <span class="text-sm">📈 Pod wpisem o gospodarce</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="commentCtx" value="patriotism" onchange="renderComments()" class="accent-red-600"> 
+                            <span class="text-sm">🇵🇱 Pod dyskusją o patriotyzmie</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="commentCtx" value="industry" onchange="renderComments()" class="accent-red-600"> 
+                            <span class="text-sm">🏭 Pod wpisem o branży</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="commentCtx" value="project" onchange="renderComments()" class="accent-red-600"> 
+                            <span class="text-sm">🏗️ Promowanie projektu</span>
+                        </label>
+                    </div>
+                    
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Opcjonalnie: firma / branża</label>
+                    <input id="commentBrand" type="text" placeholder="np. Biedronka, elektronika..." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm mb-3" oninput="renderComments()">
+                    
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-100 text-xs text-amber-800">
+                        <strong>💡 Pamiętaj:</strong> Komentarze pod cudzymi wpisami to ~70% wzrostu na X. Szukaj wpisów o: polskiej gospodarce, firmach, cenach, zakupach. Komentuj <strong>naturalnie</strong>, nie spamuj — zawsze dostosuj tekst do kontekstu wpisu.
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-2 space-y-3" id="commentsOutput"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TAB 3: CALENDAR -->
+<div id="panel-calendar" class="tab-panel hidden">
+    <div class="max-w-5xl mx-auto px-4 py-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mb-4">
+            <div class="flex items-center justify-between mb-4">
+                <button onclick="changeWeek(-1)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm transition-colors">← Poprzedni</button>
+                <h3 id="calendarTitle" class="font-semibold text-slate-900"></h3>
+                <button onclick="changeWeek(1)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm transition-colors">Następny →</button>
+            </div>
+            <div id="calendarGrid" class="grid grid-cols-7 gap-3"></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h3 class="font-semibold text-slate-900 mb-3">📊 Statystyki tygodnia</h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="p-3 bg-slate-50 rounded-xl">
+                    <div id="statTotal" class="text-2xl font-bold text-slate-900">0</div>
+                    <div class="text-xs text-slate-500">Zaplanowano</div>
+                </div>
+                <div class="p-3 bg-green-50 rounded-xl">
+                    <div id="statDone" class="text-2xl font-bold text-green-600">0</div>
+                    <div class="text-xs text-slate-500">Zrobione</div>
+                </div>
+                <div class="p-3 bg-red-50 rounded-xl">
+                    <div id="statPending" class="text-2xl font-bold text-red-600">0</div>
+                    <div class="text-xs text-slate-500">Do zrobienia</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TAB 4: TEMPLATES / SZABLONY TEKSTOWE -->
+<div id="panel-templates" class="tab-panel hidden">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="mb-4 p-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <p class="text-sm text-slate-600">📋 Szablony tekstowe do postów na X i Facebooku. Zmienne oznaczone <span class="text-red-500 font-semibold">{tak}</span> zastąp własnymi danymi. Kliknij „Kopiuj" → wklej w post → dostosuj.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Posty z grafiką kategorii -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-semibold text-slate-900 mb-1">📊 Post z grafiką kategorii</h3>
+                <p class="text-xs text-slate-400 mb-3">Twój główny format — grafika + krótki opis</p>
+                <div id="tplCategoryPosts" class="space-y-2"></div>
+            </div>
+
+            <!-- Wątki -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-semibold text-slate-900 mb-1">🧵 Wątek (Thread na X)</h3>
+                <p class="text-xs text-slate-400 mb-3">Wielotweetowy format — hook + firmy + CTA</p>
+                <div id="tplThread" class="space-y-2"></div>
+            </div>
+            
+            <!-- Za kulisami -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-semibold text-slate-900 mb-1">🏗️ Za kulisami projektu</h3>
+                <p class="text-xs text-slate-400 mb-3">Osobiste posty budujące zaufanie</p>
+                <div id="tplBehind" class="space-y-2"></div>
+            </div>
+            
+            <!-- Quiz / Angażujące -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-semibold text-slate-900 mb-1">🤔 Quiz / Pytanie angażujące</h3>
+                <p class="text-xs text-slate-400 mb-3">Pytania zwiększające interakcję</p>
+                <div id="tplQuiz" class="space-y-2"></div>
+            </div>
+
+            <!-- Komentarze -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-semibold text-slate-900 mb-1">💬 Komentarze pod cudzymi wpisami</h3>
+                <p class="text-xs text-slate-400 mb-3">Gotowe odpowiedzi — dostosuj do kontekstu</p>
+                <div id="tplComments" class="space-y-2"></div>
+            </div>
+
+            <!-- Facebook dłuższe -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-semibold text-slate-900 mb-1">📘 Posty na Facebooka (dłuższe)</h3>
+                <p class="text-xs text-slate-400 mb-3">Rozbudowane opisy z CTA na końcu</p>
+                <div id="tplFacebook" class="space-y-2"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('tab-active');
+        b.classList.add('text-slate-600','hover:bg-slate-100');
+    });
+    document.getElementById(`panel-${tab}`).classList.remove('hidden');
+    const btn = document.getElementById(`tab-${tab}`);
+    btn.classList.add('tab-active');
+    btn.classList.remove('text-slate-600','hover:bg-slate-100');
+    
+    if (tab === 'comments') renderComments();
+    if (tab === 'calendar') renderCalendar();
+    if (tab === 'templates') renderTemplates();
+}
+
+// ===== COPY TO CLIPBOARD =====
+async function copyText(text, btnId) {
+    try {
+        await navigator.clipboard.writeText(text);
+    } catch(e) {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    const btn = document.getElementById(btnId);
+    if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = '✅ Skopiowano!';
+        btn.classList.add('copy-flash');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copy-flash'); }, 1500);
+    }
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ===== COMMENT GENERATOR =====
+const COMMENT_BANK = {
+    shopping: [
+        { label: 'Naturalny — informacyjny', text: 'Warto zwrócić uwagę, z jakiego kraju jest dana firma. Kupując polskie, wspieramy miejsca pracy i podatki w Polsce. Na czypolskafirma.pl można to szybko sprawdzić.' },
+        { label: 'Z konkretem', text: 'Sprawdzałem to na czypolskafirma.pl — {brand}spośród popularnych marek w tej kategorii, tylko kilka ma polski kapitał. Warto wiedzieć, zanim wydamy pieniądze.' },
+        { label: 'Lekki, osobisty', text: 'Od kiedy prowadzę czypolskafirma.pl, zacząłem zwracać uwagę na to, z jakiego kraju jest firma. To naprawdę otwiera oczy. Polecam sprawdzić!' },
+        { label: 'Krótki i na temat', text: 'Jeśli ktoś chce sprawdzić, czy to polska firma — na czypolskafirma.pl weryfikujemy pochodzenie kapitału popularnych marek w Polsce.' },
+    ],
+    company: [
+        { label: 'Fakty o firmie', text: '{brand} to firma z kapitałem {country}. Na czypolskafirma.pl sprawdzisz strukturę właścicielską i skąd pochodzi kapitał.' },
+        { label: 'Kontekst', text: 'Warto wiedzieć, że {brand} ma {country} kapitał. Na czypolskafirma.pl weryfikuję takie informacje — każda firma jest sprawdzana przez publiczne rejestry.' },
+        { label: 'Z alternatywą', text: 'Jeśli szukasz polskiej alternatywy dla {brand}, sprawdź czypolskafirma.pl — zestawiamy firmy w tej samej kategorii z informacją o pochodzeniu kapitału.' },
+    ],
+    economy: [
+        { label: 'O reinwestycji', text: 'Kluczowe jest budowanie silnego prywatnego polskiego kapitału, który reinwestuje zyski w kraju i tutaj zwiększa zatrudnienie. Dlatego tworzę czypolskafirma.pl — żeby ułatwić świadome wybory.' },
+        { label: 'O podatkach', text: 'Kiedy kupujesz w polskiej firmie, podatki zostają w Polsce. Na czypolskafirma.pl sprawdzisz, które firmy mają polski kapitał — projekt tworzony ze środków prywatnych, bez dotacji.' },
+        { label: 'Obiektywny', text: 'Ważne, żebyśmy wiedzieli, komu płacimy. Nie chodzi o bojkot, ale o świadomy wybór. Na czypolskafirma.pl można sprawdzić pochodzenie kapitału firm — dane z publicznych rejestrów.' },
+        { label: 'Z danymi', text: 'Sprawdziłem to — w wielu kategoriach produktów codziennego użytku, polskie firmy to mniejszość. Na czypolskafirma.pl weryfikuję te dane systematycznie. Warto wiedzieć.' },
+    ],
+    patriotism: [
+        { label: 'O patriotyzmie konsumenckim', text: 'Patriotyzm gospodarczy to nie slogany, to świadome wybory. Dlatego tworzę czypolskafirma.pl — żeby każdy mógł szybko sprawdzić, z jakiego kraju jest dana firma. Projekt ze środków prywatnych, bez żadnych dotacji.' },
+        { label: 'Praktyczny', text: 'Najskuteczniejszy patriotyzm to ten portfelowy — kupowanie polskich produktów i usług. Na czypolskafirma.pl zestawiamy firmy z informacją o pochodzeniu kapitału. Proste i sprawdzone.' },
+        { label: 'Osobisty', text: 'Zacząłem od prostego pytania: „czy ta firma jest polska?". Okazało się, że odpowiedź często zaskakuje. Dlatego powstało czypolskafirma.pl — żeby każdy mógł to łatwo sprawdzić.' },
+    ],
+    industry: [
+        { label: 'O branży', text: 'Sprawdziłem tę branżę na czypolskafirma.pl — {brand}wyniki mogą zaskoczyć. Warto wiedzieć, zanim wydamy pieniądze.' },
+        { label: 'Z danymi', text: 'W tej branży {brand}polskich firm jest naprawdę niewiele. Na czypolskafirma.pl weryfikuję pochodzenie kapitału — żeby ułatwić świadome wybory.' },
+        { label: 'Z CTA', text: 'Jeśli interesuje Cię, które firmy w tej branży mają polski kapitał — sprawdź czypolskafirma.pl. Weryfikuję dane przez KRS i CRBR.' },
+    ],
+    project: [
+        { label: 'Krótka prezentacja', text: 'Prowadzę projekt czypolskafirma.pl — niezależną bazę, w której sprawdzisz, czy firma jest polska. Dane z publicznych rejestrów, bez reklam, ze środków prywatnych.' },
+        { label: 'Pod dyskusją', text: 'Właśnie po to tworzę czypolskafirma.pl — żebyśmy mieli łatwy dostęp do informacji o pochodzeniu kapitału firm. Projekt jest prywatny, bez sponsorów. Sprawdź, jeśli Cię to interesuje.' },
+        { label: 'Z zaproszeniem', text: 'Jeśli chcesz wiedzieć więcej o tym, z jakiego kraju są popularne firmy w Polsce — zapraszam na czypolskafirma.pl. Tworzę tę bazę sam, po godzinach, bo uważam że to ważne.' },
+    ],
+};
+
+function renderComments() {
+    const ctx = document.querySelector('input[name="commentCtx"]:checked').value;
+    const brand = document.getElementById('commentBrand').value.trim();
+    const container = document.getElementById('commentsOutput');
+    const templates = COMMENT_BANK[ctx] || [];
+    
+    let html = '';
+    templates.forEach((tpl, i) => {
+        let text = tpl.text;
+        if (brand) {
+            text = text.replace('{brand}', brand + ' — ').replace('{brand}', brand).replace('{country}', '...');
+        } else {
+            text = text.replace('{brand} — ', '').replace('{brand}', '').replace('{country}', '...');
+        }
+        
+        const btnId = `copy-comment-${i}`;
+        const charCount = text.length;
+        const charClass = charCount > 280 ? 'char-over' : 'text-slate-400';
+        
+        html += `
+            <div class="comment-variant bg-white rounded-2xl border border-slate-200 p-4 shadow-sm pl-5 fade-in">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-medium text-slate-500">${tpl.label}</span>
+                    <span class="text-xs ${charClass}">${charCount} znaków</span>
+                </div>
+                <p class="text-sm text-slate-800 leading-relaxed mb-3">${escHtml(text)}</p>
+                <button id="${btnId}" onclick="copyText(\`${text.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`, '${btnId}')" class="px-4 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors">📋 Kopiuj</button>
+            </div>`;
+    });
+    
+    container.innerHTML = html;
+}
+
+// ===== CALENDAR =====
+const WEEK_SCHEDULE = [
+    { day: 'Poniedziałek', tasks: [
+        { icon: '📊', label: 'Post z grafiką kategorii', platform: 'X + FB' },
+        { icon: '💬', label: '5-10 komentarzy pod cudzymi wpisami', platform: 'X' },
+    ]},
+    { day: 'Wtorek', tasks: [
+        { icon: '💬', label: '5-10 komentarzy pod wpisami', platform: 'X' },
+    ]},
+    { day: 'Środa', tasks: [
+        { icon: '📊', label: 'Post z grafiką kategorii', platform: 'X + FB' },
+        { icon: '💬', label: '5-10 komentarzy', platform: 'X' },
+    ]},
+    { day: 'Czwartek', tasks: [
+        { icon: '🧵', label: 'Wątek (Thread)', platform: 'X' },
+        { icon: '💬', label: '5-10 komentarzy', platform: 'X' },
+    ]},
+    { day: 'Piątek', tasks: [
+        { icon: '📊', label: 'Post z grafiką kategorii', platform: 'X + FB' },
+        { icon: '💬', label: '5-10 komentarzy', platform: 'X' },
+    ]},
+    { day: 'Sobota', tasks: [
+        { icon: '💬', label: 'Lajki i komentarze (luźniej)', platform: 'X' },
+    ]},
+    { day: 'Niedziela', tasks: [
+        { icon: '🏗️', label: 'Post za kulisami (co 2 tyg)', platform: 'X + FB' },
+    ]},
+];
+
+let currentWeekStart = getMonday(new Date());
+let calendarDone = JSON.parse(localStorage.getItem('cpf_calendar') || '{}');
+
+function getMonday(d) {
+    const date = new Date(d);
+    const day = date.getDay();
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(date.setDate(diff));
+}
+
+function formatDate(d) { return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' }); }
+function dateKey(d) { return d.toISOString().split('T')[0]; }
+
+function changeWeek(delta) {
+    currentWeekStart = new Date(currentWeekStart.getTime() + delta * 7 * 86400000);
+    renderCalendar();
+}
+
+function toggleCalendarDone(key, taskIdx) {
+    const fullKey = `${key}-${taskIdx}`;
+    calendarDone[fullKey] = !calendarDone[fullKey];
+    localStorage.setItem('cpf_calendar', JSON.stringify(calendarDone));
+    renderCalendar();
+}
+
+function renderCalendar() {
+    const grid = document.getElementById('calendarGrid');
+    const title = document.getElementById('calendarTitle');
+    const monday = currentWeekStart;
+    const sunday = new Date(monday.getTime() + 6 * 86400000);
+    title.textContent = `${formatDate(monday)} — ${formatDate(sunday)}`;
+    
+    const today = dateKey(new Date());
+    let html = '';
+    let totalTasks = 0, doneTasks = 0;
+    
+    for (let i = 0; i < 7; i++) {
+        const day = new Date(monday.getTime() + i * 86400000);
+        const key = dateKey(day);
+        const isToday = key === today;
+        const schedule = WEEK_SCHEDULE[i];
+        
+        html += `<div class="p-3 rounded-xl border ${isToday ? 'border-red-300 bg-red-50/50 ring-2 ring-red-200' : 'border-slate-200 bg-white'} min-h-[140px]">`;
+        html += `<div class="text-xs font-semibold ${isToday ? 'text-red-700' : 'text-slate-600'} mb-1">${schedule.day}</div>`;
+        html += `<div class="text-xs ${isToday ? 'text-red-500 font-medium' : 'text-slate-400'} mb-2">${formatDate(day)}${isToday ? ' — dziś' : ''}</div>`;
+        
+        schedule.tasks.forEach((task, ti) => {
+            const fullKey = `${key}-${ti}`;
+            const done = !!calendarDone[fullKey];
+            totalTasks++;
+            if (done) doneTasks++;
+            
+            html += `
+                <label class="flex items-start gap-1.5 mb-1.5 cursor-pointer group">
+                    <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleCalendarDone('${key}', ${ti})" class="mt-0.5 accent-green-600 flex-shrink-0">
+                    <span class="text-xs ${done ? 'line-through text-slate-400' : 'text-slate-700'} group-hover:text-red-600 transition-colors leading-tight">${task.icon} ${task.label}</span>
+                </label>`;
+        });
+        
+        html += '</div>';
+    }
+    
+    grid.innerHTML = html;
+    document.getElementById('statTotal').textContent = totalTasks;
+    document.getElementById('statDone').textContent = doneTasks;
+    document.getElementById('statPending').textContent = totalTasks - doneTasks;
+}
+
+// ===== TEMPLATE BANK =====
+function renderTemplates() {
+    renderTemplateSection('tplCategoryPosts', [
+        'Sprawdź, z jakiego kraju są najpopularniejsze marki {kategoria} w Polsce.\n\n🇵🇱 {polskie_firmy} to polskie firmy. Zanim {akcja}, sprawdź markę na naszej stronie.\n\n#CzyPolskaFirma #PolskieFirmy',
+        '{emoji} Zdecydowana większość {rzeczownik} w Polsce to zagraniczne firmy.\nNa naszej stronie sprawdzisz, który {rzeczownik_poj} jest polski! 🇵🇱\n\n#CzyPolskaFirma',
+        'Wśród {n} popularnych {rzeczownik} w Polsce, tylko {k} ma polski kapitał. Reszta to m.in. {flagi} {kraje}.\n\nSprawdź sam 👇\n\n#CzyPolskaFirma #Gospodarka',
+        'Rynek {kategoria} w Polsce — sprawdź do kogo trafia marża {emoji}🇵🇱\n\nWięcej firm sprawdzisz na stronie.\n\n#Gospodarka',
+    ]);
+    
+    renderTemplateSection('tplThread', [
+        '🧵 WĄTEK\n\nTweet 1 (hook):\n{emoji} Kupujesz {kategoria}? Sprawdziłem {n} popularnych marek.\nTylko {k} z nich ma polski kapitał. Reszta? {flagi}\nWątek 🧵👇\n\nTweet 2-6 (per firma):\n{nr}/{total}. {marka}\nWłaściciel: {nazwa_firmy}\nKapitał: {flaga} {kraj}\n\nOstatni tweet:\nPełne dane — czypolskafirma.pl/kategoria/{slug}\nProjekt tworzę sam, ze środków prywatnych. Jeśli uważasz, że to ważne — podaj dalej 🙏\n#CzyPolskaFirma',
+    ]);
+    
+    renderTemplateSection('tplBehind', [
+        'Mały update z projektu CzyPolskaFirma 🏗️\n\nW tym tygodniu dodałem {n} nowych firm do bazy. Powoli, ale do przodu 💪\n\nProjekt tworzę sam, po godzinach, ze środków prywatnych. Żadnych dotacji, żadnych sponsorów.\n\nJeśli masz firmę, którą powinienem sprawdzić — napisz w komentarzu!',
+        'CzyPolskaFirma.pl to projekt, który tworzę sam. Bez dotacji, bez sponsorów, ze środków prywatnych.\n\nDlaczego? Bo uważam, że jako konsumenci powinniśmy wiedzieć, komu płacimy. Każda firma w bazie jest weryfikowana przez publiczne rejestry.\n\nJeśli uważasz, że to ważne — podaj dalej 🙏',
+        'Kolejna kategoria dodana do bazy ✅\n\nCo byście chcieli zobaczyć następne na czypolskafirma.pl? 🤔\n\nPropozycje piszcie poniżej 👇',
+    ]);
+    
+    renderTemplateSection('tplQuiz', [
+        '🤔 Szybki test! Która z tych marek ({kategoria}) jest POLSKA?\n\nA) {marka_1}\nB) {marka_2}\nC) {marka_3}\nD) {marka_4}\n\nOdpowiedź w reply 👇\n\n#CzyPolskaFirma',
+        'Którą {rzeczownik_poj} uważasz za polską markę? 🇵🇱\n\n🗳️ Odpowiedzi piszcie w komentarzach!\nWyniki i fakty pokażę jutro o 18:00 📊\n\n#CzyPolskaFirma',
+    ]);
+    
+    renderTemplateSection('tplComments', [
+        'Warto zwrócić uwagę, z jakiego kraju jest dana firma. Kupując polskie, wspieramy miejsca pracy i podatki w Polsce. Na czypolskafirma.pl można to szybko sprawdzić.',
+        'Kluczowe jest budowanie silnego prywatnego polskiego kapitału, który reinwestuje zyski w kraju i tutaj zwiększa zatrudnienie. Staram się to pokazywać na czypolskafirma.pl — projekt tworzony własnymi środkami, z czystej potrzeby.',
+        'Patriotyzm gospodarczy to nie slogany, to świadome wybory. Na czypolskafirma.pl sprawdzisz pochodzenie kapitału — projekt ze środków prywatnych, bez żadnych dotacji.',
+        'Jeśli chcesz sprawdzić, czy to polska firma — na czypolskafirma.pl weryfikuję pochodzenie kapitału popularnych marek. Dane z publicznych rejestrów.',
+        'Zacząłem od prostego pytania: „czy ta firma jest polska?". Okazało się, że odpowiedź często zaskakuje. Dlatego powstało czypolskafirma.pl.',
+    ]);
+    
+    renderTemplateSection('tplFacebook', [
+        '{emoji} Sprawdź, z jakiego kraju są najpopularniejsze marki w kategorii: {kategoria}.\n\nNa grafice zestawiłem {n} popularnych marek. 🇵🇱 {polskie_firmy} to polskie firmy!\n\nDlaczego to ważne? Bo kiedy kupujesz w polskiej firmie, podatki i zyski zostają w Polsce — trafiają na polskie pensje i polskie inwestycje.\n\nWięcej firm sprawdzisz na 👉 czypolskafirma.pl/kategoria/{slug}\n\n#CzyPolskaFirma #PolskieFirmy #PatriotyzmGospodarczy',
+        '📖 Historia polskiej firmy, o której nie wszyscy wiedzą.\n\n{marka} powstała w {rok} roku. {krótka_historia}\n\n100% polskiego kapitału. Podatki płacone w Polsce. Zyski reinwestowane w kraju.\n\nTakich historii jest więcej — na czypolskafirma.pl zbieramy informacje o pochodzeniu kapitału firm.\n\nZnacie inne polskie success stories? 👇',
+        '📢 Hej! Mały update z projektu CzyPolskaFirma.\n\nW tym tygodniu dodałem do bazy kategorię „{kategoria}" — {n} nowych firm sprawdzonych. Każdą weryfikuję ręcznie przez KRS, CRBR i publicznie dostępne dokumenty.\n\nProjekt tworzę sam, po godzinach, ze środków prywatnych. Żadnych dotacji, żadnych sponsorów. Po prostu uważam, że jako konsumenci powinniśmy wiedzieć, komu płacimy.\n\n👉 czypolskafirma.pl',
+    ]);
+}
+
+function renderTemplateSection(containerId, templates) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = templates.map((tpl, i) => {
+        const btnId = `copy-tpl-${containerId}-${i}`;
+        const highlighted = escHtml(tpl).replace(/\{([^}]+)\}/g, '<span class="text-red-500 font-semibold">{$1}</span>');
+        return `
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                <pre class="whitespace-pre-wrap font-sans leading-relaxed text-slate-700 mb-2">${highlighted}</pre>
+                <button id="${btnId}" onclick="copyText(\`${tpl.replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`, '${btnId}')" class="px-3 py-1 text-xs rounded-lg bg-slate-200 hover:bg-slate-300 transition-colors">📋 Kopiuj szablon</button>
+            </div>`;
+    }).join('');
+}
+
+// ===== INIT =====
+renderComments();
+renderCalendar();
+</script>
+</body>
+</html>
