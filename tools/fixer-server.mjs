@@ -32,7 +32,7 @@ const server = http.createServer(async (req, res) => {
                 // The standalone tool will send JSON with { domain, fileBase64, fileName }
                 
                 const data = JSON.parse(Buffer.concat(body).toString());
-                const { domain, fileBase64, fileName } = data;
+                let { domain, fileBase64, fileName } = data;
 
                 if (!domain || !fileBase64) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -40,6 +40,8 @@ const server = http.createServer(async (req, res) => {
                     return;
                 }
 
+                // Double check domain cleaning
+                domain = domain.toLowerCase().trim().replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
                 const safeDomain = domain.replace(/[^a-zA-Z0-9.\-]/g, '');
                 const ext = path.extname(fileName) || '.png';
                 const buffer = Buffer.from(fileBase64.split(',')[1], 'base64');

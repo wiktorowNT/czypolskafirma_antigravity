@@ -13,7 +13,8 @@ import { cn } from "@/lib/utils"
  *
  * Fallback chain:
  *   1. Lokalne logo: /logos/{domena}.png (lub .svg, .jpg, .webp)
- *   2. Letter avatar (pierwsza litera nazwy firmy)
+ *   2. Brandfetch CDN: https://cdn.brandfetch.io/domain/{domena}
+ *   3. Letter avatar (pierwsza litera nazwy firmy)
  *
  * Aby dodać/zaktualizować logo:
  *   - Wrzuć plik {domena}.png do /public/logos/
@@ -62,6 +63,9 @@ function getAvatarColor(name: string): { bg: string; text: string } {
   return colors[Math.abs(hash) % colors.length]
 }
 
+// Brandfetch CDN client ID (public — designed for use in <img> tags)
+const BRANDFETCH_CLIENT_ID = process.env.NEXT_PUBLIC_BRANDFETCH_CLIENT_ID || '1idDBakJbZwIqqTCivg'
+
 /**
  * Build local logo URL candidates for a domain.
  * All logos are standardized to .png (with a few legacy .svg files).
@@ -74,6 +78,14 @@ function getLocalLogoCandidates(domain: string): string[] {
     `/logos/${domain}.jpeg`,
     `/logos/${domain}.webp`,
   ]
+}
+
+/**
+ * Build Brandfetch CDN URL for a domain.
+ * Used as fallback when local logo is missing.
+ */
+function getBrandfetchCdnUrl(domain: string): string {
+  return `https://cdn.brandfetch.io/domain/${domain}?c=${BRANDFETCH_CLIENT_ID}`
 }
 
 export function CompanyLogo({
@@ -98,6 +110,11 @@ export function CompanyLogo({
     // Priority 2: Legacy static logo URL
     if (logoUrl) {
       candidates.push(logoUrl)
+    }
+
+    // Priority 3: Brandfetch CDN (runtime fallback for missing local logos)
+    if (domain) {
+      candidates.push(getBrandfetchCdnUrl(domain))
     }
 
     return candidates

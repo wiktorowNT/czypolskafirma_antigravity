@@ -1,12 +1,37 @@
 [
   {
-    "domain": "pkp.pl",
-    "slug": "PKP",
-    "name": "POLSKIE KOLEJE PAŃSTWOWE SPÓŁKA AKCYJNA"
+    "domain": "bp.pl",
+    "slug": "BP",
+    "name": ""
   },
   {
-    "domain": "totalizator.pl",
-    "slug": "Totalizator Sportowy",
-    "name": "TOTALIZATOR SPORTOWY SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ"
+    "domain": "muellerpolska.pl",
+    "slug": "Müller",
+    "name": ""
+  },
+  {
+    "domain": "granna.pl",
+    "slug": "Granna",
+    "name": "\"CONSILIUM\"SPÓŁKA Z O.O."
+  },
+  {
+    "domain": "browarfortuna.pl",
+    "slug": "Browar Fortuna",
+    "name": "BROWAR FORTUNA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ SPÓŁKA KOMANDYTOWA"
+  },
+  {
+    "domain": "lactalis.pl",
+    "slug": "Lactalis",
+    "name": "LACTALIS POLSKA SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ"
+  },
+  {
+    "domain": "pru.pl",
+    "slug": "Prudential",
+    "name": "PRUDENTIAL INTERNATIONAL ASSURANCE PLC SPÓŁKA AKCYJNA ODDZIAŁ W POLSCE"
+  },
+  {
+    "domain": "vivus.pl",
+    "slug": "Vivus",
+    "name": "SOONLY FINANCE SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ"
   }
 ]
