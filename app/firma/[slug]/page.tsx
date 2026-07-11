@@ -4,6 +4,7 @@ import CompanyProfileClient from "./CompanyProfileClient"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName, cleanAddress } from "@/lib/slug-utils"
 import { buildCompanyFaqItems, getCountryName } from "@/lib/company-faq"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 3600 // ISR: revalidate every hour
 
@@ -410,7 +411,7 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <CompanyProfileClient company={company} relatedCompanies={relatedCompanies} />
     </>

@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react"
 import * as LucideIcons from "lucide-react"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { getAllCategoriesFromSupabase } from "@/lib/supabase/category-cache"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 3600 // ISR: odśwież co godzinę
 
@@ -124,7 +125,7 @@ export default async function KategoriePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       <div className="container mx-auto px-4 py-8">
