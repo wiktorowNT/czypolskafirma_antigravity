@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     try {
         // Use PostgREST 'in' filter
         const filter = `id=in.(${cappedIds.map(id => encodeURIComponent(id)).join(",")})`
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,siedziba_pl,vat_czynny,categories(name,slug)&${filter}`
+        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,siedziba_pl,vat_czynny,categories(name,slug)&${filter}`
 
         const res = await fetch(url, {
             headers: {
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         const results = data.map((company: any) => ({
             id: company.id,
             slug: company.slug ? slugify(company.slug) : company.id,
-            brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
+            brand: resolveDisplayName(company.display_name, company.slug, company.name),
             company: company.name,
             category: company.categories?.name || "Inne",
             categorySlug: company.categories?.slug || "inne",

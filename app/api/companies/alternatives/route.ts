@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
         const categoryId = catData[0].id
 
         // Get Polish companies from the same category (country_code = PL), excluding the current one
-        let companiesUrl = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code&category_id=eq.${categoryId}&country_code=eq.PL&limit=${limit}&order=name`
+        let companiesUrl = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code&category_id=eq.${categoryId}&country_code=eq.PL&limit=${limit}&order=name`
 
         if (excludeId) {
             companiesUrl += `&id=neq.${excludeId}`
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
             id: company.id,
             // Kanoniczny slug URL + nazwa marki do wyświetlania
             slug: company.slug ? slugify(company.slug) : company.slug,
-            brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
+            brand: resolveDisplayName(company.display_name, company.slug, company.name),
             website_url: company.website_url,
             country_code: company.country_code,
         }))

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -36,11 +36,11 @@ export async function GET(request: Request) {
         let url: string
         if (countryCode) {
             // If it's a country search, filter by country_code
-            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
+            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
         } else {
             // Standard search by name, slug, NIP or KRS
             const formattedQuery = query.trim().replace(/\s+/g, "*")
-            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=50`
+            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=50`
         }
 
         const res = await fetch(url, {
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
             return {
                 id: company.id, // This is the UUID
                 slug: company.slug ? slugify(company.slug) : company.slug, // kanoniczny slug URL
-                brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
+                brand: resolveDisplayName(company.display_name, company.slug, company.name),
                 company: company.name,
                 category: categoryData?.name || "Inne",
                 categorySlug: categoryData?.slug || "inne",

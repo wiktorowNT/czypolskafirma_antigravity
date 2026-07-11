@@ -1,5 +1,5 @@
 import { getSupabaseServerClient } from "./server"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 godzin
 
@@ -33,7 +33,7 @@ function mapCompanyToItem(company: any) {
 
   return {
     id: company.id,
-    brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
+    brand: resolveDisplayName(company.display_name, company.slug, company.name),
     company: company.name,
     score: score,
     badges: badges,
@@ -84,6 +84,7 @@ export async function getCachedCategoryData(categorySlug: string) {
         id,
         name,
         slug,
+        display_name,
         nip,
         krs,
         founded_at,
