@@ -108,7 +108,10 @@ async function loadLogoDataUri(domain: string, base: string): Promise<string | n
 export default async function Image({ params }: { params: { slug: string } }) {
   const company = await fetchCompany(params.slug)
 
-  // Fallback, gdy nie uda się pobrać danych — spójny z resztą marki.
+  // Gdy nie uda się pobrać danych firmy — neutralny layout bez werdyktu
+  // (nie twierdzimy "zagraniczna" dla nieznanej firmy). Gdy firma istnieje,
+  // werdykt jest zgodny ze stroną: isPolish = country_code === "PL".
+  const found = company !== null
   const brand = company?.brand || "Sprawdź firmę"
   const code = company?.country_code || null
   const isPolish = code?.toUpperCase() === "PL"
@@ -121,8 +124,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const domain = getDomainFromUrl(company?.website_url)
   const logo = domain ? await loadLogoDataUri(domain, getBaseUrl()) : null
 
-  // Kolorystyka werdyktu.
-  const accent = isPolish ? "#16a34a" : "#dc2626"
+  // Kolorystyka werdyktu (neutralna, gdy brak danych firmy).
+  const accent = !found ? "#dc2626" : isPolish ? "#16a34a" : "#dc2626"
   const verdictBg = isPolish ? "#f0fdf4" : "#fef2f2"
   const verdictBorder = isPolish ? "#bbf7d0" : "#fecaca"
   const verdictText = isPolish ? "Polska firma" : "Firma zagraniczna"
@@ -209,32 +212,39 @@ export default async function Image({ params }: { params: { slug: string } }) {
           {brand}
         </div>
 
-        {/* Werdykt (flaga + tekst) */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            background: verdictBg,
-            border: `2px solid ${verdictBorder}`,
-            borderRadius: 9999,
-            padding: "18px 34px",
-          }}
-        >
-          {flagCode && (
-            <img
-              src={`https://flagcdn.com/w80/${flagCode}.png`}
-              width={52}
-              alt=""
-              style={{ borderRadius: "6px", marginRight: "20px", boxShadow: "0 2px 4px rgb(0 0 0 / 0.1)" }}
-            />
-          )}
-          <div style={{ display: "flex", fontSize: 40, fontWeight: 700, color: accent }}>
-            {verdictText}
+        {/* Werdykt (flaga + tekst) — tylko gdy mamy dane firmy */}
+        {found ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              background: verdictBg,
+              border: `2px solid ${verdictBorder}`,
+              borderRadius: 9999,
+              padding: "18px 34px",
+            }}
+          >
+            {flagCode && (
+              <img
+                src={`https://flagcdn.com/w80/${flagCode}.png`}
+                width={52}
+                alt=""
+                style={{ borderRadius: "6px", marginRight: "20px", boxShadow: "0 2px 4px rgb(0 0 0 / 0.1)" }}
+              />
+            )}
+            <div style={{ display: "flex", fontSize: 40, fontWeight: 700, color: accent }}>
+              {verdictText}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Brak danych firmy — neutralny podpis zamiast werdyktu.
+          <div style={{ display: "flex", fontSize: 34, color: "#475569", textAlign: "center", maxWidth: 900 }}>
+            Sprawdź pochodzenie kapitału firmy
+          </div>
+        )}
 
         {/* Kraj pochodzenia kapitału (dla firm zagranicznych) */}
-        {!isPolish && countryName !== "Brak danych" && (
+        {found && !isPolish && countryName !== "Brak danych" && (
           <div style={{ display: "flex", fontSize: 28, color: "#64748b", marginTop: 22 }}>
             Kapitał: {countryName}
           </div>
