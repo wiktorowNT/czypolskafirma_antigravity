@@ -1,4 +1,5 @@
 import { getSupabaseServerClient } from "./server"
+import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 godzin
 
@@ -32,11 +33,12 @@ function mapCompanyToItem(company: any) {
 
   return {
     id: company.id,
-    brand: company.slug ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : company.name,
+    brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
     company: company.name,
     score: score,
     badges: badges,
-    slug: company.slug,
+    // Kanoniczny slug URL — używany w linkach i JSON-LD na stronach kategorii
+    slug: company.slug ? slugify(company.slug) : company.slug,
     category_slug: company.categories?.slug,
     nip: company.nip,
     krs: company.krs,

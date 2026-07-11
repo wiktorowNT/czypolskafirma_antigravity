@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ChevronRight, Globe, BadgeCheck, MapPin, Receipt, Heart } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 import { useBookmarks } from "@/hooks/use-bookmarks"
+import { countryNames } from "@/lib/countries"
 
 export interface CompanyCardProps {
     id: string
@@ -93,10 +94,10 @@ export function CompanyCard({
             <div className="flex items-center gap-3 flex-shrink-0 relative z-10">
                 {/* Country Flag */}
                 {countryCode && (
-                    <div className="flex items-center justify-center" title={countryCode}>
+                    <div className="flex items-center justify-center" title={countryNames[countryCode.toUpperCase()] || countryCode}>
                         <img
                             src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
-                            alt={countryCode}
+                            alt={`Flaga: ${countryNames[countryCode.toUpperCase()] || countryCode} — kraj pochodzenia kapitału`}
                             className="w-6 sm:w-7 h-auto rounded-sm border border-slate-200 shadow-sm"
                             loading="lazy"
                         />
@@ -121,7 +122,7 @@ export function CompanyCard({
                 </button>
             </div>
             
-            {/* Hover background effect (optional subtle indicator) */}
+            {/* Hover background effect — subtle indicator */}
             <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0 rounded-full" />
         </div>
     )

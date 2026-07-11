@@ -20,6 +20,8 @@ interface CompanyDetail {
     id: string
     name: string
     slug: string
+    canonicalSlug: string
+    brandName: string
     categorySlug: string
     categoryName: string
     nip?: string
@@ -41,8 +43,17 @@ interface CompanyDetail {
     lastVerified: string
 }
 
+interface RelatedCompany {
+    id: string
+    slug: string
+    brand: string
+    website_url?: string
+    country_code?: string
+}
+
 interface CompanyProfileClientProps {
     company: CompanyDetail
+    relatedCompanies?: RelatedCompany[]
 }
 
 // Format slug as display name: "polkomtel-plus" -> "Polkomtel Plus"
@@ -53,7 +64,7 @@ function formatSlugAsName(slug: string): string {
         .join(' ')
 }
 
-export default function CompanyProfileClient({ company }: CompanyProfileClientProps) {
+export default function CompanyProfileClient({ company, relatedCompanies }: CompanyProfileClientProps) {
     const { isBookmarked, toggleBookmark } = useBookmarks()
     const bookmarked = isBookmarked(company.id)
 
@@ -104,7 +115,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
 
                             {/* Current Page - Company Name */}
                             <span className="text-slate-400 truncate max-w-[150px] sm:max-w-[250px]">
-                                {formatSlugAsName(company.slug)}
+                                {company.brandName || formatSlugAsName(company.slug)}
                             </span>
                         </nav>
 
@@ -138,6 +149,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                     id={company.id}
                     name={company.name}
                     slug={company.slug}
+                    brandName={company.brandName}
                     business_description={company.business_description}
                     ownership_description={company.ownership_description}
                     country_code={company.country_code}
@@ -164,6 +176,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                     categoryName={company.categoryName}
                     companyId={company.id}
                     isCurrentCompanyPolish={company.country_code?.toUpperCase() === "PL"}
+                    initialAlternatives={relatedCompanies}
                 />
 
                 {/* Report CTA */}
@@ -173,7 +186,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                             <p className="text-sm font-medium text-slate-700">Widzisz błąd lub masz więcej informacji?</p>
                             <p className="text-xs text-slate-500 mt-0.5">Pomóż nam poprawić dane o tej firmie.</p>
                         </div>
-                        <ReportDialog defaultBrandName={formatSlugAsName(company.slug)}>
+                        <ReportDialog defaultBrandName={company.brandName || formatSlugAsName(company.slug)}>
                             <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
                                 <Flag className="w-4 h-4" />
                                 Zgłoś uwagi
@@ -185,6 +198,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
                 {/* SEO Content — subtle bottom sections for Google indexing */}
                 <CompanyFAQ
                     slug={company.slug}
+                    brandName={company.brandName}
                     country_code={company.country_code}
                     ownership_description={company.ownership_description}
                     owner_name={company.owner_name}
@@ -199,6 +213,7 @@ export default function CompanyProfileClient({ company }: CompanyProfileClientPr
 
                 <CompanyArticle
                     slug={company.slug}
+                    brandName={company.brandName}
                     country_code={company.country_code}
                     ownership_description={company.ownership_description}
                     owner_name={company.owner_name}

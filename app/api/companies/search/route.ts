@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
+import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -64,10 +65,8 @@ export async function GET(request: Request) {
             
             return {
                 id: company.id, // This is the UUID
-                slug: company.slug, // This is the slug for SEO URLs
-                brand: company.slug 
-                    ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') 
-                    : company.name,
+                slug: company.slug ? slugify(company.slug) : company.slug, // kanoniczny slug URL
+                brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
                 company: company.name,
                 category: categoryData?.name || "Inne",
                 categorySlug: categoryData?.slug || "inne",

@@ -2,8 +2,11 @@ import { Metadata } from "next"
 import { Search, TrendingUp, Globe2 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "O projekcie | CzyPolskaFirma.pl",
+  title: "O projekcie",
   description: "Dowiedz się, dlaczego stworzyliśmy projekt CzyPolskaFirma i jak wspieramy świadomość konsumencką oraz polską gospodarkę.",
+  alternates: {
+    canonical: "https://czypolskafirma.pl/o-projekcie",
+  },
 }
 
 export default function AboutPage() {

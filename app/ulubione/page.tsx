@@ -2,8 +2,11 @@ import { Suspense } from "react"
 import BookmarksClient from "./BookmarksClient"
 
 export const metadata = {
-    title: "Ulubione firmy | CzyPolskaFirma",
+    title: "Ulubione firmy",
     description: "Twoja lista ulubionych firm zapisanych w przeglądarce.",
+    alternates: {
+        canonical: "https://czypolskafirma.pl/ulubione",
+    },
 }
 
 export default function BookmarksPage() {

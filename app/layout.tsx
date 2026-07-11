@@ -27,10 +27,8 @@ export const metadata: Metadata = {
     template: "%s | CzyPolskaFirma.pl",
   },
   description: "Wybieraj świadomie polskie produkty. Sprawdź pochodzenie kapitału, strukturę właścicielską i podatki ponad 500 firm w Polsce. Twoje pieniądze mają moc!",
-  keywords: ["polska firma", "kapitał polski", "pochodzenie firmy", "patriotyzm gospodarczy", "właściciel firmy", "polskie marki"],
-  alternates: {
-    canonical: "https://czypolskafirma.pl",
-  },
+  // Uwaga: bez globalnego `alternates.canonical` — każda strona ustawia canonical na samą siebie.
+  // Uwaga: bez `keywords` — Google ignoruje meta keywords, to tylko szum.
   openGraph: {
     title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
     description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",

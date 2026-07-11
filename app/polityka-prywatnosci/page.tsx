@@ -1,8 +1,11 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Polityka Prywatności | CzyPolskaFirma.pl",
+  title: "Polityka Prywatności",
   description: "Polityka prywatności i pliki cookies serwisu CzyPolskaFirma.pl",
+  alternates: {
+    canonical: "https://czypolskafirma.pl/polityka-prywatnosci",
+  },
 }
 
 export default function PrivacyPolicyPage() {

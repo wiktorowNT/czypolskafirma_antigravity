@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /narzedzia/
+Disallow: /szukaj/
 
 Sitemap: https://czypolskafirma.pl/sitemap.xml

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { slugify } from "@/lib/slug-utils"
 
 const BASE_URL = "https://czypolskafirma.pl"
 
@@ -14,6 +15,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
+    },
+    {
+      url: `${BASE_URL}/companies`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
     },
     {
       url: `${BASE_URL}/o-projekcie`,
@@ -61,10 +68,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .order("name", { ascending: true })
 
     if (!companiesError && companies) {
+      // Kanoniczne slugi (slugify) — bez spacji, nawiasów, wielkich liter i polskich znaków.
       companyPages = companies.map((company) => {
-        const displaySlug = company.slug || company.id
+        const canonicalSlug = (company.slug ? slugify(company.slug) : "") || company.id
         return {
-          url: `${BASE_URL}/firma/${encodeURIComponent(displaySlug)}`,
+          url: `${BASE_URL}/firma/${canonicalSlug}`,
           lastModified: company.verified_at
             ? new Date(company.verified_at)
             : new Date(),

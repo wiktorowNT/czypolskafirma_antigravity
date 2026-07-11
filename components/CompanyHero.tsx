@@ -32,6 +32,7 @@ interface CompanyHeroProps {
     id: string
     name: string
     slug: string
+    brandName?: string
     business_description?: string | null
     ownership_description?: string | null
     country_code?: string | null
@@ -71,6 +72,7 @@ export default function CompanyHero({
     id,
     name,
     slug,
+    brandName,
     business_description,
     ownership_description,
     country_code,
@@ -84,7 +86,7 @@ export default function CompanyHero({
     const isPolish = country_code?.toUpperCase() === "PL"
     const countryName = getCountryName(country_code)
     const foundingYear = getFoundingYear(founded_at)
-    const displayName = formatSlugAsName(slug)
+    const displayName = brandName || formatSlugAsName(slug)
 
     // Owner display logic - narrative approach
     const ownerDisplay = owner_name || parent_company_name || "Brak danych"
@@ -122,7 +124,7 @@ export default function CompanyHero({
                             {country_code && (
                                 <img
                                     src={`https://flagcdn.com/w80/${country_code.toLowerCase()}.png`}
-                                    alt={`Flaga ${countryName}`}
+                                    alt={`Flaga: ${countryName} — kraj pochodzenia kapitału`}
                                     className="h-9 w-auto rounded-sm border border-slate-200 shadow-sm"
                                 />
                             )}

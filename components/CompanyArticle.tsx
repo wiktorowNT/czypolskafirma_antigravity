@@ -23,6 +23,7 @@ function formatSlugAsName(slug: string): string {
 
 interface CompanyArticleProps {
     slug: string
+    brandName?: string
     country_code?: string | null
     ownership_description?: string | null
     owner_name?: string | null
@@ -38,6 +39,7 @@ interface CompanyArticleProps {
 
 export default function CompanyArticle({
     slug,
+    brandName,
     country_code,
     ownership_description,
     owner_name,
@@ -50,7 +52,7 @@ export default function CompanyArticle({
     age,
     ownership_type,
 }: CompanyArticleProps) {
-    const name = formatSlugAsName(slug)
+    const name = brandName || formatSlugAsName(slug)
     const isPolish = country_code?.toUpperCase() === "PL"
     const countryName = getCountryName(country_code)
     const ownerDisplay = owner_name || parent_company_name

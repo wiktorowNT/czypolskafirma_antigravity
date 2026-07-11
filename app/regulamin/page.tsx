@@ -1,8 +1,11 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Regulamin | CzyPolskaFirma.pl",
+  title: "Regulamin",
   description: "Regulamin korzystania z serwisu informacyjnego CzyPolskaFirma.pl",
+  alternates: {
+    canonical: "https://czypolskafirma.pl/regulamin",
+  },
 }
 
 export default function TermsPage() {

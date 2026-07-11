@@ -6,7 +6,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/narzedzia/", "/szukaj/", "/companies/"],
+        // Uwaga: /companies/ musi być crawlowalne — to główna lista firm (internal linking).
+        disallow: ["/api/", "/narzedzia/", "/szukaj/"],
       },
     ],
     sitemap: "https://czypolskafirma.pl/sitemap.xml",

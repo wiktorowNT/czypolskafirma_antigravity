@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -53,11 +54,9 @@ export async function GET(request: Request) {
 
         const results = data.map((company: any) => ({
             id: company.id,
-            slug: company.slug,
-            brand: company.slug
-                ?.split("-")
-                .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
-                .join(" ") || company.name,
+            // Kanoniczny slug URL + nazwa marki do wyświetlania
+            slug: company.slug ? slugify(company.slug) : company.slug,
+            brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
             website_url: company.website_url,
             country_code: company.country_code,
         }))

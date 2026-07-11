@@ -18,6 +18,7 @@ interface PolishAlternativesProps {
     categoryName: string
     companyId: string
     isCurrentCompanyPolish: boolean
+    initialAlternatives?: Alternative[]
 }
 
 export default function PolishAlternatives({
@@ -25,12 +26,16 @@ export default function PolishAlternatives({
     categoryName,
     companyId,
     isCurrentCompanyPolish,
+    initialAlternatives,
 }: PolishAlternativesProps) {
-    const [alternatives, setAlternatives] = useState<Alternative[]>([])
-    const [isLoading, setIsLoading] = useState(true)
+    // Dane przekazane z serwera renderują się w wyjściowym HTML (linki widoczne dla crawlera).
+    const hasInitialData = initialAlternatives !== undefined
+    const [alternatives, setAlternatives] = useState<Alternative[]>(initialAlternatives || [])
+    const [isLoading, setIsLoading] = useState(!hasInitialData)
     const [shared, setShared] = useState(false)
 
     useEffect(() => {
+        if (hasInitialData) return
         async function fetchAlternatives() {
             try {
                 const res = await fetch(
@@ -47,7 +52,7 @@ export default function PolishAlternatives({
             }
         }
         fetchAlternatives()
-    }, [categorySlug, companyId])
+    }, [categorySlug, companyId, hasInitialData])
 
     const handleShare = async () => {
         const url = window.location.href
@@ -106,15 +111,17 @@ export default function PolishAlternatives({
                 </div>
             </div>
 
-            {/* Polish Alternatives */}
+            {/* Related companies / Polish Alternatives */}
             {alternatives.length > 0 && (
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200/60 p-5">
                     <div className="mb-4">
                         <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
                             <BadgeCheck className="w-5 h-5 text-red-600" />
-                            {isCurrentCompanyPolish
-                                ? `Inne polskie firmy w kategorii ${categoryName}`
-                                : `Polskie alternatywy w kategorii ${categoryName}`
+                            {alternatives.some((alt) => alt.country_code?.toUpperCase() !== "PL")
+                                ? `Inne firmy z kategorii ${categoryName}`
+                                : isCurrentCompanyPolish
+                                    ? `Inne polskie firmy w kategorii ${categoryName}`
+                                    : `Polskie alternatywy w kategorii ${categoryName}`
                             }
                         </h3>
                         {!isCurrentCompanyPolish && (
@@ -140,10 +147,16 @@ export default function PolishAlternatives({
                                     <p className="text-sm font-semibold text-slate-900 truncate group-hover:text-red-600 transition-colors">
                                         {alt.brand}
                                     </p>
-                                    <span className="text-xs text-slate-500 flex items-center gap-1">
-                                        <BadgeCheck className="w-3 h-3 text-red-600" />
-                                        Polska firma
-                                    </span>
+                                    {alt.country_code?.toUpperCase() === "PL" ? (
+                                        <span className="text-xs text-slate-500 flex items-center gap-1">
+                                            <BadgeCheck className="w-3 h-3 text-red-600" />
+                                            Polska firma
+                                        </span>
+                                    ) : (
+                                        <span className="text-xs text-slate-500">
+                                            Firma zagraniczna
+                                        </span>
+                                    )}
                                 </div>
                                 <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors flex-shrink-0" />
                             </Link>

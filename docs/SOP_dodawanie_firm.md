@@ -1,7 +1,8 @@
 # 🏭 SOP: Rurociąg Danych (Data Pipeline) — Schemat Dodawania Firm do Bazy
 
 > **Projekt:** czypolskafirma.pl  
-> **Cel dokumentu:** Ustandaryzowany proces zbierania, weryfikacji i importu danych o firmach do Supabase.
+> **Cel dokumentu:** Ustandaryzowany proces zbierania, weryfikacji i importu danych o firmach do Supabase.  
+> **Źródło:** zsynchronizowane z Notion („Projekt czypolskafirma" → SOP Rurociąg Danych). Powiązane: `docs/SOP_logotypy.md`.
 
 ---
 

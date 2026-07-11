@@ -8,15 +8,43 @@ import { ChevronDown } from "lucide-react"
 import { CompanySearch } from "@/components/company-search"
 import { CategoryTabs } from "@/components/category-tabs"
 import { CompanyLogo } from "@/components/company-logo"
+import { countryNames } from "@/lib/countries"
+import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
 
-export default function Hero() {
-  const [categories, setCategories] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [companyCount, setCompanyCount] = useState<number | null>(null)
-  const [popularTags, setPopularTags] = useState<{ id: string; displayName: string; website_url: string | null; country_code: string | null }[]>([])
-  const [popularLoading, setPopularLoading] = useState(true)
+interface HeroCategory {
+  id: string
+  name: string
+  slug: string
+  icon?: string | null
+}
+
+interface HeroPopularTag {
+  id: string
+  slug?: string
+  displayName: string
+  website_url: string | null
+  country_code: string | null
+}
+
+interface HeroProps {
+  // Dane przekazane z serwera (app/page.tsx) — dzięki temu linki do /kategoria/*
+  // i /firma/* renderują się w wyjściowym HTML. Fallback: fetch po stronie klienta.
+  initialCategories?: HeroCategory[]
+  initialCompanyCount?: number | null
+  initialPopularTags?: HeroPopularTag[]
+}
+
+export default function Hero({ initialCategories, initialCompanyCount, initialPopularTags }: HeroProps) {
+  const hasInitialData = initialCategories !== undefined
+  const [categories, setCategories] = useState<HeroCategory[]>(initialCategories || [])
+  const [loading, setLoading] = useState(!hasInitialData)
+  const [companyCount, setCompanyCount] = useState<number | null>(initialCompanyCount ?? null)
+  const [popularTags, setPopularTags] = useState<HeroPopularTag[]>(initialPopularTags || [])
+  const [popularLoading, setPopularLoading] = useState(initialPopularTags === undefined)
 
   useEffect(() => {
+    if (hasInitialData) return
+
     async function fetchCategories() {
       try {
         const response = await fetch("/api/categories")
@@ -51,9 +79,8 @@ export default function Hero() {
           if (Array.isArray(data) && data.length > 0) {
             setPopularTags(data.map((c: any) => ({
               id: c.id,
-              displayName: c.slug
-                ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')
-                : c.name,
+              slug: c.slug ? slugify(c.slug) : c.id,
+              displayName: c.slug ? displayNameFromSlug(c.slug) : c.name,
               website_url: c.website_url || null,
               country_code: c.country_code || null,
             })))
@@ -69,7 +96,7 @@ export default function Hero() {
     fetchCategories()
     fetchCompanyCount()
     fetchPopularCompanies()
-  }, [])
+  }, [hasInitialData])
 
 
 
@@ -162,7 +189,7 @@ export default function Hero() {
               {popularTags.map((tag, index) => (
                 <Link
                   key={tag.id}
-                  href={`/firma/${tag.id}`}
+                  href={`/firma/${tag.slug || tag.id}`}
                   className={`inline-flex items-center gap-1.5 pl-1 pr-3 py-1 text-sm font-medium bg-white border border-slate-200 rounded-full text-slate-700 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm${index >= 3 ? " hidden sm:inline-flex" : ""
                     }`}
                 >
@@ -176,7 +203,7 @@ export default function Hero() {
                   {tag.country_code && (
                     <img
                       src={`https://flagcdn.com/w20/${tag.country_code.toLowerCase()}.png`}
-                      alt={tag.country_code}
+                      alt={`Flaga: ${countryNames[tag.country_code.toUpperCase()] || tag.country_code} — kraj pochodzenia kapitału`}
                       className="w-4 h-auto rounded-[1px] border border-slate-200/50"
                     />
                   )}
