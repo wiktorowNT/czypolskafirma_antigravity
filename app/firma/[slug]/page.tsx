@@ -280,6 +280,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     alternates: {
       canonical: canonicalUrl,
     },
+    // Obrazek OG (og:image + twitter:image) generuje dynamicznie
+    // app/firma/[slug]/opengraph-image.tsx — nie ustawiamy tu images ręcznie,
+    // aby uniknąć zdublowanych metatagów.
     openGraph: {
       title: `${title} | CzyPolskaFirma.pl`,
       description,
@@ -287,21 +290,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url: canonicalUrl,
       locale: "pl_PL",
       siteName: "CzyPolskaFirma",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: `Czy ${brand} to polska firma? — CzyPolskaFirma.pl`,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | CzyPolskaFirma.pl`,
       description,
       creator: "@CzyPolskaFirma",
-      images: ["/og-image.png"],
     },
   }
 }
