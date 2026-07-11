@@ -52,6 +52,24 @@ export function displayNameFromSlug(rawSlug: string): string {
     .join(" ")
 }
 
+/**
+ * Nazwa marki do wyświetlania, z priorytetem dla ręcznie zweryfikowanej kolumny
+ * `display_name` z bazy (poprawne diakrytyki i wielkość liter, np. "Żabka", "PKO BP").
+ * Kolejność: display_name (jeśli niepuste) -> displayNameFromSlug(slug) -> name.
+ * Dzięki temu brak wypełnionego display_name nie powoduje regresji — strona
+ * zachowuje się tak jak przed dodaniem kolumny.
+ */
+export function resolveDisplayName(
+  displayName: string | null | undefined,
+  rawSlug: string | null | undefined,
+  fallbackName?: string | null,
+): string {
+  const dn = displayName?.trim()
+  if (dn) return dn
+  if (rawSlug) return displayNameFromSlug(rawSlug)
+  return fallbackName?.trim() || ""
+}
+
 /** Usuwa zdublowane prefiksy w adresach, np. "ul. ul. Żniwna 5" -> "ul. Żniwna 5". */
 export function cleanAddress<T extends string | null | undefined>(adres: T): T {
   if (!adres) return adres

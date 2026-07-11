@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 export function FAQ() {
   const [openIndexes, setOpenIndexes] = useState<number[]>([])
@@ -54,7 +55,7 @@ export function FAQ() {
     <section id="faq" className="py-20 bg-slate-50 border-t border-slate-100">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">

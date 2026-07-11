@@ -1,4 +1,5 @@
 import { Search, Globe2, Lightbulb } from "lucide-react"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 export function HowItWorks() {
   const steps = [
@@ -37,7 +38,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-20 bg-slate-50 border-t border-slate-100">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToJsonLd) }}
       />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">

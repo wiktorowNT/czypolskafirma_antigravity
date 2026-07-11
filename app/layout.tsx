@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Suspense } from "react"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -108,7 +109,7 @@ export default function RootLayout({
         <script defer src="https://cloud.umami.is/script.js" data-website-id="d7fcfe14-5859-4a38-9101-1ea0565f2b4e"></script>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
       </head>
       <body className="font-sans" suppressHydrationWarning>

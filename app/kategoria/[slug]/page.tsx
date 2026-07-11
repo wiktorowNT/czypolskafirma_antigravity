@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import CategoryPageView from "@/components/category-page-view"
 import { getCachedCategoryData } from "@/lib/supabase/category-cache"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 3600 // ISR: revalidate every hour
 
@@ -76,7 +77,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <CategoryPageView category={category} />
     </>

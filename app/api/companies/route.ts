@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 export const dynamic = "force-dynamic"
 
@@ -9,7 +9,7 @@ export async function GET() {
     const supabase = await getSupabaseServerClient()
     const { data, error } = await supabase
       .from("companies")
-      .select("id, name, slug, country_code, siedziba_pl, vat_czynny, website_url")
+      .select("id, name, slug, display_name, country_code, siedziba_pl, vat_czynny, website_url")
       .order("name", { ascending: true })
 
     if (error) {
@@ -20,7 +20,7 @@ export async function GET() {
     const results = (data || []).map((c: any) => ({
       ...c,
       slug: c.slug ? slugify(c.slug) : c.slug,
-      brand: c.slug ? displayNameFromSlug(c.slug) : c.name,
+      brand: resolveDisplayName(c.display_name, c.slug, c.name),
     }))
 
     return NextResponse.json(results)

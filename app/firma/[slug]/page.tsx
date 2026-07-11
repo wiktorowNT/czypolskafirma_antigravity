@@ -2,8 +2,9 @@ import type { Metadata } from "next"
 import { notFound, permanentRedirect } from "next/navigation"
 import CompanyProfileClient from "./CompanyProfileClient"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
-import { slugify, displayNameFromSlug, cleanAddress } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName, cleanAddress } from "@/lib/slug-utils"
 import { buildCompanyFaqItems, getCountryName } from "@/lib/company-faq"
+import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 3600 // ISR: revalidate every hour
 
@@ -50,6 +51,7 @@ interface SupabaseCompany {
   id: string
   name: string
   slug: string
+  display_name: string | null
   nip: string | null
   krs: string | null
   siedziba_pl: boolean
@@ -77,6 +79,7 @@ const COMPANY_SELECT = `
   id,
   name,
   slug,
+  display_name,
   nip,
   krs,
   siedziba_pl,
@@ -125,7 +128,7 @@ function mapCompany(data: SupabaseCompany): CompanyDetail {
     name: company.name,
     slug: rawSlug,
     canonicalSlug: slugify(rawSlug) || company.id,
-    brandName: rawSlug ? displayNameFromSlug(rawSlug) : company.name,
+    brandName: resolveDisplayName(company.display_name, rawSlug, company.name),
     categoryId: company.category_id || undefined,
     categorySlug: company.categories?.slug || "inne",
     categoryName: company.categories?.name || "Inne",
@@ -220,7 +223,7 @@ async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompa
     const supabase = await getSupabaseServerClient()
     const { data, error } = await supabase
       .from("companies")
-      .select("id, slug, name, website_url, country_code")
+      .select("id, slug, name, display_name, website_url, country_code")
       .eq("category_id", company.categoryId)
       .neq("id", company.id)
       .order("name", { ascending: true })
@@ -232,7 +235,7 @@ async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompa
     const mapped: RelatedCompany[] = data.map((c: any) => ({
       id: c.id,
       slug: slugify(c.slug || "") || c.id,
-      brand: c.slug ? displayNameFromSlug(c.slug) : c.name,
+      brand: resolveDisplayName(c.display_name, c.slug, c.name),
       website_url: c.website_url || undefined,
       country_code: c.country_code || undefined,
     }))
@@ -277,6 +280,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     alternates: {
       canonical: canonicalUrl,
     },
+    // Obrazek OG (og:image + twitter:image) generuje dynamicznie
+    // app/firma/[slug]/opengraph-image.tsx — nie ustawiamy tu images ręcznie,
+    // aby uniknąć zdublowanych metatagów.
     openGraph: {
       title: `${title} | CzyPolskaFirma.pl`,
       description,
@@ -284,21 +290,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url: canonicalUrl,
       locale: "pl_PL",
       siteName: "CzyPolskaFirma",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: `Czy ${brand} to polska firma? — CzyPolskaFirma.pl`,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | CzyPolskaFirma.pl`,
       description,
       creator: "@CzyPolskaFirma",
-      images: ["/og-image.png"],
     },
   }
 }
@@ -408,7 +405,7 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <CompanyProfileClient company={company} relatedCompanies={relatedCompanies} />
     </>

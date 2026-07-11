@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { CompaniesList } from "./CompaniesList"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 import type { CompanyGridItem } from "@/components/CompanyGrid"
 
 export const revalidate = 3600 // ISR: odśwież listę co godzinę
@@ -21,7 +21,7 @@ async function getCompanies(): Promise<CompanyGridItem[]> {
     const supabase = await getSupabaseServerClient()
     const { data, error } = await supabase
       .from("companies")
-      .select("id, name, slug, country_code, siedziba_pl, vat_czynny, website_url")
+      .select("id, name, slug, display_name, country_code, siedziba_pl, vat_czynny, website_url")
       .order("name", { ascending: true })
 
     if (error || !data) {
@@ -32,7 +32,7 @@ async function getCompanies(): Promise<CompanyGridItem[]> {
     return data.map((c: any) => ({
       id: c.id,
       slug: c.slug ? slugify(c.slug) : c.id,
-      brand: c.slug ? displayNameFromSlug(c.slug) : c.name,
+      brand: resolveDisplayName(c.display_name, c.slug, c.name),
       company: c.name,
       country_code: c.country_code,
       vatActive: c.vat_czynny === true || c.vat_czynny === "Tak",

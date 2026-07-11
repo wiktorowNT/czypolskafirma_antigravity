@@ -10,7 +10,7 @@ import { GlobalStats } from "@/components/global-stats"
 import { SupportSection } from "@/components/support-section"
 import { WhyPolish } from "@/components/WhyPolish"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 export const revalidate = 3600 // ISR: odśwież dane hero co godzinę
 
@@ -74,7 +74,9 @@ async function getHeroData(): Promise<{
       result.popularTags = popularRes.data.map((c: any) => ({
         id: c.id,
         slug: c.slug ? slugify(c.slug) : c.id,
-        displayName: c.slug ? displayNameFromSlug(c.slug) : c.name,
+        // Uwaga: aby display_name działało tu w pełni, funkcja RPC get_popular_companies
+        // musi zwracać kolumnę display_name. Bez tego następuje fallback na slug (bez regresji).
+        displayName: resolveDisplayName(c.display_name, c.slug, c.name),
         website_url: c.website_url || null,
         country_code: c.country_code || null,
       }))

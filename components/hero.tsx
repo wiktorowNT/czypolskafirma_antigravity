@@ -9,7 +9,7 @@ import { CompanySearch } from "@/components/company-search"
 import { CategoryTabs } from "@/components/category-tabs"
 import { CompanyLogo } from "@/components/company-logo"
 import { countryNames } from "@/lib/countries"
-import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
+import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 interface HeroCategory {
   id: string
@@ -80,7 +80,7 @@ export default function Hero({ initialCategories, initialCompanyCount, initialPo
             setPopularTags(data.map((c: any) => ({
               id: c.id,
               slug: c.slug ? slugify(c.slug) : c.id,
-              displayName: c.slug ? displayNameFromSlug(c.slug) : c.name,
+              displayName: resolveDisplayName(c.display_name, c.slug, c.name),
               website_url: c.website_url || null,
               country_code: c.country_code || null,
             })))
