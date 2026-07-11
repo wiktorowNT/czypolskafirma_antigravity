@@ -2,8 +2,10 @@ import { Suspense } from "react"
 import SearchResultsClient from "./SearchResultsClient"
 
 export const metadata = {
-    title: "Wyniki wyszukiwania | CzyPolskaFirma",
+    title: "Wyniki wyszukiwania",
     description: "Wyniki wyszukiwania firm w bazie CzyPolskaFirma",
+    // /szukaj jest zablokowane w robots.txt — dodatkowo noindex dla pewności
+    robots: { index: false, follow: true },
 }
 
 export default function SearchPage() {

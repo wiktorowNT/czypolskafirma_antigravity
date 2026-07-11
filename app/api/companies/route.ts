@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
 
 export const dynamic = "force-dynamic"
 
@@ -15,7 +16,14 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data || [])
+    // Kanoniczne slugi URL + nazwa marki do wyświetlania
+    const results = (data || []).map((c: any) => ({
+      ...c,
+      slug: c.slug ? slugify(c.slug) : c.slug,
+      brand: c.slug ? displayNameFromSlug(c.slug) : c.name,
+    }))
+
+    return NextResponse.json(results)
   } catch (err) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }

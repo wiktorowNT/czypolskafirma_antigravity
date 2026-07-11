@@ -7,9 +7,15 @@ import { countryNames } from "@/lib/countries"
 
 const SCROLL_KEY = "companies-list-scroll"
 
-export function CompaniesList() {
-  const [companies, setCompanies] = useState<CompanyGridItem[]>([])
-  const [loading, setLoading] = useState(true)
+interface CompaniesListProps {
+  // Dane przekazane z serwera (app/companies/page.tsx) renderują się w wyjściowym HTML.
+  initialCompanies?: CompanyGridItem[]
+}
+
+export function CompaniesList({ initialCompanies }: CompaniesListProps) {
+  const hasInitialData = initialCompanies !== undefined
+  const [companies, setCompanies] = useState<CompanyGridItem[]>(initialCompanies || [])
+  const [loading, setLoading] = useState(!hasInitialData)
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<string>("name-asc")
   const [countryQuery, setCountryQuery] = useState<string>("")
@@ -44,6 +50,8 @@ export function CompaniesList() {
     const country = params.get("country")
     if (country) setCountryQuery(country)
 
+    if (hasInitialData) return
+
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 10000)
 
@@ -62,7 +70,7 @@ export function CompaniesList() {
         const formattedData: CompanyGridItem[] = data.map((c: any) => ({
           id: c.id,
           slug: c.slug,
-          brand: c.slug ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : c.name,
+          brand: c.brand || (c.slug ? c.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : c.name),
           company: c.name,
           description: "",
           logo_url: null,

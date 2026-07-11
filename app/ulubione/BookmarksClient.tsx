@@ -8,6 +8,7 @@ import { CompanyLogo } from "@/components/company-logo"
 
 interface BookmarkedCompany {
     id: string
+    slug?: string
     brand: string
     company: string
     category: string
@@ -183,7 +184,7 @@ export default function BookmarksClient() {
                                     key={company.id}
                                     className="group bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200 p-4 flex items-center gap-4"
                                 >
-                                    <Link href={`/firma/${company.id}`} className="flex-shrink-0">
+                                    <Link href={`/firma/${company.slug || company.id}`} className="flex-shrink-0">
                                         <CompanyLogo
                                             websiteUrl={company.website_url}
                                             name={company.brand}
@@ -191,7 +192,7 @@ export default function BookmarksClient() {
                                         />
                                     </Link>
 
-                                    <Link href={`/firma/${company.id}`} className="flex-1 min-w-0">
+                                    <Link href={`/firma/${company.slug || company.id}`} className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-0.5">
                                             <h3 className="font-bold text-slate-900 uppercase tracking-wide text-sm group-hover:text-red-600 transition-colors truncate">
                                                 {company.brand}
@@ -218,7 +219,7 @@ export default function BookmarksClient() {
                                             <Heart className="w-4 h-4 fill-current" />
                                         </button>
                                         <Link
-                                            href={`/firma/${company.id}`}
+                                            href={`/firma/${company.slug || company.id}`}
                                             className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-900 hover:text-white transition-all"
                                         >
                                             <ChevronRight className="w-4 h-4" />

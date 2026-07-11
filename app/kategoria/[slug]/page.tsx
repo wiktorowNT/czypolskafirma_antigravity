@@ -11,24 +11,34 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   if (!data.categoryName) {
     return {
-      title: "Kategoria nie znaleziona | CzyPolskaFirma",
+      title: "Kategoria nie znaleziona",
+      robots: { index: false, follow: false },
     }
   }
 
-  const title = `Polskie marki: ${data.categoryName} - lista firm i kapitał | CzyPolskaFirma`
+  // Sufiks "| CzyPolskaFirma.pl" dodaje title.template z layoutu — bez ręcznego dopisywania.
+  const title = `Polskie marki: ${data.categoryName} - lista firm i kapitał`
   const description = `Sprawdź, które firmy z kategorii ${data.categoryName} mają polski kapitał. Zobacz zestawienie polskich marek i alternatyw dla zagranicznych koncernów w branży ${data.categoryName}.`
+  const canonicalUrl = `https://czypolskafirma.pl/kategoria/${encodeURIComponent(data.categorySlug)}`
 
   return {
     title,
     description,
     openGraph: {
-      title,
+      title: `${title} | CzyPolskaFirma.pl`,
       description,
       type: "website",
-      url: `https://czypolskafirma.pl/kategoria/${slug}`,
+      url: canonicalUrl,
+      locale: "pl_PL",
+      siteName: "CzyPolskaFirma",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | CzyPolskaFirma.pl`,
+      description,
     },
     alternates: {
-      canonical: `https://czypolskafirma.pl/kategoria/${slug}`,
+      canonical: canonicalUrl,
     },
   }
 }
@@ -56,6 +66,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     "itemListElement": data.companies.map((company: any, index: number) => ({
       "@type": "ListItem",
       "position": index + 1,
+      // company.slug jest już kanoniczny (slugify w lib/supabase/category-cache.ts)
       "url": `https://czypolskafirma.pl/firma/${company.slug || company.id}`,
       "name": company.brand || company.company
     }))

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { slugify, displayNameFromSlug } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -46,9 +47,8 @@ export async function GET(request: Request) {
 
         const results = data.map((company: any) => ({
             id: company.id,
-            brand: company.slug
-                ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')
-                : company.name,
+            slug: company.slug ? slugify(company.slug) : company.id,
+            brand: company.slug ? displayNameFromSlug(company.slug) : company.name,
             company: company.name,
             category: company.categories?.name || "Inne",
             categorySlug: company.categories?.slug || "inne",

@@ -65,4 +65,7 @@ export const countryNames: Record<string, string> = {
   "PT": "Portugalia",
   "IE": "Irlandia",
   "GR": "Grecja",
+  "LU": "Luksemburg",
+  "HU": "Węgry",
 }
+// Mapa kodów ISO -> polskie nazwy krajów (używana m.in. w alt-ach flag i meta description)
