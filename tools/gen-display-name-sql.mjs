@@ -12,7 +12,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
-const CORRECTIONS = {
+export const CORRECTIONS = {
   // --- Polskie znaki / nazwy ---
   "zabka": "Żabka",
   "zywiec-zdroj": "Żywiec Zdrój",
@@ -192,10 +192,10 @@ const CORRECTIONS = {
   "ava-laboratorium": "AVA Laboratorium",
 }
 
-// ---- Wczytaj slugi z CSV, aby zweryfikowac klucze ----
+// ---- Generowanie SQL uruchamiamy TYLKO gdy plik jest wywolany bezposrednio
+// (`node tools/gen-display-name-sql.mjs`). Przy imporcie eksportujemy sam CORRECTIONS.
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const csvPath = path.join(__dirname, "..", "docs", "display-names.csv")
-const outPath = path.join(__dirname, "..", "docs", "display-names.sql")
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 
 function parseCsvLine(line) {
   const out = []
@@ -215,35 +215,44 @@ function parseCsvLine(line) {
   return out
 }
 
-const dbSlugs = new Set()
-if (fs.existsSync(csvPath)) {
-  const raw = fs.readFileSync(csvPath, "utf8").replace(/^﻿/, "")
-  const lines = raw.split(/\r?\n/).filter(Boolean).slice(1)
-  for (const line of lines) {
-    const cols = parseCsvLine(line)
-    if (cols[1]) dbSlugs.add(cols[1]) // raw_slug = companies.slug
+// Zbior slugow z bazy (na podstawie CSV) do walidacji kluczy slownika.
+// Eksportowane, bo korzysta z tego rowniez skrypt aplikujacy (apply-display-names.mjs).
+export function loadDbSlugsFromCsv() {
+  const csvPath = path.join(__dirname, "..", "docs", "display-names.csv")
+  const dbSlugs = new Set()
+  if (fs.existsSync(csvPath)) {
+    const raw = fs.readFileSync(csvPath, "utf8").replace(/^﻿/, "")
+    const lines = raw.split(/\r?\n/).filter(Boolean).slice(1)
+    for (const line of lines) {
+      const cols = parseCsvLine(line)
+      if (cols[1]) dbSlugs.add(cols[1]) // raw_slug = companies.slug
+    }
   }
-} else {
-  console.warn("⚠ Brak docs/display-names.csv — nie moge zweryfikowac slugow. Uruchom najpierw: node tools/fill-display-names.mjs")
+  return dbSlugs
 }
 
-// ---- Walidacja: klucze slownika, ktorych nie ma w bazie ----
-const missing = []
-const valid = []
-for (const [slug, name] of Object.entries(CORRECTIONS)) {
-  if (dbSlugs.size && !dbSlugs.has(slug)) missing.push(slug)
-  else valid.push([slug, name])
-}
+if (isMain) {
+  const outPath = path.join(__dirname, "..", "docs", "display-names.sql")
+  const dbSlugs = loadDbSlugsFromCsv()
+  if (!dbSlugs.size) {
+    console.warn("⚠ Brak docs/display-names.csv — nie moge zweryfikowac slugow. Uruchom najpierw: node tools/fill-display-names.mjs")
+  }
 
-if (missing.length) {
-  console.warn(`⚠ ${missing.length} slugow ze slownika NIE ma w CSV (pomijam w SQL): ${missing.join(", ")}`)
-}
+  const missing = []
+  const valid = []
+  for (const [slug, name] of Object.entries(CORRECTIONS)) {
+    if (dbSlugs.size && !dbSlugs.has(slug)) missing.push(slug)
+    else valid.push([slug, name])
+  }
 
-// ---- Generuj SQL: bulk UPDATE ... FROM (VALUES ...) ----
-const esc = (s) => s.replace(/'/g, "''")
-const valuesRows = valid.map(([slug, name]) => `  ('${esc(slug)}', '${esc(name)}')`).join(",\n")
+  if (missing.length) {
+    console.warn(`⚠ ${missing.length} slugow ze slownika NIE ma w CSV (pomijam w SQL): ${missing.join(", ")}`)
+  }
 
-const sql = `-- docs/display-names.sql — WYGENEROWANE przez tools/gen-display-name-sql.mjs
+  const esc = (s) => s.replace(/'/g, "''")
+  const valuesRows = valid.map(([slug, name]) => `  ('${esc(slug)}', '${esc(name)}')`).join(",\n")
+
+  const sql = `-- docs/display-names.sql — WYGENEROWANE przez tools/gen-display-name-sql.mjs
 -- Wykonaj w Supabase SQL Editor. Ustawia companies.display_name tylko dla marek,
 -- ktorych poprawna nazwa rozni sie od auto-generowanej ze sluga (${valid.length} firm).
 -- Bezpieczne: nie rusza pozostalych firm (fallback na slug daje ten sam wynik).
@@ -260,6 +269,7 @@ WHERE c.slug = v.slug;
 -- SELECT slug, display_name FROM companies WHERE display_name IS NOT NULL ORDER BY slug;
 `
 
-fs.writeFileSync(outPath, sql, "utf8")
-console.log(`✔ Zapisano ${valid.length} korekt do: ${outPath}`)
-if (missing.length) console.log(`  (pominieto ${missing.length} nieistniejacych slugow — patrz ostrzezenie wyzej)`)
+  fs.writeFileSync(outPath, sql, "utf8")
+  console.log(`✔ Zapisano ${valid.length} korekt do: ${outPath}`)
+  if (missing.length) console.log(`  (pominieto ${missing.length} nieistniejacych slugow — patrz ostrzezenie wyzej)`)
+}
