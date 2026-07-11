@@ -1,6 +1,6 @@
 -- docs/display-names.sql — WYGENEROWANE przez tools/gen-display-name-sql.mjs
 -- Wykonaj w Supabase SQL Editor. Ustawia companies.display_name tylko dla marek,
--- ktorych poprawna nazwa rozni sie od auto-generowanej ze sluga (228 firm).
+-- ktorych poprawna nazwa rozni sie od auto-generowanej ze sluga (232 firm).
 -- Bezpieczne: nie rusza pozostalych firm (fallback na slug daje ten sam wynik).
 -- Idempotentne: mozna uruchomic ponownie.
 
@@ -80,7 +80,7 @@ FROM (VALUES
   ('tvp-telewizja-polska', 'TVP – Telewizja Polska'),
   ('tui-poland', 'TUI Poland'),
   ('dax-cosmetics', 'DAX Cosmetics'),
-  ('pz-cussons-luksja', 'PZ Cussons Luksja'),
+  ('pz-cussons-luksja', 'Luksja'),
   ('jd-sports', 'JD Sports'),
   ('fb-antczak', 'FB Antczak'),
   ('stx-next', 'STX Next'),
@@ -133,7 +133,7 @@ FROM (VALUES
   ('ebilet-pl', 'eBilet.pl'),
   ('cda-pl', 'CDA.pl'),
   ('wakacje-pl', 'Wakacje.pl'),
-  ('pracuj-pl-grupa-pracuj', 'Pracuj.pl (Grupa Pracuj)'),
+  ('pracuj-pl-grupa-pracuj', 'Pracuj.pl'),
   ('eobuwie-pl', 'eobuwie.pl'),
   ('morele', 'Morele.net'),
   ('cd-projekt-red', 'CD Projekt Red'),
@@ -218,7 +218,7 @@ FROM (VALUES
   ('cooling-endorfy', 'Endorfy'),
   ('sphinx-sfinks', 'Sphinx'),
   ('mptech-myphone', 'myPhone'),
-  ('meta-facebook', 'Meta'),
+  ('meta-facebook', 'Facebook'),
   ('credit-agricole', 'Crédit Agricole'),
   ('bristol-myers-squibb', 'Bristol-Myers Squibb'),
   ('pierre-rene', 'Pierre René'),
@@ -234,7 +234,11 @@ FROM (VALUES
   ('pekao', 'Bank Pekao'),
   ('gulermak', 'Gülermak'),
   ('ppl-koral', 'PPL Koral'),
-  ('mk-foam-kolo', 'MK Foam Koło')
+  ('mk-foam-kolo', 'MK Foam Koło'),
+  ('pudliszki-heinz', 'Pudliszki'),
+  ('wyborowa-pernod-ricard', 'Wyborowa'),
+  ('kofola-hoop-cola', 'Kofola'),
+  ('text-livechat-software', 'Text')
 ) AS v(slug, name)
 WHERE c.slug = v.slug;
 
