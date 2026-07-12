@@ -1,13 +1,16 @@
-const { useState, useRef, useEffect, useMemo, Fragment } = React;
-
 interface Company {
   id: string
+  slug?: string
   brand: string
   company: string
   category: string
   categorySlug: string
   website_url?: string
   country_code?: string
+  owner_name?: string
+  ownership_description?: string
+  founded_at?: string
+  verified_at?: string
 }
 
 interface SelectedCompany extends Company {
@@ -16,6 +19,8 @@ interface SelectedCompany extends Company {
 
 type ThemeMode = 'classic' | 'dark' | 'minimalist' | 'pro'
 type LayoutMode = 'products' | 'shops'
+type GraphicMode = 'zestawienie' | 'karta'
+type CardSize = 'square' | 'wide'
 
 function GeneratorPage() {
   const [selectedCompanies, setSelectedCompanies] = useState<SelectedCompany[]>([])
@@ -24,6 +29,10 @@ function GeneratorPage() {
   const [description, setDescription] = useState("Sprawdzamy kto stoi za popularnymi markami")
   const [theme, setTheme] = useState<ThemeMode>('pro')
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('shops')
+  const [graphicMode, setGraphicMode] = useState<GraphicMode>('zestawienie')
+  const [cardSize, setCardSize] = useState<CardSize>('square')
+  const [cardHeadline, setCardHeadline] = useState("CZY TO POLSKA FIRMA?")
+  const [cardDescription, setCardDescription] = useState("")
   const printRef = useRef<HTMLDivElement>(null)
 
   // Custom Search State
@@ -68,6 +77,11 @@ function GeneratorPage() {
   }, [searchQuery])
 
   const handleSelectCompany = (company: Company) => {
+    if (graphicMode === 'karta') {
+      setSelectedCompanies([{ ...company }])
+      setCardDescription(company.ownership_description || "")
+      return
+    }
     if (selectedCompanies.length >= 6) {
       alert("Możesz dodać maksymalnie 6 firm do jednej grafiki.")
       return
@@ -93,29 +107,25 @@ function GeneratorPage() {
   const handleDownloadImage = async () => {
     if (printRef.current === null) return
 
-    // Ukrywamy elementy, których nie chcemy na grafice (np. przyciski X)
-    const elementsToHide = document.querySelectorAll('.exclude-from-export');
-    elementsToHide.forEach((el: any) => el.style.opacity = '0');
-
     try {
       const htmlToImage = window.htmlToImage
       const dataUrl = await htmlToImage.toPng(printRef.current, {
         quality: 1.0,
-        pixelRatio: 3, // Wyższa jakość dla social media
-        skipAutoScale: true,
-        backgroundColor: theme === 'dark' && !(layoutMode === 'shops' && selectedCompanies.length === 2) ? '#020617' : (theme === 'pro' ? '#f8fafc' : '#ffffff'),
+        pixelRatio: 2,
+        backgroundColor: graphicMode === 'karta'
+          ? (theme === 'dark' ? '#020617' : '#f8fafc')
+          : (theme === 'dark' && !(layoutMode === 'shops' && selectedCompanies.length === 2) ? '#020617' : (theme === 'pro' ? '#f8fafc' : '#ffffff')),
       })
-      
+
       const link = document.createElement('a')
-      link.download = `czypolskafirma-${layoutMode}-${theme}.png`
+      link.download = graphicMode === 'karta'
+        ? `czypolskafirma-karta-${selectedCompanies[0]?.slug || 'firma'}-${cardSize}.png`
+        : `czypolskafirma-${layoutMode}-${theme}.png`
       link.href = dataUrl
       link.click()
     } catch (err) {
       console.error('Błąd podczas generowania grafiki:', err)
-      alert("Wystąpił błąd podczas generowania pliku. Spróbuj ponownie.");
-    } finally {
-      // Przywracamy widoczność elementów
-      elementsToHide.forEach((el: any) => el.style.opacity = '');
+      alert("Wystąpił błąd podczas generowania pliku. Spróbuj ponownie.")
     }
   }
 
@@ -166,7 +176,7 @@ function GeneratorPage() {
     }
   }
 
-  const polandSvgPath = "M3945 9050 c-27 -5 -120 -25 -205 -46 -105 -25 -192 -39 -270 -44 -152 -10 -343 -71 -458 -146 -66 -45 -190 -101 -250 -115 -26 -6 -90 -14 -142 -18 -69 -5 -109 -14 -144 -30 -66 -32 -153 -116 -201 -194 -34 -55 -52 -72 -119 -113 -102 -63 -156 -82 -234 -83 -34 -1 -88 -10 -120 -20 -31 -10 -111 -29 -177 -41 -66 -11 -133 -26 -150 -31 -16 -6 -91 -21 -166 -34 -159 -27 -166 -28 -239 -59 -91 -38 -148 -57 -300 -97 -80 -21 -191 -56 -248 -78 -57 -23 -108 -41 -114 -41 -6 0 -32 -16 -59 -35 l-48 -34 -78 9 c-72 8 -80 7 -100 -12 -27 -25 -30 -60 -8 -78 9 -7 38 -24 66 -36 42 -20 51 -21 55 -9 4 9 19 15 38 15 17 0 42 9 56 20 33 26 146 29 136 4 -9 -23 11 -54 35 -54 29 0 22 -44 -7 -48 -12 -2 -30 -12 -39 -22 -15 -17 -16 -28 -9 -72 7 -43 13 -54 31 -56 28 -4 37 -30 18 -52 -8 -9 -15 -23 -15 -31 -1 -8 -8 0 -17 16 -31 59 -74 95 -114 95 -54 0 -85 14 -105 49 -25 43 -44 47 -70 14 -35 -43 -33 -107 5 -141 29 -24 30 -28 24 -86 -5 -54 -2 -66 19 -97 21 -32 54 -136 74 -239 4 -19 15 -46 25 -59 25 -32 25 -35 -18 -87 -37 -43 -37 -46 -34 -118 3 -83 -10 -114 -57 -135 -15 -7 -62 -35 -105 -63 l-78 -51 7 -43 c5 -34 2 -50 -15 -78 -12 -19 -18 -37 -14 -39 4 -3 31 -8 60 -12 44 -6 58 -13 88 -46 19 -21 39 -39 44 -39 5 0 41 -31 79 -68 49 -48 83 -72 113 -81 55 -17 120 -61 138 -95 13 -24 12 -28 -9 -51 -21 -23 -22 -26 -8 -38 36 -28 31 -53 -17 -92 -54 -45 -56 -64 -21 -174 26 -82 39 -96 97 -106 41 -7 44 -17 18 -65 -5 -9 -2 -22 8 -33 13 -13 14 -20 5 -29 -7 -7 -12 -27 -12 -45 0 -28 5 -36 35 -50 25 -12 34 -22 29 -32 -3 -9 -10 -41 -16 -71 -26 -149 -30 -160 -44 -160 -13 0 -104 -83 -104 -95 0 -2 13 -19 29 -37 16 -18 34 -51 40 -73 8 -29 24 -49 56 -72 37 -28 45 -39 51 -79 6 -42 4 -48 -26 -79 -18 -18 -30 -39 -28 -45 2 -7 60 -38 128 -69 107 -49 125 -60 128 -81 5 -49 35 -132 48 -137 8 -3 14 -15 14 -27 1 -11 7 -37 14 -57 12 -35 10 -44 -61 -224 -40 -103 -73 -193 -73 -200 0 -7 -18 -27 -39 -44 -34 -27 -38 -35 -32 -59 7 -25 12 -27 64 -30 71 -4 97 9 97 48 0 15 8 42 17 59 17 29 17 31 -2 45 -20 15 -20 15 3 38 12 12 22 17 22 10 0 -8 10 -9 30 -5 22 4 36 0 51 -13 17 -15 23 -16 41 -5 15 9 23 10 31 2 6 -6 22 -11 34 -11 13 0 37 -10 53 -22 28 -21 29 -22 14 -56 -13 -32 -12 -38 4 -66 11 -19 29 -33 45 -36 18 -3 35 -18 51 -45 20 -33 30 -40 58 -41 79 -4 208 -32 242 -54 30 -18 47 -22 92 -18 l54 5 31 -54 c33 -58 34 -58 67 -39 13 7 37 10 53 8 29 -4 32 -8 55 -71 3 -11 11 -8 32 11 15 14 39 33 54 43 25 15 29 15 50 1 32 -23 65 -20 83 8 15 23 18 23 64 11 56 -14 140 -72 141 -96 0 -9 -8 -27 -17 -40 -10 -13 -23 -33 -29 -44 -6 -12 -24 -21 -41 -23 -20 -2 -50 -21 -84 -52 l-54 -48 40 -41 c30 -32 46 -41 73 -41 28 0 35 -5 43 -30 8 -23 19 -31 46 -36 25 -5 40 -15 52 -37 9 -16 30 -43 48 -59 23 -22 35 -45 43 -82 9 -43 18 -58 52 -84 49 -38 113 -45 123 -14 3 11 15 24 28 29 12 6 41 26 64 45 24 20 68 43 102 54 34 10 61 22 61 26 0 5 9 4 19 -1 17 -10 19 -6 23 34 3 44 2 45 -30 51 -28 6 -34 12 -44 52 -6 24 -24 59 -39 77 -28 31 -28 33 -10 49 17 15 22 14 82 -13 45 -20 74 -27 97 -24 44 7 122 -23 122 -46 0 -22 100 -56 137 -46 24 6 25 4 19 -28 -4 -22 -2 -38 6 -44 7 -6 78 -11 162 -12 127 -2 151 1 167 15 11 9 19 23 19 31 0 17 15 17 45 -3 21 -13 22 -19 13 -40 -9 -19 -8 -28 5 -42 10 -10 17 -23 17 -28 -1 -16 -74 -56 -113 -62 -21 -2 -40 -9 -43 -14 -9 -13 45 -67 82 -82 19 -9 45 -36 70 -74 31 -50 49 -66 88 -83 l48 -21 45 24 c24 13 55 37 68 55 23 29 27 31 56 20 17 -7 38 -25 47 -42 23 -46 42 -56 69 -38 25 17 53 11 53 -11 0 -8 12 -19 28 -25 15 -6 42 -20 61 -32 21 -12 43 -18 56 -15 13 3 49 -3 80 -14 32 -11 72 -20 90 -20 27 0 33 -5 42 -34 6 -21 7 -38 2 -43 -6 -6 2 -40 18 -86 l27 -77 78 -30 c42 -16 86 -30 97 -30 16 0 21 -11 30 -63 6 -35 11 -75 11 -90 0 -14 5 -37 11 -50 10 -21 15 -23 65 -19 l54 4 0 -31 c0 -17 5 -51 12 -76 14 -50 36 -63 85 -50 16 4 46 9 68 10 56 2 114 57 122 114 5 39 7 40 52 46 85 11 91 14 91 40 0 28 26 45 69 45 25 0 37 -8 61 -42 16 -22 30 -47 30 -55 0 -8 10 -37 21 -64 19 -43 25 -49 50 -49 22 0 32 -6 39 -25 10 -26 15 -28 94 -29 57 -1 63 -11 65 -102 1 -27 7 -56 14 -63 8 -9 9 -15 1 -18 -6 -2 -25 -14 -42 -27 l-32 -23 25 -23 c20 -18 32 -22 64 -17 22 3 53 15 68 27 31 24 67 20 96 -11 11 -11 30 -24 44 -30 52 -20 58 -14 86 81 33 109 57 130 149 130 l57 0 7 35 c6 34 8 36 43 34 20 -2 49 5 66 13 28 15 32 15 87 -13 32 -16 62 -29 68 -29 6 0 13 13 16 29 6 28 9 29 53 28 25 -1 54 2 64 7 14 7 20 2 30 -23 6 -17 16 -31 22 -31 6 0 24 -13 39 -29 19 -20 34 -27 51 -23 17 3 25 0 25 -10 0 -8 11 -25 24 -37 37 -35 85 -23 120 30 15 22 38 45 51 51 19 9 25 19 25 44 0 27 5 35 25 40 19 5 30 0 48 -21 21 -25 25 -26 45 -14 12 8 22 21 22 30 0 33 63 38 150 13 66 -19 65 -19 160 -1 63 12 76 12 85 0 5 -7 33 -16 62 -19 48 -6 52 -9 69 -46 13 -29 20 -35 26 -25 4 8 21 20 37 27 28 11 34 10 80 -24 27 -20 55 -36 62 -36 21 0 79 -91 79 -123 0 -23 9 -31 73 -63 50 -26 83 -37 110 -35 27 1 37 -2 37 -13 0 -22 56 -48 97 -44 27 2 39 -3 53 -20 16 -19 31 -23 112 -28 54 -4 99 -12 108 -20 28 -24 92 -45 144 -48 42 -2 60 3 99 27 l47 29 -39 28 c-21 16 -42 33 -46 39 -3 6 -14 11 -24 11 -10 0 -28 11 -41 25 -18 20 -21 28 -12 37 7 7 12 24 12 38 0 15 9 35 20 45 21 19 40 73 40 113 0 15 -21 48 -56 85 -49 56 -55 66 -50 97 3 22 0 42 -9 54 -22 29 -18 72 7 96 12 11 25 20 29 20 4 0 21 24 37 53 17 28 108 136 204 240 95 103 196 217 225 254 76 97 163 183 298 292 66 54 126 106 134 115 8 10 32 26 52 37 30 15 40 27 45 53 8 46 57 66 158 66 83 0 177 15 186 30 3 6 19 64 35 130 l29 120 -22 45 c-12 25 -22 52 -22 60 0 8 -9 24 -20 35 -11 11 -20 31 -20 45 0 20 -5 25 -25 25 -27 0 -32 18 -15 51 9 15 22 19 69 19 49 0 61 4 81 26 16 16 21 28 14 32 -148 95 -172 115 -189 152 -10 22 -24 45 -32 51 -7 6 -13 22 -13 35 0 13 -12 35 -26 49 -15 15 -23 32 -20 40 3 8 8 21 11 28 3 7 -8 20 -25 30 -16 10 -30 27 -30 37 0 13 -13 23 -42 32 -32 10 -48 23 -60 48 -9 18 -31 46 -48 61 -35 32 -38 56 -11 90 29 38 36 97 14 121 -10 11 -18 27 -18 36 0 9 -19 29 -43 45 -37 25 -43 33 -37 54 4 16 -3 40 -20 72 -26 47 -26 49 -12 103 14 53 14 57 -6 76 -26 26 -14 44 51 72 44 20 45 21 37 58 -22 116 -10 188 35 212 18 10 19 13 6 38 -7 15 -17 46 -20 68 -7 38 -13 45 -71 79 -35 20 -71 48 -80 61 -9 14 -25 24 -39 24 -14 0 -57 13 -98 29 -40 16 -92 35 -116 42 -32 9 -41 16 -37 28 4 9 -3 22 -16 32 l-23 17 48 108 c43 96 56 116 115 172 113 107 179 139 391 192 l185 46 27 218 26 218 -30 50 c-27 43 -31 59 -29 112 1 47 -3 68 -19 91 -11 17 -20 37 -20 45 0 8 -22 29 -49 47 -37 24 -51 40 -56 65 -14 59 -46 149 -96 267 -46 106 -50 120 -44 171 5 46 1 70 -25 145 -17 50 -38 128 -46 174 -8 46 -21 93 -29 104 -8 12 -15 30 -15 41 0 11 -7 27 -16 37 -14 15 -14 20 -1 46 11 21 13 45 8 97 -6 57 -12 72 -31 85 -13 9 -44 37 -69 63 -35 35 -60 50 -102 62 -31 9 -59 22 -62 31 -4 8 -24 23 -47 35 -22 11 -40 24 -40 29 0 5 -26 8 -57 7 -53 -1 -58 1 -56 20 2 14 -6 25 -22 32 -14 7 -25 18 -25 27 0 8 -5 15 -11 15 -6 0 -41 15 -78 34 -75 38 -115 35 -109 -6 4 -31 -5 -32 -431 -68 -319 -28 -376 -30 -585 -24 -152 4 -260 3 -316 -5 -73 -9 -136 -7 -450 19 -201 16 -556 52 -790 80 -234 28 -451 53 -482 57 l-57 6 -14 -34 c-25 -59 -66 -88 -144 -103 -47 -9 -86 -24 -116 -45 -48 -33 -62 -37 -164 -45 -60 -5 -63 -5 -63 17 0 13 -5 28 -11 34 -16 16 33 39 107 53 122 21 147 28 156 44 12 21 61 46 92 46 14 0 31 9 41 23 26 37 -4 33 -103 -17 -101 -51 -214 -85 -317 -95 -84 -9 -396 -2 -410 9 -5 5 -36 11 -68 15 -39 5 -68 15 -87 31 -15 13 -39 24 -53 24 -43 0 -68 48 -71 133 -1 50 -7 82 -19 100 -9 14 -17 37 -17 50 0 18 -5 23 -22 23 -18 -1 -24 5 -26 29 -2 18 -18 43 -39 63 -20 21 -32 40 -29 49 3 8 6 21 6 29 0 11 9 10 48 -5 170 -67 252 -120 325 -210 22 -27 30 -31 42 -21 22 18 1 50 -80 118 -47 39 -85 62 -115 70 -25 6 -81 32 -125 57 -44 25 -89 45 -100 45 -11 0 -38 11 -60 25 -38 23 -48 24 -185 23 -80 0 -167 -4 -195 -8z";
+  const polandSvgPath = "M3945 9050 c-27 -5 -120 -25 -205 -46 -105 -25 -192 -39 -270 -44 -152 -10 -343 -71 -458 -146 -66 -45 -190 -101 -250 -115 -26 -6 -90 -14 -142 -18 -69 -5 -109 -14 -144 -30 -66 -32 -153 -116 -201 -194 -34 -55 -52 -72 -119 -113 -102 -63 -156 -82 -234 -83 -34 -1 -88 -10 -120 -20 -31 -10 -111 -29 -177 -41 -66 -11 -133 -26 -150 -31 -16 -6 -91 -21 -166 -34 -159 -27 -166 -28 -239 -59 -91 -38 -148 -57 -300 -97 -80 -21 -191 -56 -248 -78 -57 -23 -108 -41 -114 -41 -6 0 -32 -16 -59 -35 l-48 -34 -78 9 c-72 8 -80 7 -100 -12 -27 -25 -30 -60 -8 -78 9 -7 38 -24 66 -36 42 -20 51 -21 55 -9 4 9 19 15 38 15 17 0 42 9 56 20 33 26 146 29 136 4 -9 -23 11 -54 35 -54 29 0 22 -44 -7 -48 -12 -2 -30 -12 -39 -22 -15 -17 -16 -28 -9 -72 7 -43 13 -54 31 -56 28 -4 37 -30 18 -52 -8 -9 -15 -23 -15 -31 -1 -8 -8 0 -17 16 -31 59 -74 95 -114 95 -54 0 -85 14 -105 49 -25 43 -44 47 -70 14 -35 -43 -33 -107 5 -141 29 -24 30 -28 24 -86 -5 -54 -2 -66 19 -97 21 -32 54 -136 74 -239 4 -19 15 -46 25 -59 25 -32 25 -35 -18 -87 -37 -43 -37 -46 -34 -118 3 -83 -10 -114 -57 -135 -15 -7 -62 -35 -105 -63 l-78 -51 7 -43 c5 -34 2 -50 -15 -78 -12 -19 -18 -37 -14 -39 4 -3 31 -8 60 -12 44 -6 58 -13 88 -46 19 -21 39 -39 44 -39 5 0 41 -31 79 -68 49 -48 83 -72 113 -81 55 -17 120 -61 138 -95 13 -24 12 -28 -9 -51 -21 -23 -22 -26 -8 -38 36 -28 31 -53 -17 -92 -54 -45 -56 -64 -21 -174 26 -82 39 -96 97 -106 41 -7 44 -17 18 -65 -5 -9 -2 -22 8 -33 13 -13 14 -20 5 -29 -7 -7 -12 -27 -12 -45 0 -28 5 -36 35 -50 25 -12 34 -22 29 -32 -3 -9 -10 -41 -16 -71 -26 -149 -30 -160 -44 -160 -13 0 -104 -83 -104 -95 0 -2 13 -19 29 -37 16 -18 34 -51 40 -73 8 -29 24 -49 56 -72 37 -28 45 -39 51 -79 6 -42 4 -48 -26 -79 -18 -18 -30 -39 -28 -45 2 -7 60 -38 128 -69 107 -49 125 -60 128 -81 5 -49 35 -132 48 -137 8 -3 14 -15 14 -27 1 -11 7 -37 14 -57 12 -35 10 -44 -61 -224 -40 -103 -73 -193 -73 -200 0 -7 -18 -27 -39 -44 -34 -27 -38 -35 -32 -59 7 -25 12 -27 64 -30 71 -4 97 9 97 48 0 15 8 42 17 59 17 29 17 31 -2 45 -20 15 -20 15 3 38 12 12 22 17 22 10 0 -8 10 -9 30 -5 22 4 36 0 51 -13 17 -15 23 -16 41 -5 15 9 23 10 31 2 6 -6 22 -11 34 -11 13 0 37 -10 53 -22 28 -21 29 -22 14 -56 -13 -32 -12 -38 4 -66 11 -19 29 -33 45 -36 18 -3 35 -18 51 -45 20 -33 30 -40 58 -41 79 -4 208 -32 242 -54 30 -18 47 -22 92 -18 l54 5 31 -54 c33 -58 34 -58 67 -39 13 7 37 10 53 8 29 -4 32 -8 55 -71 3 -11 11 -8 32 11 15 14 39 33 54 43 25 15 29 15 50 1 32 -23 65 -20 83 8 15 23 18 23 64 11 56 -14 140 -72 141 -96 0 -9 -8 -27 -17 -40 -10 -13 -23 -33 -29 -44 -6 -12 -24 -21 -41 -23 -20 -2 -50 -21 -84 -52 l-54 -48 40 -41 c30 -32 46 -41 73 -41 28 0 35 -5 43 -30 8 -23 19 -31 46 -36 25 -5 40 -15 52 -37 9 -16 30 -43 48 -59 23 -22 35 -45 43 -82 9 -43 18 -58 52 -84 49 -38 113 -45 123 -14 3 11 15 24 28 29 12 6 41 26 64 45 24 20 68 43 102 54 34 10 61 22 61 26 0 5 9 4 19 -1 17 -10 19 -6 23 34 3 44 2 45 -30 51 -28 6 -34 12 -44 52 -6 24 -24 59 -39 77 -28 31 -28 33 -10 49 17 15 22 14 82 -13 45 -20 74 -27 97 -24 44 7 122 -23 122 -46 0 -22 100 -56 137 -46 24 6 25 4 19 -28 -4 -22 -2 -38 6 -44 7 -6 78 -11 162 -12 127 -2 151 1 167 15 11 9 19 23 19 31 0 17 15 17 45 -3 21 -13 22 -19 13 -40 -9 -19 -8 -28 5 -42 10 -10 17 -23 17 -28 -1 -16 -74 -56 -113 -62 -21 -2 -40 -9 -43 -14 -9 -13 45 -67 82 -82 19 -9 45 -36 70 -74 31 -50 49 -66 88 -83 l48 -21 45 24 c24 13 55 37 68 55 23 29 27 31 56 20 17 -7 38 -25 47 -42 23 -46 42 -56 69 -38 25 17 53 11 53 -11 0 -8 12 -19 28 -25 15 -6 42 -20 61 -32 21 -12 43 -18 56 -15 13 3 49 -3 80 -14 32 -11 72 -20 90 -20 27 0 33 -5 42 -34 6 -21 7 -38 2 -43 -6 -6 2 -40 18 -86 l27 -77 78 -30 c42 -16 86 -30 97 -30 16 0 21 -11 30 -63 6 -35 11 -75 11 -90 0 -14 5 -37 11 -50 10 -21 15 -23 65 -19 l54 4 0 -31 c0 -17 5 -51 12 -76 14 -50 36 -63 85 -50 16 4 46 9 68 10 56 2 114 57 122 114 5 39 7 40 52 46 85 11 91 14 91 40 0 28 26 45 69 45 25 0 37 -8 61 -42 16 -22 30 -47 30 -55 0 -8 10 -37 21 -64 19 -43 25 -49 50 -49 22 0 32 -6 39 -25 10 -26 15 -28 94 -29 57 -1 63 -11 65 -102 1 -27 7 -56 14 -63 8 -9 9 -15 1 -18 -6 -2 -25 -14 -42 -27 l-32 -23 25 -23 c20 -18 32 -22 64 -17 22 3 53 15 68 27 31 24 67 20 96 -11 11 -11 30 -24 44 -30 52 -20 58 -14 86 81 33 109 57 130 149 130 l57 0 7 35 c6 34 8 36 43 34 20 -2 49 5 66 13 28 15 32 15 87 -13 32 -16 62 -29 68 -29 6 0 13 13 16 29 6 28 9 29 53 28 25 -1 54 2 64 7 14 7 20 2 30 -23 6 -17 16 -31 22 -31 6 0 24 -13 39 -29 19 -20 34 -27 51 -23 17 3 25 0 25 -10 0 -8 11 -25 24 -37 37 -35 85 -23 120 30 15 22 38 45 51 51 19 9 25 19 25 44 0 27 5 35 25 40 19 5 30 0 48 -21 21 -25 25 -26 45 -14 12 8 22 21 22 30 0 33 63 38 150 13 66 -19 65 -19 160 -1 63 12 76 12 85 0 5 -7 33 -16 62 -19 48 -6 52 -9 69 -46 13 -29 20 -35 26 -25 4 8 21 20 37 27 28 11 34 10 80 -24 27 -20 55 -36 62 -36 21 0 79 -91 79 -123 0 -23 9 -31 73 -63 50 -26 83 -37 110 -35 27 1 37 -2 37 -13 0 -22 56 -48 97 -44 27 2 39 -3 53 -20 16 -19 31 -23 112 -28 54 -4 99 -12 108 -20 28 -24 92 -45 144 -48 42 -2 60 3 99 27 l47 29 -39 28 c-21 16 -42 33 -46 39 -3 6 -14 11 -24 11 -10 0 -28 11 -41 25 -18 20 -21 28 -12 37 7 7 12 24 12 38 0 15 9 35 20 45 21 19 40 73 40 113 0 15 -21 48 -56 85 -49 56 -55 66 -50 97 3 22 0 42 -9 54 -22 29 -18 72 7 96 12 11 25 20 29 20 4 0 21 24 37 53 17 28 108 136 204 240 95 103 196 217 225 254 76 97 163 183 298 292 66 54 126 106 134 115 8 10 32 26 52 37 30 15 40 27 45 53 8 46 57 66 158 66 83 0 177 15 186 30 3 6 19 64 35 130 l29 120 -22 45 c-12 25 -22 52 -22 60 0 8 -9 24 -20 35 -11 11 -20 31 -20 45 0 20 -5 25 -25 25 -27 0 -32 18 -15 51 9 15 22 19 69 19 49 0 61 4 81 26 16 16 21 28 14 32 -148 95 -172 115 -189 152 -10 22 -24 45 -32 51 -7 6 -13 22 -13 35 0 13 -12 35 -26 49 -15 15 -23 32 -20 40 3 8 8 21 11 28 3 7 -8 20 -25 30 -16 10 -30 27 -30 37 0 13 -13 23 -42 32 -32 10 -48 23 -60 48 -9 18 -31 46 -48 61 -35 32 -38 56 -11 90 29 38 36 97 14 121 -10 11 -18 27 -18 36 0 9 -19 29 -43 45 -37 25 -43 33 -37 54 4 16 -3 40 -20 72 -26 47 -26 49 -12 103 14 53 14 57 -6 76 -26 26 -14 44 51 72 44 20 45 21 37 58 -22 116 -10 188 35 212 18 10 19 13 6 38 -7 15 -17 46 -20 68 -7 38 -13 45 -71 79 -35 20 -71 48 -80 61 -9 14 -25 24 -39 24 -14 0 -57 13 -98 29 -40 16 -92 35 -116 42 -32 9 -41 16 -37 28 4 9 -3 22 -16 32 l-23 17 48 108 c43 96 56 116 115 172 113 107 179 139 391 192 l185 46 27 218 26 218 -30 50 c-27 43 -31 59 -29 112 1 47 -3 68 -19 91 -11 17 -20 37 -20 45 0 8 -22 29 -49 47 -37 24 -51 40 -56 65 -14 59 -46 149 -96 267 -46 106 -50 120 -44 171 5 46 1 70 -25 145 -17 50 -38 128 -46 174 -8 46 -21 93 -29 104 -8 12 -15 30 -15 41 0 11 -7 27 -16 37 -14 15 -14 20 -1 46 11 21 13 45 8 97 -6 57 -12 72 -31 85 -13 9 -44 37 -69 63 -35 35 -60 50 -102 62 -31 9 -59 22 -62 31 -4 8 -24 23 -47 35 -22 11 -40 24 -40 29 0 5 -26 8 -57 7 -53 -1 -58 1 -56 20 2 14 -6 25 -22 32 -14 7 -25 18 -25 27 0 8 -5 15 -11 15 -6 0 -41 15 -78 34 -75 38 -115 35 -109 -6 4 -31 -5 -32 -431 -68 -319 -28 -376 -30 -585 -24 -152 4 -260 3 -316 -5 -73 -9 -136 -7 -450 19 -201 16 -556 52 -790 80 -234 28 -451 53 -482 57 l-57 6 -14 -34 c-25 -59 -66 -88 -144 -103 -47 -9 -86 -24 -116 -45 -48 -33 -62 -37 -164 -45 -60 -5 -63 -5 -63 17 0 13 -5 28 -11 34 -16 16 33 39 107 53 122 21 147 28 156 44 12 21 61 46 92 46 14 0 31 9 41 23 26 37 -4 33 -103 -17 -101 -51 -214 -85 -317 -95 -84 -9 -396 -2 -410 9 -5 5 -36 11 -68 15 -39 5 -68 15 -87 31 -15 13 -39 24 -53 24 -43 0 -68 48 -71 133 -1 50 -7 82 -19 100 -9 14 -17 37 -17 50 0 18 -5 23 -22 23 -18 -1 -24 5 -26 29 -2 18 -18 43 -39 63 -20 21 -32 40 -29 49 3 8 6 21 6 29 0 11 9 10 48 -5 170 -67 252 -120 325 -210 22 -27 30 -31 42 -21 22 18 1 50 -80 118 -47 39 -85 62 -115 70 -25 6 -81 32 -125 57 -44 25 -89 45 -100 45 -11 0 -38 11 -60 25 -38 23 -48 24 -185 23 -80 0 -167 -4 -195 -8z"
 
   const renderGridTemplate = () => {
     if (theme === 'pro') {
@@ -196,21 +206,13 @@ function GeneratorPage() {
             {selectedCompanies.map((company) => {
               const isPolish = company.country_code?.toLowerCase() === 'pl'
               return (
-                <div key={company.id} className={`group bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border-4 flex flex-col p-6 relative transition-all ${isPolish ? 'border-[#00c853] shadow-[0_20px_50px_-15px_rgba(0,200,83,0.2)] ring-8 ring-green-50' : 'border-slate-100 shadow-sm'}`}>
+                <div key={company.id} className={`bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] border-4 flex flex-col p-6 relative transition-all ${isPolish ? 'border-[#00c853] shadow-[0_20px_50px_-15px_rgba(0,200,83,0.2)] ring-8 ring-green-50' : 'border-slate-100 shadow-sm'}`}>
                   
                   {isPolish && (
                     <div className="absolute -top-4 -right-4 bg-[#00c853] text-white px-5 py-2 rounded-full font-black uppercase tracking-widest text-[11px] shadow-lg z-30 border-2 border-white">
                       Polska Firma
                     </div>
                   )}
-
-                  <button 
-                    onClick={() => handleRemoveCompany(company.id)}
-                    className="exclude-from-export absolute top-4 left-4 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg z-30 hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100"
-                    title="Usuń firmę"
-                  >
-                    <i data-lucide="x" className="h-4 w-4" />
-                  </button>
 
                   <div className="flex-1 flex flex-col">
                     <div className={`h-32 mb-6 flex items-center justify-center relative rounded-3xl transition-all ${isPolish ? 'bg-white' : 'bg-slate-50/50'}`}>
@@ -226,15 +228,11 @@ function GeneratorPage() {
                     <div className="text-[11px] text-slate-500 font-extrabold uppercase tracking-wider truncate mb-4">{company.company}</div>
                     
                     <div className={`mt-auto rounded-2xl p-3 px-4 flex items-center justify-between border transition-all ${isPolish ? 'bg-green-50/50 border-green-100' : 'bg-slate-50/50 border-slate-100/50'}`}>
-                       <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3">
                         {isPolish ? (
                            <svg viewBox="0 0 1024 1024" className="w-5 h-5 fill-green-500 opacity-80"><g transform="translate(0,1024) scale(0.1,-0.1)"><path d={polandSvgPath}/></g></svg>
                         ) : (
-                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-red-500 opacity-80">
-                             <circle cx="12" cy="12" r="10"></circle>
-                             <line x1="2" y1="12" x2="22" y2="12"></line>
-                             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                           </svg>
+                           <i data-lucide="globe" className="w-5 h-5 text-red-500 opacity-80" />
                         )}
                         <div>
                           <div className={`text-[9px] uppercase font-black tracking-widest ${isPolish ? 'text-green-600' : 'text-red-500'}`}>KAPITAŁ</div>
@@ -283,24 +281,16 @@ function GeneratorPage() {
             return (
               <div key={company.id} className={
                 theme === 'dark' 
-                  ? `group bg-slate-900 rounded-3xl shadow-xl border flex flex-col overflow-hidden relative ${isPolish ? 'border-green-500/50 shadow-green-900/20' : 'border-slate-800'}`
+                  ? `bg-slate-900 rounded-3xl shadow-xl border flex flex-col overflow-hidden relative ${isPolish ? 'border-green-500/50 shadow-green-900/20' : 'border-slate-800'}`
                   : theme === 'minimalist'
-                    ? `group bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border-0 flex flex-col overflow-hidden relative ${isPolish ? 'ring-2 ring-[#dc143c]/10 ring-offset-4' : 'ring-1 ring-slate-100'}`
-                    : `group bg-white rounded-2xl shadow-md border flex flex-col overflow-hidden relative ${isPolish ? 'border-slate-200 border-t-4 border-t-[#dc143c]' : 'border-slate-200'}`
+                    ? `bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border-0 flex flex-col overflow-hidden relative ${isPolish ? 'ring-2 ring-[#dc143c]/10 ring-offset-4' : 'ring-1 ring-slate-100'}`
+                    : `bg-white rounded-2xl shadow-md border flex flex-col overflow-hidden relative ${isPolish ? 'border-slate-200 border-t-4 border-t-[#dc143c]' : 'border-slate-200'}`
               }>
                 
                 {isPolish && theme === 'classic' && <div className="absolute top-4 right-4 bg-[#dc143c] text-white px-4 py-1 rounded-full font-bold shadow text-sm uppercase tracking-wide z-10">Polska Firma</div>}
                 {isPolish && theme === 'minimalist' && <div className="absolute top-6 right-6 bg-red-50 text-red-600 px-4 py-1.5 rounded-full font-bold shadow-sm text-sm uppercase tracking-wide z-10">Polska Firma</div>}
                 {isPolish && theme === 'dark' && <div className="absolute top-4 right-4 bg-green-500/20 text-green-400 border border-green-500/30 px-4 py-1 rounded-full font-bold shadow text-sm uppercase tracking-wide z-10">Polska Firma</div>}
                 
-                <button 
-                  onClick={() => handleRemoveCompany(company.id)}
-                  className="exclude-from-export absolute top-4 left-4 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg z-30 hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100"
-                  title="Usuń firmę"
-                >
-                  <i data-lucide="x" className="h-4 w-4" />
-                </button>
-
                 <div className={theme === 'dark' ? "h-64 bg-slate-900/50 flex items-center justify-center p-6 border-b border-slate-800 relative overflow-hidden" : theme === 'minimalist' ? "h-64 bg-transparent flex items-center justify-center p-8 relative overflow-hidden" : "h-56 bg-white flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden"}>
                   {layoutMode === 'products' ? (
                     company.customImage ? (
@@ -355,6 +345,82 @@ function GeneratorPage() {
     )
   }
 
+  const renderCardTemplate = () => {
+    const company = selectedCompanies[0]
+    const isDark = theme === 'dark'
+    const wide = cardSize === 'wide'
+
+    if (!company) {
+      return (
+        <div className={`flex-1 flex items-center justify-center font-bold text-2xl m-12 rounded-3xl border-4 border-dashed ${isDark ? 'text-slate-600 border-slate-800' : 'text-slate-400 border-slate-200/60'}`}>
+          Wyszukaj i wybierz firmę, aby stworzyć kartę...
+        </div>
+      )
+    }
+
+    const isPolish = company.country_code?.toLowerCase() === 'pl'
+    const accent = isPolish ? '#00c853' : '#dc143c'
+    const foundedYear = company.founded_at ? new Date(company.founded_at).getFullYear() : null
+    const verifiedDate = company.verified_at ? String(company.verified_at).slice(0, 10) : null
+
+    return (
+      <div className={`flex flex-col h-full relative overflow-hidden ${isDark ? 'bg-slate-950' : 'bg-[#f8fafc]'} ${wide ? 'p-10 pb-5' : 'p-12 pb-7'}`}>
+        <div className={`absolute rounded-full opacity-30 pointer-events-none ${wide ? 'w-[280px] h-[280px] -right-16 -top-16' : 'w-[360px] h-[360px] -right-20 -top-20'}`} style={{ backgroundImage: `radial-gradient(${isDark ? '#334155' : '#94a3b8'} 3px, transparent 3px)`, backgroundSize: '24px 24px' }}></div>
+
+        <div className="flex justify-between items-center mb-6 relative z-10">
+          <h1 className={`font-black uppercase tracking-tight ${wide ? 'text-4xl' : 'text-5xl'} ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>{cardHeadline}</h1>
+          <div className="flex items-center gap-3">
+            <img src="https://flagcdn.com/w80/pl.png" className="h-7 rounded shadow-sm" alt="PL" />
+            <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>CzyPolskaFirma.pl</span>
+          </div>
+        </div>
+
+        <div className={`flex-1 flex relative z-10 ${wide ? 'flex-row gap-8' : 'flex-col gap-6'}`}>
+          <div className={`${wide ? 'w-[380px] shrink-0' : ''} flex flex-col`}>
+            <div className={`rounded-[2rem] flex-1 flex flex-col items-center justify-center p-8 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] border border-slate-100'}`}>
+              <CompanyLogo websiteUrl={company.website_url} name={company.brand} size={wide ? 140 : 180} className="shadow-none border-0 bg-transparent mb-6" />
+              <h2 className={`font-black text-center leading-tight ${wide ? 'text-4xl' : 'text-5xl'} ${isDark ? 'text-white' : 'text-slate-900'}`}>{company.brand}</h2>
+              <div className={`mt-3 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full ${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{company.category}</div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col gap-5 min-w-0">
+            <div className="rounded-[2rem] p-6 px-8 flex items-center justify-between" style={{ backgroundColor: isPolish ? (isDark ? 'rgba(0,200,83,0.10)' : 'rgba(0,200,83,0.07)') : (isDark ? 'rgba(220,20,60,0.10)' : 'rgba(220,20,60,0.05)'), border: `3px solid ${accent}` }}>
+              <div>
+                <div className="text-sm font-black uppercase tracking-widest mb-1" style={{ color: accent }}>Werdykt</div>
+                <div className={`font-black uppercase leading-none ${wide ? 'text-4xl' : 'text-5xl'}`} style={{ color: accent }}>{isPolish ? 'Polska firma' : 'Firma zagraniczna'}</div>
+              </div>
+              {company.country_code && (
+                <div className="flex flex-col items-center gap-2 shrink-0 ml-6">
+                  <img src={`https://flagcdn.com/w160/${company.country_code.toLowerCase()}.png`} className="h-14 rounded-lg shadow border border-black/10" alt={company.country_code} />
+                  <div className={`font-black text-lg ${isDark ? 'text-white' : 'text-slate-900'}`}>{getCountryName(company.country_code)}</div>
+                </div>
+              )}
+            </div>
+
+            <div className={`rounded-[2rem] p-6 px-8 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white shadow-sm border border-slate-100'}`}>
+              <div className={`text-sm font-black uppercase tracking-widest mb-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Właściciel / Inwestor</div>
+              <div className={`font-black ${wide ? 'text-2xl' : 'text-3xl'} ${isDark ? 'text-white' : 'text-slate-900'}`}>{company.owner_name || company.company}</div>
+              {foundedYear && <div className={`mt-1 font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>W Polsce od {foundedYear} roku</div>}
+            </div>
+
+            {cardDescription && (
+              <div className={`rounded-[2rem] p-6 px-8 flex-1 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white shadow-sm border border-slate-100'}`}>
+                <div className={`text-sm font-black uppercase tracking-widest mb-2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Struktura właścicielska</div>
+                <p className={`${wide ? 'text-lg' : 'text-xl'} font-medium leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{cardDescription}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={`mt-6 pt-4 flex justify-between items-center border-t-2 relative z-10 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+          <span className={`font-black text-[#dc143c] ${wide ? 'text-xl' : 'text-2xl'}`}>czypolskafirma.pl/firma/{company.slug || ''}</span>
+          <span className={`font-bold uppercase tracking-widest ${wide ? 'text-sm' : 'text-base'} ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{verifiedDate ? `Weryfikacja: ${verifiedDate}` : 'Pełna struktura na stronie'}</span>
+        </div>
+      </div>
+    )
+  }
+
   const renderVersusSplitTemplate = () => {
     const leftCompany = selectedCompanies[0]
     const rightCompany = selectedCompanies[1]
@@ -368,16 +434,9 @@ function GeneratorPage() {
 
         <div className="flex-1 flex bg-slate-50 relative">
           
-          <div className="group flex-1 flex flex-col items-center justify-center p-12 relative border-r-2 border-slate-200 border-dashed">
+          <div className="flex-1 flex flex-col items-center justify-center p-12 relative border-r-2 border-slate-200 border-dashed">
             {leftCompany ? (
               <>
-                <button 
-                  onClick={() => handleRemoveCompany(leftCompany.id)}
-                  className="exclude-from-export absolute top-8 left-8 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-30 hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100"
-                  title="Usuń firmę"
-                >
-                  <i data-lucide="x" className="h-6 w-6" />
-                </button>
                 <div className="w-[280px] h-[280px] flex items-center justify-center rounded-[40px] bg-white shadow-xl border-4 border-slate-200 mb-10 overflow-hidden p-8">
                   <CompanyLogo websiteUrl={leftCompany.website_url} name={leftCompany.brand} size={200} className="rounded-none border-0 shadow-none" />
                 </div>
@@ -397,16 +456,9 @@ function GeneratorPage() {
             )}
           </div>
 
-          <div className="group flex-1 flex flex-col items-center justify-center p-12 relative bg-green-50/30">
+          <div className="flex-1 flex flex-col items-center justify-center p-12 relative bg-green-50/30">
             {rightCompany ? (
               <>
-                <button 
-                  onClick={() => handleRemoveCompany(rightCompany.id)}
-                  className="exclude-from-export absolute top-8 right-8 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-30 hover:bg-red-600 transition-all opacity-0 group-hover:opacity-100"
-                  title="Usuń firmę"
-                >
-                  <i data-lucide="x" className="h-6 w-6" />
-                </button>
                 {rightCompany.country_code?.toLowerCase() === 'pl' && (
                    <div className="absolute top-12 right-12 bg-green-500 text-white px-8 py-2 rounded-full font-black uppercase tracking-widest text-lg shadow-lg z-10">Polska Firma</div>
                 )}
@@ -457,23 +509,85 @@ function GeneratorPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             
             <div className="md:col-span-1 border-r border-slate-200 pr-6">
+              <label className="block text-sm font-medium text-slate-700 mb-2">Tryb</label>
+              <div className="flex bg-slate-100 p-1 rounded-lg mb-4">
+                <button
+                  onClick={() => setGraphicMode('zestawienie')}
+                  className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${graphicMode === 'zestawienie' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Zestawienie firm
+                </button>
+                <button
+                  onClick={() => {
+                    setGraphicMode('karta')
+                    if (theme === 'classic' || theme === 'minimalist') setTheme('pro')
+                    if (selectedCompanies.length > 0) {
+                      setSelectedCompanies(selectedCompanies.slice(0, 1))
+                      setCardDescription(selectedCompanies[0].ownership_description || "")
+                    }
+                  }}
+                  className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${graphicMode === 'karta' ? 'bg-[#dc143c] shadow text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Karta firmy
+                </button>
+              </div>
+
+              {graphicMode === 'zestawienie' && (
+              <>
               <label className="block text-sm font-medium text-slate-700 mb-2">Wybierz Rodzaj Grafiki</label>
               <div className="flex bg-slate-100 p-1 rounded-lg mb-4">
-                <button 
+                <button
                   onClick={() => setLayoutMode('products')}
                   className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${layoutMode === 'products' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Produkty (Ze Zdjęciem)
                 </button>
-                <button 
+                <button
                   onClick={() => setLayoutMode('shops')}
                   className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${layoutMode === 'shops' ? 'bg-[#dc143c] shadow text-white' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Sklepy (Duże Logo)
                 </button>
               </div>
+              </>
+              )}
 
-              {!(layoutMode === 'shops' && selectedCompanies.length === 2) && (
+              {graphicMode === 'karta' && (
+                <>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Format</label>
+                  <div className="flex bg-slate-100 p-1 rounded-lg mb-4">
+                    <button
+                      onClick={() => setCardSize('square')}
+                      className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${cardSize === 'square' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Kwadrat 1:1 (FB)
+                    </button>
+                    <button
+                      onClick={() => setCardSize('wide')}
+                      className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${cardSize === 'wide' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Szeroki 16:9 (X)
+                    </button>
+                  </div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Motyw</label>
+                  <div className="flex bg-slate-100 p-1 rounded-lg">
+                    <button
+                      onClick={() => setTheme('pro')}
+                      className={`flex-1 text-xs py-2 px-2 rounded-md font-bold transition-all ${theme === 'pro' ? 'bg-white shadow text-slate-900 border border-slate-200' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Jasny (Pro)
+                    </button>
+                    <button
+                      onClick={() => setTheme('dark')}
+                      className={`flex-1 text-xs py-2 px-2 rounded-md font-medium transition-all ${theme === 'dark' ? 'bg-slate-900 shadow text-white border border-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Dark
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {graphicMode === 'zestawienie' && !(layoutMode === 'shops' && selectedCompanies.length === 2) && (
                 <>
                   <label className="block text-sm font-medium text-slate-700 mb-2 mt-4">Wybierz Motyw Kolorystyczny</label>
                   <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg">
@@ -507,37 +621,64 @@ function GeneratorPage() {
             </div>
 
             <div className="md:col-span-2 grid grid-cols-2 gap-4">
+              {graphicMode === 'zestawienie' && (
+              <>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Tytuł grafiki (Duży Czerwony)</label>
-                <input 
-                  type="text" 
-                  value={title} 
+                <input
+                  type="text"
+                  value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Podtytuł grafiki (Duży Czarny)</label>
-                <input 
-                  type="text" 
-                  value={subtitle} 
+                <input
+                  type="text"
+                  value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Opis pod tytułem (Trzecia linia)</label>
-                <input 
-                  type="text" 
-                  value={description} 
+                <input
+                  type="text"
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
-              
+              </>
+              )}
+
+              {graphicMode === 'karta' && (
+              <>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Nagłówek karty</label>
+                <input
+                  type="text"
+                  value={cardHeadline}
+                  onChange={(e) => setCardHeadline(e.target.value)}
+                  className="w-full p-2 border border-slate-300 rounded-md bg-white"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Opis struktury właścicielskiej (wypełnia się automatycznie z bazy — możesz skrócić lub zmienić)</label>
+                <textarea
+                  value={cardDescription}
+                  onChange={(e) => setCardDescription(e.target.value)}
+                  rows={3}
+                  className="w-full p-2 border border-slate-300 rounded-md bg-white text-sm"
+                />
+              </div>
+              </>
+              )}
+
               <div className="col-span-2 mt-2">
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Wyszukaj firmę do dodania (Max 6)
+                  {graphicMode === 'karta' ? 'Wyszukaj firmę (karta pokazuje jedną firmę)' : 'Wyszukaj firmę do dodania (Max 6)'}
                 </label>
                 <div className="max-w-full relative z-50">
                   <div className="relative">
@@ -592,19 +733,9 @@ function GeneratorPage() {
 
         <div className="flex flex-col xl:flex-row gap-8 items-start">
             <div className="w-full xl:w-80 flex flex-col gap-4">
-              <div className="flex justify-between items-center mb-1">
-                <h3 className="font-bold text-lg text-slate-800">
-                  Dodane firmy ({selectedCompanies.length}/6)
-                </h3>
-                {selectedCompanies.length > 0 && (
-                  <button 
-                    onClick={() => setSelectedCompanies([])}
-                    className="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-wider"
-                  >
-                    Wyczyść wszystko
-                  </button>
-                )}
-              </div>
+              <h3 className="font-bold text-lg text-slate-800">
+                {graphicMode === 'karta' ? 'Wybrana firma' : `Dodane firmy (${selectedCompanies.length}/6)`}
+              </h3>
               {selectedCompanies.map((company, index) => (
                 <div key={company.id} className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col gap-3">
                   <div className="flex justify-between items-start">
@@ -621,16 +752,12 @@ function GeneratorPage() {
                         <div className="text-xs text-slate-500">{company.country_code?.toUpperCase()}</div>
                       </div>
                     </div>
-                    <button 
-                      onClick={() => handleRemoveCompany(company.id)} 
-                      className="p-2 hover:bg-red-50 rounded-full text-slate-400 hover:text-red-600 transition-all"
-                      title="Usuń firmę"
-                    >
+                    <button onClick={() => handleRemoveCompany(company.id)} className="text-slate-400 hover:text-red-500">
                       <i data-lucide="x" className="h-5 w-5" />
                     </button>
                   </div>
                   
-                  {layoutMode === 'products' && (
+                  {graphicMode === 'zestawienie' && layoutMode === 'products' && (
                     <div>
                       <label className="block text-xs font-medium text-slate-700 mb-1">Zdjęcie produktu</label>
                       <div className="relative">
@@ -657,14 +784,20 @@ function GeneratorPage() {
             </div>
 
             <div className="flex-1 overflow-auto bg-slate-300 p-4 md:p-8 rounded-xl flex justify-center items-center overflow-x-auto w-full">
-              <div 
-                ref={printRef} 
-                style={{ width: '1080px', minHeight: '1080px' }} 
-                className={getCanvasStyles()}
+              <div
+                ref={printRef}
+                style={graphicMode === 'karta'
+                  ? (cardSize === 'wide' ? { width: '1200px', minHeight: '675px' } : { width: '1080px', minHeight: '1080px' })
+                  : { width: '1080px', minHeight: '1080px' }}
+                className={graphicMode === 'karta'
+                  ? `${theme === 'dark' ? 'bg-slate-950' : 'bg-[#f8fafc]'} shadow-2xl flex flex-col relative shrink-0`
+                  : getCanvasStyles()}
               >
-                {layoutMode === 'shops' && selectedCompanies.length === 2 
-                  ? renderVersusSplitTemplate() 
-                  : renderGridTemplate()}
+                {graphicMode === 'karta'
+                  ? renderCardTemplate()
+                  : (layoutMode === 'shops' && selectedCompanies.length === 2
+                    ? renderVersusSplitTemplate()
+                    : renderGridTemplate())}
               </div>
             </div>
           </div>

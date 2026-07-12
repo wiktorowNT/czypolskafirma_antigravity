@@ -9,12 +9,17 @@ import { countryNames } from "@/lib/countries"
 
 interface Company {
   id: string
+  slug?: string
   brand: string
   company: string
   category: string
   categorySlug: string
   website_url?: string
   country_code?: string
+  owner_name?: string
+  ownership_description?: string
+  founded_at?: string
+  verified_at?: string
 }
 
 interface SelectedCompany extends Company {
@@ -23,6 +28,8 @@ interface SelectedCompany extends Company {
 
 type ThemeMode = 'classic' | 'dark' | 'minimalist' | 'pro'
 type LayoutMode = 'products' | 'shops'
+type GraphicMode = 'zestawienie' | 'karta'
+type CardSize = 'square' | 'wide'
 
 export default function GeneratorPage() {
   const [selectedCompanies, setSelectedCompanies] = useState<SelectedCompany[]>([])
@@ -31,6 +38,10 @@ export default function GeneratorPage() {
   const [description, setDescription] = useState("Sprawdzamy kto stoi za popularnymi markami")
   const [theme, setTheme] = useState<ThemeMode>('pro')
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('shops')
+  const [graphicMode, setGraphicMode] = useState<GraphicMode>('zestawienie')
+  const [cardSize, setCardSize] = useState<CardSize>('square')
+  const [cardHeadline, setCardHeadline] = useState("CZY TO POLSKA FIRMA?")
+  const [cardDescription, setCardDescription] = useState("")
   const printRef = useRef<HTMLDivElement>(null)
 
   // Custom Search State
@@ -75,6 +86,11 @@ export default function GeneratorPage() {
   }, [searchQuery])
 
   const handleSelectCompany = (company: Company) => {
+    if (graphicMode === 'karta') {
+      setSelectedCompanies([{ ...company }])
+      setCardDescription(company.ownership_description || "")
+      return
+    }
     if (selectedCompanies.length >= 6) {
       alert("Możesz dodać maksymalnie 6 firm do jednej grafiki.")
       return
@@ -105,11 +121,15 @@ export default function GeneratorPage() {
       const dataUrl = await htmlToImage.toPng(printRef.current, {
         quality: 1.0,
         pixelRatio: 2,
-        backgroundColor: theme === 'dark' && !(layoutMode === 'shops' && selectedCompanies.length === 2) ? '#020617' : (theme === 'pro' ? '#f8fafc' : '#ffffff'),
+        backgroundColor: graphicMode === 'karta'
+          ? (theme === 'dark' ? '#020617' : '#f8fafc')
+          : (theme === 'dark' && !(layoutMode === 'shops' && selectedCompanies.length === 2) ? '#020617' : (theme === 'pro' ? '#f8fafc' : '#ffffff')),
       })
-      
+
       const link = document.createElement('a')
-      link.download = `czypolskafirma-${layoutMode}-${theme}.png`
+      link.download = graphicMode === 'karta'
+        ? `czypolskafirma-karta-${selectedCompanies[0]?.slug || 'firma'}-${cardSize}.png`
+        : `czypolskafirma-${layoutMode}-${theme}.png`
       link.href = dataUrl
       link.click()
     } catch (err) {
@@ -334,6 +354,82 @@ export default function GeneratorPage() {
     )
   }
 
+  const renderCardTemplate = () => {
+    const company = selectedCompanies[0]
+    const isDark = theme === 'dark'
+    const wide = cardSize === 'wide'
+
+    if (!company) {
+      return (
+        <div className={`flex-1 flex items-center justify-center font-bold text-2xl m-12 rounded-3xl border-4 border-dashed ${isDark ? 'text-slate-600 border-slate-800' : 'text-slate-400 border-slate-200/60'}`}>
+          Wyszukaj i wybierz firmę, aby stworzyć kartę...
+        </div>
+      )
+    }
+
+    const isPolish = company.country_code?.toLowerCase() === 'pl'
+    const accent = isPolish ? '#00c853' : '#dc143c'
+    const foundedYear = company.founded_at ? new Date(company.founded_at).getFullYear() : null
+    const verifiedDate = company.verified_at ? String(company.verified_at).slice(0, 10) : null
+
+    return (
+      <div className={`flex flex-col h-full relative overflow-hidden ${isDark ? 'bg-slate-950' : 'bg-[#f8fafc]'} ${wide ? 'p-10 pb-5' : 'p-12 pb-7'}`}>
+        <div className={`absolute rounded-full opacity-30 pointer-events-none ${wide ? 'w-[280px] h-[280px] -right-16 -top-16' : 'w-[360px] h-[360px] -right-20 -top-20'}`} style={{ backgroundImage: `radial-gradient(${isDark ? '#334155' : '#94a3b8'} 3px, transparent 3px)`, backgroundSize: '24px 24px' }}></div>
+
+        <div className="flex justify-between items-center mb-6 relative z-10">
+          <h1 className={`font-black uppercase tracking-tight ${wide ? 'text-4xl' : 'text-5xl'} ${isDark ? 'text-white' : 'text-[#0f172a]'}`}>{cardHeadline}</h1>
+          <div className="flex items-center gap-3">
+            <img src="https://flagcdn.com/w80/pl.png" className="h-7 rounded shadow-sm" alt="PL" />
+            <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>CzyPolskaFirma.pl</span>
+          </div>
+        </div>
+
+        <div className={`flex-1 flex relative z-10 ${wide ? 'flex-row gap-8' : 'flex-col gap-6'}`}>
+          <div className={`${wide ? 'w-[380px] shrink-0' : ''} flex flex-col`}>
+            <div className={`rounded-[2rem] flex-1 flex flex-col items-center justify-center p-8 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] border border-slate-100'}`}>
+              <CompanyLogo websiteUrl={company.website_url} name={company.brand} size={wide ? 140 : 180} className="shadow-none border-0 bg-transparent mb-6" />
+              <h2 className={`font-black text-center leading-tight ${wide ? 'text-4xl' : 'text-5xl'} ${isDark ? 'text-white' : 'text-slate-900'}`}>{company.brand}</h2>
+              <div className={`mt-3 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full ${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{company.category}</div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col gap-5 min-w-0">
+            <div className="rounded-[2rem] p-6 px-8 flex items-center justify-between" style={{ backgroundColor: isPolish ? (isDark ? 'rgba(0,200,83,0.10)' : 'rgba(0,200,83,0.07)') : (isDark ? 'rgba(220,20,60,0.10)' : 'rgba(220,20,60,0.05)'), border: `3px solid ${accent}` }}>
+              <div>
+                <div className="text-sm font-black uppercase tracking-widest mb-1" style={{ color: accent }}>Werdykt</div>
+                <div className={`font-black uppercase leading-none ${wide ? 'text-4xl' : 'text-5xl'}`} style={{ color: accent }}>{isPolish ? 'Polska firma' : 'Firma zagraniczna'}</div>
+              </div>
+              {company.country_code && (
+                <div className="flex flex-col items-center gap-2 shrink-0 ml-6">
+                  <img src={`https://flagcdn.com/w160/${company.country_code.toLowerCase()}.png`} className="h-14 rounded-lg shadow border border-black/10" alt={company.country_code} />
+                  <div className={`font-black text-lg ${isDark ? 'text-white' : 'text-slate-900'}`}>{getCountryName(company.country_code)}</div>
+                </div>
+              )}
+            </div>
+
+            <div className={`rounded-[2rem] p-6 px-8 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white shadow-sm border border-slate-100'}`}>
+              <div className={`text-sm font-black uppercase tracking-widest mb-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Właściciel / Inwestor</div>
+              <div className={`font-black ${wide ? 'text-2xl' : 'text-3xl'} ${isDark ? 'text-white' : 'text-slate-900'}`}>{company.owner_name || company.company}</div>
+              {foundedYear && <div className={`mt-1 font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>W Polsce od {foundedYear} roku</div>}
+            </div>
+
+            {cardDescription && (
+              <div className={`rounded-[2rem] p-6 px-8 flex-1 ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white shadow-sm border border-slate-100'}`}>
+                <div className={`text-sm font-black uppercase tracking-widest mb-2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Struktura właścicielska</div>
+                <p className={`${wide ? 'text-lg' : 'text-xl'} font-medium leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{cardDescription}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={`mt-6 pt-4 flex justify-between items-center border-t-2 relative z-10 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+          <span className={`font-black text-[#dc143c] ${wide ? 'text-xl' : 'text-2xl'}`}>czypolskafirma.pl/firma/{company.slug || ''}</span>
+          <span className={`font-bold uppercase tracking-widest ${wide ? 'text-sm' : 'text-base'} ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{verifiedDate ? `Weryfikacja: ${verifiedDate}` : 'Pełna struktura na stronie'}</span>
+        </div>
+      </div>
+    )
+  }
+
   const renderVersusSplitTemplate = () => {
     const leftCompany = selectedCompanies[0]
     const rightCompany = selectedCompanies[1]
@@ -422,23 +518,85 @@ export default function GeneratorPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             
             <div className="md:col-span-1 border-r border-slate-200 pr-6">
+              <label className="block text-sm font-medium text-slate-700 mb-2">Tryb</label>
+              <div className="flex bg-slate-100 p-1 rounded-lg mb-4">
+                <button
+                  onClick={() => setGraphicMode('zestawienie')}
+                  className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${graphicMode === 'zestawienie' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Zestawienie firm
+                </button>
+                <button
+                  onClick={() => {
+                    setGraphicMode('karta')
+                    if (theme === 'classic' || theme === 'minimalist') setTheme('pro')
+                    if (selectedCompanies.length > 0) {
+                      setSelectedCompanies(selectedCompanies.slice(0, 1))
+                      setCardDescription(selectedCompanies[0].ownership_description || "")
+                    }
+                  }}
+                  className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${graphicMode === 'karta' ? 'bg-[#dc143c] shadow text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Karta firmy
+                </button>
+              </div>
+
+              {graphicMode === 'zestawienie' && (
+              <>
               <label className="block text-sm font-medium text-slate-700 mb-2">Wybierz Rodzaj Grafiki</label>
               <div className="flex bg-slate-100 p-1 rounded-lg mb-4">
-                <button 
+                <button
                   onClick={() => setLayoutMode('products')}
                   className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${layoutMode === 'products' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Produkty (Ze Zdjęciem)
                 </button>
-                <button 
+                <button
                   onClick={() => setLayoutMode('shops')}
                   className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${layoutMode === 'shops' ? 'bg-[#dc143c] shadow text-white' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   Sklepy (Duże Logo)
                 </button>
               </div>
+              </>
+              )}
 
-              {!(layoutMode === 'shops' && selectedCompanies.length === 2) && (
+              {graphicMode === 'karta' && (
+                <>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Format</label>
+                  <div className="flex bg-slate-100 p-1 rounded-lg mb-4">
+                    <button
+                      onClick={() => setCardSize('square')}
+                      className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${cardSize === 'square' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Kwadrat 1:1 (FB)
+                    </button>
+                    <button
+                      onClick={() => setCardSize('wide')}
+                      className={`flex-1 text-sm py-2 px-3 rounded-md font-bold transition-all ${cardSize === 'wide' ? 'bg-white shadow text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Szeroki 16:9 (X)
+                    </button>
+                  </div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Motyw</label>
+                  <div className="flex bg-slate-100 p-1 rounded-lg">
+                    <button
+                      onClick={() => setTheme('pro')}
+                      className={`flex-1 text-xs py-2 px-2 rounded-md font-bold transition-all ${theme === 'pro' ? 'bg-white shadow text-slate-900 border border-slate-200' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Jasny (Pro)
+                    </button>
+                    <button
+                      onClick={() => setTheme('dark')}
+                      className={`flex-1 text-xs py-2 px-2 rounded-md font-medium transition-all ${theme === 'dark' ? 'bg-slate-900 shadow text-white border border-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                      Dark
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {graphicMode === 'zestawienie' && !(layoutMode === 'shops' && selectedCompanies.length === 2) && (
                 <>
                   <label className="block text-sm font-medium text-slate-700 mb-2 mt-4">Wybierz Motyw Kolorystyczny</label>
                   <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg">
@@ -472,37 +630,64 @@ export default function GeneratorPage() {
             </div>
 
             <div className="md:col-span-2 grid grid-cols-2 gap-4">
+              {graphicMode === 'zestawienie' && (
+              <>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Tytuł grafiki (Duży Czerwony)</label>
-                <input 
-                  type="text" 
-                  value={title} 
+                <input
+                  type="text"
+                  value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Podtytuł grafiki (Duży Czarny)</label>
-                <input 
-                  type="text" 
-                  value={subtitle} 
+                <input
+                  type="text"
+                  value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Opis pod tytułem (Trzecia linia)</label>
-                <input 
-                  type="text" 
-                  value={description} 
+                <input
+                  type="text"
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full p-2 border border-slate-300 rounded-md bg-white"
                 />
               </div>
-              
+              </>
+              )}
+
+              {graphicMode === 'karta' && (
+              <>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Nagłówek karty</label>
+                <input
+                  type="text"
+                  value={cardHeadline}
+                  onChange={(e) => setCardHeadline(e.target.value)}
+                  className="w-full p-2 border border-slate-300 rounded-md bg-white"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Opis struktury właścicielskiej (wypełnia się automatycznie z bazy — możesz skrócić lub zmienić)</label>
+                <textarea
+                  value={cardDescription}
+                  onChange={(e) => setCardDescription(e.target.value)}
+                  rows={3}
+                  className="w-full p-2 border border-slate-300 rounded-md bg-white text-sm"
+                />
+              </div>
+              </>
+              )}
+
               <div className="col-span-2 mt-2">
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Wyszukaj firmę do dodania (Max 6)
+                  {graphicMode === 'karta' ? 'Wyszukaj firmę (karta pokazuje jedną firmę)' : 'Wyszukaj firmę do dodania (Max 6)'}
                 </label>
                 <div className="max-w-full relative z-50">
                   <div className="relative">
@@ -558,7 +743,7 @@ export default function GeneratorPage() {
         <div className="flex flex-col xl:flex-row gap-8 items-start">
             <div className="w-full xl:w-80 flex flex-col gap-4">
               <h3 className="font-bold text-lg text-slate-800">
-                Dodane firmy ({selectedCompanies.length}/6)
+                {graphicMode === 'karta' ? 'Wybrana firma' : `Dodane firmy (${selectedCompanies.length}/6)`}
               </h3>
               {selectedCompanies.map((company, index) => (
                 <div key={company.id} className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col gap-3">
@@ -581,7 +766,7 @@ export default function GeneratorPage() {
                     </button>
                   </div>
                   
-                  {layoutMode === 'products' && (
+                  {graphicMode === 'zestawienie' && layoutMode === 'products' && (
                     <div>
                       <label className="block text-xs font-medium text-slate-700 mb-1">Zdjęcie produktu</label>
                       <div className="relative">
@@ -608,14 +793,20 @@ export default function GeneratorPage() {
             </div>
 
             <div className="flex-1 overflow-auto bg-slate-300 p-4 md:p-8 rounded-xl flex justify-center items-center overflow-x-auto w-full">
-              <div 
-                ref={printRef} 
-                style={{ width: '1080px', minHeight: '1080px' }} 
-                className={getCanvasStyles()}
+              <div
+                ref={printRef}
+                style={graphicMode === 'karta'
+                  ? (cardSize === 'wide' ? { width: '1200px', minHeight: '675px' } : { width: '1080px', minHeight: '1080px' })
+                  : { width: '1080px', minHeight: '1080px' }}
+                className={graphicMode === 'karta'
+                  ? `${theme === 'dark' ? 'bg-slate-950' : 'bg-[#f8fafc]'} shadow-2xl flex flex-col relative shrink-0`
+                  : getCanvasStyles()}
               >
-                {layoutMode === 'shops' && selectedCompanies.length === 2 
-                  ? renderVersusSplitTemplate() 
-                  : renderGridTemplate()}
+                {graphicMode === 'karta'
+                  ? renderCardTemplate()
+                  : (layoutMode === 'shops' && selectedCompanies.length === 2
+                    ? renderVersusSplitTemplate()
+                    : renderGridTemplate())}
               </div>
             </div>
           </div>
