@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 
     try {
         const formattedQuery = query.trim().replace(/\s+/g, "*")
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=20`
+        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,owner_name,ownership_description,founded_at,verified_at,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=20`
 
         const res = await fetch(url, {
             headers: {
@@ -42,14 +42,19 @@ export async function GET(request: Request) {
             return {
                 id: company.id,
                 slug: company.slug,
-                brand: company.slug 
-                    ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') 
-                    : company.name,
+                brand: company.display_name
+                    || (company.slug
+                        ? company.slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+                        : company.name),
                 company: company.name,
                 category: categoryData?.name || "Inne",
                 categorySlug: categoryData?.slug || "inne",
                 website_url: company.website_url,
                 country_code: company.country_code,
+                owner_name: company.owner_name,
+                ownership_description: company.ownership_description,
+                founded_at: company.founded_at,
+                verified_at: company.verified_at,
             }
         })
 
