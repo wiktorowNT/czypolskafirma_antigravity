@@ -21,6 +21,18 @@ export interface BlogPostMeta {
   relatedCompanies: string[]
   /** Szacowany czas czytania w minutach (min. 1). */
   readingTimeMinutes: number
+  /** Zdjęcie główne wpisu: ścieżka z public/ (np. /images/blog/foo.jpg) lub https. */
+  image?: string
+  /** Tekst alternatywny zdjęcia głównego (fallback: tytuł wpisu). */
+  imageAlt?: string
+}
+
+/** Akceptujemy tylko ścieżki lokalne z public/ oraz absolutne https. */
+function sanitizeImageSrc(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined
+  const src = value.trim()
+  if (src.startsWith("/") || /^https?:\/\//i.test(src)) return src
+  return undefined
 }
 
 export interface BlogPost extends BlogPostMeta {
@@ -70,6 +82,8 @@ function parsePostFile(filePath: string): { meta: BlogPostMeta; content: string 
         description: typeof data.description === "string" ? data.description.trim() : "",
         relatedCompanies,
         readingTimeMinutes,
+        image: sanitizeImageSrc(data.image),
+        imageAlt: typeof data.imageAlt === "string" ? data.imageAlt.trim() : undefined,
       },
       content,
     }
@@ -117,8 +131,9 @@ export function getPostBySlug(slug: string): BlogPost | null {
 // ---------------------------------------------------------------------------
 // Lekki renderer markdown -> HTML.
 // Obsługuje: nagłówki (##/###/####), akapity, listy (-/*/1.), cytaty (>),
-// linie poziome (---), bloki kodu (```), pogrubienie, kursywę, kod inline
-// i linki. Cała treść jest escapowana przed składaniem HTML.
+// linie poziome (---), bloki kodu (```), obrazki (![opis](src) — w osobnej
+// linii renderowane jako <figure> z podpisem), pogrubienie, kursywę,
+// kod inline i linki. Cała treść jest escapowana przed składaniem HTML.
 // ---------------------------------------------------------------------------
 
 function escapeHtml(text: string): string {
@@ -134,6 +149,15 @@ function renderInline(text: string): string {
 
   // Kod inline — najpierw, żeby nie formatować jego wnętrza.
   out = out.replace(/`([^`]+)`/g, "<code>$1</code>")
+
+  // Obrazki w środku akapitu — przed linkami, żeby "![...](...)" nie łapało
+  // się na składnię linku. Obrazki blokowe (osobna linia) obsługuje renderMarkdown.
+  out = out.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (match, alt, src) => {
+    if (src.startsWith("/") || /^https?:\/\//i.test(src)) {
+      return `<img src="${src}" alt="${alt}" loading="lazy" decoding="async" />`
+    }
+    return match
+  })
 
   // Linki [tekst](url) — tylko http(s) i ścieżki względne.
   out = out.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (match, label, url) => {
@@ -201,6 +225,22 @@ export function renderMarkdown(markdown: string): string {
     if (!trimmed) {
       flushParagraph()
       flushList()
+      continue
+    }
+
+    // Obrazek w osobnej linii -> <figure> z podpisem z tekstu alternatywnego.
+    const image = trimmed.match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/)
+    if (image) {
+      flushParagraph()
+      flushList()
+      const src = image[2]
+      if (src.startsWith("/") || /^https?:\/\//i.test(src)) {
+        const alt = escapeHtml(image[1])
+        const caption = image[1] ? `<figcaption>${renderInline(image[1])}</figcaption>` : ""
+        html.push(
+          `<figure><img src="${escapeHtml(src)}" alt="${alt}" loading="lazy" decoding="async" />${caption}</figure>`,
+        )
+      }
       continue
     }
 

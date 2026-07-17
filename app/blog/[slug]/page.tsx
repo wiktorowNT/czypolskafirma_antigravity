@@ -24,6 +24,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   }
 
   const url = `${BASE_URL}/blog/${post.slug}`
+  const imageAlt = post.imageAlt || post.title
   return {
     title: post.title,
     description: post.description,
@@ -38,8 +39,24 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       locale: "pl_PL",
       siteName: "CzyPolskaFirma",
       publishedTime: post.date,
+      ...(post.image ? { images: [{ url: post.image, alt: imageAlt }] } : {}),
     },
+    ...(post.image
+      ? {
+          twitter: {
+            card: "summary_large_image" as const,
+            title: post.title,
+            description: post.description,
+            images: [post.image],
+          },
+        }
+      : {}),
   }
+}
+
+/** Absolutny URL zdjęcia (ścieżki z public/ dostają domenę produkcyjną). */
+function absoluteImageUrl(image: string): string {
+  return image.startsWith("/") ? `${BASE_URL}${image}` : image
 }
 
 function formatDate(iso: string): string {
@@ -67,6 +84,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     description: post.description,
     datePublished: post.date,
     inLanguage: "pl-PL",
+    ...(post.image ? { image: [absoluteImageUrl(post.image)] } : {}),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": url,
@@ -106,6 +124,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
         <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="h-1.5 bg-red-600" />
+          {post.image && (
+            <img
+              src={post.image}
+              alt={post.imageAlt || post.title}
+              className="w-full aspect-[2/1] object-cover border-b border-slate-200"
+            />
+          )}
           <div className="p-6 sm:p-10">
             <header className="mb-8">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mb-5">
@@ -135,6 +160,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-1.5
                 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-1.5
                 [&_blockquote]:border-l-4 [&_blockquote]:border-red-200 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-lg [&_blockquote]:px-4 [&_blockquote]:py-3 [&_blockquote]:my-6 [&_blockquote]:text-slate-700 [&_blockquote_p]:mb-0
+                [&_figure]:my-6 [&_figure_img]:w-full [&_figure_img]:rounded-xl [&_figure_img]:border [&_figure_img]:border-slate-200
+                [&_figcaption]:text-xs [&_figcaption]:text-slate-500 [&_figcaption]:mt-2 [&_figcaption]:text-center
                 [&_hr]:my-8 [&_hr]:border-slate-200
                 [&_code]:bg-slate-100 [&_code]:text-slate-800 [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[0.9em]
                 [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:rounded-xl [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-6 [&_pre_code]:bg-transparent [&_pre_code]:text-inherit [&_pre_code]:p-0"

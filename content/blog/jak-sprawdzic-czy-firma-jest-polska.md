@@ -3,6 +3,8 @@ title: "Jak sprawdzić, czy firma jest polska? 4 zasady weryfikacji kapitału"
 slug: "jak-sprawdzic-czy-firma-jest-polska"
 date: 2026-07-17
 description: "Miejsce rejestracji i historia marki potrafią mylić. Wyjaśniamy 4 zasady, według których weryfikujemy, czy firma naprawdę należy do polskiego kapitału."
+image: "/images/blog/jak-sprawdzic-czy-firma-jest-polska.png"
+imageAlt: "Grafika CzyPolskaFirma z pytaniem: czy ta firma jest polska? 4 zasady weryfikacji kapitału"
 relatedCompanies:
   - zabka
   - e-wedel

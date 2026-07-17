@@ -104,7 +104,16 @@ export default async function BlogPage() {
             {/* Wyróżniony najnowszy wpis */}
             <article className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all overflow-hidden mb-8">
               <div className="h-1.5 bg-red-600" />
-              <Link href={`/blog/${featured.slug}`} className="block p-6 sm:p-10 group">
+              <Link href={`/blog/${featured.slug}`} className="block group">
+                {featured.image && (
+                  <img
+                    src={featured.image}
+                    alt={featured.imageAlt || featured.title}
+                    loading="lazy"
+                    className="w-full aspect-[2/1] object-cover border-b border-slate-200"
+                  />
+                )}
+                <div className="p-6 sm:p-10">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold uppercase tracking-wide">
                     <Sparkles className="w-3 h-3" />
@@ -127,6 +136,7 @@ export default async function BlogPage() {
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </div>
+                </div>
               </Link>
             </article>
 
@@ -136,9 +146,18 @@ export default async function BlogPage() {
                 {rest.map((post) => (
                   <article
                     key={post.slug}
-                    className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
+                    className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all overflow-hidden"
                   >
-                    <Link href={`/blog/${post.slug}`} className="flex flex-col h-full p-6 sm:p-8 group">
+                    <Link href={`/blog/${post.slug}`} className="flex flex-col h-full group">
+                      {post.image && (
+                        <img
+                          src={post.image}
+                          alt={post.imageAlt || post.title}
+                          loading="lazy"
+                          className="w-full aspect-video object-cover border-b border-slate-200"
+                        />
+                      )}
+                      <div className="flex flex-col flex-1 p-6 sm:p-8">
                       <PostMeta post={post} />
                       <h2 className="text-lg sm:text-xl font-bold text-slate-900 mt-3 mb-3 leading-snug group-hover:text-red-600 transition-colors [font-family:var(--font-playfair)]">
                         {post.title}
@@ -154,6 +173,7 @@ export default async function BlogPage() {
                           Czytaj
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                         </span>
+                      </div>
                       </div>
                     </Link>
                   </article>
