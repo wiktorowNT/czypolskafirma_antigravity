@@ -1,25 +1,17 @@
 import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, CalendarDays, Building2 } from "lucide-react"
+import { ArrowLeft, ArrowRight, CalendarDays, Clock, Building2, Search } from "lucide-react"
 import { getAllPosts, getPostBySlug } from "@/lib/blog"
-import { getSupabaseServerClient } from "@/lib/supabase/server"
-import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { getCompaniesBySlugs } from "@/lib/blog-companies"
 import { serializeJsonLd } from "@/lib/json-ld"
 import { CompanyCard } from "@/components/CompanyCard"
+import { BlogShare } from "@/components/blog-share"
 
 const BASE_URL = "https://czypolskafirma.pl"
 
 // ISR: odśwież dane firm (sekcja "Firmy z tego wpisu") co godzinę.
 export const revalidate = 3600
-
-interface RelatedCompany {
-  id: string
-  slug: string
-  brand: string
-  website_url?: string
-  country_code?: string
-}
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }))
@@ -50,35 +42,6 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   }
 }
 
-async function getRelatedCompanies(companySlugs: string[]): Promise<RelatedCompany[]> {
-  if (companySlugs.length === 0) return []
-  try {
-    const supabase = await getSupabaseServerClient()
-    // Slugi w bazie bywają "surowe" (spacje, nawiasy), więc dopasowujemy
-    // po kanonicznym slugify() — tak samo jak profil /firma/[slug].
-    const { data, error } = await supabase
-      .from("companies")
-      .select("id, slug, name, display_name, website_url, country_code")
-
-    if (error || !data) return []
-
-    const wanted = new Map(companySlugs.map((s, index) => [s, index]))
-    return data
-      .filter((c: any) => c.slug && wanted.has(slugify(c.slug)))
-      .map((c: any) => ({
-        id: c.id,
-        slug: slugify(c.slug) || c.id,
-        brand: resolveDisplayName(c.display_name, c.slug, c.name),
-        website_url: c.website_url || undefined,
-        country_code: c.country_code || undefined,
-      }))
-      .sort((a, b) => (wanted.get(a.slug) ?? 0) - (wanted.get(b.slug) ?? 0))
-  } catch (err) {
-    console.error("[blog] Błąd pobierania firm z wpisu:", err)
-    return []
-  }
-}
-
 function formatDate(iso: string): string {
   return new Date(`${iso}T00:00:00`).toLocaleDateString("pl-PL", {
     day: "numeric",
@@ -91,7 +54,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const post = getPostBySlug(params.slug)
   if (!post) notFound()
 
-  const relatedCompanies = await getRelatedCompanies(post.relatedCompanies)
+  const url = `${BASE_URL}/blog/${post.slug}`
+  const relatedCompanies = await getCompaniesBySlugs(post.relatedCompanies)
+  const otherPosts = getAllPosts()
+    .filter((p) => p.slug !== post.slug)
+    .slice(0, 2)
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -102,7 +69,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     inLanguage: "pl-PL",
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${BASE_URL}/blog/${post.slug}`,
+      "@id": url,
     },
     author: {
       "@type": "Organization",
@@ -137,33 +104,49 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           Wszystkie wpisy
         </Link>
 
-        <article className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200">
-          <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
-              <CalendarDays className="w-4 h-4" />
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
-            </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              {post.title}
-            </h1>
-          </header>
+        <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="h-1.5 bg-red-600" />
+          <div className="p-6 sm:p-10">
+            <header className="mb-8">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mb-5">
+                <span className="flex items-center gap-1.5">
+                  <CalendarDays className="w-4 h-4" />
+                  <time dateTime={post.date}>{formatDate(post.date)}</time>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4" />
+                  {post.readingTimeMinutes} min czytania
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight [font-family:var(--font-playfair)]">
+                {post.title}
+              </h1>
+            </header>
 
-          <div
-            className="text-slate-600 leading-relaxed text-sm sm:text-base
-              [&_h2]:text-xl [&_h2]:sm:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:mt-10 [&_h2]:mb-4
-              [&_h3]:text-lg [&_h3]:sm:text-xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3
-              [&_h4]:text-base [&_h4]:sm:text-lg [&_h4]:font-semibold [&_h4]:text-slate-900 [&_h4]:mt-6 [&_h4]:mb-2
-              [&_p]:mb-4 [&_p:last-child]:mb-0
-              [&_a]:text-red-600 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-red-700
-              [&_strong]:text-slate-900
-              [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-1.5
-              [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-1.5
-              [&_blockquote]:border-l-4 [&_blockquote]:border-red-200 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-lg [&_blockquote]:px-4 [&_blockquote]:py-3 [&_blockquote]:my-6 [&_blockquote]:text-slate-700 [&_blockquote_p]:mb-0
-              [&_hr]:my-8 [&_hr]:border-slate-200
-              [&_code]:bg-slate-100 [&_code]:text-slate-800 [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[0.9em]
-              [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:rounded-xl [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-6 [&_pre_code]:bg-transparent [&_pre_code]:text-inherit [&_pre_code]:p-0"
-            dangerouslySetInnerHTML={{ __html: post.html }}
-          />
+            <div
+              className="text-slate-600 leading-relaxed text-sm sm:text-base
+                [&>p:first-of-type]:text-base [&>p:first-of-type]:sm:text-lg [&>p:first-of-type]:text-slate-700 [&>p:first-of-type]:leading-relaxed
+                [&_h2]:text-xl [&_h2]:sm:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:[font-family:var(--font-playfair)]
+                [&_h3]:text-lg [&_h3]:sm:text-xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:[font-family:var(--font-playfair)]
+                [&_h4]:text-base [&_h4]:sm:text-lg [&_h4]:font-semibold [&_h4]:text-slate-900 [&_h4]:mt-6 [&_h4]:mb-2
+                [&_p]:mb-4 [&_p:last-child]:mb-0
+                [&_a]:text-red-600 [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-red-700
+                [&_strong]:text-slate-900
+                [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ul]:space-y-1.5
+                [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_ol]:space-y-1.5
+                [&_blockquote]:border-l-4 [&_blockquote]:border-red-200 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-lg [&_blockquote]:px-4 [&_blockquote]:py-3 [&_blockquote]:my-6 [&_blockquote]:text-slate-700 [&_blockquote_p]:mb-0
+                [&_hr]:my-8 [&_hr]:border-slate-200
+                [&_code]:bg-slate-100 [&_code]:text-slate-800 [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[0.9em]
+                [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:rounded-xl [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-6 [&_pre_code]:bg-transparent [&_pre_code]:text-inherit [&_pre_code]:p-0"
+              dangerouslySetInnerHTML={{ __html: post.html }}
+            />
+
+            {/* Udostępnianie */}
+            <div className="mt-10 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
+              <span className="text-sm font-medium text-slate-500">Podziel się wpisem:</span>
+              <BlogShare url={url} title={post.title} />
+            </div>
+          </div>
         </article>
 
         {/* Firmy z tego wpisu */}
@@ -190,6 +173,59 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </div>
           </section>
         )}
+
+        {/* Czytaj też */}
+        {otherPosts.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6">Czytaj też</h2>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {otherPosts.map((other) => (
+                <article
+                  key={other.slug}
+                  className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
+                >
+                  <Link href={`/blog/${other.slug}`} className="flex flex-col h-full p-6 group">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mb-3">
+                      <span className="flex items-center gap-1.5">
+                        <CalendarDays className="w-4 h-4" />
+                        <time dateTime={other.date}>{formatDate(other.date)}</time>
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4" />
+                        {other.readingTimeMinutes} min
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-red-600 transition-colors [font-family:var(--font-playfair)]">
+                      {other.title}
+                    </h3>
+                    <span className="mt-auto pt-4 inline-flex items-center gap-1.5 text-sm font-medium text-red-600">
+                      Czytaj
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* CTA */}
+        <section className="mt-10 bg-[#020617] rounded-2xl p-8 sm:p-12 text-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 [font-family:var(--font-playfair)]">
+            Sprawdź, czy Twoja marka jest polska
+          </h2>
+          <p className="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-8">
+            Werdykt, ostateczny właściciel i struktura kapitału — dla setek zweryfikowanych
+            firm działających w Polsce. Twoje pieniądze mają moc.
+          </p>
+          <Link
+            href="/szukaj"
+            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg transition-colors"
+          >
+            <Search className="w-4 h-4" />
+            Przeszukaj bazę firm
+          </Link>
+        </section>
 
       </div>
     </main>

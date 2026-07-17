@@ -19,6 +19,8 @@ export interface BlogPostMeta {
   description: string
   /** Kanoniczne slugi firm z /firma/[slug] powiązanych z wpisem. */
   relatedCompanies: string[]
+  /** Szacowany czas czytania w minutach (min. 1). */
+  readingTimeMinutes: number
 }
 
 export interface BlogPost extends BlogPostMeta {
@@ -57,6 +59,9 @@ function parsePostFile(filePath: string): { meta: BlogPostMeta; content: string 
           .filter(Boolean)
       : []
 
+    const wordCount = content.split(/\s+/).filter(Boolean).length
+    const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))
+
     return {
       meta: {
         slug,
@@ -64,6 +69,7 @@ function parsePostFile(filePath: string): { meta: BlogPostMeta; content: string 
         date,
         description: typeof data.description === "string" ? data.description.trim() : "",
         relatedCompanies,
+        readingTimeMinutes,
       },
       content,
     }
