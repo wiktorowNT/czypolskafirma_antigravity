@@ -164,6 +164,9 @@ export function Header() {
               <Link href="/companies" className="text-slate-600 hover:text-slate-900 font-medium">
                 Lista firm
               </Link>
+              <Link href="/blog" className="text-slate-600 hover:text-slate-900">
+                Blog
+              </Link>
               <button onClick={() => scrollToSection("how-it-works")} className="text-slate-600 hover:text-slate-900">
                 Jak to działa
               </button>
@@ -265,6 +268,13 @@ export function Header() {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Lista firm
+                </Link>
+                <Link
+                  href="/blog"
+                  className="text-left text-slate-600 hover:text-slate-900 py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Blog
                 </Link>
                 <button onClick={() => scrollToSection("how-it-works")} className="text-left text-slate-600 py-2">
                   Jak to działa

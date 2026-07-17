@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify } from "@/lib/slug-utils"
+import { getAllPosts } from "@/lib/blog"
 
 const BASE_URL = "https://czypolskafirma.pl"
 
@@ -24,6 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/kategorie`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/blog`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.7,
@@ -59,6 +66,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.4,
     },
   ]
+
+  // Blog posts from content/blog/*.md
+  const blogPages: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: new Date(`${post.date}T00:00:00`),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }))
 
   // Dynamic pages from Supabase
   let companyPages: MetadataRoute.Sitemap = []
@@ -107,5 +122,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Sort by priority for cleaner sitemap
-  return [...staticPages, ...companyPages, ...categoryPages].sort((a, b) => (b.priority || 0) - (a.priority || 0))
+  return [...staticPages, ...blogPages, ...companyPages, ...categoryPages].sort((a, b) => (b.priority || 0) - (a.priority || 0))
 }
