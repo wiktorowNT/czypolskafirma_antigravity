@@ -6,13 +6,11 @@ w internecie). Generuje UPDATE-y SQL uzupełniające dwie kolumny tabeli
 
 ## Przygotowanie danych wejściowych
 
-W Supabase SQL Editor uruchom i skopiuj wynik:
+Gotowe partie po 25 firm są w **`docs/marki-partie.md`** (id + slug + nazwa,
+cała baza, 30 partii z checkboxami do odhaczania). Kopiuj jedną partię na raz —
+mniejsze partie = mniej halucynacji.
 
-```sql
-select slug, name from companies order by name;
-```
-
-Wklejaj do promptu partiami po ok. 25 firm (mniejsze partie = mniej halucynacji).
+(Alternatywnie z Supabase SQL Editor: `select id, slug, name from companies order by name;`)
 
 ## Jak użyć wyniku
 
@@ -51,17 +49,17 @@ FORMAT WYNIKU — dla każdej firmy jeden UPDATE SQL, dokładnie w tym wzorcu:
 update companies set
   brand_aliases = 'Tymbark, Kubuś, Lubella',
   brands = '[{"name":"Tymbark","domain":"tymbark.com"},{"name":"Kubuś","domain":"kubus.pl"},{"name":"Lubella"}]'::jsonb
-where slug = 'maspex';
+where id = 'f271e51d-cb55-4130-9a8f-23aca93b1531';
 
 Wymagania techniczne:
 - `brand_aliases`: te same nazwy co w `brands`, rozdzielone przecinkiem i spacją.
-- `slug` przepisz DOKŁADNIE z danych wejściowych (łącznie ze spacjami,
-  nawiasami i wielkością liter — bywa „surowy", np. 'DM (Drogerie Markt)').
+- W `where` użyj `id` przepisanego DOKŁADNIE z danych wejściowych (pierwsza
+  kolumna, UUID) — nigdy nie dopasowuj po slugu ani nazwie.
 - Apostrofy w nazwach escapuj podwójnie ('' zamiast ').
 - Wszystkie UPDATE-y podaj w jednym bloku kodu SQL, bez komentarzy między nimi.
 - Po bloku SQL dodaj sekcję „Pominięte:" z listą firm bez UPDATE i powodem
   (jedna linia na firmę).
 
-DANE WEJŚCIOWE (slug | nazwa):
+DANE WEJŚCIOWE (id | slug | nazwa):
 
-[TU WKLEJ PARTIĘ ~25 FIRM]
+[TU WKLEJ PARTIĘ ~25 FIRM Z docs/marki-partie.md]
