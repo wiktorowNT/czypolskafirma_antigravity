@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Hero from "@/components/hero"
 import { HowItWorks } from "@/components/how-it-works"
-import { Features } from "@/components/features"
+import { HomeBlogSection } from "@/components/home-blog-section"
 import { Methodology } from "@/components/methodology"
 import { ReportForm } from "@/components/report-form"
 import { FAQ } from "@/components/faq"
@@ -41,17 +41,24 @@ async function getHeroData(): Promise<{
   categories: HeroCategory[]
   companyCount: number | null
   popularTags: HeroPopularTag[]
+  recentCompanies: HeroPopularTag[]
 }> {
-  const result: { categories: HeroCategory[]; companyCount: number | null; popularTags: HeroPopularTag[] } = {
+  const result: {
+    categories: HeroCategory[]
+    companyCount: number | null
+    popularTags: HeroPopularTag[]
+    recentCompanies: HeroPopularTag[]
+  } = {
     categories: [],
     companyCount: null,
     popularTags: [],
+    recentCompanies: [],
   }
 
   try {
     const supabase = await getSupabaseServerClient()
 
-    const [categoriesRes, countRes, popularRes] = await Promise.all([
+    const [categoriesRes, countRes, popularRes, recentRes] = await Promise.all([
       supabase.from("categories").select("id, name, slug, icon").order("name", { ascending: true }),
       supabase.from("companies").select("id", { count: "exact", head: true }),
       (async () => {
@@ -62,6 +69,11 @@ async function getHeroData(): Promise<{
           result_limit: 6,
         })
       })(),
+      supabase
+        .from("companies")
+        .select("id, slug, name, display_name, website_url, country_code")
+        .order("created_at", { ascending: false })
+        .limit(4),
     ])
 
     if (!categoriesRes.error && categoriesRes.data) {
@@ -69,6 +81,15 @@ async function getHeroData(): Promise<{
     }
     if (!countRes.error && typeof countRes.count === "number") {
       result.companyCount = countRes.count
+    }
+    if (!recentRes.error && Array.isArray(recentRes.data)) {
+      result.recentCompanies = recentRes.data.map((c: any) => ({
+        id: c.id,
+        slug: c.slug ? slugify(c.slug) : c.id,
+        displayName: resolveDisplayName(c.display_name, c.slug, c.name),
+        website_url: c.website_url || null,
+        country_code: c.country_code || null,
+      }))
     }
     if (!popularRes.error && Array.isArray(popularRes.data)) {
       result.popularTags = popularRes.data.map((c: any) => ({
@@ -89,7 +110,7 @@ async function getHeroData(): Promise<{
 }
 
 export default async function Home() {
-  const { categories, companyCount, popularTags } = await getHeroData()
+  const { categories, companyCount, popularTags, recentCompanies } = await getHeroData()
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -98,10 +119,11 @@ export default async function Home() {
           initialCategories={categories}
           initialCompanyCount={companyCount}
           initialPopularTags={popularTags}
+          initialRecentCompanies={recentCompanies}
         />
         <GlobalStats />
         <HowItWorks />
-        <Features />
+        <HomeBlogSection />
         <Methodology />
         <WhyPolish />
         <ReportForm />

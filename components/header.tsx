@@ -178,9 +178,6 @@ export function Header() {
               <button onClick={() => scrollToSection("methodology")} className="text-slate-600 hover:text-slate-900">
                 Metodologia
               </button>
-              <button onClick={() => scrollToSection("features")} className="text-slate-600 hover:text-slate-900">
-                Funkcje
-              </button>
               <button onClick={() => scrollToSection("faq")} className="text-slate-600 hover:text-slate-900">
                 FAQ
               </button>
@@ -298,9 +295,6 @@ export function Header() {
                 </button>
                 <button onClick={() => scrollToSection("methodology")} className="text-left text-slate-600 py-2">
                   Metodologia
-                </button>
-                <button onClick={() => scrollToSection("features")} className="text-left text-slate-600 py-2">
-                  Funkcje
                 </button>
                 <button onClick={() => scrollToSection("faq")} className="text-left text-slate-600 py-2">
                   FAQ

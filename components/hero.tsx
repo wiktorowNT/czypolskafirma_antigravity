@@ -31,9 +31,10 @@ interface HeroProps {
   initialCategories?: HeroCategory[]
   initialCompanyCount?: number | null
   initialPopularTags?: HeroPopularTag[]
+  initialRecentCompanies?: HeroPopularTag[]
 }
 
-export default function Hero({ initialCategories, initialCompanyCount, initialPopularTags }: HeroProps) {
+export default function Hero({ initialCategories, initialCompanyCount, initialPopularTags, initialRecentCompanies }: HeroProps) {
   const hasInitialData = initialCategories !== undefined
   const [categories, setCategories] = useState<HeroCategory[]>(initialCategories || [])
   const [loading, setLoading] = useState(!hasInitialData)
@@ -211,7 +212,34 @@ export default function Hero({ initialCategories, initialCompanyCount, initialPo
             </div>
           ) : null}
 
-
+          {/* Ostatnio dodane firmy — sygnał, że baza żyje */}
+          {initialRecentCompanies && initialRecentCompanies.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8 -mt-4">
+              <span className="text-sm text-slate-500">Ostatnio dodane:</span>
+              {initialRecentCompanies.map((tag, index) => (
+                <Link
+                  key={tag.id}
+                  href={`/firma/${tag.slug || tag.id}`}
+                  className={`inline-flex items-center gap-1.5 pl-1 pr-3 py-1 text-sm font-medium bg-white border border-slate-200 rounded-full text-slate-700 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors shadow-sm${index >= 3 ? " hidden sm:inline-flex" : ""}`}
+                >
+                  <CompanyLogo
+                    websiteUrl={tag.website_url}
+                    name={tag.displayName}
+                    size={24}
+                    className="rounded-full"
+                  />
+                  {tag.displayName}
+                  {tag.country_code && (
+                    <img
+                      src={`https://flagcdn.com/w20/${tag.country_code.toLowerCase()}.png`}
+                      alt={`Flaga: ${countryNames[tag.country_code.toUpperCase()] || tag.country_code} — kraj pochodzenia kapitału`}
+                      className="w-4 h-auto rounded-[1px] border border-slate-200/50"
+                    />
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
 
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-6">
