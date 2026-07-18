@@ -6,7 +6,7 @@ export default function NotFound() {
             <div className="text-center px-4">
                 <div className="mb-8">
                     <img
-                        src="https://flagcdn.com/w80/pl.png"
+                        src="/flags/pl-w80.png"
                         alt="Polska"
                         className="w-16 h-auto mx-auto rounded-sm shadow-sm opacity-50"
                     />

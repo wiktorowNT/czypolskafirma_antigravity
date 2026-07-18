@@ -10,7 +10,7 @@ export function Footer() {
           {/* Poziom 1: Nazwa i flaga */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <img
-              src="https://flagcdn.com/w40/pl.png"
+              src="/flags/pl-w40.png"
               alt="Polska"
               className="w-6 h-auto rounded-sm shadow-sm"
             />

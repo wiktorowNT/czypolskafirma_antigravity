@@ -1,4 +1,5 @@
-import { CheckCircle2, ShieldCheck } from "lucide-react"
+import Link from "next/link"
+import { CheckCircle2, ShieldCheck, ArrowRight } from "lucide-react"
 
 export function Methodology() {
   const sources = [
@@ -45,6 +46,16 @@ export function Methodology() {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="text-center mt-8">
+          <Link
+            href="/metodologia"
+            className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold transition-colors"
+          >
+            Poznaj pełną metodologię weryfikacji
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>

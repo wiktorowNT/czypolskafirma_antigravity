@@ -40,7 +40,7 @@ export function CategoryStats({
             <div className="flex items-center justify-between text-xs md:text-sm">
                 <div className="flex items-center gap-1.5 md:gap-2">
                     <img
-                        src="https://flagcdn.com/w40/pl.png"
+                        src="/flags/pl-w40.png"
                         alt="PL"
                         className="w-4 md:w-5 h-auto rounded shadow-sm"
                     />

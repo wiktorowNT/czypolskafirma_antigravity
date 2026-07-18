@@ -146,7 +146,7 @@ export function GlobalStats() {
                         <div className="relative z-10">
                             <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2">
                                 <img
-                                    src="https://flagcdn.com/w40/pl.png"
+                                    src="/flags/pl-w40.png"
                                     alt="PL"
                                     className="w-5 h-auto rounded-sm"
                                 />

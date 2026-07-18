@@ -8,6 +8,14 @@ import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 3600 // ISR: revalidate every hour
 
+// Bez generateStaticParams Next 14 renderuje trasę dynamiczną przy KAŻDYM
+// wejściu (revalidate było ignorowane — produkcja zwracała no-store i
+// X-Vercel-Cache: MISS, TTFB ~1,6 s). Pusta lista = profile generują się
+// na żądanie przy pierwszym wejściu i są serwowane z cache przez godzinę.
+export function generateStaticParams(): { slug: string }[] {
+  return []
+}
+
 const BASE_URL = "https://czypolskafirma.pl"
 
 interface CompanyDetail {
