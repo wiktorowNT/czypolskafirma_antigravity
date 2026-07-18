@@ -25,6 +25,9 @@ export function Footer() {
             <Link href="/metodologia" className="hover:text-white transition-colors">
               Metodologia
             </Link>
+            <Link href="/blog" className="hover:text-white transition-colors">
+              Blog
+            </Link>
             <Link href="mailto:kontakt@czypolskafirma.pl" className="hover:text-white transition-colors">
               Kontakt
             </Link>
