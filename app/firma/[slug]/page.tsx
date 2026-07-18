@@ -46,6 +46,12 @@ interface CompanyDetail {
   registry_url?: string
   lastVerified: string
   brandAliases?: string[]
+  brands?: CompanyBrand[]
+}
+
+export interface CompanyBrand {
+  name: string
+  domain?: string
 }
 
 export interface RelatedCompany {
@@ -226,26 +232,59 @@ async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
   }
 }
 
-// Marki firmy z kolumny brand_aliases (tekst rozdzielany przecinkami).
-// Osobne, odporne zapytanie: dopóki kolumna nie istnieje w bazie
-// (migracja tools/sql/2026-07-18-brand-aliases.sql), zwraca pustą listę
-// i profil renderuje się bez sekcji marek — zero regresji.
-async function getBrandAliases(companyId: string): Promise<string[]> {
+function parseAliases(raw: unknown): string[] {
+  if (!raw) return []
+  return String(raw)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
+
+function parseBrands(raw: unknown): CompanyBrand[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .filter((b: any) => b && typeof b.name === "string" && b.name.trim())
+    .map((b: any) => ({
+      name: String(b.name).trim(),
+      domain: typeof b.domain === "string" && b.domain.trim() ? String(b.domain).trim() : undefined,
+    }))
+}
+
+// Marki firmy: brands (JSON z domenami, do logotypów) + brand_aliases
+// (tekst do wyszukiwarki i fallbacku wyświetlania). Osobne, odporne
+// zapytania z degradacją: brak kolumny brands -> próbujemy samo
+// brand_aliases; brak obu kolumn -> puste listy i zero regresji
+// (migracje: tools/sql/2026-07-18-*.sql).
+async function getBrandData(companyId: string): Promise<{ aliases: string[]; brands: CompanyBrand[] }> {
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase
+
+    const full = await supabase
+      .from("companies")
+      .select("brand_aliases, brands")
+      .eq("id", companyId)
+      .maybeSingle()
+
+    if (!full.error && full.data) {
+      return {
+        aliases: parseAliases((full.data as any).brand_aliases),
+        brands: parseBrands((full.data as any).brands),
+      }
+    }
+
+    const aliasesOnly = await supabase
       .from("companies")
       .select("brand_aliases")
       .eq("id", companyId)
       .maybeSingle()
 
-    if (error || !data || !(data as any).brand_aliases) return []
-    return String((data as any).brand_aliases)
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
+    if (!aliasesOnly.error && aliasesOnly.data) {
+      return { aliases: parseAliases((aliasesOnly.data as any).brand_aliases), brands: [] }
+    }
+
+    return { aliases: [], brands: [] }
   } catch {
-    return []
+    return { aliases: [], brands: [] }
   }
 }
 
@@ -347,11 +386,12 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
     permanentRedirect(`/firma/${company.canonicalSlug}`)
   }
 
-  const [relatedCompanies, brandAliases] = await Promise.all([
+  const [relatedCompanies, brandData] = await Promise.all([
     getRelatedCompanies(company),
-    getBrandAliases(company.id),
+    getBrandData(company.id),
   ])
-  company.brandAliases = brandAliases
+  company.brandAliases = brandData.aliases
+  company.brands = brandData.brands
 
   const isPolish = company.country_code?.toUpperCase() === "PL"
   const brand = company.brandName

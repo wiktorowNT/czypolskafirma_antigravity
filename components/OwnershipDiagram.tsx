@@ -1,5 +1,12 @@
 import { Network, ArrowDown, Building2, User, Store } from "lucide-react"
 import { getCountryName } from "@/lib/company-faq"
+import { CompanyLogo } from "@/components/company-logo"
+
+export interface DiagramBrand {
+    name: string
+    /** Domena strony marki (np. tymbark.com) — źródło logotypu. */
+    domain?: string
+}
 
 interface OwnershipDiagramProps {
     brandName: string
@@ -7,8 +14,10 @@ interface OwnershipDiagramProps {
     parentCompanyName?: string
     ownerName?: string
     countryCode?: string
-    /** Marki należące do firmy (kolumna brand_aliases, po migracji). */
+    /** Marki należące do firmy (kolumna brand_aliases) — fallback tekstowy. */
     brandAliases?: string[]
+    /** Marki z domenami (kolumna brands) — wyświetlane z logotypami. */
+    brands?: DiagramBrand[]
 }
 
 function CountryFlag({ code, className }: { code: string; className?: string }) {
@@ -33,8 +42,11 @@ export default function OwnershipDiagram({
     ownerName,
     countryCode,
     brandAliases,
+    brands,
 }: OwnershipDiagramProps) {
-    if (!ownerName && !parentCompanyName) return null
+    const hasBrands = Boolean(brands && brands.length > 0)
+    const hasAliases = Boolean(brandAliases && brandAliases.length > 0)
+    if (!ownerName && !parentCompanyName && !hasBrands && !hasAliases) return null
 
     const isPolish = countryCode?.toUpperCase() === "PL"
     const countryName = countryCode ? getCountryName(countryCode) : null
@@ -48,6 +60,7 @@ export default function OwnershipDiagram({
                 <h2 className="text-base sm:text-lg font-bold text-slate-900">Struktura właścicielska</h2>
             </div>
 
+            {(ownerName || parentCompanyName) && (
             <div className="flex flex-col items-center gap-1">
                 {/* Szczyt piramidy: ostateczny właściciel */}
                 {ownerName && (
@@ -105,23 +118,44 @@ export default function OwnershipDiagram({
                     )}
                 </div>
             </div>
+            )}
 
-            {/* Marki należące do firmy (po uzupełnieniu brand_aliases w bazie) */}
-            {brandAliases && brandAliases.length > 0 && (
+            {/* Marki należące do firmy: karty z logotypami (brands), fallback
+                na pigułki tekstowe (brand_aliases). */}
+            {(hasBrands || hasAliases) && (
                 <div className="mt-5 pt-4 border-t border-slate-100">
-                    <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 mb-2">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 mb-2.5">
                         Marki należące do firmy
                     </div>
-                    <div className="flex flex-wrap gap-1.5">
-                        {brandAliases.map((alias) => (
-                            <span
-                                key={alias}
-                                className="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium"
-                            >
-                                {alias}
-                            </span>
-                        ))}
-                    </div>
+                    {hasBrands ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {brands!.map((b) => (
+                                <div
+                                    key={b.name}
+                                    className="flex items-center gap-2.5 rounded-lg border border-slate-200 bg-slate-50/60 px-3 py-2"
+                                >
+                                    <CompanyLogo
+                                        websiteUrl={b.domain ? `https://${b.domain}` : undefined}
+                                        name={b.name}
+                                        size={32}
+                                        className="rounded-lg flex-shrink-0"
+                                    />
+                                    <span className="text-sm font-medium text-slate-800 truncate">{b.name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-1.5">
+                            {brandAliases!.map((alias) => (
+                                <span
+                                    key={alias}
+                                    className="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium"
+                                >
+                                    {alias}
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
         </section>

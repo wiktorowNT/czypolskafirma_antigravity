@@ -43,6 +43,7 @@ interface CompanyDetail {
     registry_url?: string
     lastVerified: string
     brandAliases?: string[]
+    brands?: { name: string; domain?: string }[]
 }
 
 interface RelatedCompany {
@@ -171,6 +172,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     ownerName={company.owner_name}
                     countryCode={company.country_code}
                     brandAliases={company.brandAliases}
+                    brands={company.brands}
                 />
 
                 {/* Company Meta Details - Address, Registry, Links */}
