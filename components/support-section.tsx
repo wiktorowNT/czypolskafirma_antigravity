@@ -27,8 +27,9 @@ export function SupportSection() {
                 <span className="text-red-500">Wesprzyj nasze działania!</span>
               </h2>
               <p className="text-lg text-slate-300 mb-8 leading-relaxed">
-                CzyPolskaFirma.pl to niezależna inicjatywa stworzona dla każdego, kto chce kupować świadomie. 
-                Twoje wsparcie pomaga nam rozwijać bazę danych, docierać do rzetelnych informacji 
+                CzyPolskaFirma.pl to niezależna inicjatywa stworzona dla każdego, kto chce kupować świadomie.
+                Serwis działa bez reklam i ukrytych sponsorów — utrzymujemy się wyłącznie z dobrowolnego
+                wsparcia. Twoja cegiełka pomaga nam rozwijać bazę danych, docierać do rzetelnych informacji
                 o strukturach własnościowych i budować największy w Polsce portal o pochodzeniu firm.
               </p>
               
