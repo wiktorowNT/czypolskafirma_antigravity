@@ -33,37 +33,54 @@ export async function GET(request: Request) {
         const { getCountryCode } = await import("@/lib/countries")
         const countryCode = getCountryCode(query)
         
-        let url: string
+        const headers = {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Accept: "application/json",
+        }
+
+        let data: any[]
         if (countryCode) {
             // If it's a country search, filter by country_code
-            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
+            const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
+            const res = await fetch(url, { headers })
+            if (!res.ok) return NextResponse.json([])
+            data = await res.json()
         } else {
-            // Standard search by name, slug, NIP or KRS
+            // Standard search by name, slug, NIP, KRS or brand alias (marki firmy).
             const formattedQuery = query.trim().replace(/\s+/g, "*")
-            url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=50`
+            const q = encodeURIComponent(formattedQuery)
+            // Wariant z brand_aliases; jeśli kolumny jeszcze nie ma w bazie
+            // (przed migracją tools/sql/2026-07-18-brand-aliases.sql),
+            // PostgREST zwróci błąd i przechodzimy na wariant bez aliasów.
+            const urlWithAliases = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,brand_aliases,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*,brand_aliases.ilike.*${q}*)&limit=50`
+            const urlLegacy = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*)&limit=50`
+
+            let res = await fetch(urlWithAliases, { headers })
+            if (!res.ok) {
+                res = await fetch(urlLegacy, { headers })
+                if (!res.ok) return NextResponse.json([])
+            }
+            data = await res.json()
         }
-
-        const res = await fetch(url, {
-            headers: {
-                apikey: SUPABASE_ANON_KEY,
-                Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-                Accept: "application/json",
-            },
-        })
-
-        if (!res.ok) {
-            const text = await res.text()
-            return NextResponse.json([])
-        }
-
-        const data = await res.json()
 
         // Map to search result format
+        const queryLower = query.trim().toLowerCase()
         const results = data.map((company: any) => {
             // Handle categories as either object or array (PostgREST can return either depending on relationship)
             const categoryData = Array.isArray(company.categories) ? company.categories[0] : company.categories
-            
+
+            // Marka, przez którą firma pasuje do zapytania (np. "Lech" -> Kompania
+            // Piwowarska) — do podpowiedzi w dropdownie wyszukiwarki.
+            const matchedBrand = company.brand_aliases
+                ? String(company.brand_aliases)
+                      .split(",")
+                      .map((s: string) => s.trim())
+                      .find((b: string) => b && b.toLowerCase().includes(queryLower))
+                : undefined
+
             return {
+                matchedBrand,
                 id: company.id, // This is the UUID
                 slug: company.slug ? slugify(company.slug) : company.slug, // kanoniczny slug URL
                 brand: resolveDisplayName(company.display_name, company.slug, company.name),

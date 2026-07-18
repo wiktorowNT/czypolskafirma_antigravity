@@ -10,6 +10,7 @@ import {
 import { ReportDialog } from "@/components/report-dialog"
 import CompanyHero from "@/components/CompanyHero"
 import CompanyMetaDetails from "@/components/CompanyMetaDetails"
+import OwnershipDiagram from "@/components/OwnershipDiagram"
 import PolishAlternatives from "@/components/PolishAlternatives"
 import CompanyFAQ from "@/components/CompanyFAQ"
 import CompanyArticle from "@/components/CompanyArticle"
@@ -41,6 +42,8 @@ interface CompanyDetail {
     website_url?: string
     registry_url?: string
     lastVerified: string
+    brandAliases?: string[]
+    brands?: { name: string; domain?: string }[]
 }
 
 interface RelatedCompany {
@@ -159,6 +162,17 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     ownership_type={company.ownership_type}
                     categoryName={company.categoryName}
                     website_url={company.website_url}
+                />
+
+                {/* Struktura właścicielska — piramida marka -> spółka-matka -> właściciel */}
+                <OwnershipDiagram
+                    brandName={company.brandName}
+                    companyName={company.name}
+                    parentCompanyName={company.parent_company_name}
+                    ownerName={company.owner_name}
+                    countryCode={company.country_code}
+                    brandAliases={company.brandAliases}
+                    brands={company.brands}
                 />
 
                 {/* Company Meta Details - Address, Registry, Links */}
