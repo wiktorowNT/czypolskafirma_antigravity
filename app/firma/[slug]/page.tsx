@@ -45,6 +45,7 @@ interface CompanyDetail {
   website_url?: string
   registry_url?: string
   lastVerified: string
+  brandAliases?: string[]
 }
 
 export interface RelatedCompany {
@@ -225,6 +226,29 @@ async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
   }
 }
 
+// Marki firmy z kolumny brand_aliases (tekst rozdzielany przecinkami).
+// Osobne, odporne zapytanie: dopóki kolumna nie istnieje w bazie
+// (migracja tools/sql/2026-07-18-brand-aliases.sql), zwraca pustą listę
+// i profil renderuje się bez sekcji marek — zero regresji.
+async function getBrandAliases(companyId: string): Promise<string[]> {
+  try {
+    const supabase = await getSupabaseServerClient()
+    const { data, error } = await supabase
+      .from("companies")
+      .select("brand_aliases")
+      .eq("id", companyId)
+      .maybeSingle()
+
+    if (error || !data || !(data as any).brand_aliases) return []
+    return String((data as any).brand_aliases)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+  } catch {
+    return []
+  }
+}
+
 async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompany[]> {
   if (!company.categoryId) return []
   try {
@@ -323,7 +347,11 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
     permanentRedirect(`/firma/${company.canonicalSlug}`)
   }
 
-  const relatedCompanies = await getRelatedCompanies(company)
+  const [relatedCompanies, brandAliases] = await Promise.all([
+    getRelatedCompanies(company),
+    getBrandAliases(company.id),
+  ])
+  company.brandAliases = brandAliases
 
   const isPolish = company.country_code?.toUpperCase() === "PL"
   const brand = company.brandName

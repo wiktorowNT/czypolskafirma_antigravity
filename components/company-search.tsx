@@ -16,6 +16,8 @@ interface Company {
   categorySlug: string
   website_url?: string
   country_code?: string
+  /** Marka, przez którą firma pasuje do zapytania (np. "Lech" -> Kompania Piwowarska). */
+  matchedBrand?: string
 }
 
 interface CompanySearchProps {
@@ -283,7 +285,12 @@ export function CompanySearch({
                     )}
                   </div>
                   <div className="text-sm text-slate-500 truncate">{company.company}</div>
-                  <div className="text-xs text-slate-400 mt-0.5">{company.category}</div>
+                  <div className="text-xs text-slate-400 mt-0.5">
+                    {company.category}
+                    {company.matchedBrand && (
+                      <span className="text-red-600 font-medium"> · marka: {company.matchedBrand}</span>
+                    )}
+                  </div>
                 </div>
               </div>
             </button>
