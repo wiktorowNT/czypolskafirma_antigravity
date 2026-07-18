@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import * as LucideIcons from "lucide-react"
+import { getCategoryIcon } from "@/components/category-icon"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 interface Category {
@@ -19,11 +19,7 @@ interface CategoryTabsProps {
 }
 
 export function CategoryTabs({ categories, className }: CategoryTabsProps) {
-  const getIconComponent = (iconName: string | null) => {
-    if (!iconName) return LucideIcons.Tag
-    const icon = LucideIcons[iconName as keyof typeof LucideIcons]
-    return icon && typeof icon === "function" ? icon : LucideIcons.Tag
-  }
+  const getIconComponent = (iconName: string | null) => getCategoryIcon(iconName)
 
   return (
     <div className={cn("w-full", className)}>

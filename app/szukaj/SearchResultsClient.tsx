@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Search, ChevronLeft, Loader2, Check, FolderOpen, MessageSquarePlus, ChevronDown, Filter, X } from "lucide-react"
-import * as LucideIcons from "lucide-react"
+import { getCategoryIcon } from "@/components/category-icon"
 import { CompanyCard } from "@/components/CompanyCard"
 import { CompanyGrid } from "@/components/CompanyGrid"
 import { ReportDialog } from "@/components/report-dialog"
@@ -198,8 +198,7 @@ export default function SearchResultsClient() {
                                     <h3 className="font-semibold text-slate-900 text-sm mb-4">Przeglądaj kategorie</h3>
                                     <div className="space-y-2">
                                         {sidebarCategories.map((cat) => {
-                                            const iconCandidate = cat.icon ? LucideIcons[cat.icon as keyof typeof LucideIcons] : null
-                                            const Icon = (iconCandidate && typeof iconCandidate === "function" ? iconCandidate : FolderOpen) as React.ComponentType<{ className?: string }>
+                                            const Icon = cat.icon ? getCategoryIcon(cat.icon) : FolderOpen
                                             return (
                                                 <Link
                                                     key={cat.slug}

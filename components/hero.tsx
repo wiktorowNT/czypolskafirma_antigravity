@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 
-import * as LucideIcons from "lucide-react"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Globe, Search } from "lucide-react"
 import { CompanySearch } from "@/components/company-search"
 import { CategoryTabs } from "@/components/category-tabs"
 import { CompanyLogo } from "@/components/company-logo"
@@ -129,7 +128,7 @@ export default function Hero({ initialCategories, initialCompanyCount, initialPo
             </div>
             <div className="relative group w-full sm:w-[200px]">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <LucideIcons.Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+                <Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
               </div>
               <input
                 type="text"
@@ -163,7 +162,7 @@ export default function Hero({ initialCategories, initialCompanyCount, initialPo
               }}
               className="h-12 px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2"
             >
-              <LucideIcons.Search className="h-4 w-4" />
+              <Search className="h-4 w-4" />
               <span>Szukaj</span>
             </button>
           </div>

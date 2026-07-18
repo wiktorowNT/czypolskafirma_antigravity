@@ -3,9 +3,9 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
-import * as LucideIcons from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, ChevronDown, Heart, Search } from "lucide-react"
+import { getCategoryIcon } from "@/components/category-icon"
 import { useBookmarks } from "@/hooks/use-bookmarks"
 import { CompanySearch } from "@/components/company-search"
 
@@ -137,8 +137,7 @@ export function Header() {
                   >
                     <div className="grid grid-cols-1 gap-1">
                       {categories.map((cat) => {
-                        const iconCandidate = LucideIcons[cat.icon as keyof typeof LucideIcons]
-                        const Icon = (iconCandidate && typeof iconCandidate === "function" ? iconCandidate : LucideIcons.Tag) as React.ComponentType<{ className?: string }>
+                        const Icon = getCategoryIcon(cat.icon)
                         return (
                           <Link
                             key={cat.id}
@@ -161,10 +160,16 @@ export function Header() {
                 )}
               </div>
 
-              <Link href="/companies" className="text-slate-600 hover:text-slate-900 font-medium">
+              <Link
+                href="/companies"
+                className={`font-medium ${pathname === "/companies" ? "text-red-600" : "text-slate-600 hover:text-slate-900"}`}
+              >
                 Lista firm
               </Link>
-              <Link href="/blog" className="text-slate-600 hover:text-slate-900">
+              <Link
+                href="/blog"
+                className={pathname.startsWith("/blog") ? "text-red-600 font-medium" : "text-slate-600 hover:text-slate-900"}
+              >
                 Blog
               </Link>
               <button onClick={() => scrollToSection("how-it-works")} className="text-slate-600 hover:text-slate-900">
@@ -211,11 +216,23 @@ export function Header() {
           {/* Mobile actions */}
           <div className="md:hidden flex items-center gap-1">
             {pathname !== "/" && !isMobileSearchOpen && (
-              <Button variant="ghost" size="sm" onClick={() => { setIsMobileSearchOpen(true); setIsMenuOpen(false) }}>
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-label="Otwórz wyszukiwarkę"
+                onClick={() => { setIsMobileSearchOpen(true); setIsMenuOpen(false) }}
+              >
                 <Search className="h-5 w-5" />
               </Button>
             )}
-            <Button ref={mobileMenuButtonRef} variant="ghost" size="sm" onClick={() => { setIsMenuOpen(!isMenuOpen); setIsMobileSearchOpen(false) }}>
+            <Button
+              ref={mobileMenuButtonRef}
+              variant="ghost"
+              size="sm"
+              aria-label={isMenuOpen ? "Zamknij menu" : "Otwórz menu"}
+              aria-expanded={isMenuOpen}
+              onClick={() => { setIsMenuOpen(!isMenuOpen); setIsMobileSearchOpen(false) }}
+            >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>

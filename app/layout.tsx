@@ -9,14 +9,16 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Suspense } from "react"
 import { serializeJsonLd } from "@/lib/json-ld"
 
+// latin-ext jest niezbędny dla polskich diakrytyków (ą, ę, ż, ó...) —
+// bez niego przeglądarka renderuje je z fontu zastępczego.
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-inter",
 })
 
 const playfair = Playfair_Display({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-playfair",
 })
@@ -41,7 +43,7 @@ export const metadata: Metadata = {
       {
         url: "/og-image.png",
         width: 1200,
-        height: 630,
+        height: 510,
         alt: "CzyPolskaFirma Banner",
       },
     ],

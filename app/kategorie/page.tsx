@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
-import * as LucideIcons from "lucide-react"
+import { getCategoryIcon } from "@/components/category-icon"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { getAllCategoriesFromSupabase } from "@/lib/supabase/category-cache"
 import { serializeJsonLd } from "@/lib/json-ld"
@@ -43,11 +43,7 @@ interface CategoryEntry {
 }
 
 // Ikona Lucide po nazwie (spójne z components/category-tabs.tsx); fallback: Tag.
-function getIconComponent(iconName: string | null) {
-  if (!iconName) return LucideIcons.Tag
-  const icon = LucideIcons[iconName as keyof typeof LucideIcons]
-  return icon && typeof icon === "function" ? (icon as typeof LucideIcons.Tag) : LucideIcons.Tag
-}
+const getIconComponent = (iconName: string | null) => getCategoryIcon(iconName)
 
 // Liczba firm per category_id — jedno lekkie zapytanie; przy błędzie pomijamy liczby.
 async function getCategoryCounts(): Promise<Record<string, number>> {

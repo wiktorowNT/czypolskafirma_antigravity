@@ -22,7 +22,7 @@ import {
   MessageSquarePlus,
   Globe,
 } from "lucide-react"
-import * as LucideIcons from "lucide-react"
+import { getCategoryIcon } from "@/components/category-icon"
 import { CompanyLogo } from "@/components/company-logo"
 import { CompanyGrid } from "@/components/CompanyGrid"
 import { CategoryStats } from "@/components/CategoryStats"
@@ -568,8 +568,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                   <h3 className="font-semibold text-slate-900 text-sm mb-4">Inne kategorie</h3>
                   <div className="space-y-2">
                     {sidebarCategories.map((cat) => {
-                      const iconCandidate = cat.icon ? LucideIcons[cat.icon as keyof typeof LucideIcons] : null
-                      const Icon = (iconCandidate && typeof iconCandidate === "function" ? iconCandidate : FolderOpen) as React.ComponentType<{ className?: string }>
+                      const Icon = cat.icon ? getCategoryIcon(cat.icon) : FolderOpen
                       return (
                         <Link
                           key={cat.slug}
