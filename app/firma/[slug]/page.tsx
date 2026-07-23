@@ -163,9 +163,15 @@ function mapCompany(data: SupabaseCompany): CompanyDetail {
     country_code: company.country_code || undefined,
     website_url: company.website_url || undefined,
     registry_url: company.registry_url || undefined,
+    // Data "Weryfikacja" na profilu. Kolejność: verified_at -> created_at (data dodania
+    // wpisu). NIGDY new Date() jako główny fallback: verified_at jest puste dla firm, więc
+    // dawałoby to wszystkim dzisiejszą (i codziennie inną) datę — wygląda niewiarygodnie.
+    // Ostateczny new Date() tylko dla teoretycznego braku obu dat (w praktyce nie występuje).
     lastVerified: company.verified_at
       ? new Date(company.verified_at).toISOString().split("T")[0]
-      : new Date().toISOString().split("T")[0],
+      : company.created_at
+        ? new Date(company.created_at).toISOString().split("T")[0]
+        : new Date().toISOString().split("T")[0],
   }
 }
 
