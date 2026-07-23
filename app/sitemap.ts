@@ -5,6 +5,12 @@ import { getAllPosts } from "@/lib/blog"
 
 const BASE_URL = "https://czypolskafirma.pl"
 
+// Stabilna data `lastmod` dla stron statycznych i kategorii. NIE używać tu new Date():
+// sitemapa regeneruje się co godzinę (revalidate), więc new Date() sprawiałby, że każda
+// strona co godzinę wygląda na "zmienioną przed chwilą" — Google traci zaufanie do lastmod
+// i przestaje go używać do planowania re-crawlu. Bumpuj ręcznie przy istotnych zmianach treści.
+const STATIC_LASTMOD = new Date("2026-07-23T00:00:00Z")
+
 export const revalidate = 3600 // Cache sitemap for 1 hour — fresh enough for new companies, reduces Supabase load
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -13,55 +19,55 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "daily",
       priority: 1,
     },
     {
       url: `${BASE_URL}/companies`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/kategorie`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/blog`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/o-projekcie`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${BASE_URL}/metodologia`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${BASE_URL}/polityka-prywatnosci`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/regulamin`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/ulubione`,
-      lastModified: new Date(),
+      lastModified: STATIC_LASTMOD,
       changeFrequency: "weekly",
       priority: 0.4,
     },
@@ -85,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Fetch all company IDs and slugs for /firma/[slug] pages
     const { data: companies, error: companiesError } = await supabase
       .from("companies")
-      .select("id, slug, verified_at")
+      .select("id, slug, verified_at, created_at")
       .order("name", { ascending: true })
 
     if (!companiesError && companies) {
@@ -94,9 +100,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const canonicalSlug = (company.slug ? slugify(company.slug) : "") || company.id
         return {
           url: `${BASE_URL}/firma/${canonicalSlug}`,
+          // Stabilny lastmod z realnej daty wpisu. Kolejność: verified_at -> created_at
+          // -> stała. NIGDY new Date(): przy godzinnej regeneracji sitemapy dawałoby to
+          // wszystkim firmom datę "teraz" co godzinę i Google przestaje ufać lastmod.
           lastModified: company.verified_at
             ? new Date(company.verified_at)
-            : new Date(),
+            : company.created_at
+              ? new Date(company.created_at)
+              : STATIC_LASTMOD,
           changeFrequency: "weekly" as const,
           priority: 0.9, // Higher priority for company profiles
         }
@@ -112,7 +123,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!categoriesError && categories) {
       categoryPages = categories.map((category) => ({
         url: `${BASE_URL}/kategoria/${encodeURIComponent(category.slug)}`,
-        lastModified: new Date(),
+        lastModified: STATIC_LASTMOD,
         changeFrequency: "daily" as const,
         priority: 0.8,
       }))
