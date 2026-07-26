@@ -1,11 +1,22 @@
 import { ImageResponse } from "next/og"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 import { getCountryName } from "@/lib/company-faq"
+import {
+  OG_SIZE,
+  OG_COLORS,
+  OG_BOTTOM_SAFE_AREA,
+  getOgBaseUrl,
+  getDomainFromUrl,
+  getFlagCode,
+  loadLogoDataUri,
+  loadFlagDataUri,
+  loadOgFonts,
+} from "@/lib/og-assets"
 
 export const runtime = "edge"
 
 export const alt = "Sprawdź pochodzenie kapitału firmy — CzyPolskaFirma.pl"
-export const size = { width: 1200, height: 630 }
+export const size = OG_SIZE
 export const contentType = "image/png"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -15,24 +26,6 @@ interface OgCompany {
   brand: string
   country_code: string | null
   website_url: string | null
-}
-
-// Origin do pobierania statycznych logotypów z /public/logos/.
-// Na Vercel: bieżący deployment (preview lub prod); lokalnie/fallback: produkcja.
-function getBaseUrl(): string {
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
-  return "https://czypolskafirma.pl"
-}
-
-// Ta sama logika domeny co components/company-logo.tsx (host bez www).
-function getDomainFromUrl(url?: string | null): string | null {
-  if (!url) return null
-  try {
-    const withProtocol = url.startsWith("http") ? url : `https://${url}`
-    return new URL(withProtocol).hostname.replace(/^www\./, "")
-  } catch {
-    return null
-  }
 }
 
 async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
@@ -46,6 +39,11 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
   const decoded = decodeURIComponent(slugOrId)
   const normalized = decoded.toLowerCase().trim().replace(/\s+/g, "-")
 
+  // Bez tego Next 14 cache'uje odpowiedź Supabase bezterminowo (domyślne
+  // force-cache dla fetch) i karta serwuje nieaktualne dane firmy — łącznie
+  // z werdyktem — długo po zmianie w bazie.
+  const revalidate = { next: { revalidate: 3600 } }
+
   try {
     // 1) Dopasowanie bezpośrednie (exact / znormalizowany / case-insensitive).
     const orFilter = `or=(slug.eq.${encodeURIComponent(decoded)},slug.eq.${encodeURIComponent(
@@ -53,7 +51,7 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
     )},slug.ilike.${encodeURIComponent(decoded)})`
     const directRes = await fetch(
       `${SUPABASE_URL}/rest/v1/companies?select=${select}&${orFilter}&limit=1`,
-      { headers },
+      { headers, ...revalidate },
     )
     if (directRes.ok) {
       const rows = await directRes.json()
@@ -63,7 +61,10 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
     // 2) Fallback: kanoniczne dopasowanie po slugify (dla niekanonicznych slugów w bazie).
     const wanted = slugify(decoded)
     if (wanted) {
-      const allRes = await fetch(`${SUPABASE_URL}/rest/v1/companies?select=${select}`, { headers })
+      const allRes = await fetch(`${SUPABASE_URL}/rest/v1/companies?select=${select}`, {
+        headers,
+        ...revalidate,
+      })
       if (allRes.ok) {
         const all = await allRes.json()
         const match = all.find((c: any) => c.slug && slugify(c.slug) === wanted)
@@ -84,54 +85,52 @@ function mapRow(row: any): OgCompany {
   }
 }
 
-// Pobiera logo z /public/logos/{domena}.{ext} jako data URI (jeden fetch, bez
-// polegania na ponownym pobraniu przez Satori). Zwraca null, gdy pliku brak.
-async function loadLogoDataUri(domain: string, base: string): Promise<string | null> {
-  for (const ext of ["png", "jpg", "jpeg", "webp"]) {
-    try {
-      const res = await fetch(`${base}/logos/${domain}.${ext}`)
-      if (!res.ok) continue
-      const contentType = res.headers.get("content-type") || ""
-      if (!contentType.startsWith("image")) continue
-      const buf = await res.arrayBuffer()
-      const bytes = new Uint8Array(buf)
-      let binary = ""
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i])
-      return `data:${contentType};base64,${btoa(binary)}`
-    } catch {
-      // spróbuj kolejnego rozszerzenia
-    }
-  }
-  return null
+// Kolumna tekstu ma ~840 px (1200 minus marginesy, kafelek logo i odstęp).
+// Dobieramy stopień pisma tak, żeby nazwa zmieściła się w maks. dwóch wierszach.
+function getBrandFontSize(brand: string): number {
+  const len = brand.length
+  if (len <= 16) return 84
+  if (len <= 24) return 68
+  if (len <= 34) return 56
+  return 46
+}
+
+// Pierwsza litera marki — zastępuje logo, gdy firma nie ma pliku w public/logos/.
+function getMonogram(brand: string): string {
+  const first = brand.trim().charAt(0)
+  return first ? first.toUpperCase() : "?"
 }
 
 export default async function Image({ params }: { params: { slug: string } }) {
-  const company = await fetchCompany(params.slug)
+  const [company, fonts] = await Promise.all([fetchCompany(params.slug), loadOgFonts()])
 
   // Gdy nie uda się pobrać danych firmy — neutralny layout bez werdyktu
   // (nie twierdzimy "zagraniczna" dla nieznanej firmy). Gdy firma istnieje,
   // werdykt jest zgodny ze stroną: isPolish = country_code === "PL".
   const found = company !== null
-  const brand = company?.brand || "Sprawdź firmę"
+  const brand = company?.brand || "Sprawdź, czy to polska firma"
   const code = company?.country_code || null
   const isPolish = code?.toUpperCase() === "PL"
   const countryName = getCountryName(code)
 
-  // Kod flagi dla flagcdn (lowercase alpha-2; UK -> gb).
-  const flagCode = code ? (code.toLowerCase() === "uk" ? "gb" : code.toLowerCase()) : null
-
-  // Logo (opcjonalne).
+  const base = getOgBaseUrl()
   const domain = getDomainFromUrl(company?.website_url)
-  const logo = domain ? await loadLogoDataUri(domain, getBaseUrl()) : null
+  const flagCode = found ? getFlagCode(code) : null
 
-  // Kolorystyka werdyktu (neutralna, gdy brak danych firmy).
-  const accent = !found ? "#dc2626" : isPolish ? "#16a34a" : "#dc2626"
-  const verdictBg = isPolish ? "#f0fdf4" : "#fef2f2"
-  const verdictBorder = isPolish ? "#bbf7d0" : "#fecaca"
+  const [logo, wordmarkFlag, verdictFlag] = await Promise.all([
+    domain ? loadLogoDataUri(domain, base) : Promise.resolve(null),
+    loadFlagDataUri("pl", base),
+    flagCode ? loadFlagDataUri(flagCode, base) : Promise.resolve(null),
+  ])
+
+  // Kolorystyka werdyktu (neutralna czerwień marki, gdy brak danych firmy).
+  const accent = found && isPolish ? OG_COLORS.polish : OG_COLORS.foreign
+  const accentBright = found && isPolish ? OG_COLORS.polishBright : OG_COLORS.foreignBright
   const verdictText = isPolish ? "Polska firma" : "Firma zagraniczna"
 
-  // Dopasowanie wielkości nazwy do długości (limit szerokości).
-  const brandFont = brand.length > 26 ? 52 : brand.length > 16 ? 64 : 76
+  // Kraj pokazujemy tylko dla firm zagranicznych — przy "Polska firma"
+  // wiersz "Kapitał: Polska" tylko powtarzałby werdykt.
+  const showCapitalLine = found && !isPolish && countryName !== "Brak danych"
 
   return new ImageResponse(
     (
@@ -141,116 +140,152 @@ export default async function Image({ params }: { params: { slug: string } }) {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(to bottom right, #ffffff, #f1f5f9)",
-          borderTop: `20px solid ${accent}`,
-          padding: "72px 80px",
+          fontFamily: "Inter",
+          background: `linear-gradient(135deg, ${OG_COLORS.bgFrom} 0%, ${OG_COLORS.bgVia} 55%, ${OG_COLORS.bgTo} 100%)`,
         }}
       >
-        {/* Wordmark */}
-        <div
-          style={{
-            position: "absolute",
-            top: 44,
-            left: 80,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src="https://flagcdn.com/w80/pl.png"
-            width={40}
-            alt=""
-            style={{ borderRadius: "6px", marginRight: "16px" }}
-          />
-          <div style={{ fontSize: 34, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>
-            CzyPolskaFirma.pl
-          </div>
-        </div>
+        {/* Pasek werdyktu — czytelny sygnał koloru nawet w miniaturze */}
+        <div style={{ display: "flex", width: "100%", height: 10, background: accentBright }} />
 
-        {/* Logo w jasnej plakietce (stały kontener, contain — bez zniekształceń) */}
-        {logo && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 180,
-              height: 180,
-              background: "#ffffff",
-              borderRadius: 28,
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.08)",
-              marginBottom: 40,
-            }}
-          >
-            <img
-              src={logo}
-              width={140}
-              height={140}
-              alt=""
-              style={{ objectFit: "contain" }}
-            />
-          </div>
-        )}
-
-        {/* Nazwa marki */}
         <div
           style={{
             display: "flex",
-            fontSize: brandFont,
-            fontWeight: 800,
-            color: "#0f172a",
-            textAlign: "center",
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            maxWidth: 1040,
-            marginBottom: 36,
+            flexDirection: "column",
+            flex: 1,
+            padding: `44px 64px ${OG_BOTTOM_SAFE_AREA}px 64px`,
           }}
         >
-          {brand}
-        </div>
-
-        {/* Werdykt (flaga + tekst) — tylko gdy mamy dane firmy */}
-        {found ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              background: verdictBg,
-              border: `2px solid ${verdictBorder}`,
-              borderRadius: 9999,
-              padding: "18px 34px",
-            }}
-          >
-            {flagCode && (
-              <img
-                src={`https://flagcdn.com/w80/${flagCode}.png`}
-                width={52}
-                alt=""
-                style={{ borderRadius: "6px", marginRight: "20px", boxShadow: "0 2px 4px rgb(0 0 0 / 0.1)" }}
-              />
+          {/* Wordmark — stała belka nad treścią */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {wordmarkFlag && (
+              <img src={wordmarkFlag} width={38} alt="" style={{ borderRadius: 5, marginRight: 16 }} />
             )}
-            <div style={{ display: "flex", fontSize: 40, fontWeight: 700, color: accent }}>
-              {verdictText}
+            <div
+              style={{
+                display: "flex",
+                fontSize: 30,
+                fontWeight: 800,
+                color: OG_COLORS.wordmark,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              CzyPolskaFirma.pl
             </div>
           </div>
-        ) : (
-          // Brak danych firmy — neutralny podpis zamiast werdyktu.
-          <div style={{ display: "flex", fontSize: 34, color: "#475569", textAlign: "center", maxWidth: 900 }}>
-            Sprawdź pochodzenie kapitału firmy
-          </div>
-        )}
 
-        {/* Kraj pochodzenia kapitału (dla firm zagranicznych) */}
-        {found && !isPolish && countryName !== "Brak danych" && (
-          <div style={{ display: "flex", fontSize: 28, color: "#64748b", marginTop: 22 }}>
-            Kapitał: {countryName}
+          {/* Blok główny wyśrodkowany w pionie: treść po lewej, logo po prawej */}
+          <div style={{ display: "flex", flex: 1, width: "100%", alignItems: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+              <div
+                style={{
+                  display: "flex",
+                  fontSize: getBrandFontSize(brand),
+                  fontWeight: 800,
+                  color: OG_COLORS.brand,
+                  // Nie schodzić poniżej ~1.2: Satori przycina wtedy znaki
+                  // diakrytyczne nad wielkimi literami (Ż w "Żabka", Ó, Ź).
+                  lineHeight: 1.2,
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                {brand}
+              </div>
+
+              {found ? (
+                /* Werdykt — wypełniona plakietka, dużo mocniejsza niż pastelowa ramka */
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    alignSelf: "flex-start",
+                    background: accent,
+                    borderRadius: 9999,
+                    padding: "16px 34px",
+                    marginTop: 28,
+                    boxShadow: `0 14px 30px -10px ${accent}`,
+                  }}
+                >
+                  {verdictFlag && (
+                    <img
+                      src={verdictFlag}
+                      width={48}
+                      alt=""
+                      style={{ borderRadius: 5, marginRight: 20 }}
+                    />
+                  )}
+                  <div style={{ display: "flex", fontSize: 40, fontWeight: 800, color: "#ffffff" }}>
+                    {verdictText}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: 34,
+                    fontWeight: 500,
+                    color: OG_COLORS.muted,
+                    marginTop: 28,
+                  }}
+                >
+                  Baza pochodzenia kapitału marek działających w Polsce
+                </div>
+              )}
+
+              {showCapitalLine && (
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: 30,
+                    fontWeight: 500,
+                    color: OG_COLORS.muted,
+                    marginTop: 22,
+                  }}
+                >
+                  Kapitał: {countryName}
+                </div>
+              )}
+            </div>
+
+            {/* Kafelek logo — biały, bo logotypy projektowane są pod jasne tło.
+                Bez logotypu wyświetlamy monogram, żeby karta nie miała dziury.
+                Dla nieznanej firmy kafelka nie ma w ogóle — nie ma czego pokazać. */}
+            {found && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  width: 176,
+                  height: 176,
+                  marginLeft: 56,
+                  background: OG_COLORS.tile,
+                  borderRadius: 30,
+                  border: `1px solid ${OG_COLORS.tileBorder}`,
+                  boxShadow: "0 18px 40px -12px rgb(0 0 0 / 0.55)",
+                }}
+              >
+                {logo ? (
+                  <img src={logo} width={132} height={132} alt="" style={{ objectFit: "contain" }} />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      fontSize: 92,
+                      fontWeight: 800,
+                      color: accent,
+                      letterSpacing: "-0.04em",
+                    }}
+                  >
+                    {getMonogram(brand)}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     ),
-    { ...size },
+    { ...size, fonts },
   )
 }

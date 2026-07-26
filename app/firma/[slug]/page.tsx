@@ -349,6 +349,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const ownerPart = owner ? ` Właściciel: ${owner}.` : ""
   const description = `Sprawdź, czy ${brand} to polska firma. Kraj pochodzenia: ${countryName}.${ownerPart} Struktura kapitału, siedziba i dane rejestrowe.`
 
+  // Tytuł dla social mediów jest krótszy niż tytuł SEO: X nakłada go jako
+  // plakietkę na dolną krawędź obrazka OG, więc długie zdanie z sufiksem
+  // "| CzyPolskaFirma.pl" zasłaniało pół karty.
+  const isPolish = company.country_code?.toUpperCase() === "PL"
+  const hasCountry = countryName !== "Brak danych"
+  const socialTitle = isPolish
+    ? `${brand} — polska firma`
+    : hasCountry
+      ? `${brand} — firma zagraniczna (${countryName})`
+      : `${brand} — firma zagraniczna`
+
   const canonicalUrl = `${BASE_URL}/firma/${company.canonicalSlug}`
 
   return {
@@ -361,7 +372,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     // app/firma/[slug]/opengraph-image.tsx — nie ustawiamy tu images ręcznie,
     // aby uniknąć zdublowanych metatagów.
     openGraph: {
-      title: `${title} | CzyPolskaFirma.pl`,
+      title: socialTitle,
       description,
       type: "website",
       url: canonicalUrl,
@@ -370,7 +381,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | CzyPolskaFirma.pl`,
+      title: socialTitle,
       description,
       creator: "@CzyPolskaFirma",
     },

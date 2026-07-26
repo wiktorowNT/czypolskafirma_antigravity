@@ -99,10 +99,23 @@ Opcje naprawy:
 > Poniższe polecenia wykonuj na `develop` — publikacja na produkcję to osobny, ręczny merge
 > `develop → main` po weryfikacji na podglądzie Vercel (patrz `DEVELOPMENT_WORKFLOW.md`).
 
-**Krok 8 — zapis i publikacja:**
+**Krok 8 — kopie PNG dla kart OG (obowiązkowe po każdej zmianie logotypów):**
+
+Karty Open Graph (podgląd linku na X/Facebooku) renderuje Satori, które **nie
+dekoduje WebP** i nie renderuje `.svg`. Dla takich logotypów potrzebna jest kopia
+PNG w `public/logos-og/` — bez niej karta firmy pokaże monogram zamiast logo.
 
 ```bash
-git add public/logos
+node tools/generate-og-assets.mjs logos
+```
+
+Skrypt pomija firmy, które mają już `.png`/`.jpg` w `public/logos`, i nie rusza
+plików źródłowych — `public/logos/` zostaje w oryginalnej jakości.
+
+**Krok 9 — zapis i publikacja:**
+
+```bash
+git add public/logos public/logos-og
 git commit -m "Aktualizacja logotypów firm — masowy fetch i audyt"
 git push
 ```

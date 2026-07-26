@@ -67,5 +67,14 @@ export const countryNames: Record<string, string> = {
   "GR": "Grecja",
   "LU": "Luksemburg",
   "HU": "Węgry",
+  "ZA": "RPA",
+  "LT": "Litwa",
+  "CA": "Kanada",
+  "EE": "Estonia",
+  "UA": "Ukraina",
+  "AU": "Australia",
+  "TW": "Tajwan",
+  "SI": "Słowenia",
+  "HR": "Chorwacja",
 }
 // Mapa kodów ISO -> polskie nazwy krajów (używana m.in. w alt-ach flag i meta description)
