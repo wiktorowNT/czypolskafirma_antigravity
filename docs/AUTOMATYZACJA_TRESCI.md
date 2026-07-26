@@ -40,14 +40,27 @@ Zakładka **Actions → Codzienna treść → Run workflow**. Do wyboru:
 
 ## Konfiguracja (jednorazowo)
 
-1. **Token do Claude'a.** W terminalu lokalnie:
+1. **Token do Claude'a.** `setup-token` to komenda CLI Claude Code, nie aplikacji
+   okienkowej. Jeżeli CLI nie ma w systemie (sprawdzenie: `claude --version` zwraca
+   błąd), najpierw instalacja, w PowerShellu albo Terminalu Windows:
+
+   ```bash
+   npm install -g @anthropic-ai/claude-code
+   ```
+
+   Potem w **nowym** oknie terminala, żeby złapało PATH:
 
    ```bash
    claude setup-token
    ```
 
-   Token pochodzi z Twojej subskrypcji Claude, więc automat nie generuje osobnych
-   kosztów. Zużywa za to Twój limit, tak samo jak praca w Claude Code.
+   Otworzy się przeglądarka z logowaniem do konta Claude, a terminal wypisze token
+   zaczynający się od `sk-ant-oat...`. Token pochodzi z subskrypcji Claude, więc
+   automat nie generuje osobnych kosztów. Zużywa za to limit subskrypcji, tak samo
+   jak praca w Claude Code.
+
+   Token jest poświadczeniem do konta: trafia wyłącznie do sekretu w GitHubie,
+   nigdy do plików w repo, do czatu ani do zgłoszeń.
 
 2. **Sekret w repozytorium.** GitHub → Settings → Secrets and variables → Actions →
    New repository secret. Nazwa: `CLAUDE_CODE_OAUTH_TOKEN`, wartość: token z punktu 1.
