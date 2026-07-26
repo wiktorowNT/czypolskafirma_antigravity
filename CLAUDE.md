@@ -138,6 +138,7 @@ Pełna procedura: `docs/SOP_dodawanie_firm.md` (proces bazowy opisany też w Not
 - `docs/DEVELOPMENT_WORKFLOW.md` — workflow git i proces akceptacji
 - `docs/SOP_dodawanie_firm.md` — pełny pipeline dodawania firm
 - `docs/SOP_logotypy.md` — zarządzanie logotypami firm (fetch, audyt, Logo Fixer)
+- `docs/AUTOMATYZACJA_TRESCI.md` — codzienny automat treści (blog + X + FB) na GitHub Actions
 - `docs/BACKUP_STRATEGY.md` — strategia backupu bazy
 
 > Część dokumentacji jest lustrzana z Notion (workspace „Projekt czypolskafirma").

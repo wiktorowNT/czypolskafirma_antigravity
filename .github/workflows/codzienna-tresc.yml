@@ -1,0 +1,128 @@
+name: Codzienna treść
+
+# Raz dziennie przygotowuje paczkę: wpis blogowy + wersje na X i Facebooka,
+# i otwiera pull requesta do gałęzi develop. Nic nie publikuje samo.
+# Szczegóły i instrukcja obsługi: docs/AUTOMATYZACJA_TRESCI.md
+
+on:
+  schedule:
+    # 04:00 UTC = 06:00 czasu polskiego latem, 05:00 zimą.
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+    inputs:
+      tryb:
+        description: "Tryb pracy"
+        type: choice
+        options: [auto, news, evergreen]
+        default: auto
+      temat:
+        description: "Wymuszony temat lub link do artykułu (puste = automat wybiera sam)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: codzienna-tresc
+  cancel-in-progress: false
+
+jobs:
+  paczka:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Pobierz repozytorium
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Ustal dzisiejszą datę
+        id: dzien
+        run: echo "data=$(TZ=Europe/Warsaw date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Napisz treści
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Wykonaj w całości instrukcję z pliku .github/prompts/codzienna-tresc.md.
+
+            Dzisiejsza data (Europe/Warsaw): ${{ steps.dzien.outputs.data }}
+            Tryb: ${{ inputs.tryb || 'auto' }}
+            Wymuszony temat: ${{ inputs.temat || '(brak, wybierz sam)' }}
+
+            Pamiętaj: tylko pliki, żadnych operacji gitowych.
+          claude_args: >-
+            --model claude-opus-5
+            --max-turns 80
+            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(node tools/lint-tresci.mjs:*)"
+
+      - name: Sprawdź, czy jest materiał
+        id: material
+        run: |
+          if [ ! -f .tmp/pr-body.md ]; then
+            echo "Automat nie zapisał .tmp/pr-body.md. Sprawdź log kroku „Napisz treści”."
+            exit 1
+          fi
+          if head -n 1 .tmp/pr-body.md | grep -q "BRAK MATERIAŁU"; then
+            echo "powod=$(head -n 1 .tmp/pr-body.md)" >> "$GITHUB_OUTPUT"
+            echo "jest=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "jest=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Brak materiału na dziś
+        if: steps.material.outputs.jest == 'false'
+        run: |
+          echo "::warning::${{ steps.material.outputs.powod }}"
+          echo "Kończę bez pull requesta."
+
+      - name: Lint treści
+        if: steps.material.outputs.jest == 'true'
+        run: node tools/lint-tresci.mjs
+
+      - name: Sprawdź, czy automat nie ruszył cudzych plików
+        if: steps.material.outputs.jest == 'true'
+        run: |
+          set -e
+          niedozwolone=$(git status --porcelain | cut -c4- | grep -v -E '^(content/blog/|docs/social/newsy/|docs/social/kolejka-tematow\.md|public/images/blog/)' || true)
+          if [ -n "$niedozwolone" ]; then
+            echo "Automat zmienił pliki spoza dozwolonych ścieżek:"
+            echo "$niedozwolone"
+            exit 1
+          fi
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Brak jakichkolwiek zmian w plikach treści."
+            exit 1
+          fi
+
+      - name: Otwórz pull requesta
+        if: steps.material.outputs.jest == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          galaz="tresc/${{ steps.dzien.outputs.data }}-${{ github.run_number }}"
+          tytul=$(head -n 1 .tmp/pr-body.md | sed 's/^#* *//')
+
+          git config user.name "czypolskafirma-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$galaz"
+          git add content/blog docs/social/newsy docs/social/kolejka-tematow.md public/images/blog 2>/dev/null || true
+          git commit -m "Treść: $tytul"
+          git push --force-with-lease origin "$galaz"
+
+          gh pr create \
+            --base develop \
+            --head "$galaz" \
+            --title "$tytul" \
+            --body-file .tmp/pr-body.md
