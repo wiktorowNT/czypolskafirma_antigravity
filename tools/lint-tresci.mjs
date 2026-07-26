@@ -69,6 +69,19 @@ const ZAKAZANE_NA_BLOGU = [
   "stosujemy zasadę",
 ]
 
+/**
+ * Zdania dowożące werdykt o pochodzeniu kapitału. Nie są zakazane, ale mają padać
+ * raz i w naturalnym miejscu. Powtarzanie ich albo domykanie nimi tekstu sprawia,
+ * że wpis brzmi jak agitka zamiast jak artykuł. Zasada „Ciekawość ponad werdykt"
+ * w tools/skills/lowca-newsow/SKILL.md.
+ */
+const WERDYKT_WZORCE = [
+  /nie (jest|był|była|są|byli|jesteśmy) [^.!?\n]{0,40}polsk/gi,
+  /nie należ(y|ą|ała|ało) [^.!?\n]{0,40}(polsk|do polskiego)/gi,
+  /(to|jest|pozostaje) (firma|marka|spółka|sieć|grupa) zagraniczn/gi,
+  /nie ma nic wspólnego z polsk/gi,
+]
+
 const BLOG_MIN_SLOW = 450
 const BLOG_MAX_SLOW = 1100
 const X_MIN_ZNAKOW = 800
@@ -167,6 +180,37 @@ function sprawdzStyl(plik, pelnyTekst, fragment, offsetFragmentu, etykieta, list
   }
 }
 
+/**
+ * Pilnuje, żeby tekst nie dowoził werdyktu o polskości na siłę: raz wystarczy,
+ * a ostatni akapit należy do historii, nie do klasyfikacji.
+ */
+function sprawdzWerdykt(plik, pelnyTekst, fragment, offsetFragmentu, etykieta) {
+  const trafienia = []
+  for (const wzorzec of WERDYKT_WZORCE) {
+    for (const m of fragment.matchAll(wzorzec)) trafienia.push(m.index)
+  }
+  if (!trafienia.length) return
+
+  if (trafienia.length > 1) {
+    ostrzezenie(
+      plik,
+      liniaDla(pelnyTekst, offsetFragmentu + Math.min(...trafienia)),
+      `${etykieta}: werdykt o pochodzeniu kapitału pada ${trafienia.length} razy. Raz, faktem, w naturalnym miejscu wystarczy.`,
+    )
+  }
+
+  const akapity = fragment.trim().split(/\n\s*\n/)
+  const ostatni = akapity[akapity.length - 1] || ""
+  const domkniecie = WERDYKT_WZORCE.some((w) => new RegExp(w.source, "i").test(ostatni))
+  if (domkniecie && akapity.length > 1) {
+    ostrzezenie(
+      plik,
+      liniaDla(pelnyTekst, offsetFragmentu + fragment.lastIndexOf(ostatni)),
+      `${etykieta}: tekst domknięty werdyktem o polskości. Zakończ tym, co ciekawe w samej historii.`,
+    )
+  }
+}
+
 function liczHashtagi(tekst) {
   return (tekst.match(/(^|\s)#[\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+/g) || []).length
 }
@@ -227,6 +271,7 @@ function lintBloga(plik) {
 
   const offsetTresci = raw.length - tresc.length
   sprawdzStyl(plik, raw, tresc, offsetTresci, "Blog", [...ZAKAZANE_FRAZY, ...ZAKAZANE_NA_BLOGU])
+  sprawdzWerdykt(plik, raw, tresc, offsetTresci, "Blog")
 
   const slowa = tresc.replace(/```[\s\S]*?```/g, "").split(/\s+/).filter(Boolean).length
   if (slowa < BLOG_MIN_SLOW || slowa > BLOG_MAX_SLOW) {
@@ -293,6 +338,7 @@ function lintNewsa(plik) {
     const linia = liniaDla(raw, wpisX.offset)
 
     sprawdzStyl(plik, raw, trescX, wpisX.offset, "Wpis X", ZAKAZANE_FRAZY)
+    sprawdzWerdykt(plik, raw, trescX, wpisX.offset, "Wpis X")
 
     if (trescX.length < X_MIN_ZNAKOW || trescX.length > X_MAX_ZNAKOW) {
       bland(plik, linia, `Wpis X ma ${trescX.length} znaków, powinien mieć ${X_MIN_ZNAKOW}-${X_MAX_ZNAKOW}.`)
@@ -312,6 +358,7 @@ function lintNewsa(plik) {
     const linia = liniaDla(raw, wpisFB.offset)
 
     sprawdzStyl(plik, raw, trescFB, wpisFB.offset, "Wpis FB", ZAKAZANE_FRAZY)
+    sprawdzWerdykt(plik, raw, trescFB, wpisFB.offset, "Wpis FB")
 
     if (trescFB.length < FB_MIN_ZNAKOW || trescFB.length > FB_MAX_ZNAKOW) {
       bland(plik, linia, `Wpis FB ma ${trescFB.length} znaków, powinien mieć ${FB_MIN_ZNAKOW}-${FB_MAX_ZNAKOW}.`)

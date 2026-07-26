@@ -58,6 +58,12 @@ Twarde zasady, które łamią publikację:
   w wersjach X i FB.
 - **Zero zmyślonych liczb.** Każda kwota, procent i data pochodzi ze źródła, które
   wypisujesz w sekcji Weryfikacja. Nie znasz szczegółu, nie podajesz go.
+- **Ciekawość ponad werdykt.** Osią tekstu jest historia, nie pochodzenie kapitału.
+  Nie domykaj tekstu zdaniem „a X i tak nie jest polska", nie powtarzaj werdyktu kilka
+  razy i nie naginaj tematu, żeby do niego dojść. Szukaj tego, co w historii naprawdę
+  ciekawe: kurs i pieniądze, kulisy decyzji, mechanizm, skutek dla klienta. Właściciel
+  wchodzi tam, gdzie odpowiada na pytanie, które sama historia stawia. Pełna zasada:
+  sekcja „Ciekawość ponad werdykt" w `tools/skills/lowca-newsow/SKILL.md`.
 - Zero polityki partyjnej, zero wzywania do bojkotu, maksymalnie jeden hashtag,
   1-2 emoji funkcjonalne.
 

@@ -97,12 +97,18 @@ reszta przebiegu bez zmian.
 
 ## Twarde zasady treści
 
-- X bez Premium: **maks. 280 znaków** na post (licz przed zapisem!). Gdy w ustawieniach
-  `x_premium: true`, dłuższe posty są dozwolone, ale hook nadal w pierwszych 280 znakach.
+- Długość na X zależy od `x_premium` w stanie. Bez Premium: maks. 280 znaków.
+  Z Premium (limit 25 000): **przy postach o jednej firmie domyślna jest forma dłuższa
+  i merytoryczna** (długość jak wersja FB lub kilka zdań więcej), bo wpis na profilu ma
+  wnosić realną wartość dla kogoś, kto zaczyna czytać. Warunek: pierwsze ~280 znaków
+  (hook + sedno) muszą działać samodzielnie przed „Pokaż więcej". Krótkiej formy używaj
+  tylko tam, gdzie treść jej nie potrzebuje (quiz, pojedynek).
 - Link do profilu zawsze z UTM: `?utm_source=x&utm_medium=social` (na FB `utm_source=fb`).
   Używaj czystych URL-i profilów (URL-enkodowane slugi).
 - Emoji i hashtagi wg checklisty w `references/formaty.md` (1–2 funkcjonalne emoji na post,
   maks. 2 hashtagi).
+- **Zero myślników „ — " (em-dash) w treści postów i komentarzy** — szczegóły i zamienniki
+  w `references/formaty.md`.
 - Fakty tylko z pobranych stron. Gdy strona nie podaje szczegółu (np. procentu udziałów),
   nie podawaj go. Wątpliwość = wybierz inną firmę.
 - Bez wzywania do bojkotów. Pokazujemy dane i alternatywy, wybór należy do czytelnika.

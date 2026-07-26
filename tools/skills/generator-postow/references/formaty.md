@@ -41,21 +41,34 @@ terminów; humor tak, złośliwość wobec pytającego nigdy.
 Post ma brzmieć jak człowiek opowiadający znajomemu ciekawostkę, nie jak copywriter.
 Test przed zapisem: **czy powiedziałbyś to zdanie na głos koledze?** Jeśli nie — przepisz.
 
+Druga strona tej samej zasady: **post nie musi za wszelką cenę dochodzić do
+polskości**. Werdykt jest sensem projektu, ale nie każdy tekst musi go dowozić
+puentą w stylu „a więc jednak nie jest polska". Jeżeli w historii jest coś
+ciekawszego (kurs, kwota, kulisy decyzji, absurd rynkowy, zmiana dla klienta),
+to ono jest bohaterem, a werdykt pada raz, faktem, w naturalnym miejscu.
+Werdykt wciśnięty na siłę brzmi jak agitka i psuje wiarygodność bardziej,
+niż pomaga.
+
 Typowe AI-maniery do unikania:
 - doklejone pytania retoryczne („Brzmi jak zagranica?", „Znacie?", „A Wy?")
 - dramatyczne kontrasty („A jednak…", „Tymczasem…", „Prawda jest inna")
 - puste wzmacniacze („co ciekawe", „warto wiedzieć", „mało kto wie")
+- **myślnik „ — " (pauza/em-dash) jest CAŁKOWICIE ZAKAZANY w treści postów i komentarzy**
+  — to najbardziej rozpoznawalny sygnał tekstu z AI. Zamiast niego: kropka, przecinek,
+  dwukropek albo podział na dwa zdania. Strzałka „→" przed linkiem zostaje, to nie
+  myślnik. Zakaz dotyczy treści do publikacji; plików roboczych i instrukcji nie.
 
-Zamiast chwytu — po prostu powiedz fakt. Wzorzec zatwierdzony przez właściciela projektu:
+Zamiast chwytu — po prostu powiedz fakt. Wzorzec zatwierdzony przez właściciela projektu
+(z usuniętym myślnikiem):
 
 > Stoisz przy półce widzisz: Hoop Cola, syropy Paola, Jupik. Te wszystkie marki od 2019
-> w 100% należą do polskiego ZMB Capital — jest on również producentem Ustronianki 🇵🇱
+> w 100% należą do polskiego ZMB Capital, tego samego, który produkuje Ustroniankę 🇵🇱
 > Więcej takich ciekawostek → [link]
 
-Zauważ: zero pytań retorycznych, zero „a jednak", fakt podany wprost, swobodna
-interpunkcja jak w mowie. Tak ma brzmieć całość. Elementy głosu marki (zwroty do „Was",
-porównania) też muszą przechodzić test naturalności — lepiej post bez ozdobnika niż
-z ozdobnikiem, który pachnie generatorem.
+Zauważ: zero pytań retorycznych, zero „a jednak", zero myślników, fakt podany wprost,
+swobodna interpunkcja jak w mowie. Tak ma brzmieć całość. Elementy głosu marki (zwroty
+do „Was", porównania) też muszą przechodzić test naturalności — lepiej post bez ozdobnika
+niż z ozdobnikiem, który pachnie generatorem.
 
 ### Różnorodność w obrębie paczki — obowiązkowe
 
@@ -64,7 +77,7 @@ Głos marki nie może zostać na papierze. W każdej paczce (od 3 postów wzwyż
 - **Min. jeden post z elementem głosu marki**: zwrot do „Was", porównanie z czapy albo
   ekscytacja danymi. Jeden wystarczy — trzy posty z memowym porównaniem to już cringe.
 - **Różnicuj konstrukcję hooków.** Dwa sąsiednie posty nie mogą zaczynać się tym samym
-  schematem (np. „[Marka] — wyliczanka produktów. A jednak…"). Warianty otwarcia:
+  schematem (np. „[Marka], wyliczanka produktów, kontrast"). Warianty otwarcia:
   pytanie do czytelnika, goła liczba/procent, „Zgłosiliście…", teza do obalenia,
   mini-scenka („Stoisz przy półce z wędlinami…").
 - **Maks. jedna wyliczanka produktów na paczkę.** Hook to jedno krótkie zdanie,
@@ -123,13 +136,17 @@ nigdy nie oznaczaj posta „głos marki" w treści ani w nagłówku paczki.
 Najmocniejszy format. Wybieraj marki powszechnie brane za polskie (polska nazwa, polska
 historia, obecność od dekad), których werdykt to „Zagraniczna" — typowe przypadki Złotej Klatki.
 
-Struktura X:
-1. Hook: konkret o marce, który buduje jej „polskość" (historia, produkt, miejsce)
-2. Fakt: kto naprawdę jest właścicielem (z profilu firmy)
-3. [link]
+Struktura X (forma dłuższa, domyślna przy Premium): 4–7 zdań w akapitach po 1–3 zdania.
+
+1. Hook: co buduje „polskość" marki (nazwa, historia, produkt, miejsce). Pierwszy akapit
+   musi nieść sedno przed „Pokaż więcej".
+2. Zwrot: kto naprawdę ma kapitał, od kiedy, jaki pakiet (% z profilu).
+3. Piramida do nazwiska: spółka-matka i kraj, a na szczycie konkretny właściciel z profilu.
+4. Niuans: co zostaje polskie (produkcja, siedziba), a co nie (kapitał, zysk).
+5. [link] z UTM na końcu.
 
 Przykład (na bazie profilu Żabki — zawsze pobierz aktualny!):
-> Żabka — bardziej polska nazwa nie istnieje. Tyle że od 2017 kontrolny pakiet trzyma
+> Żabka. Bardziej polska nazwa nie istnieje. Tyle że od 2017 kontrolny pakiet trzyma
 > fundusz CVC z zagranicy 🇬🇧 Kto dokładnie na niej zarabia i od kiedy → [link]
 
 FB (wersja dłuższa): 3–5 zdań, dodaj krótką historię marki („zaczynało jako…"),
@@ -145,7 +162,7 @@ Struktura X: zacznij od konkretu o firmie (co robi, skąd jest, kto prowadzi) i 
 typu „brzmi jak firma z Zachodu?", „brzmi jak import ze Stambułu" są sztuczne i zakazane.
 
 Źle: „Zahir Kebab brzmi jak import prosto ze Stambułu. A to w 100% polska firma…"
-Dobrze: „Zahir Kebab — sieć rollo spod Łodzi, w 100% polska firma. Prowadzą ją od 2018
+Dobrze: „Zahir Kebab to sieć rollo spod Łodzi, w 100% polska firma. Prowadzą ją od 2018
 bracia Islam 🇵🇱 Więcej takich → [link]"
 
 ## 3. Quiz (natywna ankieta X / FB)
@@ -183,8 +200,9 @@ czytelnik ma dokonać tego wyboru jutro w sklepie.
 „X polskich firm w kategorii [kategoria]" — 3–6 marek z werdyktem „Polska" z jednej
 kategorii, po jednej linijce: marka + jedno zdanie czym jest.
 
-Na X: lista w jednym poście (albo wątek, gdy x_premium=false i się nie mieści:
-post główny + 1 odpowiedź). Na FB: pełna lista + link do kategorii.
+Na X: lista w jednym poście — z Premium (x_premium=true) zawsze jeden post, bez wątków,
+nawet gdy przekracza 280 znaków (pamiętaj: początek przed „Pokaż więcej" musi nieść
+sedno). Bez Premium: post główny + 1 odpowiedź. Na FB: pełna lista + link do kategorii.
 Zakończenie: „Pełna lista i szczegóły właścicielskie → [link do kategorii]".
 
 ## 7. Statystyka kategorii (niedziela)
@@ -192,6 +210,39 @@ Zakończenie: „Pełna lista i szczegóły właścicielskie → [link do katego
 Ze strony kategorii policz proporcje: „Na [N] sieci [kategoria] w naszej bazie tylko [M]
 ma polski kapitał." + 1–2 przykłady + link do kategorii. Podawaj liczby wprost ze strony
 („Znaleziono N firm…" + zliczone werdykty) — nie szacuj.
+
+## 8a. Długi wpis (tylko z X Premium, maks. 1 na tydzień)
+
+Premium pozwala pisać do 25 000 znaków — używaj tego rzadko i celowo, bo feed premiuje
+zwięzłość. 800–2500 znaków wystarcza; nie lej wody. Wstawiaj zamiast niedzielnej
+statystyki lub jako dodatkowy 8. post, gdy temat na to zasługuje.
+
+**Wzorzec zatwierdzony przez właściciela** (wiralowy wpis „Kto naprawdę zarabia
+na hot-dogu z Żabki?"). Anatomia, punkt po punkcie:
+
+1. **Hook od codziennego produktu, nie od spółki.** „Kto zarabia na hot-dogu z Żabki?"
+   bije „strukturę akcjonariatu Żabka Group" o rzędy wielkości. Zacznij od rzeczy,
+   którą czytelnik trzymał dziś w ręce.
+2. **Podążaj za pieniędzmi, krok po kroku.** Sklep → spółka polska → spółka-matka
+   (kraj!) → fundusze/właściciele. Każdy krok jedno zdanie, flagi emoji przy krajach.
+3. **Twarde liczby.** Procenty pakietów, kwota przejęcia, dzisiejsza wycena.
+   Liczby robią robotę lepiej niż przymiotniki.
+4. **Nazwiska na szczycie piramidy.** Nie „fundusz CVC", tylko konkretni ludzie,
+   którzy za nim stoją (z profilu/weryfikacji). Piramida kończąca się nazwiskiem
+   robi wrażenie i wyróżnia nas z tłumu ogólników.
+5. **Zniuansowany werdykt.** „Operacyjnie polska, ale kapitał i lwia część zysku
+   za granicą" jest wiarygodniejsze niż zero-jedynkowe „NIE-polska". Niuans = dowód,
+   że wiemy, o czym mówimy.
+6. **Druga warstwa: historia.** Founderzy, kolejne sprzedaże, timeline. Jedna
+   ciekawostka historyczna, o której mało kto pamięta.
+7. **Puenta z lekką ironią,** bez moralizowania („Jesteśmy dobrzy w wymyślaniu super
+   biznesów i oddawaniu ich zagranicy. Brawo My!"). Bez wzywania do czegokolwiek.
+
+Techniczne: pierwsze ~280 znaków (hook + pierwszy krok pieniędzy) musi działać
+samodzielnie, bo reszta chowa się za „Pokaż więcej". Akapity 1–3 zdania. **Link do
+profilu wrzuć w pierwszy komentarz pod własnym wpisem, nie w treść** — X obniża
+zasięg postów z linkami zewnętrznymi; w treści zamiast linku napisz, że szczegóły
+w komentarzu. W paczce podaj i wpis, i treść tego pierwszego komentarza.
 
 ## 8. 🚨 CZYPOLSKAFIRMA RAPORT 🚨 / build in public (rotacyjnie zamiast 7)
 
@@ -238,7 +289,9 @@ Grafika: [4 loga + znak zapytania]
 
 - [ ] Każdy fakt pochodzi z pobranej strony (żadnych „około", „podobno", zmyślonych %)
 - [ ] Nazwy precyzyjne: post nie myli marki z profilu ze spółką ani z marką-matką
-- [ ] X ≤ 280 znaków (chyba że x_premium)
+- [ ] Bez Premium: X ≤ 280 znaków. Z Premium: posty o jednej firmie domyślnie w formie
+  dłuższej i merytorycznej; pierwsze ~280 znaków niosą hook i sedno (fold „Pokaż więcej").
+  Krótka forma tylko tam, gdzie treść jej nie wymaga (quiz, pojedynek)
 - [ ] Link z poprawnym UTM w każdym poście (poza samym quizem — tam link idzie dopiero w odpowiedzi)
 - [ ] Każdy post ma 1–2 emoji: flaga kraju kapitału to standard, do tego maks. jeden
   akcent pasujący do treści (💊 przy farmacji, 📱 przy telekomach, → przy CTA).
@@ -249,4 +302,6 @@ Grafika: [4 loga + znak zapytania]
 - [ ] Maks. jedna wyliczanka produktów na paczkę
 - [ ] Test naturalności: każde zdanie dałoby się powiedzieć na głos koledze
   (zero doklejonych pytań retorycznych, „a jednak", „co ciekawe")
+- [ ] **ZERO myślników „ — " w treści postów X i FB.** Przeskanuj każdy post przed
+  zapisem; znalazłeś myślnik = przepisz zdanie (kropka, przecinek albo dwukropek)
 - [ ] Każdy post ma linijkę `Grafika:` ze specyfikacją
