@@ -23,6 +23,11 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
+  # Akcja Claude'a pobiera token OIDC, żeby wymienić go na krótkotrwałe
+  # poświadczenia do GitHuba. Bez tego run pada na starcie z komunikatem
+  # „Could not fetch an OIDC token".
+  id-token: write
 
 concurrency:
   group: codzienna-tresc
@@ -52,6 +57,8 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Podany wprost, żeby akcja nie musiała wymieniać OIDC na token aplikacji.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             Wykonaj w całości instrukcję z pliku .github/prompts/codzienna-tresc.md.
 
