@@ -77,7 +77,8 @@ Wolno Ci tworzyć i zmieniać **tylko** te ścieżki:
 | `docs/social/newsy/news-RRRR-MM-DD-[slug].md` | wersje X i FB, Weryfikacja, Kandydaci do bazy |
 | `docs/social/newsy/stan-newsow.json` | dopisany opisany temat |
 | `docs/social/kolejka-tematow.md` | odhaczony temat, uzupełniona kolejka |
-| `.tmp/pr-body.md` | opis pull requesta (krok 6) |
+| `public/images/blog/[slug].png` | okładka wpisu (krok 4b) |
+| `.tmp/okladka.json`, `.tmp/pr-body.md` | pliki robocze (kroki 4b i 6) |
 
 Nie dotykasz kodu aplikacji, konfiguracji, workflow ani żadnego innego pliku.
 Data w nazwach i we frontmatterze to dzisiejsza data podana w wiadomości uruchomieniowej.
@@ -85,6 +86,38 @@ Data w nazwach i we frontmatterze to dzisiejsza data podana w wiadomości urucho
 Jeżeli w `docs/social/kolejka-tematow.md` zostało mniej niż 5 nieodhaczonych tematów,
 dopisz 10 nowych na podstawie kategorii i firm z żywej strony, tak żeby nie powtarzały
 opisanych już tematów.
+
+## Krok 4b. Okładka wpisu
+
+Każdy wpis dostaje własną okładkę 1200×630, bo to ona pokazuje się przy udostępnianiu
+linku na Facebooku i X. Zapisz dane do `.tmp/okladka.json`:
+
+```json
+{
+  "slug": "[slug wpisu]",
+  "tytul": "[krótszy tytuł na grafikę, do ~60 znaków]",
+  "akcent": "[fragment tytułu na czerwono, dokładnie tak jak w tytule]",
+  "podtytul": "[jedno zdanie, do ~70 znaków]",
+  "staty": [
+    { "wartosc": "25,3 mld €", "opis": "sprzedaż sieci w 2025" }
+  ]
+}
+```
+
+Trzy statystyki (wyjątkowo dwie). Wyłącznie liczby, które padają w tekście i mają
+pokrycie w sekcji Weryfikacja. `wartosc` do ~14 znaków, `opis` do ~30 znaków, bez kropki
+na końcu. Strzałka „→” w wartości jest dobra przy kierunku transakcji („Zurych →
+Warszawa”, „Norwegia → Indie”). Potem uruchom:
+
+```bash
+node tools/okladka-wpisu.mjs .tmp/okladka.json
+```
+
+Skrypt wypisze gotowe linijki `image` i `imageAlt` do frontmattera wpisu. Dopisz je,
+przy czym `imageAlt` sformułuj własnymi słowami, tak żeby mówił, co widać na grafice.
+
+Jeżeli render się nie uda, nie blokuj z tego powodu całej paczki: zostaw wpis bez pól
+`image` i `imageAlt` i napisz o tym w opisie pull requesta.
 
 ## Krok 5. Sprawdź się
 

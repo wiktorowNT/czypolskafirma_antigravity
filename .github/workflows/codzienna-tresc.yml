@@ -48,6 +48,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      # Chrome dla puppeteera waży ~150 MB, więc lepiej go nie ściągać co dzień.
+      - name: Cache przeglądarki puppeteera
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Zależności (puppeteer do okładek)
+        run: npm ci
 
       - name: Ustal dzisiejszą datę
         id: dzien
@@ -70,7 +81,7 @@ jobs:
           claude_args: >-
             --model claude-opus-5
             --max-turns 80
-            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(node tools/lint-tresci.mjs:*)"
+            --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(node tools/lint-tresci.mjs:*),Bash(node tools/okladka-wpisu.mjs:*)"
 
       - name: Sprawdź, czy jest materiał
         id: material

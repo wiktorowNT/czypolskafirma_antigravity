@@ -12,6 +12,7 @@ Nic nie publikuje samodzielnie: publikacja to Twoja decyzja i Twoje dwa kliknię
    - szuka newsa z ostatnich 7 dni i weryfikuje fakty w **dwóch niezależnych źródłach**,
    - jeżeli takiego newsa nie ma, bierze temat z `docs/social/kolejka-tematow.md`,
    - pisze `content/blog/[slug].md` oraz `docs/social/newsy/news-RRRR-MM-DD-[slug].md`,
+   - renderuje okładkę wpisu do `public/images/blog/[slug].png` i wpina ją we frontmatter,
    - uruchamia `node tools/lint-tresci.mjs` i poprawia błędy.
 3. Workflow jeszcze raz odpala lint (już bez udziału modelu), sprawdza, że zmieniły się
    tylko pliki treści, commituje na gałąź `tresc/RRRR-MM-DD-NN` i otwiera pull requesta.
@@ -100,6 +101,31 @@ Repozytorium jest publiczne, więc minuty GitHub Actions są darmowe i nielimito
 Model czyta cudze strony internetowe, więc obowiązuje zasada ograniczonego zaufania:
 ma dostęp tylko do plików treści i do jednego polecenia w Bashu (lint). Nie ma dostępu
 do gita ani do sekretów.
+
+## Grafiki
+
+Są dwa różne rodzaje grafiki i tylko jeden robi się sam.
+
+**Okładka wpisu (automatyczna).** 1200×630 w `public/images/blog/[slug].png`, wpięta we
+frontmatter polami `image` i `imageAlt`. To jest og:image, czyli obrazek widoczny przy
+udostępnianiu linku na Facebooku i X, oraz miniatura na liście `/blog`. Automat składa
+ją z szablonu [tools/okladka-szablon.html](../tools/okladka-szablon.html): pasek marki,
+tytuł z czerwonym akcentem, podtytuł i trzy liczby z tekstu.
+
+Ręcznie robi się to tak samo, jednym poleceniem:
+
+```bash
+node tools/okladka-wpisu.mjs dane.json
+```
+
+Format `dane.json` jest opisany w nagłówku [tools/okladka-wpisu.mjs](../tools/okladka-wpisu.mjs).
+Wygląd zmienia się w szablonie HTML, bez dotykania skryptu. Fonty (Gelasio i Arimo)
+ładują się z Google Fonts, żeby render na Twoim Windowsie i na runnerze wychodził
+tak samo.
+
+**Obrazek do posta na X i Facebooka (ręczny).** Automat go nie tworzy, podaje tylko
+pomysł w linijce „Grafika:" na górze pliku newsowego, np. oś czasu albo wykres kursu.
+Post można też wrzucić bez grafiki, wtedy przy linku i tak zaciągnie się okładka wpisu.
 
 ## Lint lokalnie
 
