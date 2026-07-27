@@ -15,7 +15,7 @@ Zasady:
 
 ## Analizy pojedynczych marek
 
-- [ ] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki
+- [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
 - [ ] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu
 - [ ] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym
 - [ ] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy
