@@ -3,6 +3,8 @@ title: "Kto jest właścicielem Biedronki i ile z tego zostaje w Polsce"
 slug: "kto-jest-wlascicielem-biedronki"
 date: 2026-07-27
 description: "Biedronkę zbudował Mariusz Świtalski, kupili ją Portugalczycy w 1997 roku. Dziś odpowiada za ponad 70 procent przychodów całej grupy."
+image: "/images/blog/kto-jest-wlascicielem-biedronki.png"
+imageAlt: "Kto jest właścicielem Biedronki: polska sieć, portugalski właściciel"
 relatedCompanies:
   - biedronka
 ---
