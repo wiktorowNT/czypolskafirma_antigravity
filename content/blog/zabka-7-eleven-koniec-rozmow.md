@@ -1,8 +1,8 @@
 ---
-title: "Żabka o krok od japońskiego właściciela. Dlaczego kurs skoczył o 11 procent"
+title: "Żabka bez japońskiego właściciela. Kurs oddał cały wzrost w jeden dzień"
 slug: "zabka-7-eleven-koniec-rozmow"
-date: 2026-07-26
-description: "Seven & i Holdings, właściciel sieci 7-Eleven, wycofał się z zakupu udziałów w Grupie Żabka. Na samą plotkę o transakcji kurs urósł o prawie 11 procent."
+date: 2026-07-27
+description: "Seven & i Holdings, właściciel sieci 7-Eleven, wycofał się z zakupu udziałów w Grupie Żabka. Kurs urósł o 10,87 procent na plotce i oddał to na jednej sesji."
 relatedCompanies:
   - zabka
 ---
@@ -10,7 +10,7 @@ relatedCompanies:
 16 lipca akcje Grupy Żabka podrożały o 10,87 procent w ciągu jednej sesji. Nie wydarzyło
 się nic, co dotyczyłoby sklepów, sprzedaży ani wyników. Wystarczyło doniesienie japońskiej
 agencji Nikkei, że ktoś rozważa kupno dużego pakietu akcji. Dziesięć dni później kupujący
-odszedł od stołu.
+odszedł od stołu, a rynek zabrał ten wzrost w pierwszej godzinie poniedziałkowej sesji.
 
 ## Jeden dzień, prawie jedenaście procent
 
@@ -37,8 +37,8 @@ by powstał i przy jakim progu.
 
 Spór stracił znaczenie w sobotę 25 lipca, kiedy Seven & i poinformowało, że nie przystępuje
 do transakcji, bo nie udało się uzgodnić ze sprzedającym warunków, które spółka uznałaby
-za najlepsze dla swoich akcjonariuszy. Giełda była już zamknięta, więc rynek nie zdążył
-zareagować. Pierwsza sesja po tej informacji wypada w poniedziałek.
+za najlepsze dla swoich akcjonariuszy. Giełda była wtedy zamknięta, więc rynek odpowiedział
+dopiero w poniedziałek.
 
 ## Kto miał sprzedawać
 
@@ -68,10 +68,15 @@ to brakiem rozmowy ze strony japońskiego zarządu.
 W sklepach nie zmienia się nic. Sieć na koniec marca liczyła 12 750 placówek w Polsce
 i Rumunii i działa dokładnie tak samo jak dziesięć dni temu.
 
-Zmienia się sytuacja tych, którzy kupowali akcje po 16 lipca. Płacili za scenariusz,
-w którym pojawia się kupujący gotowy dać premię, a ten scenariusz właśnie zniknął.
-Poniedziałkowa sesja pokaże, ile z tych 10,87 procent rynek wyceniał samą spółkę,
-a ile nadzieję na wezwanie.
+Zmieniła się sytuacja tych, którzy kupowali akcje po 16 lipca. Płacili za scenariusz,
+w którym pojawia się kupujący gotowy dać premię, a ten scenariusz zniknął w sobotni wieczór.
+Poniedziałkowa sesja otworzyła się spadkiem o 11,2 procent, do 27,66 zł. Po godzinie
+dziewiątej przecena sięgała 13 procent, a kurs schodził poniżej 27 zł, przy obrocie
+rzędu 45 mln zł. W południe akcje kosztowały około 27,90 zł.
+
+Cały ruch z 16 lipca został więc oddany, a kurs wrócił poniżej poziomu sprzed doniesienia
+Nikkei. Odpowiedź na pytanie, ile z tamtego wzrostu dotyczyło samej firmy, a ile nadziei
+na wezwanie, brzmi: prawie w całości nadziei.
 
 Japończycy zapowiedzieli, że dalej rozglądają się za okazjami w Europie. Fundusze, które
 trzymają blisko połowę akcji Żabki, prędzej czy później i tak będą chciały z niej wyjść.
@@ -79,6 +84,9 @@ trzymają blisko połowę akcji Żabki, prędzej czy później i tak będą chci
 **Źródła:**
 
 - https://www.parkiet.com/handel-i-konsumpcja/art44885601-seven-eleven-nie-kupi-zabki-transakcja-odwolana
+- https://www.bankier.pl/wiadomosc/Zabka-spada-o-11-2-proc-po-informacji-ze-Seven-i-Holdings-zrezygnowal-z-inwestycji-9173578.html
+- https://strefainwestorow.pl/wiadomosci/20260727/zabka-spada-o-112-proc-po-informacji-ze-seven-i-holdings-zrezygnowal-z
+- https://www.parkiet.com/handel-i-konsumpcja/art44889981-japonczycy-nie-kupia-zabki-notowania-sie-zalamaly
 - https://www.bankier.pl/wiadomosc/Firma-Seven-i-Holdings-zrezygnowala-z-inwestycji-w-Grupe-Zabka-9173270.html
 - https://strefainwestorow.pl/spolki/7-eleven-rezygnacja-zabka
 - https://www.rp.pl/handel/art44885611-koniec-rozmow-o-przejeciu-zabki-japonska-firma-wycofuje-sie-z-inwestycji
