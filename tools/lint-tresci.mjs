@@ -82,6 +82,36 @@ const WERDYKT_WZORCE = [
   /nie ma nic wspólnego z polsk/gi,
 ]
 
+/**
+ * Słownictwo rynku kapitałowego. Projekt jest o markach i o tym, czyje są, a nie
+ * o giełdzie. Pojedyncze wystąpienie bywa potrzebne, nagromadzenie znaczy, że tekst
+ * osunął się w rubrykę giełdową. Zasada „Konsument, nie inwestor" w
+ * tools/skills/lowca-newsow/SKILL.md.
+ */
+const SLOWNIK_GIELDOWY = [
+  "kurs",
+  "akcj",
+  "wezwani",
+  "skup akcji",
+  "buyback",
+  "gpw",
+  "notowan",
+  "sesj",
+  "akcjonariusz",
+  "kapitalizacj",
+  "delisting",
+  "free float",
+  "wig20",
+  "giełd",
+  "ebitda",
+  "parkiecie",
+]
+
+// Próg dobrany tak, żeby wpis o Biedronce (8 odwołań, bo tłumaczy strukturę
+// właścicielską) przechodził, a wpis o kursie Żabki (38) zapalał ostrzeżenie.
+const BLOG_LIMIT_GIELDOWY = 8
+const POST_LIMIT_GIELDOWY = 3
+
 const BLOG_MIN_SLOW = 450
 const BLOG_MAX_SLOW = 1100
 const X_MIN_ZNAKOW = 800
@@ -211,6 +241,29 @@ function sprawdzWerdykt(plik, pelnyTekst, fragment, offsetFragmentu, etykieta) {
   }
 }
 
+/** Ostrzega, gdy tekst zsuwa się z opowieści o marce w relację giełdową. */
+function sprawdzGieldowosc(plik, pelnyTekst, fragment, offsetFragmentu, etykieta, limit) {
+  const male = fragment.toLowerCase()
+  const trafienia = []
+
+  for (const slowo of SLOWNIK_GIELDOWY) {
+    let idx = male.indexOf(slowo)
+    while (idx !== -1) {
+      trafienia.push({ slowo, idx })
+      idx = male.indexOf(slowo, idx + slowo.length)
+    }
+  }
+
+  if (trafienia.length <= limit) return
+
+  const uzyte = [...new Set(trafienia.map((t) => t.slowo))].slice(0, 6).join(", ")
+  ostrzezenie(
+    plik,
+    liniaDla(pelnyTekst, offsetFragmentu + Math.min(...trafienia.map((t) => t.idx))),
+    `${etykieta}: ${trafienia.length} odwołań do giełdy (${uzyte}) przy limicie ${limit}. Bohaterem ma być marka i jej właściciel, nie rynek.`,
+  )
+}
+
 function liczHashtagi(tekst) {
   return (tekst.match(/(^|\s)#[\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+/g) || []).length
 }
@@ -272,6 +325,7 @@ function lintBloga(plik) {
   const offsetTresci = raw.length - tresc.length
   sprawdzStyl(plik, raw, tresc, offsetTresci, "Blog", [...ZAKAZANE_FRAZY, ...ZAKAZANE_NA_BLOGU])
   sprawdzWerdykt(plik, raw, tresc, offsetTresci, "Blog")
+  sprawdzGieldowosc(plik, raw, tresc, offsetTresci, "Blog", BLOG_LIMIT_GIELDOWY)
 
   const slowa = tresc.replace(/```[\s\S]*?```/g, "").split(/\s+/).filter(Boolean).length
   if (slowa < BLOG_MIN_SLOW || slowa > BLOG_MAX_SLOW) {
@@ -339,6 +393,7 @@ function lintNewsa(plik) {
 
     sprawdzStyl(plik, raw, trescX, wpisX.offset, "Wpis X", ZAKAZANE_FRAZY)
     sprawdzWerdykt(plik, raw, trescX, wpisX.offset, "Wpis X")
+    sprawdzGieldowosc(plik, raw, trescX, wpisX.offset, "Wpis X", POST_LIMIT_GIELDOWY)
 
     if (trescX.length < X_MIN_ZNAKOW || trescX.length > X_MAX_ZNAKOW) {
       bland(plik, linia, `Wpis X ma ${trescX.length} znaków, powinien mieć ${X_MIN_ZNAKOW}-${X_MAX_ZNAKOW}.`)
@@ -359,6 +414,7 @@ function lintNewsa(plik) {
 
     sprawdzStyl(plik, raw, trescFB, wpisFB.offset, "Wpis FB", ZAKAZANE_FRAZY)
     sprawdzWerdykt(plik, raw, trescFB, wpisFB.offset, "Wpis FB")
+    sprawdzGieldowosc(plik, raw, trescFB, wpisFB.offset, "Wpis FB", POST_LIMIT_GIELDOWY)
 
     if (trescFB.length < FB_MIN_ZNAKOW || trescFB.length > FB_MAX_ZNAKOW) {
       bland(plik, linia, `Wpis FB ma ${trescFB.length} znaków, powinien mieć ${FB_MIN_ZNAKOW}-${FB_MAX_ZNAKOW}.`)

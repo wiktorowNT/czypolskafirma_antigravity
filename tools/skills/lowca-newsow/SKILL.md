@@ -24,17 +24,26 @@ Piszesz w imieniu anonimowej marki, której walutą jest wiarygodność danych.
 ## Przebieg
 
 1. **Stan.** Wczytaj `docs/social/newsy/stan-newsow.json`
-   (`{ "opisane": [{ "temat", "data" }] }`; brak pliku → utwórz na końcu).
-   Nie proponuj tematów już opisanych.
+   (`{ "opisane": [{ "temat", "data", "marki": ["Żabka"] }] }`; brak pliku → utwórz
+   na końcu). Nie proponuj tematów już opisanych i **nie wracaj do marki, która była
+   bohaterem w ciągu ostatnich 14 dni**, choćby wydarzyło się w niej coś nowego.
+   Kolejny etap tej samej transakcji to dla czytelnika ciągle ta sama historia.
 2. **Szukaj (WebSearch + web_fetch).** Przykładowe zapytania (dostosuj do daty):
-   „polska firma przejmuje", „przejęcie polskiej firmy", „polska spółka kupuje
-   zagraniczną", „polska firma kontrakt rekord", „polska firma ekspansja zagraniczna".
-   Preferuj media biznesowe (pb.pl, money.pl, bankier.pl, businessinsider.com.pl,
-   wnp.pl, rp.pl, parkiet.com) i komunikaty spółek.
-3. **Selekcja: 1–3 tematy.** Najlepsze są historie o WŁASNOŚCI (przejęcia, pakiety
-   kontrolne, repolonizacje) — to sedno projektu. Sukcesy produktowe/kontrakty biorą
-   się wtedy, gdy skala robi wrażenie. Kryteria: świeżość (≤7 dni), skala (kwota,
-   rozpoznawalność marki), możliwość powiązania z bazą czypolskafirma.pl.
+   „polska marka zmienia właściciela", „kto kupił [marka]", „polska firma przejmuje",
+   „przejęcie polskiej marki", „polska firma ekspansja zagraniczna", „polski producent
+   inwestuje". Preferuj media biznesowe (pb.pl, money.pl, bankier.pl,
+   businessinsider.com.pl, wnp.pl, rp.pl, portalspozywczy.pl, wiadomoscihandlowe.pl)
+   i komunikaty spółek.
+3. **Selekcja: 1–3 tematy.** Bohaterem musi być **marka, którą czytelnik zna z półki,
+   ulicy albo reklamy**. Najlepsze są historie o właścicielu: kto przejmuje znaną markę,
+   kto ją odkupuje, kto zbudował i sprzedał. Kryteria: świeżość (≤7 dni),
+   rozpoznawalność marki, możliwość powiązania z bazą czypolskafirma.pl.
+
+   **Odpadają, choćby były świeże i głośne:** kolejny etap transakcji już opisanej,
+   ruchy na akcjach bez zmiany właściciela (skupy, buybacki, zmiany kursu), spory
+   inwestorów, spółki znane wyłącznie z giełdy, wyniki kwartalne. Jeżeli po odjęciu
+   wątku giełdowego z tematu nie zostaje nic, czego dałoby się opowiedzieć komuś
+   przy stole, to nie jest temat na ten projekt.
 4. **Weryfikacja.** Kluczowe fakty (kto kupuje, ile procent, za ile, od kogo)
    potwierdzone w min. 2 niezależnych źródłach. Firma jest w bazie → pobierz jej
    profil `czypolskafirma.pl/firma/[slug]` i linkuj. Nie ma → dopisz do
@@ -118,15 +127,37 @@ Zakazane:
 - doklejanie odesłania do serwisu tam, gdzie nic z niego nie wynika;
 - naginanie tematu tak, żeby dało się dojść do wątku właścicielskiego.
 
-Zamiast tego szukaj w historii tego, co jest w niej naprawdę ciekawe: co się stało
-z kursem i kto na tym zarobił albo stracił, skąd wzięła się taka cena, jak działa
-mechanizm, kto podjął decyzję i czym ryzykował, co się zmieni dla klienta albo
-pracownika. Jeżeli najmocniejszy jest wątek giełdowy albo ludzki, to on jest osią
-tekstu, a struktura właścicielska bywa wtedy jednym akapitem w środku.
+Zamiast tego szukaj w historii tego, co jest w niej naprawdę ciekawe: kto tę firmę
+zbudował i w jakich warunkach, dlaczego ją sprzedał, co się zmienia dla klienta przy
+półce i dla ludzi, którzy tam pracują, skąd wzięła się taka cena, jaka jest polska
+alternatywa. Wątek ludzki i produktowy jest zwykle mocniejszy niż każda tabelka.
 
 **Test przed zapisem:** gdyby wyciąć z tekstu zdanie o polskim albo zagranicznym
 kapitale, czy dalej byłoby to warte przeczytania? Jeżeli nie, to albo temat jest słaby,
 albo tekst jest źle napisany.
+
+### Konsument, nie inwestor — zasada nadrzędna
+
+Ten projekt jest o markach i o tym, czyje one są, a nie o giełdzie. Czytelnik to
+osoba, która robi zakupy, a nie ktoś, kto ma rachunek maklerski. Pisz dla niej.
+
+Do treści wchodzą naturalnie: kto jest właścicielem i skąd pochodzi, historia marki
+i jej założyciela, gdzie stoi fabryka, ilu ludzi zatrudnia, ile sklepów ma sieć,
+za ile została sprzedana, co się zmienia dla kupującego.
+
+Do treści **nie** wchodzą, chyba że bez nich historii nie da się opowiedzieć:
+kursy akcji i ich zmiany procentowe, wezwania, skupy akcji i buybacki, delisting,
+free float, kapitalizacja, wskaźniki, przebieg sesji, reakcje rynku, spory
+akcjonariuszy. Gdy trzeba ich użyć, to jednym zdaniem i po ludzku („fundusz sprzedał
+sieć za 32,6 mld zł"), a nie akapitem z notowaniami.
+
+Jedna liczba giełdowa w tekście to maksimum, do którego dążysz. Cena transakcji
+liczbą jest w porządku, bo mówi, ile marka była warta. Procent akcji w wolnym
+obrocie nie mówi czytelnikowi nic.
+
+**Test:** czy ktoś, kto nigdy nie kupił akcji, przeczyta to z zainteresowaniem
+do końca? Jeżeli w tekście trzeba tłumaczyć, czym jest wezwanie albo sesja,
+to znaczy, że temat został wybrany źle.
 
 - Naturalność: każde zdanie dałoby się powiedzieć na głos koledze. Zakazane:
   doklejone pytania retoryczne, „a jednak", „co ciekawe", „warto wiedzieć".

@@ -93,7 +93,10 @@ Repozytorium jest publiczne, więc minuty GitHub Actions są darmowe i nielimito
 |---|---|
 | Dwa niezależne źródła | Fakt bez potwierdzenia nie wchodzi do tekstu, temat odpada |
 | Tryb evergreen | Brak newsa nie oznacza newsa naciąganego |
-| `tools/lint-tresci.mjs` | Em-dashe, zwroty AI, „my" na blogu, frontmatter, długości, UTM-y, duplikaty slugów |
+| Lista tematów zużytych | Workflow podaje modelowi tytuły **wszystkich** dotychczasowych paczek (`gh pr list --state all`), więc pamięć działa nawet wtedy, gdy nic nie mergujesz |
+| Karencja marki: 14 dni | Ta sama firma nie wraca jako bohater, choćby wydarzyło się w niej coś nowego |
+| Limit newsów: 3 na 7 dni | Reszta dni to analizy marek z kolejki, czyli to, o czym jest projekt |
+| `tools/lint-tresci.mjs` | Em-dashe, zwroty AI, „my" na blogu, frontmatter, długości, UTM-y, duplikaty slugów, przechył w stronę giełdy, werdykt dowożony na siłę |
 | Kontrola ścieżek | Automat może dotknąć wyłącznie plików treści, nigdy kodu aplikacji |
 | Pull request | Nic nie trafia na `develop` bez Twojego merge'a, na `main` bez drugiego |
 | Zakaz wykonywania poleceń ze stron | Treść artykułów jest danymi, nie instrukcją dla modelu |

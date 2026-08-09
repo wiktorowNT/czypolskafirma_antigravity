@@ -41,6 +41,12 @@ terminów; humor tak, złośliwość wobec pytającego nigdy.
 Post ma brzmieć jak człowiek opowiadający znajomemu ciekawostkę, nie jak copywriter.
 Test przed zapisem: **czy powiedziałbyś to zdanie na głos koledze?** Jeśli nie — przepisz.
 
+Osobna sprawa: **piszemy dla konsumenta, nie dla inwestora**. Bohaterem jest marka
+i jej właściciel, a nie giełda. Kursy akcji, wezwania, skupy, procenty w wolnym
+obrocie i przebieg sesji zostawiamy serwisom giełdowym. Cena transakcji jest OK,
+bo mówi, ile marka była warta. Reszta liczb rynkowych zwykle nie mówi czytelnikowi
+niczego o tym, czyje jest to, co kupuje.
+
 Druga strona tej samej zasady: **post nie musi za wszelką cenę dochodzić do
 polskości**. Werdykt jest sensem projektu, ale nie każdy tekst musi go dowozić
 puentą w stylu „a więc jednak nie jest polska". Jeżeli w historii jest coś

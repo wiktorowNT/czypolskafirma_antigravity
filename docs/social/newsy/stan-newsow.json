@@ -1,12 +1,16 @@
 {
   "opisane": [
-    { "temat": "Kumho Tire buduje fabrykę opon w Opolu (Doublestar, Chiny)", "data": "2026-07-13" },
-    { "temat": "Pesa przejmuje niemieckiego producenta tramwajów HeiterBlick (Lipsk)", "data": "2026-07-15" },
-    { "temat": "MOYA/Anwim sprzedana konsorcjum Stonepeak + Energy Equation Partners (USA)", "data": "2026-07-15" },
-    { "temat": "Polenergia znika z GPW: wezwanie Mansa (Kulczyk) + Brookfield po 59,10 zł, delisting", "data": "2026-07-17" },
-    { "temat": "Captain Fresh (Indie) przejmuje Morex z Gdyni; po Graalu i Koralu domknięcie polskiej branży rybnej", "data": "2026-07-21" },
-    { "temat": "Grupa Pracuj odkupuje No Fluff Jobs od Ringier Axel Springer Polska za 10,4 mln zł; marka wraca pod polską kontrolę", "data": "2026-07-25" },
-    { "temat": "Seven & i Holdings (7-Eleven) rezygnuje z zakupu kilkudziesięciu procent udziałów w Grupie Żabka od CVC i Partners Group; kurs oddaje cały wzrost z 16.07", "data": "2026-07-27" },
-    { "temat": "Evergreen: kto jest właścicielem Biedronki (Jerónimo Martins, rodzina Soares dos Santos 56,14%) i ile z tego zostaje w Polsce", "data": "2026-07-27" }
+    { "temat": "Kumho Tire buduje fabrykę opon w Opolu (Doublestar, Chiny)", "data": "2026-07-13", "marki": ["Kumho Tire"], "tryb": "news" },
+    { "temat": "Pesa przejmuje niemieckiego producenta tramwajów HeiterBlick (Lipsk)", "data": "2026-07-15", "marki": ["Pesa"], "tryb": "news" },
+    { "temat": "MOYA/Anwim sprzedana konsorcjum Stonepeak + Energy Equation Partners (USA)", "data": "2026-07-15", "marki": ["MOYA"], "tryb": "news" },
+    { "temat": "Polenergia znika z GPW: wezwanie Mansa (Kulczyk) + Brookfield po 59,10 zł, delisting", "data": "2026-07-17", "marki": ["Polenergia"], "tryb": "news" },
+    { "temat": "Captain Fresh (Indie) przejmuje Morex z Gdyni; po Graalu i Koralu domknięcie polskiej branży rybnej", "data": "2026-07-21", "marki": ["Morex", "Superfish", "Koral"], "tryb": "news" },
+    { "temat": "Grupa Pracuj odkupuje No Fluff Jobs od Ringier Axel Springer Polska za 10,4 mln zł; marka wraca pod polską kontrolę", "data": "2026-07-25", "marki": ["No Fluff Jobs", "Pracuj.pl"], "tryb": "news" },
+    { "temat": "Seven & i Holdings (7-Eleven) rezygnuje z zakupu kilkudziesięciu procent udziałów w Grupie Żabka od CVC i Partners Group; kurs oddaje cały wzrost z 16.07", "data": "2026-07-27", "marki": ["Żabka"], "tryb": "news" },
+    { "temat": "Evergreen: kto jest właścicielem Biedronki (Jerónimo Martins, rodzina Soares dos Santos 56,14%) i ile z tego zostaje w Polsce", "data": "2026-07-27", "marki": ["Biedronka"], "tryb": "evergreen" },
+    { "temat": "UniCredit blisko kontroli nad Commerzbankiem, właścicielem mBanku (paczka zamknięta bez publikacji)", "data": "2026-07-28", "marki": ["mBank"], "tryb": "news" },
+    { "temat": "Novaturas, turecki inwestor i wezwanie na resztę akcji (paczka zamknięta bez publikacji)", "data": "2026-07-29", "marki": ["Novaturas"], "tryb": "news" },
+    { "temat": "Pepco: odwołany skup akcji i nowy program za 400 mln euro (dwie paczki zamknięte bez publikacji)", "data": "2026-07-31", "marki": ["Pepco"], "tryb": "news" },
+    { "temat": "Couche-Tard (Circle K) ogłasza wezwanie na 100 proc. akcji Grupy Żabka po 32 zł, wycena 32,6 mld zł; temat opisany dziewięć razy pod rząd, wszystkie paczki zamknięte bez publikacji", "data": "2026-08-09", "marki": ["Żabka", "Circle K"], "tryb": "news" }
   ]
 }

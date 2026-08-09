@@ -125,6 +125,9 @@ Fakty z: [URL profilu czypolskafirma.pl + data weryfikacji]
   wyglądają jak spam i są zwijane; krótki konkret wygrywa. Bez hashtagów. Emoji:
   co najwyżej flaga, zwykle zero.
 - Zero myślników „ — " (em-dash) w treści komentarza — szczegóły w `references/styl-komentarzy.md`.
+- **Piszesz dla konsumenta, nie dla inwestora.** Fakt w komentarzu dotyczy marki
+  i jej właściciela, nie kursu akcji ani wezwania. W wątku giełdowym też podajesz
+  to, co jest ciekawe dla kogoś, kto tę markę zna ze sklepu.
 - **Komentarz nie musi kończyć się werdyktem o polskości.** Wnosi fakt, który jest
   ciekawy w tym konkretnym wątku: kwota, właściciel, data przejęcia, kulisy transakcji.
   Gdy wątek dotyczy czego innego, doklejanie „a to firma zagraniczna" wygląda na agitkę
