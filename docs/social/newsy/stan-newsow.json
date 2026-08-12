@@ -11,6 +11,9 @@
     { "temat": "UniCredit blisko kontroli nad Commerzbankiem, właścicielem mBanku (paczka zamknięta bez publikacji)", "data": "2026-07-28", "marki": ["mBank"], "tryb": "news" },
     { "temat": "Novaturas, turecki inwestor i wezwanie na resztę akcji (paczka zamknięta bez publikacji)", "data": "2026-07-29", "marki": ["Novaturas"], "tryb": "news" },
     { "temat": "Pepco: odwołany skup akcji i nowy program za 400 mln euro (dwie paczki zamknięte bez publikacji)", "data": "2026-07-31", "marki": ["Pepco"], "tryb": "news" },
-    { "temat": "Couche-Tard (Circle K) ogłasza wezwanie na 100 proc. akcji Grupy Żabka po 32 zł, wycena 32,6 mld zł; temat opisany dziewięć razy pod rząd, wszystkie paczki zamknięte bez publikacji", "data": "2026-08-09", "marki": ["Żabka", "Circle K"], "tryb": "news" }
+    { "temat": "Couche-Tard (Circle K) ogłasza wezwanie na 100 proc. akcji Grupy Żabka po 32 zł, wycena 32,6 mld zł; temat opisany dziewięć razy pod rząd, wszystkie paczki zamknięte bez publikacji", "data": "2026-08-09", "marki": ["Żabka", "Circle K"], "tryb": "news" },
+    { "temat": "Woolworth znika z Polski, sklepy przejmuje TEDi (paczka zamknięta bez publikacji)", "data": "2026-08-10", "marki": ["Woolworth", "TEDi"], "tryb": "news" },
+    { "temat": "Mitsubishi Electric przejmuje warszawski Medcom (paczka zamknięta bez publikacji)", "data": "2026-08-11", "marki": ["Medcom"], "tryb": "news" },
+    { "temat": "Evergreen: kto jest właścicielem Wedla, jak Komisja Europejska wymusiła sprzedaż marki Kraftowi i skąd wzięła się w niej grupa Lotte", "data": "2026-08-12", "marki": ["E. Wedel"], "tryb": "evergreen" }
   ]
 }
