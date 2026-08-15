@@ -35,3 +35,6 @@ Generator.html
 
 .tmp.driveupload/
 
+
+# audyt bezpieczenstwa - niezalatane podatnosci, repo jest publiczne
+/docs/AUDYT_TECHNICZNY_2026-07.md

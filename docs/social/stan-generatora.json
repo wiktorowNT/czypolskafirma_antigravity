@@ -1,0 +1,52 @@
+{
+  "ustawienia": {
+    "x_premium": true
+  },
+  "wykorzystania": [
+    {
+      "marka": "Bioton",
+      "format": "zaskoczenie",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "Play",
+      "format": "pojedynek",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "Plus",
+      "format": "pojedynek",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "Inglot",
+      "format": "odwrotka",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "E. Wedel",
+      "format": "zaskoczenie",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "E. Wedel",
+      "format": "dlugi-wpis",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "E. Wedel",
+      "format": "zgloszenie",
+      "data": "2026-07-13"
+    },
+    {
+      "marka": "Biedronka",
+      "format": "dlugi-wpis",
+      "data": "2026-07-17"
+    },
+    {
+      "marka": "Wawel",
+      "format": "zaskoczenie",
+      "data": "2026-07-23"
+    }
+  ]
+}

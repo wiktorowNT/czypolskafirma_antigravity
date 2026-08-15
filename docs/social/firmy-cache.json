@@ -1,0 +1,19 @@
+{
+  "zbudowano": "2026-07-12",
+  "uwaga": "Indeks częściowy — pobrane kategorie: żywność, kosmetyki, handel, moda (4 z 19). Pełny indeks zostanie dobudowany przy kolejnym uruchomieniu.",
+  "firmy": [
+    { "marka": "E. Wedel", "url_profilu": "https://czypolskafirma.pl/firma/e-wedel", "werdykt": "Zagraniczna", "kraj": "KR", "kategoria": "Żywność" },
+    { "marka": "Giacomo Conti", "url_profilu": "https://czypolskafirma.pl/firma/giacomo-conti", "werdykt": "Polska", "kraj": "PL", "kategoria": "Moda" },
+    { "marka": "Ziaja", "url_profilu": "https://czypolskafirma.pl/firma/ziaja", "werdykt": "Polska", "kraj": "PL", "kategoria": "Kosmetyki" },
+    { "marka": "Nivea", "url_profilu": "https://czypolskafirma.pl/firma/nivea", "werdykt": "Zagraniczna", "kraj": "DE", "kategoria": "Kosmetyki" },
+    { "marka": "L'Oréal", "url_profilu": "https://czypolskafirma.pl/firma/loreal", "werdykt": "Zagraniczna", "kraj": "FR", "kategoria": "Kosmetyki" },
+    { "marka": "Yves Rocher", "url_profilu": "https://czypolskafirma.pl/firma/yves-rocher", "werdykt": "Zagraniczna", "kraj": "FR", "kategoria": "Kosmetyki" },
+    { "marka": "Biedronka", "url_profilu": "https://czypolskafirma.pl/firma/biedronka", "werdykt": "Zagraniczna", "kraj": "PT", "kategoria": "Handel" },
+    { "marka": "Dino Polska", "url_profilu": "https://czypolskafirma.pl/firma/Dino Polska", "werdykt": "Polska", "kraj": "PL", "kategoria": "Handel" },
+    { "marka": "Reserved (LPP)", "url_profilu": "https://czypolskafirma.pl/firma/reserved", "werdykt": "Polska", "kraj": "PL", "kategoria": "Moda" },
+    { "marka": "CCC", "url_profilu": "https://czypolskafirma.pl/firma/ccc", "werdykt": "Polska", "kraj": "PL", "kategoria": "Moda" },
+    { "marka": "Empik", "url_profilu": "https://czypolskafirma.pl/firma/empik", "werdykt": "Polska", "kraj": "PL", "kategoria": "Handel" },
+    { "marka": "Netto", "url_profilu": "https://czypolskafirma.pl/firma/netto", "werdykt": "Zagraniczna", "kraj": "DK", "kategoria": "Handel" },
+    { "marka": "Lidl", "url_profilu": "https://czypolskafirma.pl/firma/lidl", "werdykt": "Zagraniczna", "kraj": "DE", "kategoria": "Handel" }
+  ]
+}

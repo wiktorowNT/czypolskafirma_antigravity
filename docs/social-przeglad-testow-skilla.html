@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "generator-postow", "runs": [{"id": "eval-0-paczka-tygodniowa-with_skill-run-1", "prompt": "(No prompt found)", "eval_id": null, "outputs": [{"name": "firmy-cache.json", "type": "text", "content": "{\n  \"zbudowano\": \"2026-07-11\",\n  \"zrodlo\": \"strony kategorii czypolskafirma.pl\",\n  \"kategorie_pobrane\": [\"handel\", \"banki\", \"kosmetyki\", \"moda\", \"telekomunikacja\", \"gastronomia\", \"motoryzacja\"],\n  \"firmy\": [\n    { \"marka\": \"50 Style\", \"url_profilu\": \"https://czypolskafirma.pl/firma/50 Style\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Action\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Action\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Agata Meble\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Agata Meble\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Aldi\", \"url_profilu\": \"https://czypolskafirma.pl/firma/aldi\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Allegro\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Allegro\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Answear.com\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Answear.com\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Apteki Gemini\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Apteki Gemini\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"CZ\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Arhelan\", \"url_profilu\": \"https://czypolskafirma.pl/firma/arhelan\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Auchan\", \"url_profilu\": \"https://czypolskafirma.pl/firma/auchan\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Biedronka\", \"url_profilu\": \"https://czypolskafirma.pl/firma/biedronka\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Bonito.pl\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Bonito.pl\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Bricomarche\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Bricomarche\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Carrefour\", \"url_profilu\": \"https://czypolskafirma.pl/firma/carrefour\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Castorama\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Castorama\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Chata Polska\", \"url_profilu\": \"https://czypolskafirma.pl/firma/chata-polska\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Dealz\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Dealz\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"ZA\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Decathlon\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Decathlon\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Deichmann\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Deichmann\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Delikatesy Centrum\", \"url_profilu\": \"https://czypolskafirma.pl/firma/delikatesy-centrum\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Dino Polska\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Dino Polska\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"DM (Drogerie Markt)\", \"url_profilu\": \"https://czypolskafirma.pl/firma/DM (Drogerie Markt)\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Douglas\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Douglas\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n    { \"marka\": \"DOZ (Dbam o Zdrowie)\", \"url_profilu\": \"https://czypolskafirma.pl/firma/DOZ (Dbam o Zdrowie)\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Dr. Max\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Dr. Max\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"CZ\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Drogerie Natura\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Drogerie Natura\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"EBilet.pl\", \"url_profilu\": \"https://czypolskafirma.pl/firma/eBilet.pl\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Empik\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Empik\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Eobuwie.pl\", \"url_profilu\": \"https://czypolskafirma.pl/firma/eobuwie.pl\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Erli\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Erli\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Eurocash\", \"url_profilu\": \"https://czypolskafirma.pl/firma/eurocash\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Frisco.pl\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Frisco.pl\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"HalfPrice\", \"url_profilu\": \"https://czypolskafirma.pl/firma/HalfPrice\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Hebe\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Hebe\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Intersport\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Intersport\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"JD Sports\", \"url_profilu\": \"https://czypolskafirma.pl/firma/JD Sports\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Jula\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Jula\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"SE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Jysk\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Jysk\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DK\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Kakadu\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Kakadu\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"CZ\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Kaufland\", \"url_profilu\": \"https://czypolskafirma.pl/firma/kaufland\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Kik\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Kik\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Komputronik\", \"url_profilu\": \"https://czypolskafirma.pl/firma/komputronik\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Leclerc\", \"url_profilu\": \"https://czypolskafirma.pl/firma/leclerc\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Leroy Merlin\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Leroy Merlin\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Lewiatan\", \"url_profilu\": \"https://czypolskafirma.pl/firma/lewiatan\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Lidl\", \"url_profilu\": \"https://czypolskafirma.pl/firma/lidl\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Makro\", \"url_profilu\": \"https://czypolskafirma.pl/firma/makro\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Martes Sport\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Martes Sport\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Maxi Zoo\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Maxi Zoo\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Media Expert\", \"url_profilu\": \"https://czypolskafirma.pl/firma/media-expert\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Media Markt\", \"url_profilu\": \"https://czypolskafirma.pl/firma/media-markt\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Merkury Market\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Merkury Market\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Morele\", \"url_profilu\": \"https://czypolskafirma.pl/firma/morele\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Mr\u00f3wka\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Mr\u00f3wka\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Nasz Sklep\", \"url_profilu\": \"https://czypolskafirma.pl/firma/nasz-sklep\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Neonet\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Neonet\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Netto\", \"url_profilu\": \"https://czypolskafirma.pl/firma/netto\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DK\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Neuca\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Neuca\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"OBI\", \"url_profilu\": \"https://czypolskafirma.pl/firma/OBI\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Pepco\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Pepco\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"ZA\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Polomarket\", \"url_profilu\": \"https://czypolskafirma.pl/firma/polomarket\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Rossmann\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Rossmann\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Rtv Euro Agd\", \"url_profilu\": \"https://czypolskafirma.pl/firma/rtv-euro-agd\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Selgros\", \"url_profilu\": \"https://czypolskafirma.pl/firma/selgros\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"CH\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Sephora\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Sephora\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Sizeer\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Sizeer\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Smyk\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Smyk\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"AT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Spar\", \"url_profilu\": \"https://czypolskafirma.pl/firma/spar\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Stokrotka\", \"url_profilu\": \"https://czypolskafirma.pl/firma/stokrotka\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"LT\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Super Pharm\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Super-Pharm\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"IL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"TaniaKsiazka.pl\", \"url_profilu\": \"https://czypolskafirma.pl/firma/TaniaKsiazka.pl\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Tchibo\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Tchibo\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Tedi\", \"url_profilu\": \"https://czypolskafirma.pl/firma/Tedi\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"handel\" },\n    { \"marka\": \"TK Maxx\", \"url_profilu\": \"https://czypolskafirma.pl/firma/TK Maxx\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Top Market\", \"url_profilu\": \"https://czypolskafirma.pl/firma/top-market\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"X Kom\", \"url_profilu\": \"https://czypolskafirma.pl/firma/x-kom\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"handel\" },\n    { \"marka\": \"Zabka\", \"url_profilu\": \"https://czypolskafirma.pl/firma/zabka\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"handel\" },\n\n    { \"marka\": \"Alior Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/alior-bank\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Bank Pocztowy\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bank-pocztowy\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Bff\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bff\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"IT\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Bnp Paribas\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bnp-paribas\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Bos\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bos\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Bps\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bps\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Citi Handlowy\", \"url_profilu\": \"https://czypolskafirma.pl/firma/citi-handlowy\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Credit Agricole\", \"url_profilu\": \"https://czypolskafirma.pl/firma/credit-agricole\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Erste Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/erste-bank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"AT\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Inbank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/inbank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"EE\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Ing\", \"url_profilu\": \"https://czypolskafirma.pl/firma/ing\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"NL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Mbank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/mbank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Millennium\", \"url_profilu\": \"https://czypolskafirma.pl/firma/millennium\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Nest Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/nest-bank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Pekao\", \"url_profilu\": \"https://czypolskafirma.pl/firma/pekao\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Pko Bp\", \"url_profilu\": \"https://czypolskafirma.pl/firma/pko-bp\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Plus Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/plus-bank\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Provident\", \"url_profilu\": \"https://czypolskafirma.pl/firma/provident\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Raiffeisen\", \"url_profilu\": \"https://czypolskafirma.pl/firma/raiffeisen\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"AT\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Revolut\", \"url_profilu\": \"https://czypolskafirma.pl/firma/revolut\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Santander Bank Polska\", \"url_profilu\": \"https://czypolskafirma.pl/firma/santander-bank-polska\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"ES\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Sgb\", \"url_profilu\": \"https://czypolskafirma.pl/firma/sgb\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Skok Kasa Stefczyka\", \"url_profilu\": \"https://czypolskafirma.pl/firma/skok-kasa-stefczyka\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Toyota Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/toyota-bank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"JP\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Unicredit\", \"url_profilu\": \"https://czypolskafirma.pl/firma/unicredit\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"IT\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Velobank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/velobank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"banki\" },\n    { \"marka\": \"Vivus\", \"url_profilu\": \"https://czypolskafirma.pl/firma/vivus\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"banki\" },\n\n    { \"marka\": \"Ziaja\", \"url_profilu\": \"https://czypolskafirma.pl/firma/ziaja\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"Inglot\", \"url_profilu\": \"https://czypolskafirma.pl/firma/inglot\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"Dr Irena Eris\", \"url_profilu\": \"https://czypolskafirma.pl/firma/dr-irena-eris\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"To\u0142pa\", \"url_profilu\": \"https://czypolskafirma.pl/firma/tolpa\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"Bielenda\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bielenda\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"Nivea\", \"url_profilu\": \"https://czypolskafirma.pl/firma/nivea\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"L'Or\u00e9al\", \"url_profilu\": \"https://czypolskafirma.pl/firma/loreal\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"Avon\", \"url_profilu\": \"https://czypolskafirma.pl/firma/avon\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"kosmetyki\" },\n    { \"marka\": \"Oriflame\", \"url_profilu\": \"https://czypolskafirma.pl/firma/oriflame\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"SE\", \"kategoria\": \"kosmetyki\" },\n\n    { \"marka\": \"4F\", \"url_profilu\": \"https://czypolskafirma.pl/firma/4f\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"moda\" },\n    { \"marka\": \"CCC\", \"url_profilu\": \"https://czypolskafirma.pl/firma/ccc\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"moda\" },\n    { \"marka\": \"Reserved\", \"url_profilu\": \"https://czypolskafirma.pl/firma/reserved\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"moda\" },\n    { \"marka\": \"Sinsay\", \"url_profilu\": \"https://czypolskafirma.pl/firma/sinsay\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"moda\" },\n    { \"marka\": \"Local Heroes\", \"url_profilu\": \"https://czypolskafirma.pl/firma/local-heroes\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"moda\" },\n    { \"marka\": \"Wittchen\", \"url_profilu\": \"https://czypolskafirma.pl/firma/wittchen\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"moda\" },\n    { \"marka\": \"Zara\", \"url_profilu\": \"https://czypolskafirma.pl/firma/zara\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"ES\", \"kategoria\": \"moda\" },\n    { \"marka\": \"H&M\", \"url_profilu\": \"https://czypolskafirma.pl/firma/h-m\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"SE\", \"kategoria\": \"moda\" },\n\n    { \"marka\": \"Junak\", \"url_profilu\": \"https://czypolskafirma.pl/firma/junak\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"motoryzacja\" },\n    { \"marka\": \"Kross\", \"url_profilu\": \"https://czypolskafirma.pl/firma/kross\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"motoryzacja\" },\n    { \"marka\": \"Romet\", \"url_profilu\": \"https://czypolskafirma.pl/firma/romet\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"motoryzacja\" },\n    { \"marka\": \"Toyota\", \"url_profilu\": \"https://czypolskafirma.pl/firma/toyota\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"JP\", \"kategoria\": \"motoryzacja\" },\n    { \"marka\": \"Volkswagen\", \"url_profilu\": \"https://czypolskafirma.pl/firma/volkswagen\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"motoryzacja\" },\n\n    { \"marka\": \"Bobby Burger\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bobby-burger\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"gastronomia\" },\n    { \"marka\": \"Grycan\", \"url_profilu\": \"https://czypolskafirma.pl/firma/grycan\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"gastronomia\" },\n    { \"marka\": \"Sphinx\", \"url_profilu\": \"https://czypolskafirma.pl/firma/sphinx-sfinks\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"gastronomia\" },\n    { \"marka\": \"Zahir Kebab\", \"url_profilu\": \"https://czypolskafirma.pl/firma/zahir-kebab\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"gastronomia\" },\n    { \"marka\": \"McDonald's\", \"url_profilu\": \"https://czypolskafirma.pl/firma/mcdonald-s\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"gastronomia\" },\n\n    { \"marka\": \"Plus\", \"url_profilu\": \"https://czypolskafirma.pl/firma/plus\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"telekomunikacja\" },\n    { \"marka\": \"Netia\", \"url_profilu\": \"https://czypolskafirma.pl/firma/netia\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"telekomunikacja\" },\n    { \"marka\": \"Vectra\", \"url_profilu\": \"https://czypolskafirma.pl/firma/vectra\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"telekomunikacja\" },\n    { \"marka\": \"Orange\", \"url_profilu\": \"https://czypolskafirma.pl/firma/orange\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"telekomunikacja\" },\n    { \"marka\": \"Play\", \"url_profilu\": \"https://czypolskafirma.pl/firma/play\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"telekomunikacja\" },\n    { \"marka\": \"T-Mobile\", \"url_profilu\": \"https://czypolskafirma.pl/firma/t-mobile\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"telekomunikacja\" }\n  ],\n  \"liczba_firm_w_indeksie\": 97,\n  \"uwaga\": \"Indeks czesciowy \u2014 zbudowany z 7 z 19 kategorii (priorytet: kategorie potrzebne do paczki tygodniowej). Do uzupelnienia w kolejnych uruchomieniach.\"\n}\n"}, {"name": "stan-generatora.json", "type": "text", "content": "{\n  \"ustawienia\": { \"x_premium\": false },\n  \"wykorzystania\": [\n    { \"marka\": \"Zabka\", \"format\": \"zaskoczenie\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"ING\", \"format\": \"quiz\", \"data\": \"2026-07-14\" },\n    { \"marka\": \"Santander Bank Polska\", \"format\": \"quiz\", \"data\": \"2026-07-14\" },\n    { \"marka\": \"Millennium\", \"format\": \"quiz\", \"data\": \"2026-07-14\" },\n    { \"marka\": \"Pekao\", \"format\": \"quiz\", \"data\": \"2026-07-14\" },\n    { \"marka\": \"Pekao\", \"format\": \"odpowiedz-na-quiz\", \"data\": \"2026-07-15\" },\n    { \"marka\": \"Biedronka\", \"format\": \"pojedynek\", \"data\": \"2026-07-16\" },\n    { \"marka\": \"Dino Polska\", \"format\": \"pojedynek\", \"data\": \"2026-07-16\" },\n    { \"marka\": \"Ziaja\", \"format\": \"zestawienie\", \"data\": \"2026-07-17\" },\n    { \"marka\": \"Inglot\", \"format\": \"zestawienie\", \"data\": \"2026-07-17\" },\n    { \"marka\": \"Dr Irena Eris\", \"format\": \"zestawienie\", \"data\": \"2026-07-17\" },\n    { \"marka\": \"Local Heroes\", \"format\": \"odwrotka\", \"data\": \"2026-07-18\" },\n    { \"marka\": \"kategoria: motoryzacja\", \"format\": \"statystyka-kategorii\", \"data\": \"2026-07-19\" }\n  ]\n}\n"}], "grading": {"expectations": [{"text": "Kompletny harmonogram pon-nd z gotowymi do wklejenia postami", "passed": true, "evidence": "Paczka zawiera 7 dni (PON-ND) + warianty FB w jednym pliku paczka-2026-07-13.md wg szablonu"}, {"text": "Wszystkie posty X mieszcza sie w 280 znakach (URL liczony jak t.co)", "passed": true, "evidence": "Deklarowane i zweryfikowane skryptem: max 267; jedyny akapit >280 to post FB (bez limitu)"}, {"text": "Kazdy link do czypolskafirma.pl ma tagi UTM", "passed": true, "evidence": "Skrypt: 8/8 linkow firma/kategoria z utm_source"}, {"text": "Jest quiz-ankieta i osobny post z odpowiedzia nastepnego dnia", "passed": true, "evidence": "WT quiz (ankieta ING/Santander/Millennium/Pekao), SR odpowiedz z linkiem"}, {"text": "Zapisany plik stanu z uzytymi markami", "passed": true, "evidence": "stan-generatora.json z parami marka+format"}, {"text": "Fakty wlascicielskie zgodne z czypolskafirma.pl", "passed": true, "evidence": "Sprawdzone na zywej stronie: Zabka CVC 37,62% OK; Local Heroes/Czarnecki OK; quiz: jedyny polski bank z 4 to Pekao OK"}], "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0}}}, {"id": "eval-0-paczka-tygodniowa-without_skill-run-1", "prompt": "(No prompt found)", "eval_id": null, "outputs": [{"name": "00-kalendarz-tygodnia.md", "type": "text", "content": "# Paczka post\u00f3w \u2014 CzyPolskaFirma.pl\n## Tydzie\u0144: poniedzia\u0142ek 13.07.2026 \u2013 niedziela 19.07.2026\n\nKonto X: @czypolskafirma \u00b7 Profil: Facebook CzyPolskaFirma\nWygenerowano: sobota 11.07.2026 (na podstawie danych z czypolskafirma.pl, stan weryfikacji: lipiec 2026)\n\nWszystkie fakty u\u017cyte w postach pochodz\u0105 bezpo\u015brednio z profili firm na czypolskafirma.pl\n(\u017babka, Biedronka, Dino Polska, E. Wedel, Allegro) oraz ze strony /metodologia.\nPrzed publikacj\u0105 zweryfikuj, \u017ce dane w plikach wci\u0105\u017c zgadzaj\u0105 si\u0119 z aktualn\u0105 wersj\u0105 strony\n(struktury w\u0142a\u015bcicielskie funduszy PE potrafi\u0105 si\u0119 zmienia\u0107 z kwarta\u0142u na kwarta\u0142).\n\n| # | Data | Dzie\u0144 | Temat | Typ posta | Firma / punkt odniesienia | Plik |\n|---|------|-------|-------|-----------|---------------------------|------|\n| 1 | 13.07.2026 | poniedzia\u0142ek | Kto naprawd\u0119 stoi za \u017babk\u0105 | Hook / ciekawostka | \u017babka (UK, CVC Capital Partners) | 01-poniedzialek-2026-07-13-zabka.md |\n| 2 | 14.07.2026 | wtorek | Zasada Z\u0142otej Klatki \u2014 edukacja | Edukacyjny (metodologia) | \u017babka + E. Wedel jako przyk\u0142ady | 02-wtorek-2026-07-14-zasada-zlotej-klatki.md |\n| 3 | 15.07.2026 | \u015broda | Biedronka \u2014 31 lat w Polsce, kapita\u0142 portugalski | Fakt / ciekawostka | Biedronka (Portugalia, Jer\u00f3nimo Martins) | 03-sroda-2026-07-15-biedronka.md |\n| 4 | 16.07.2026 | czwartek | Dino Polska \u2014 polski kapita\u0142, polska kontrola | Pozytywny przyk\u0142ad | Dino Polska (Polska, Tomasz Biernacki) | 04-czwartek-2026-07-16-dino-polska.md |\n| 5 | 17.07.2026 | pi\u0105tek | Ptasie Mleczko po korea\u0144sku | Ciekawostka / Z\u0142ota Klatka | E. Wedel (Korea P\u0142d., LOTTE Group) | 05-piatek-2026-07-17-e-wedel.md |\n| 6 | 18.07.2026 | sobota | Allegro \u2014 dlaczego to jednak polska firma | Niuans / edukacja pog\u0142\u0119biona | Allegro (rozproszony akcjonariat) | 06-sobota-2026-07-18-allegro.md |\n| 7 | 19.07.2026 | niedziela | Podsumowanie tygodnia + zaproszenie do spo\u0142eczno\u015bci | CTA / community | Ca\u0142a baza + funkcja \"Zg\u0142o\u015b firm\u0119\" | 07-niedziela-2026-07-19-podsumowanie-cta.md |\n\n## Logika tygodnia\n\nTydzie\u0144 zbudowany jest jako mini-narracja:\n1. **Poniedzia\u0142ek** \u2014 mocny hook (\u017babka), \u017ceby zdoby\u0107 uwag\u0119 na start tygodnia.\n2. **Wtorek** \u2014 t\u0142umaczymy \"dlaczego\" (Zasada Z\u0142otej Klatki) na bazie posta z poniedzia\u0142ku, \u017ceby odbiorca zrozumia\u0142 metodologi\u0119, a nie tylko pojedynczy fakt.\n3. **\u015aroda** \u2014 kolejny mocny, zaskakuj\u0105cy przyk\u0142ad (Biedronka), inna kategoria (spo\u017cywcza sie\u0107 convenience vs. dyskont).\n4. **Czwartek** \u2014 kontrapunkt pozytywny (Dino Polska), \u017ceby seria nie by\u0142a wy\u0142\u0105cznie \"demaskatorska\" i pokaza\u0107, \u017ce polskie firmy te\u017c wygrywaj\u0105 na du\u017c\u0105 skal\u0119.\n5. **Pi\u0105tek** \u2014 lekki, \"shareable\" ciekawostkowy post na koniec tygodnia roboczego (E. Wedel / Ptasie Mleczko), du\u017cy potencja\u0142 viralowy (marka rozpoznawalna emocjonalnie).\n6. **Sobota** \u2014 pog\u0142\u0119biony, d\u0142u\u017cszy post dla zaanga\u017cowanych odbiorc\u00f3w weekendowych (Allegro \u2014 pokazuje rzetelno\u015b\u0107 metodologii: serwis nie etykietuje \"na wyczucie\", tylko liczy realny pakiet kontrolny).\n7. **Niedziela** \u2014 podsumowanie + CTA przed nowym tygodniem zakupowym, zaproszenie do zg\u0142aszania firm i korzystania z wyszukiwarki.\n\n## Sugerowane godziny publikacji (Polska, czas lokalny)\n\n- X (Twitter): 8:00\u20139:00 lub 19:00\u201320:00 (szczyty aktywno\u015bci przed prac\u0105 / wieczorem)\n- Facebook: 12:00\u201313:00 lub 18:00\u201319:00\n\nSzczeg\u00f3\u0142owe wytyczne dot. hashtag\u00f3w i formatowania: patrz plik `08-wytyczne-hashtagi-i-godziny.md`.\n"}, {"name": "01-poniedzialek-2026-07-13-zabka.md", "type": "text", "content": "# Poniedzia\u0142ek, 13.07.2026 \u2014 \u017babka: kto naprawd\u0119 zarabia na \"polskim\" sklepie na rogu\n\n\u0179r\u00f3d\u0142o danych: https://czypolskafirma.pl/firma/zabka (weryfikacja: 11.07.2026)\nFakty: pakiet kontrolny 37,62% akcji ma CVC Capital Partners (poprzez Heket Topco S.\u00e0 r.l.,\nLuksemburg; CVC formalnie zarejestrowane w Jersey). Marka za\u0142o\u017cona w 1998 r., przej\u0119ta przez\nCVC w 2017 r. od Mid Europa Partners. IPO na GPW w pa\u017adzierniku 2024 r. (wycena ok. 21,5 mld z\u0142).\n\n---\n\n## Post na X (limit 280 znak\u00f3w; poni\u017cszy tekst ma 265 znak\u00f3w)\n\n\u017babka mija Ci\u0119 codziennie. Ale kto na niej zarabia?\n\nPakiet kontrolny (37,6% akcji) ma fundusz CVC Capital Partners, zarejestrowany na Jersey. Marka powsta\u0142a w Polsce w 1998 r. \u2014 dzi\u015b decyduje kapita\u0142 brytyjski.\n\nczypolskafirma.pl/firma/zabka\n#PatriotyzmGospodarczy\n\n---\n\n## Post na Facebook\n\n\u017babka. Szyld, kt\u00f3ry mija si\u0119 kilka razy dziennie, id\u0105c przez polskie miasto. Marka\nkojarzona jednoznacznie jako polska \u2014 i historycznie faktycznie taka by\u0142a: powsta\u0142a\nw 1998 roku.\n\nAle status \"Firma Zagraniczna\" na CzyPolskaFirma.pl nie bierze si\u0119 z sentyment\u00f3w, tylko\nz liczb. Od 2017 roku pakiet kontrolny w \u017babce ma fundusz CVC Capital Partners\n(formalnie zarejestrowany w Jersey, notowany na Euronext Amsterdam). Po debiucie gie\u0142dowym\n\u017babka Group na GPW w pa\u017adzierniku 2024 r. i kolejnych transakcjach z listopada 2025 r.,\nCVC \u2014 poprzez luksemburski wehiku\u0142 Heket Topco \u2014 wci\u0105\u017c kontroluje ok. 37,62% akcji.\nTo najwi\u0119kszy pojedynczy pakiet, wystarczaj\u0105cy, by realnie decydowa\u0107 o strategii sp\u00f3\u0142ki.\n\nHistoria \u017babki to podr\u0119cznikowy przyk\u0142ad tego, co w naszej metodologii nazywamy\nZasad\u0105 Ostatecznego W\u0142a\u015bciciela: liczy si\u0119 nie miejsce rejestracji sp\u00f3\u0142ki-c\u00f3rki\nw Polsce ani metryka za\u0142o\u017cenia marki, tylko to, kto naprawd\u0119 siedzi na szczycie\npiramidy w\u0142asno\u015bciowej i komu w efekcie trafiaj\u0105 zyski.\n\nPe\u0142na struktura w\u0142a\u015bcicielska, dane rejestrowe i historia transakcji \u2014 w profilu firmy:\n\ud83d\udc49 https://czypolskafirma.pl/firma/zabka\n\nJak my\u015blicie \u2014 ile os\u00f3b, kt\u00f3re codziennie robi\u0105 zakupy w \u017babce, wie, kto naprawd\u0119\njest jej w\u0142a\u015bcicielem?\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** logo \u017babki + flaga Wielkiej Brytanii (jak na profilu) lub prosty diagram\n  \"piramidy w\u0142a\u015bcicielskiej\" (\u017babka Polska \u2192 Heket Topco, Luksemburg \u2192 CVC Capital\n  Partners, Jersey).\n- **Format:** pojedyncze zdj\u0119cie/grafika lub karuzela 3 slajd\u00f3w (1. pytanie-hook,\n  2. struktura w\u0142a\u015bcicielska, 3. werdykt + link).\n- **Godzina publikacji:** X \u2014 8:00; Facebook \u2014 12:30.\n- **Cel:** maksymalny zasi\u0119g na start tygodnia, wysoki potencja\u0142 komentarzy/reakcji\n  (marka bardzo rozpoznawalna, temat \"zaskakuj\u0105cy\").\n"}, {"name": "02-wtorek-2026-07-14-zasada-zlotej-klatki.md", "type": "text", "content": "# Wtorek, 14.07.2026 \u2014 Zasada Z\u0142otej Klatki (post edukacyjny o metodologii)\n\n\u0179r\u00f3d\u0142o danych: https://czypolskafirma.pl/metodologia (tre\u015b\u0107 zasad weryfikacji)\noraz profile \u017babki i E. Wedla jako ilustracja zasady.\n\nCel posta: nawi\u0105za\u0107 do wczorajszego posta o \u017babce i wyt\u0142umaczy\u0107 \"dlaczego\" \u2014\nczyli metodologi\u0119 serwisu \u2014 \u017ceby odbiorcy rozumieli, \u017ce klasyfikacja nie jest\nsubiektywna, tylko wynika z jasnych, powtarzalnych regu\u0142.\n\n---\n\n## Post na X (267 znak\u00f3w)\n\nPolska nazwa i historia to nie to samo, co polski kapita\u0142.\n\nZasada Z\u0142otej Klatki: gdy firma powsta\u0142a w Polsce, ale kontrol\u0119 przej\u0105\u0142 zagraniczny inwestor (jak \u017babka czy E. Wedel), klasyfikujemy j\u0105 jako zagraniczn\u0105.\n\nczypolskafirma.pl/metodologia\n#PatriotyzmGospodarczy\n\n---\n\n## Post na Facebook\n\nCodziennie dostajemy pytania w stylu: \"Przecie\u017c ta firma powsta\u0142a w Polsce, ma polsk\u0105\nnazw\u0119, polskich pracownik\u00f3w \u2014 dlaczego oznaczyli\u015bcie j\u0105 jako zagraniczn\u0105?\".\n\nOdpowied\u017a kryje si\u0119 w jednej z czterech \u017celaznych regu\u0142 naszej metodologii \u2014\n**Zasadzie Z\u0142otej Klatki**.\n\nHistoryczne pochodzenie marki nie ma znaczenia przy ustalaniu jej bie\u017c\u0105cego statusu.\nLiczy si\u0119 wy\u0142\u0105cznie to, kto DZI\u015a sprawuje efektywn\u0105 kontrol\u0119 nad sp\u00f3\u0142k\u0105 \u2014 czyli kto\nma pakiet powy\u017cej 50% udzia\u0142\u00f3w (lub najwi\u0119kszy pojedynczy pakiet pozwalaj\u0105cy\nsamodzielnie powo\u0142ywa\u0107 zarz\u0105d).\n\nDwa podr\u0119cznikowe przyk\u0142ady z naszej bazy:\n\n\u2022 **\u017babka** \u2014 za\u0142o\u017cona w Polsce w 1998 r., od 2017 r. kontrolowana przez fundusz\n  CVC Capital Partners (Jersey/Luksemburg). Status: firma zagraniczna.\n\n\u2022 **E. Wedel** \u2014 polska marka czekoladowa z 1851 r., od 2010 r. w 100% nale\u017c\u0105ca\n  do po\u0142udniowokorea\u0144skiego LOTTE Group. Status: firma zagraniczna.\n\nW obu przypadkach m\u00f3wimy o firmach z autentycznie polskimi korzeniami. Ale\nsentyment i historia to nie to samo, co realna struktura w\u0142asno\u015bci i miejsce,\ndo kt\u00f3rego dzi\u015b p\u0142yn\u0105 zyski.\n\nDlatego zanim nazwiemy firm\u0119 \"polsk\u0105\", sprawdzamy nie metryk\u0119 urodzenia marki,\ntylko aktualny rejestr udzia\u0142owc\u00f3w.\n\nPe\u0142na metodologia \u2014 wszystkie 4 zasady \u2014 dost\u0119pna tutaj:\n\ud83d\udc49 https://czypolskafirma.pl/metodologia\n\nZnacie inn\u0105 firm\u0119, kt\u00f3ra pasuje do tego schematu? Piszcie w komentarzu \u2014 sprawdzimy j\u0105.\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** prosta infografika \"4 zasady weryfikacji\" (Ostateczny W\u0142a\u015bciciel,\n  Efektywna Kontrola, Z\u0142ota Klatka, Klasyfikacja Binarna) lub zdj\u0119cia \u017babki i Wedla\n  obok siebie z podpisem \"polskie korzenie, zagraniczna kontrola\".\n- **Format:** karuzela edukacyjna (4 slajdy \u2014 po jednej zasadzie na slajd) dzia\u0142a\n  dobrze na Facebooku i X.\n- **Godzina publikacji:** X \u2014 8:30; Facebook \u2014 12:30.\n- **Cel:** budowanie zaufania do metodologii, przygotowanie gruntu pod kolejne\n  posty demaskatorskie w tygodniu.\n"}, {"name": "03-sroda-2026-07-15-biedronka.md", "type": "text", "content": "# \u015aroda, 15.07.2026 \u2014 Biedronka: 31 lat w Polsce, kapita\u0142 wci\u0105\u017c portugalski\n\n\u0179r\u00f3d\u0142o danych: https://czypolskafirma.pl/firma/biedronka (weryfikacja: 10.07.2026)\nFakty: podmiot rejestrowy JERONIMO MARTINS POLSKA S.A., NIP 7791011327, KRS 0000222483,\nsiedziba: ul. \u017bniwna 5, 62-025 Kostrzyn. Ostateczny w\u0142a\u015bciciel: Jer\u00f3nimo Martins SGPS S.A.\n(notowana na gie\u0142dzie w Lizbonie), kontrolowana przez rodzin\u0119 Soares dos Santos. W Polsce\nod 1995 r. \u2014 ponad 31 lat obecno\u015bci. Najwi\u0119ksza sie\u0107 detaliczna w Polsce, lider rynku\ndyskont\u00f3w spo\u017cywczych.\n\n---\n\n## Post na X (limit 280 znak\u00f3w; poni\u017cszy tekst ma 269 znak\u00f3w)\n\n31 lat w Polsce, a kapita\u0142 wci\u0105\u017c portugalski.\n\nBiedronka to dzi\u015b najwi\u0119ksza sie\u0107 handlowa w kraju \u2014 ostatecznym w\u0142a\u015bcicielem jest koncern Jer\u00f3nimo Martins z Lizbony, kontrolowany przez rodzin\u0119 Soares dos Santos.\n\nczypolskafirma.pl/firma/biedronka\n#PatriotyzmGospodarczy\n\n---\n\n## Post na Facebook\n\nCodziennie miliony Polak\u00f3w robi\u0105 zakupy w Biedronce. To ju\u017c 31 lat obecno\u015bci tej\nsieci na polskim rynku \u2014 d\u0142u\u017cej ni\u017c niejedna rodzima firma. Ale \"obecno\u015b\u0107\" to nie\nto samo, co \"polski kapita\u0142\".\n\nBiedronka to marka nale\u017c\u0105ca do sp\u00f3\u0142ki JERONIMO MARTINS POLSKA S.A., kt\u00f3rej\nostatecznym w\u0142a\u015bcicielem jest notowany na gie\u0142dzie w Lizbonie koncern\nJer\u00f3nimo Martins SGPS S.A., kontrolowany przez portugalsk\u0105 rodzin\u0119 Soares dos Santos.\nCa\u0142y zysk wypracowany w polskich sklepach \u2014 po odliczeniu koszt\u00f3w dzia\u0142alno\u015bci\nw Polsce \u2014 trafia ostatecznie do akcjonariuszy w Portugalii.\n\nWarto podkre\u015bli\u0107: to nie jest firma \"z Z\u0142otej Klatki\" jak \u017babka czy Wedel \u2014\nBiedronka od samego pocz\u0105tku dzia\u0142alno\u015bci w Polsce (1995 r.) by\u0142a cz\u0119\u015bci\u0105\nportugalskiego koncernu. Nigdy nie by\u0142a polsk\u0105 firm\u0105 w rozumieniu naszej\nmetodologii, mimo \u017ce dla wielu konsument\u00f3w \"Biedronka\" brzmi r\u00f3wnie swojsko,\nco lokalny sklep osiedlowy.\n\nZgodnie z Zasad\u0105 Ostatecznego W\u0142a\u015bciciela liczy si\u0119 miejsce, do kt\u00f3rego realnie\np\u0142yn\u0105 zyski \u2014 a to Lizbona, nie Warszawa.\n\nPe\u0142ny profil firmy, dane rejestrowe i \u017ar\u00f3d\u0142a:\n\ud83d\udc49 https://czypolskafirma.pl/firma/biedronka\n\nZaskoczeni skal\u0105 i d\u0142ugo\u015bci\u0105 obecno\u015bci zagranicznego kapita\u0142u w polskim handlu?\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** logo Biedronki + flaga Portugalii, ewentualnie liczba \"31 lat\" jako\n  du\u017cy, mocny element wizualny (kontrast: d\u0142ugi sta\u017c w Polsce vs. zagraniczny kapita\u0142).\n- **Format:** pojedyncza grafika lub kr\u00f3tka karuzela (1. hook \"31 lat\", 2. w\u0142a\u015bciciel,\n  3. werdykt + link).\n- **Godzina publikacji:** X \u2014 8:00; Facebook \u2014 12:30.\n- **Cel:** utrzymanie momentum po poniedzia\u0142ku/wtorku, kolejny \"zaskakuj\u0105cy fakt\"\n  o rozpoznawalnej marce z innej kategorii (convenience \u2192 dyskont spo\u017cywczy).\n"}, {"name": "04-czwartek-2026-07-16-dino-polska.md", "type": "text", "content": "# Czwartek, 16.07.2026 \u2014 Dino Polska: kiedy polski kapita\u0142 wygrywa na du\u017c\u0105 skal\u0119\n\n\u0179r\u00f3d\u0142o danych: https://czypolskafirma.pl/firma/dino-polska (weryfikacja: 11.07.2026)\nFakty: podmiot \"DINO POLSKA\" S.A., NIP 6211766191, KRS 0000408273, siedziba: ul. Ostrowska\n122, 63-700 Krotoszyn. Notowana na GPW. Za\u0142o\u017cyciel Tomasz Biernacki kontroluje ponad 51%\nakcji \u2014 pe\u0142na efektywna kontrola. Sie\u0107 supermarket\u00f3w dzia\u0142aj\u0105ca g\u0142\u00f3wnie w mniejszych\nmiastach i na terenach podmiejskich, w\u0142asne dzia\u0142y mi\u0119sno-w\u0119dliniarskie. Na rynku\n(w obecnej formie) od 2007 r. \u2014 ponad 18 lat.\n\nCel posta: kontrapunkt pozytywny w \u015brodku tygodnia \u2014 po dw\u00f3ch \"demaskatorskich\" postach\n(\u017babka, Biedronka) pokazujemy, \u017ce polski kapita\u0142 te\u017c buduje lider\u00f3w rynkowych na du\u017c\u0105 skal\u0119.\n\n---\n\n## Post na X (limit 280 znak\u00f3w; poni\u017cszy tekst ma 275 znak\u00f3w)\n\nNie ka\u017cda du\u017ca sie\u0107 handlowa w Polsce to zagraniczny kapita\u0142.\n\nDino Polska: sp\u00f3\u0142ka notowana na GPW, a mimo to pakiet kontrolny (ponad 51% akcji) wci\u0105\u017c ma jej za\u0142o\u017cyciel, Tomasz Biernacki. Realnie polski kapita\u0142 na du\u017c\u0105 skal\u0119.\n\nczypolskafirma.pl/firma/dino-polska\n#PolskaFirma\n\n---\n\n## Post na Facebook\n\nPo \u017babce i Biedronce czas na inny przyk\u0142ad \u2014 bo nasza baza to nie tylko demaskowanie\nzagranicznego kapita\u0142u pod polskimi szyldami. To te\u017c pokazywanie, \u017ce polski kapita\u0142\npotrafi budowa\u0107 lider\u00f3w rynkowych na du\u017c\u0105 skal\u0119.\n\nDino Polska to dzi\u015b jedna z najszybciej rosn\u0105cych sieci handlowych w kraju \u2014 kilka\ntysi\u0119cy sklep\u00f3w, g\u0142\u00f3wnie w mniejszych miastach i na terenach podmiejskich, notowana\nna Gie\u0142dzie Papier\u00f3w Warto\u015bciowych w Warszawie.\n\nI mimo statusu sp\u00f3\u0142ki gie\u0142dowej, pakiet kontrolny \u2014 ponad 51% akcji \u2014 wci\u0105\u017c nale\u017cy\ndo za\u0142o\u017cyciela, Tomasza Biernackiego. To dok\u0142adnie to, o czym m\u00f3wi nasza Zasada\nEfektywnej Kontroli: \u017ceby firma mia\u0142a status \"Polska Firma\", kto\u015b polski musi\nrealnie decydowa\u0107, a nie tylko formalnie figurowa\u0107 w dokumentach rejestrowych.\n\nDino pokazuje, \u017ce gie\u0142da i skala biznesu wcale nie musz\u0105 oznacza\u0107 rozmycia\nkontroli w\u0142a\u015bcicielskiej czy przej\u0119cia przez zagraniczny fundusz \u2014 da si\u0119 rosn\u0105\u0107\ni utrzyma\u0107 polski kapita\u0142 na sterze.\n\nPe\u0142ny profil firmy, dane rejestrowe i struktura w\u0142a\u015bcicielska:\n\ud83d\udc49 https://czypolskafirma.pl/firma/dino-polska\n\nRobicie zakupy w Dino? Dajcie zna\u0107, czy wiedzieli\u015bcie, \u017ce to polska firma na tak\ndu\u017c\u0105 skal\u0119.\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** logo Dino + flaga Polski, ewentualnie prosty wykres \"ponad 51% akcji\n  = kontrola za\u0142o\u017cyciela\" jako wizualny kontrast do poniedzia\u0142kowej \u017babki.\n- **Format:** pojedyncza grafika lub kr\u00f3tka karuzela (1. hook, 2. dane w\u0142a\u015bcicielskie,\n  3. por\u00f3wnanie z \u017babk\u0105/Biedronk\u0105 \u2014 \"du\u017ca skala + polski kapita\u0142\").\n- **Godzina publikacji:** X \u2014 8:00; Facebook \u2014 12:30.\n- **Cel:** prze\u0142amanie schematu \"demaskujemy\" \u2014 budowanie wizerunku serwisu jako\n  rzetelnego, a nie wy\u0142\u0105cznie krytycznego wobec du\u017cych marek.\n"}, {"name": "05-piatek-2026-07-17-e-wedel.md", "type": "text", "content": "# Pi\u0105tek, 17.07.2026 \u2014 Ptasie Mleczko po korea\u0144sku: historia E. Wedla\n\n\u0179r\u00f3d\u0142o danych: https://czypolskafirma.pl/firma/e-wedel (weryfikacja: 11.07.2026)\nFakty: podmiot LOTTE WEDEL Sp. z o.o., NIP 5272613819, KRS 0000340664, siedziba:\nul. Jana Zamoyskiego 28/30, 03-801 Warszawa. Marka za\u0142o\u017cona w 1851 r. W 2010 r. pakiet\nkontrolny (100% udzia\u0142\u00f3w) przej\u0105\u0142 po\u0142udniowokorea\u0144ski konglomerat LOTTE Group za ok.\n142 mln USD \u2014 od Cadbury (wcze\u015bniejszego w\u0142a\u015bciciela). Produkty: Ptasie Mleczko,\nMieszanka Wedlowska, czekolady nadziewane, Torcik Wedlowski. Kraj pochodzenia kapita\u0142u:\nKorea Po\u0142udniowa.\n\nCel posta: lekki, \"shareable\" post na koniec tygodnia roboczego \u2014 marka wywo\u0142uj\u0105ca\nsilne emocje/nostalgi\u0119, du\u017cy potencja\u0142 do komentarzy i udost\u0119pnie\u0144.\n\n---\n\n## Post na X (limit 280 znak\u00f3w; poni\u017cszy tekst ma 271 znak\u00f3w)\n\nPtasie Mleczko to polska klasyka od 1851 roku.\n\nAle za mark\u0105 E. Wedel od 2010 r. stoi po\u0142udniowokorea\u0144ski koncern LOTTE Group, kt\u00f3ry przej\u0105\u0142 100% udzia\u0142\u00f3w od Cadbury za ok. 142 mln USD. Podr\u0119cznikowy przyk\u0142ad Z\u0142otej Klatki.\n\nczypolskafirma.pl/firma/e-wedel\n#PatriotyzmGospodarczy\n\n---\n\n## Post na Facebook\n\nPi\u0105tek, wi\u0119c co\u015b na lu\u017aniejszy koniec tygodnia \u2014 ale wci\u0105\u017c z twardymi faktami.\n\nPtasie Mleczko. Torcik Wedlowski. Mieszanka Wedlowska. Dla wielu z nas to nie tylko\nprodukty \u2014 to smak dzieci\u0144stwa i jedna z najbardziej \"polskich\" marek, jakie\nmo\u017cecie sobie wyobrazi\u0107. I s\u0142usznie \u2014 E. Wedel powsta\u0142 w Warszawie w 1851 roku,\nto jedna z najstarszych marek spo\u017cywczych w Polsce.\n\nTyle \u017ce od 2010 roku firma w 100% nale\u017cy do po\u0142udniowokorea\u0144skiego konglomeratu\nLOTTE Group, kt\u00f3ry przej\u0105\u0142 j\u0105 od Cadbury za ok. 142 mln dolar\u00f3w. Zyski z ka\u017cdej\nkostki czekolady i ka\u017cdego pude\u0142ka Ptasiego Mleczka trafiaj\u0105 dzi\u015b ostatecznie do\nSeulu, nie do Warszawy.\n\nTo kolejny (po \u017babce) przyk\u0142ad tego, co nazywamy Zasad\u0105 Z\u0142otej Klatki: 170 lat\npolskiej historii marki nie zmienia faktu, \u017ce o strategii sp\u00f3\u0142ki decyduje dzi\u015b\nzagraniczny w\u0142a\u015bciciel z pe\u0142nym pakietem kontrolnym.\n\nNic nie ujmuje to jako\u015bci produkt\u00f3w ani sentymentowi \u2014 ale warto wiedzie\u0107, gdzie\nnaprawd\u0119 l\u0105duje zysk, zanim kto\u015b nazwie to \"wspieraniem polskiej gospodarki\".\n\nPe\u0142na historia transakcji i dane rejestrowe:\n\ud83d\udc49 https://czypolskafirma.pl/firma/e-wedel\n\nWiedzieli\u015bcie, \u017ce Wedel jest korea\u0144ski? Oznaczcie kogo\u015b, kto na pewno si\u0119 zdziwi.\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** zdj\u0119cie Ptasiego Mleczka/Wedla + flaga Korei Po\u0142udniowej, kontrast\n  \"1851\" (rok za\u0142o\u017cenia) vs. \"2010\" (przej\u0119cie przez LOTTE) jako o\u015b czasu.\n- **Format:** pojedyncza mocna grafika (najwy\u017cszy potencja\u0142 viralowy w tygodniu)\n  lub kr\u00f3tkie wideo/rolka z osi\u0105 czasu marki.\n- **Godzina publikacji:** X \u2014 19:00 (wieczorny szczyt, pi\u0105tkowy \"scroll\"); Facebook \u2014 18:00.\n- **Cel:** maksymalne zasi\u0119gi organiczne dzi\u0119ki emocjonalnej, rozpoznawalnej marce;\n  wysoki potencja\u0142 \"oznacz znajomego\" i udost\u0119pnie\u0144 przed weekendem.\n"}, {"name": "06-sobota-2026-07-18-allegro.md", "type": "text", "content": "# Sobota, 18.07.2026 \u2014 Allegro: dlaczego to jednak polska firma (niuans metodologii)\n\n\u0179r\u00f3d\u0142o danych: https://czypolskafirma.pl/firma/allegro (weryfikacja: 11.07.2026) oraz\nhttps://czypolskafirma.pl/metodologia (Zasada Efektywnej Kontroli, Zasada Z\u0142otej Klatki).\nFakty: podmiot ALLEGRO Sp. z o.o., NIP 5252674798, KRS 0000635012, siedziba:\nul. Wierzbi\u0119cice 1B, 61-569 Pozna\u0144. W 2016 r. przej\u0119ta przez konsorcjum Cinven, Permira\ni Mid Europa Partners za 3,25 mld USD. IPO na GPW w 2020 r. Po debiucie fundusze PE\nsukcesywnie sprzedawa\u0142y akcje. Obecnie akcjonariat mocno rozproszony (free float >70%),\nbez pojedynczego akcjonariusza posiadaj\u0105cego pakiet kontrolny. Status: Polska Firma,\nw\u0142a\u015bciciel: \"Akcjonariat rozproszony\".\n\nCel posta: d\u0142u\u017cszy, pog\u0142\u0119biony post dla zaanga\u017cowanych odbiorc\u00f3w weekendowych \u2014\npokazuje, \u017ce metodologia serwisu nie jest uproszczonym sloganem, tylko konsekwentnym\nliczeniem realnych pakiet\u00f3w kontrolnych, nawet gdy wynik jest mniej oczywisty.\n\n---\n\n## Post na X (limit 280 znak\u00f3w; poni\u017cszy tekst ma 266 znak\u00f3w)\n\nAllegro by\u0142o w r\u0119kach zagranicznych funduszy PE. Dzi\u015b ma status \"Polska Firma\". Dlaczego?\n\nPo IPO 2020 fundusze PE sukcesywnie sprzedawa\u0142y akcje. Dzi\u015b akcjonariat jest rozproszony (free float >70%) \u2014 nikt nie ma pakietu kontrolnego.\n\nczypolskafirma.pl/firma/allegro\n\n---\n\n## Post na Facebook\n\nSobotni, d\u0142u\u017cszy post dla tych, kt\u00f3rzy lubi\u0105 wchodzi\u0107 w szczeg\u00f3\u0142y \u2014 bo Allegro to\nnajlepszy dow\u00f3d na to, \u017ce nasza metodologia nie dzia\u0142a na zasadzie \"raz zagraniczne,\nzawsze zagraniczne\".\n\nKr\u00f3tka historia: Allegro powsta\u0142o w Polsce, zbudowane przez polski zesp\u00f3\u0142. W 2016 roku\nkontrolny pakiet przej\u0119\u0142o konsorcjum funduszy private equity \u2014 Cinven, Permira\ni Mid Europa Partners \u2014 p\u0142ac\u0105c za sp\u00f3\u0142k\u0119 3,25 mld dolar\u00f3w. W tamtym momencie Allegro\nby\u0142o podr\u0119cznikowym przyk\u0142adem Zasady Z\u0142otej Klatki, dok\u0142adnie jak dzisiejsza \u017babka.\n\nAle w 2020 roku Allegro zadebiutowa\u0142o na GPW. Od tego momentu fundusze PE stopniowo,\ntransakcja po transakcji, sprzedawa\u0142y swoje akcje na rynku. Dzi\u015b akcjonariat sp\u00f3\u0142ki\njest tak rozproszony (free float przekracza 70%), \u017ce **\u017caden pojedynczy podmiot \u2014\nani polski, ani zagraniczny \u2014 nie posiada pakietu kontrolnego** w rozumieniu naszej\nZasady Efektywnej Kontroli (ponad 50% udzia\u0142\u00f3w lub pojedynczy pakiet daj\u0105cy realn\u0105\nkontrol\u0119 nad zarz\u0105dem).\n\nSkoro \u017caden zagraniczny fundusz nie sprawuje ju\u017c efektywnej kontroli, Allegro nie\nspe\u0142nia dzi\u015b kryteri\u00f3w Z\u0142otej Klatki \u2014 i wraca do statusu \"Polska Firma\", sp\u00f3\u0142ki\nz siedzib\u0105 w Polsce bez zagranicznego w\u0142a\u015bciciela kontrolnego.\n\nTo nie jest wyj\u0105tek od regu\u0142 \u2014 to regu\u0142y zastosowane konsekwentnie. Klasyfikujemy\nfirmy na bie\u017c\u0105co, na podstawie aktualnej struktury akcjonariatu, a nie raz ustalonej\netykiety sprzed lat.\n\nPe\u0142na struktura w\u0142a\u015bcicielska i historia transakcji:\n\ud83d\udc49 https://czypolskafirma.pl/firma/allegro\n\nCo s\u0105dzicie \u2014 czy status \"Polska Firma\" bez jednego dominuj\u0105cego polskiego w\u0142a\u015bciciela\nte\u017c powinien si\u0119 liczy\u0107 jako \"polski kapita\u0142\"? Dyskutujmy w komentarzach.\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** o\u015b czasu Allegro (2016 przej\u0119cie PE \u2192 2020 IPO \u2192 dzi\u015b rozproszony\n  akcjonariat) lub wykres ko\u0142owy \"free float >70%\".\n- **Format:** d\u0142u\u017cszy post + karuzela z osi\u0105 czasu (3\u20134 slajdy) \u2014 dobrze sprawdza si\u0119\n  w sobot\u0119, gdy odbiorcy maj\u0105 wi\u0119cej czasu na czytanie.\n- **Godzina publikacji:** X \u2014 10:00; Facebook \u2014 12:00 (sobotni, spokojniejszy rytm).\n- **Cel:** budowanie autorytetu i wiarygodno\u015bci metodologii w\u015br\u00f3d najbardziej\n  zaanga\u017cowanej cz\u0119\u015bci odbiorc\u00f3w; materia\u0142 do przypinania/udost\u0119pniania jako\n  \"dow\u00f3d rzetelno\u015bci\" serwisu.\n"}, {"name": "07-niedziela-2026-07-19-podsumowanie-cta.md", "type": "text", "content": "# Niedziela, 19.07.2026 \u2014 Podsumowanie tygodnia + zaproszenie do spo\u0142eczno\u015bci\n\n\u0179r\u00f3d\u0142o danych: strona g\u0142\u00f3wna https://czypolskafirma.pl (licznik \"Prze\u015bwietlili\u015bmy ju\u017c\n750 firm\", stan na 11.07.2026) oraz posty z ca\u0142ego tygodnia (\u017babka, metodologia,\nBiedronka, Dino Polska, E. Wedel, Allegro).\n\nCel posta: zamkn\u0105\u0107 tydzie\u0144 jako sp\u00f3jn\u0105 narracj\u0119, przypomnie\u0107 kluczowe wnioski, da\u0107\nczytelnikom prosty CTA (wyszukiwarka + funkcja \"Zg\u0142o\u015b firm\u0119\") przed nowym tygodniem\nzakupowym.\n\n---\n\n## Post na X (limit 280 znak\u00f3w; poni\u017cszy tekst ma 269 znak\u00f3w)\n\nTydzie\u0144 z CzyPolskaFirma.pl: \u017babka, Biedronka i E. Wedel \u2014 zagraniczny kapita\u0142 pod polskim szyldem. Dino Polska i Allegro \u2014 realnie polski kapita\u0142, mimo skali.\n\nPrze\u015bwietlili\u015bmy ju\u017c 750 firm. Brakuje Twojej ulubionej? Zg\u0142o\u015b j\u0105.\n\nczypolskafirma.pl\n#PatriotyzmGospodarczy\n\n---\n\n## Post na Facebook\n\nPodsumowanie tygodnia \u2014 pi\u0119\u0107 firm, jedna zasada.\n\n\ud83d\udd34 **\u017babka** \u2014 polskie korzenie z 1998 r., dzi\u015b kontrolowana przez fundusz\nCVC Capital Partners (Jersey/Luksemburg).\n\ud83d\udd34 **Biedronka** \u2014 31 lat w Polsce, kapita\u0142 od zawsze portugalski\n(Jer\u00f3nimo Martins, rodzina Soares dos Santos).\n\ud83d\udd34 **E. Wedel** \u2014 marka z 1851 r., od 2010 r. w 100% nale\u017c\u0105ca do korea\u0144skiego\nLOTTE Group.\n\ud83d\udfe2 **Dino Polska** \u2014 sp\u00f3\u0142ka gie\u0142dowa, a mimo to pe\u0142n\u0105 kontrol\u0119 (ponad 51% akcji)\nwci\u0105\u017c ma za\u0142o\u017cyciel, Tomasz Biernacki.\n\ud83d\udfe2 **Allegro** \u2014 po latach pod kontrol\u0105 funduszy PE, dzi\u015b bez zagranicznego\nw\u0142a\u015bciciela kontrolnego \u2014 status \"Polska Firma\".\n\nWsp\u00f3lny mianownik wszystkich tych historii? Polska nazwa, polska historia i polski\nadres siedziby nic same w sobie nie m\u00f3wi\u0105 o tym, gdzie realnie l\u0105duje zysk. Liczy\nsi\u0119 tylko jedno pytanie: kto ma pakiet kontrolny na szczycie struktury w\u0142a\u015bcicielskiej.\n\nDlatego prze\u015bwietlili\u015bmy ju\u017c ponad 750 firm dzia\u0142aj\u0105cych w Polsce \u2014 od bank\u00f3w,\nprzez sieci handlowe, po producent\u00f3w \u017cywno\u015bci i elektroniki. Ka\u017cdy profil to\nkonkretne dane rejestrowe, \u017ar\u00f3d\u0142a (KRS, CRBR, CEIDG) i data ostatniej weryfikacji.\n\nZanim w nowym tygodniu zrobicie zakupy \u2014 sprawd\u017acie, kto naprawd\u0119 na nich zarabia:\n\ud83d\udc49 https://czypolskafirma.pl\n\nNie znale\u017ali\u015bcie firmy, kt\u00f3ra Was interesuje? Zg\u0142o\u015bcie j\u0105, a sprawdzimy jej struktur\u0119\nw\u0142a\u015bcicielsk\u0105 od podstaw:\n\ud83d\udc49 https://czypolskafirma.pl (formularz \"Zg\u0142o\u015b firm\u0119\" na stronie g\u0142\u00f3wnej)\n\n\u015aled\u017acie nas te\u017c na X: [@czypolskafirma](https://x.com/czypolskafirma) \u2014 codzienne\nfakty o tym, kto naprawd\u0119 stoi za polskimi markami.\n\nJak\u0105 firm\u0119 powinni\u015bmy prze\u015bwietli\u0107 w przysz\u0142ym tygodniu? Piszcie w komentarzach.\n\n---\n\n## Wskaz\u00f3wki produkcyjne\n\n- **Grafika:** karuzela-podsumowanie (5 slajd\u00f3w, po jednym na firm\u0119, z kolorowym\n  oznaczeniem \ud83d\udd34 zagraniczna / \ud83d\udfe2 polska) + slajd zamykaj\u0105cy z CTA i linkiem.\n- **Format:** karuzela na Facebooku, w\u0105tek (thread) lub pojedynczy post z grafik\u0105\n  na X \u2014 je\u015bli w\u0105tek, pierwszy tweet = wersja skr\u00f3cona podsumowania powy\u017cej.\n- **Godzina publikacji:** X \u2014 19:00 (niedzielny wiecz\u00f3r, planowanie tygodnia);\n  Facebook \u2014 18:00\u201319:00.\n- **Cel:** zamkni\u0119cie narracji tygodnia, wzrost zaanga\u017cowania (komentarze z propozycjami\n  firm), konwersja na \"Zg\u0142o\u015b firm\u0119\" i odwiedziny wyszukiwarki przed nowym tygodniem.\n"}, {"name": "08-wytyczne-hashtagi-i-godziny.md", "type": "text", "content": "# Wytyczne produkcyjne \u2014 hashtagi, godziny publikacji, ton\n\nDotyczy ca\u0142ej paczki post\u00f3w na tydzie\u0144 13.07.2026\u201319.07.2026 dla @czypolskafirma\n(X) i Facebook (CzyPolskaFirma).\n\n---\n\n## Hashtagi\n\n**G\u0142\u00f3wny hashtag serii (u\u017cywa\u0107 konsekwentnie):**\n`#PatriotyzmGospodarczy`\n\n**Hashtagi pomocnicze (u\u017cywa\u0107 oszcz\u0119dnie, max 1\u20132 dodatkowe na post, tylko gdy\npasuj\u0105 do konkretnej tre\u015bci):**\n- `#PolskaFirma` \u2014 przy postach o firmach ze statusem \"Polska Firma\" (Dino Polska,\n  Allegro).\n- `#KupujPolskie` \u2014 przy postach z wyra\u017anym CTA zakupowym (np. niedzielne podsumowanie).\n- `#KtoNaprawdeZarabia` \u2014 opcjonalny hashtag \"hookowy\" do post\u00f3w demaskatorskich\n  (\u017babka, Biedronka, Wedel), je\u015bli chcemy zbudowa\u0107 rozpoznawaln\u0105 seri\u0119.\n\n**Zasada og\u00f3lna:** na X \u2014 maks. 1\u20132 hashtagi na tweet (\u017ceby nie zjada\u0142y limitu\nznak\u00f3w i nie wygl\u0105da\u0142y spamersko). Na Facebooku hashtagi maj\u0105 mniejsze znaczenie\nalgorytmiczne \u2014 mo\u017cna pomin\u0105\u0107 lub zostawi\u0107 1 na ko\u0144cu posta.\n\nNie u\u017cywamy hashtag\u00f3w nazw firm (np. #\u017babka, #Biedronka) \u2014 ryzyko sporu z markami\noraz mieszania si\u0119 z ich w\u0142asnym contentem promocyjnym.\n\n---\n\n## Limity d\u0142ugo\u015bci i format\n\n- **X (Twitter):** twardy limit 280 znak\u00f3w. Ka\u017cdy post w paczce ma podany dok\u0142adny\n  licznik znak\u00f3w w nag\u0142\u00f3wku sekcji \"Post na X\" \u2014 przed publikacj\u0105 wklej tekst do\n  licznika znak\u00f3w X, je\u015bli by\u0142 edytowany.\n- **Facebook:** brak twardego limitu, ale posty w paczce celowo utrzymane w formie\n  \"czytelnej na telefonie\" (kr\u00f3tkie akapity, wypunktowania, wyra\u017ane CTA na ko\u0144cu).\n- Linki do profili firm zawsze w pe\u0142nej, czytelnej formie (czypolskafirma.pl/firma/...),\n  bez skracaczy URL \u2014 buduj\u0105 zaufanie i s\u0105 \u0142atwe do zweryfikowania \"go\u0142ym okiem\".\n\n---\n\n## Sugerowane godziny publikacji (czas polski)\n\n| Dzie\u0144 | X (Twitter) | Facebook |\n|-------|-------------|----------|\n| Poniedzia\u0142ek | 8:00 | 12:30 |\n| Wtorek | 8:30 | 12:30 |\n| \u015aroda | 8:00 | 12:30 |\n| Czwartek | 8:00 | 12:30 |\n| Pi\u0105tek | 19:00 | 18:00 |\n| Sobota | 10:00 | 12:00 |\n| Niedziela | 19:00 | 18:00\u201319:00 |\n\nLogika: dni robocze (pon\u2013czw) \u2014 publikacja rano, gdy odbiorcy przegl\u0105daj\u0105 telefon\nprzed/w drodze do pracy. Pi\u0105tek \u2014 wieczorny szczyt przed weekendem (l\u017cejsza,\nbardziej \"shareable\" tre\u015b\u0107). Weekend \u2014 przesuni\u0119cie na p\u00f3\u017aniejsze godziny,\nodbiorcy maj\u0105 wi\u0119cej czasu na d\u0142u\u017csze, pog\u0142\u0119bione tre\u015bci (sobota) i planowanie\nnadchodz\u0105cego tygodnia (niedzielny wiecz\u00f3r).\n\n---\n\n## Ton i styl\n\n- Rzeczowy, oparty na faktach i danych rejestrowych \u2014 bez sensacyjnego j\u0119zyka\n  (\"SKANDAL\", \"OSZUKUJ\u0104 WAS\"). Moc przekazu ma p\u0142yn\u0105\u0107 z samych liczb i fakt\u00f3w,\n  nie z emocjonalnego s\u0142ownictwa.\n- Ka\u017cdy post ko\u0144czy si\u0119 linkiem do konkretnego profilu firmy lub strony g\u0142\u00f3wnej \u2014\n  czytelnik zawsze mo\u017ce samodzielnie zweryfikowa\u0107 fakt.\n- Pytania na ko\u0144cu post\u00f3w na Facebooku (np. \"Wiedzieli\u015bcie, \u017ce...?\") \u2014 buduj\u0105\n  zaanga\u017cowanie i komentarze, kluczowe dla zasi\u0119gu organicznego.\n- Unikamy oceniania konsument\u00f3w (\"nie kupujcie tam\") \u2014 serwis dostarcza informacji,\n  decyzj\u0119 zakupow\u0105 zostawiamy odbiorcy (\"wybieraj \u015bwiadomie\").\n\n---\n\n## Checklist przed publikacj\u0105 (ka\u017cdy post)\n\n1. Sprawd\u017a aktualno\u015b\u0107 danych na czypolskafirma.pl (struktury w\u0142a\u015bcicielskie funduszy\n   PE i sp\u00f3\u0142ek gie\u0142dowych mog\u0105 si\u0119 zmienia\u0107 z kwarta\u0142u na kwarta\u0142).\n2. Zweryfikuj limit znak\u00f3w posta na X (liczy\u0107 po ewentualnej edycji).\n3. Sprawd\u017a, czy link do profilu firmy dzia\u0142a i prowadzi do w\u0142a\u015bciwej podstrony.\n4. Dodaj grafik\u0119 zgodnie ze wskaz\u00f3wk\u0105 produkcyjn\u0105 w danym pliku.\n5. Zaplanuj publikacj\u0119 o sugerowanej godzinie (patrz tabela wy\u017cej).\n"}], "grading": {"expectations": [{"text": "Kompletny harmonogram pon-nd z gotowymi do wklejenia postami", "passed": true, "evidence": "9 plikow z kalendarzem i postami na 7 dni \u2014 kompletne, ale rozbite na wiele plikow"}, {"text": "Wszystkie posty X mieszcza sie w 280 znakach (URL liczony jak t.co)", "passed": true, "evidence": "Wlasna weryfikacja agenta; skrypt nie wykryl postow X >280 (flagi dotyczyly sekcji zrodel)"}, {"text": "Kazdy link do czypolskafirma.pl ma tagi UTM", "passed": false, "evidence": "Skrypt: 16 linkow firma/kategoria, 0 z utm_source"}, {"text": "Jest quiz-ankieta i osobny post z odpowiedzia nastepnego dnia", "passed": false, "evidence": "Brak quizu-ankiety w tygodniu (pon-nd to posty statyczne + metodologia)"}, {"text": "Zapisany plik stanu z uzytymi markami", "passed": false, "evidence": "Brak pliku stanu \u2014 kolejne paczki moga powtarzac te same firmy"}, {"text": "Fakty wlascicielskie zgodne z czypolskafirma.pl", "passed": true, "evidence": "Fakty weryfikowane na zywo na profilach (Zabka, Biedronka, Dino, Allegro, Wedel)"}], "summary": {"passed": 3, "failed": 3, "total": 6, "pass_rate": 0.5}}}, {"id": "eval-1-tematyczna-banki-with_skill-run-1", "prompt": "(No prompt found)", "eval_id": null, "outputs": [{"name": "firmy-cache.json", "type": "text", "content": "{\n  \"zbudowano\": \"2026-07-11\",\n  \"zrodlo\": \"kategoria/banki (pe\u0142ny indeks; pozosta\u0142e kategorie nie pobrane w tej sesji)\",\n  \"firmy\": [\n    { \"marka\": \"Alior Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/alior-bank\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Bank Pocztowy\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bank-pocztowy\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Bff\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bff\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"IT\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Bnp Paribas\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bnp-paribas\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Bos\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bos\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Bps\", \"url_profilu\": \"https://czypolskafirma.pl/firma/bps\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Citi Handlowy\", \"url_profilu\": \"https://czypolskafirma.pl/firma/citi-handlowy\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Credit Agricole\", \"url_profilu\": \"https://czypolskafirma.pl/firma/credit-agricole\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"FR\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Erste Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/erste-bank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"AT\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Inbank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/inbank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"EE\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Ing\", \"url_profilu\": \"https://czypolskafirma.pl/firma/ing\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"NL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Mbank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/mbank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"DE\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Millennium\", \"url_profilu\": \"https://czypolskafirma.pl/firma/millennium\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"PT\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Nest Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/nest-bank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Pekao\", \"url_profilu\": \"https://czypolskafirma.pl/firma/pekao\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Pko Bp\", \"url_profilu\": \"https://czypolskafirma.pl/firma/pko-bp\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Plus Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/plus-bank\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Provident\", \"url_profilu\": \"https://czypolskafirma.pl/firma/provident\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Raiffeisen\", \"url_profilu\": \"https://czypolskafirma.pl/firma/raiffeisen\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"AT\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Revolut\", \"url_profilu\": \"https://czypolskafirma.pl/firma/revolut\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"GB\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Santander Bank Polska\", \"url_profilu\": \"https://czypolskafirma.pl/firma/santander-bank-polska\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"ES\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Sgb\", \"url_profilu\": \"https://czypolskafirma.pl/firma/sgb\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Skok Kasa Stefczyka\", \"url_profilu\": \"https://czypolskafirma.pl/firma/skok-kasa-stefczyka\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Toyota Bank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/toyota-bank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"JP\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Unicredit\", \"url_profilu\": \"https://czypolskafirma.pl/firma/unicredit\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"IT\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Velobank\", \"url_profilu\": \"https://czypolskafirma.pl/firma/velobank\", \"werdykt\": \"Zagraniczna\", \"kraj\": \"US\", \"kategoria\": \"Banki\" },\n    { \"marka\": \"Vivus\", \"url_profilu\": \"https://czypolskafirma.pl/firma/vivus\", \"werdykt\": \"Polska\", \"kraj\": \"PL\", \"kategoria\": \"Banki\" }\n  ]\n}\n"}, {"name": "stan-generatora.json", "type": "text", "content": "{\n  \"ustawienia\": { \"x_premium\": false },\n  \"wykorzystania\": [\n    { \"marka\": \"mBank\", \"format\": \"zaskoczenie\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Banki (kategoria)\", \"format\": \"statystyka kategorii\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"PKO BP / Bank Pekao / Alior Bank / BO\u015a Bank / Bank Pocztowy / SGB\", \"format\": \"zestawienie\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"PKO BP vs mBank\", \"format\": \"pojedynek\", \"data\": \"2026-07-13\" }\n  ]\n}\n"}], "grading": {"expectations": [{"text": "Dokladnie 4 posty na X, bez quizu", "passed": true, "evidence": "4 posty (zaskoczenie, statystyka, zestawienie, pojedynek), quiz pominiety na prosbe"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "218-253 znakow, skrypt nie wykryl przekroczen"}, {"text": "Linki z tagami UTM", "passed": true, "evidence": "Skrypt: 4/4 linki z utm_source"}, {"text": "Statystyka polskich bankow zgodna ze strona (10 z 27)", "passed": true, "evidence": "Strona kategorii: 27 firm, 10 z werdyktem Polska (Alior, B.Pocztowy, BOS, BPS, Pekao, PKO BP, Plus Bank, SGB, SKOK Stefczyka, Vivus) \u2014 post podaje 10 z 27"}, {"text": "Zapisany plik stanu", "passed": true, "evidence": "stan-generatora.json obecny"}], "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0}}}, {"id": "eval-1-tematyczna-banki-without_skill-run-1", "prompt": "(No prompt found)", "eval_id": null, "outputs": [{"name": "post_1_9_z_27.txt", "type": "text", "content": "W kategorii Banki na czypolskafirma.pl polski kapita\u0142 ma tylko 9 z 27 firm.\n\nPolskie: PKO BP, Pekao, Alior Bank, BOS, Bank Pocztowy, Plus Bank, SGB, BPS, SKOK Stefczyka.\n\nReszta to kapita\u0142 zagraniczny.\n\nczypolskafirma.pl/kategoria/banki\n\n#PolskaFirma #Banki\n"}, {"name": "post_2_mbank_mit.txt", "type": "text", "content": "mBank brzmi swojsko, ale to niemiecki kapita\u0142 \u2014 w\u0142a\u015bcicielem jest Commerzbank.\n\nRealnie polskie banki to m.in. PKO BP, Pekao, Alior Bank i Bank Pocztowy.\n\nNazwa nic nie m\u00f3wi o w\u0142a\u015bcicielu. Liczy si\u0119 kto ma pakiet kontrolny.\n\nczypolskafirma.pl/firma/mbank\n\n#PolskaFirma #mBank\n"}, {"name": "post_3_pekao_repolonizacja.txt", "type": "text", "content": "Bank Pekao przez blisko 20 lat nale\u017ca\u0142 do w\u0142oskiego UniCredit.\n\nW 2017 r. PZU i Polski Fundusz Rozwoju odkupi\u0142y wi\u0119kszo\u015bciowy pakiet akcji \u2014 dzi\u015b to zn\u00f3w polski kapita\u0142.\n\nTo realna repolonizacja, nie marketing.\n\nczypolskafirma.pl/firma/pekao\n\n#PolskaFirma\n"}, {"name": "post_4_zagraniczni_giganci.txt", "type": "text", "content": "Santander, ING, Millennium, BNP Paribas, Credit Agricole, UniCredit, Raiffeisen \u2014 dzia\u0142aj\u0105 w Polsce, ale kapita\u0142 jest hiszpa\u0144ski, holenderski, portugalski, francuski, w\u0142oski i austriacki.\n\nPolska alternatywa: PKO BP, Pekao, Alior Bank, BOS.\n\nczypolskafirma.pl/kategoria/banki\n\n#PolskaFirma\n"}], "grading": {"expectations": [{"text": "Dokladnie 4 posty na X, bez quizu", "passed": true, "evidence": "4 pliki .txt, bez quizu"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "Agent weryfikowal z licznikiem t.co (248-280); skrypt bez przekroczen"}, {"text": "Linki z tagami UTM", "passed": false, "evidence": "Skrypt: 4 linki, 0 z utm_source"}, {"text": "Statystyka polskich bankow zgodna ze strona (10 z 27)", "passed": false, "evidence": "Post podaje '9 z 27' i pomija Vivus \u2014 strona kategorii pokazuje 10 polskich"}, {"text": "Zapisany plik stanu", "passed": false, "evidence": "Brak pliku stanu"}], "summary": {"passed": 2, "failed": 3, "total": 5, "pass_rate": 0.4}}}, {"id": "eval-2-szybkie-o-zabce-with_skill-run-1", "prompt": "(No prompt found)", "eval_id": null, "outputs": [{"name": "firmy-cache.json", "type": "text", "content": "{\n  \"zrodlo\": \"https://czypolskafirma.pl/kategoria/handel\",\n  \"pobrano\": \"2026-07-11\",\n  \"uwaga\": \"Cache czesciowy - zbudowany tylko dla kategorii Handel (na potrzeby paczki o Zabce). Inne kategorie nie zostaly jeszcze zindeksowane; przy kolejnym uzyciu skilla dobuduj pozostale kategorie.\",\n  \"firmy\": [\n    {\n      \"marka\": \"50 Style\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/50 Style\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Action\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Action\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Agata Meble\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Agata Meble\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Aldi\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/aldi\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Allegro\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Allegro\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Answear.com\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Answear.com\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Apteki Gemini\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Apteki Gemini\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"CZ\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Arhelan\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/arhelan\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Auchan\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/auchan\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Biedronka\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/biedronka\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"PT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Bonito.pl\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Bonito.pl\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Bricomarche\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Bricomarche\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Carrefour\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/carrefour\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Castorama\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Castorama\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Chata Polska\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/chata-polska\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Dealz\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Dealz\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"ZA\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Decathlon\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Decathlon\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Deichmann\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Deichmann\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Delikatesy Centrum\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/delikatesy-centrum\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"PT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Dino Polska\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/dino-polska\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"DM (Drogerie Markt)\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/DM (Drogerie Markt)\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Douglas\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Douglas\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"DOZ (Dbam o Zdrowie)\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/DOZ (Dbam o Zdrowie)\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Dr. Max\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Dr. Max\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"CZ\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Drogerie Natura\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Drogerie Natura\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"EBilet.pl\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/eBilet.pl\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Empik\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Empik\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Eobuwie.pl\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/eobuwie.pl\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Erli\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Erli\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Eurocash\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/eurocash\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"PT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Frisco.pl\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Frisco.pl\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"PT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"HalfPrice\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/HalfPrice\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Hebe\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Hebe\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"PT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Intersport\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Intersport\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"JD Sports\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/JD Sports\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Jula\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Jula\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"SE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Jysk\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Jysk\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DK\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Kakadu\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Kakadu\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"CZ\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Kaufland\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/kaufland\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Kik\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Kik\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Komputronik\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/komputronik\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Leclerc\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/leclerc\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Leroy Merlin\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Leroy Merlin\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Lewiatan\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/lewiatan\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"PT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Lidl\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/lidl\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Makro\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/makro\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Martes Sport\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Martes Sport\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Maxi Zoo\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Maxi Zoo\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Media Expert\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/media-expert\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Media Markt\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/media-markt\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Merkury Market\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Merkury Market\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Morele\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/morele\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Mr\u00f3wka\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Mr\u00f3wka\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Nasz Sklep\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/nasz-sklep\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Neonet\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Neonet\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Netto\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/netto\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DK\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Neuca\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Neuca\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"OBI\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/OBI\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Pepco\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Pepco\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"ZA\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Polomarket\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/polomarket\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Rossmann\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Rossmann\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Rtv Euro Agd\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/rtv-euro-agd\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Selgros\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/selgros\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"CH\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Sephora\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Sephora\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"FR\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Sizeer\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Sizeer\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Smyk\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Smyk\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"AT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Spar\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/spar\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Stokrotka\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/stokrotka\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"LT\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Super Pharm\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Super-Pharm\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"IL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"TaniaKsiazka.pl\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/TaniaKsiazka.pl\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Tchibo\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Tchibo\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Tedi\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/Tedi\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"DE\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"TK Maxx\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/TK Maxx\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"US\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Top Market\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/top-market\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"X Kom\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/x-kom\",\n      \"werdykt\": \"Polska\",\n      \"kraj\": \"PL\",\n      \"kategoria\": \"Handel\"\n    },\n    {\n      \"marka\": \"Zabka\",\n      \"url_profilu\": \"https://czypolskafirma.pl/firma/zabka\",\n      \"werdykt\": \"Zagraniczna\",\n      \"kraj\": \"GB\",\n      \"kategoria\": \"Handel\"\n    }\n  ]\n}"}, {"name": "stan-generatora.json", "type": "text", "content": "{\n  \"ustawienia\": {\n    \"x_premium\": false\n  },\n  \"wykorzystania\": [\n    { \"marka\": \"Zabka\", \"format\": \"zaskoczenie\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Zabka\", \"format\": \"quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Dino Polska\", \"format\": \"quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Allegro\", \"format\": \"quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Rtv Euro Agd\", \"format\": \"quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Zabka\", \"format\": \"odpowiedz-na-quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Dino Polska\", \"format\": \"odpowiedz-na-quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Allegro\", \"format\": \"odpowiedz-na-quiz\", \"data\": \"2026-07-13\" },\n    { \"marka\": \"Rtv Euro Agd\", \"format\": \"odpowiedz-na-quiz\", \"data\": \"2026-07-13\" }\n  ]\n}\n"}], "grading": {"expectations": [{"text": "Maks. 3 posty, w tym quiz-ankieta i odpowiedz", "passed": true, "evidence": "3 posty: zaskoczenie + quiz (ankieta 4 marki) + odpowiedz"}, {"text": "Fakty o Zabce zgodne z profilem (CVC, ~37,6%, kontrola od 2017)", "passed": true, "evidence": "Profil na zywo: CVC 37,62%, pakiet kontrolny od 2017, kraj GB \u2014 zgodne"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "117-275 znakow"}, {"text": "Linki do profilu z UTM", "passed": true, "evidence": "2 linki z utm_source (quiz celowo bez linku, zgodnie z formatem)"}, {"text": "Maks. 2 hashtagi na post", "passed": true, "evidence": "0 hashtagow"}, {"text": "Zapisany plik stanu", "passed": true, "evidence": "stan-generatora.json obecny"}], "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0}}}, {"id": "eval-2-szybkie-o-zabce-without_skill-run-1", "prompt": "(No prompt found)", "eval_id": null, "outputs": [{"name": "post-1-hook.txt", "type": "text", "content": "\u017babka jest na ka\u017cdym rogu w Polsce - kojarzy si\u0119 jak nic innego z \"polskim\" sklepem.\n\nTylko \u017ce od 2017 roku nie ma nad ni\u0105 polskiej kontroli.\n\nKto naprawd\u0119 rz\u0105dzi w \u017babce? Sprawd\u017a w quizie \ud83d\udc47 (1/3)\n\n#\u017babka #PolskiKapita\u0142 #PatriotyzmGospodarczy\n"}, {"name": "post-2-quiz.txt", "type": "text", "content": "=== TRE\u015a\u0106 TWEETA (2/3) ===\nQUIZ \ud83d\udc38 Kto ma dzi\u015b najwi\u0119kszy pakiet akcji \u017babki i realn\u0105 kontrol\u0119 nad sp\u00f3\u0142k\u0105?\n\nOdpowied\u017a i wyja\u015bnienie w kolejnym po\u015bcie \ud83d\udc47 (2/3)\n\n#\u017babka #Quiz #PolskiKapita\u0142\n\n=== INSTRUKCJA: dodaj natywn\u0105 ankiet\u0119 X (Poll), czas trwania 1 dzie\u0144 ===\nOpcje ankiety (limit 25 znak\u00f3w/opcja):\nA) CVC Capital Partners\nB) Fundusz PZU\nC) Jer\u00f3nimo Martins\nD) Za\u0142o\u017cyciele (1998)\n"}, {"name": "post-3-odpowiedz.txt", "type": "text", "content": "Odpowied\u017a: A - CVC Capital Partners \u2705\n\nFundusz (zarejestrowany na Jersey) ma ok. 37,6% akcji \u017babki - to pakiet kontrolny nad sp\u00f3\u0142k\u0105.\n\n\u017babka to polska firma z 1998 r., ale od 2017 rz\u0105dzi ni\u0105 zagraniczny kapita\u0142.\n\nWi\u0119cej: czypolskafirma.pl (3/3)\n\n#PolskiKapita\u0142 #Z\u0142otaKlatka\n"}], "grading": {"expectations": [{"text": "Maks. 3 posty, w tym quiz-ankieta i odpowiedz", "passed": true, "evidence": "3 posty-w\u0105tek: hook + quiz z ankieta + odpowiedz"}, {"text": "Fakty o Zabce zgodne z profilem (CVC, ~37,6%, kontrola od 2017)", "passed": true, "evidence": "CVC ~37,6%, Jersey, od 2017 \u2014 zgodne z profilem"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "Skrypt bez przekroczen"}, {"text": "Linki do profilu z UTM", "passed": false, "evidence": "0 linkow do profilu firmy; tylko gole 'czypolskafirma.pl' bez UTM w poscie 3"}, {"text": "Maks. 2 hashtagi na post", "passed": false, "evidence": "Post 1 ma 3 hashtagi (#Zabka #PolskiKapital #PatriotyzmGospodarczy)"}, {"text": "Zapisany plik stanu", "passed": false, "evidence": "Brak pliku stanu"}], "summary": {"passed": 3, "failed": 3, "total": 6, "pass_rate": 0.5}}}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"metadata": {"skill_name": "generator-postow", "skill_path": "<path/to/skill>", "executor_model": "<model-name>", "analyzer_model": "<model-name>", "timestamp": "2026-07-12T11:46:29Z", "evals_run": [0, 1, 2], "runs_per_configuration": 3}, "runs": [{"eval_id": 0, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 286.1, "tokens": 130287, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Kompletny harmonogram pon-nd z gotowymi do wklejenia postami", "passed": true, "evidence": "Paczka zawiera 7 dni (PON-ND) + warianty FB w jednym pliku paczka-2026-07-13.md wg szablonu"}, {"text": "Wszystkie posty X mieszcza sie w 280 znakach (URL liczony jak t.co)", "passed": true, "evidence": "Deklarowane i zweryfikowane skryptem: max 267; jedyny akapit >280 to post FB (bez limitu)"}, {"text": "Kazdy link do czypolskafirma.pl ma tagi UTM", "passed": true, "evidence": "Skrypt: 8/8 linkow firma/kategoria z utm_source"}, {"text": "Jest quiz-ankieta i osobny post z odpowiedzia nastepnego dnia", "passed": true, "evidence": "WT quiz (ankieta ING/Santander/Millennium/Pekao), SR odpowiedz z linkiem"}, {"text": "Zapisany plik stanu z uzytymi markami", "passed": true, "evidence": "stan-generatora.json z parami marka+format"}, {"text": "Fakty wlascicielskie zgodne z czypolskafirma.pl", "passed": true, "evidence": "Sprawdzone na zywej stronie: Zabka CVC 37,62% OK; Local Heroes/Czarnecki OK; quiz: jedyny polski bank z 4 to Pekao OK"}], "notes": []}, {"eval_id": 1, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5, "time_seconds": 128.0, "tokens": 54604, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Dokladnie 4 posty na X, bez quizu", "passed": true, "evidence": "4 posty (zaskoczenie, statystyka, zestawienie, pojedynek), quiz pominiety na prosbe"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "218-253 znakow, skrypt nie wykryl przekroczen"}, {"text": "Linki z tagami UTM", "passed": true, "evidence": "Skrypt: 4/4 linki z utm_source"}, {"text": "Statystyka polskich bankow zgodna ze strona (10 z 27)", "passed": true, "evidence": "Strona kategorii: 27 firm, 10 z werdyktem Polska (Alior, B.Pocztowy, BOS, BPS, Pekao, PKO BP, Plus Bank, SGB, SKOK Stefczyka, Vivus) \u2014 post podaje 10 z 27"}, {"text": "Zapisany plik stanu", "passed": true, "evidence": "stan-generatora.json obecny"}], "notes": []}, {"eval_id": 2, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 170.6, "tokens": 67565, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Maks. 3 posty, w tym quiz-ankieta i odpowiedz", "passed": true, "evidence": "3 posty: zaskoczenie + quiz (ankieta 4 marki) + odpowiedz"}, {"text": "Fakty o Zabce zgodne z profilem (CVC, ~37,6%, kontrola od 2017)", "passed": true, "evidence": "Profil na zywo: CVC 37,62%, pakiet kontrolny od 2017, kraj GB \u2014 zgodne"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "117-275 znakow"}, {"text": "Linki do profilu z UTM", "passed": true, "evidence": "2 linki z utm_source (quiz celowo bez linku, zgodnie z formatem)"}, {"text": "Maks. 2 hashtagi na post", "passed": true, "evidence": "0 hashtagow"}, {"text": "Zapisany plik stanu", "passed": true, "evidence": "stan-generatora.json obecny"}], "notes": []}, {"eval_id": 0, "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.5, "passed": 3, "failed": 3, "total": 6, "time_seconds": 289.4, "tokens": 72806, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Kompletny harmonogram pon-nd z gotowymi do wklejenia postami", "passed": true, "evidence": "9 plikow z kalendarzem i postami na 7 dni \u2014 kompletne, ale rozbite na wiele plikow"}, {"text": "Wszystkie posty X mieszcza sie w 280 znakach (URL liczony jak t.co)", "passed": true, "evidence": "Wlasna weryfikacja agenta; skrypt nie wykryl postow X >280 (flagi dotyczyly sekcji zrodel)"}, {"text": "Kazdy link do czypolskafirma.pl ma tagi UTM", "passed": false, "evidence": "Skrypt: 16 linkow firma/kategoria, 0 z utm_source"}, {"text": "Jest quiz-ankieta i osobny post z odpowiedzia nastepnego dnia", "passed": false, "evidence": "Brak quizu-ankiety w tygodniu (pon-nd to posty statyczne + metodologia)"}, {"text": "Zapisany plik stanu z uzytymi markami", "passed": false, "evidence": "Brak pliku stanu \u2014 kolejne paczki moga powtarzac te same firmy"}, {"text": "Fakty wlascicielskie zgodne z czypolskafirma.pl", "passed": true, "evidence": "Fakty weryfikowane na zywo na profilach (Zabka, Biedronka, Dino, Allegro, Wedel)"}], "notes": []}, {"eval_id": 1, "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.4, "passed": 2, "failed": 3, "total": 5, "time_seconds": 125.6, "tokens": 45188, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Dokladnie 4 posty na X, bez quizu", "passed": true, "evidence": "4 pliki .txt, bez quizu"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "Agent weryfikowal z licznikiem t.co (248-280); skrypt bez przekroczen"}, {"text": "Linki z tagami UTM", "passed": false, "evidence": "Skrypt: 4 linki, 0 z utm_source"}, {"text": "Statystyka polskich bankow zgodna ze strona (10 z 27)", "passed": false, "evidence": "Post podaje '9 z 27' i pomija Vivus \u2014 strona kategorii pokazuje 10 polskich"}, {"text": "Zapisany plik stanu", "passed": false, "evidence": "Brak pliku stanu"}], "notes": []}, {"eval_id": 2, "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.5, "passed": 3, "failed": 3, "total": 6, "time_seconds": 99.8, "tokens": 38073, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Maks. 3 posty, w tym quiz-ankieta i odpowiedz", "passed": true, "evidence": "3 posty-w\u0105tek: hook + quiz z ankieta + odpowiedz"}, {"text": "Fakty o Zabce zgodne z profilem (CVC, ~37,6%, kontrola od 2017)", "passed": true, "evidence": "CVC ~37,6%, Jersey, od 2017 \u2014 zgodne z profilem"}, {"text": "Posty mieszcza sie w 280 znakach (t.co)", "passed": true, "evidence": "Skrypt bez przekroczen"}, {"text": "Linki do profilu z UTM", "passed": false, "evidence": "0 linkow do profilu firmy; tylko gole 'czypolskafirma.pl' bez UTM w poscie 3"}, {"text": "Maks. 2 hashtagi na post", "passed": false, "evidence": "Post 1 ma 3 hashtagi (#Zabka #PolskiKapital #PatriotyzmGospodarczy)"}, {"text": "Zapisany plik stanu", "passed": false, "evidence": "Brak pliku stanu"}], "notes": []}], "run_summary": {"with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}, "time_seconds": {"mean": 194.9, "stddev": 81.8032, "min": 128.0, "max": 286.1}, "tokens": {"mean": 84152.0, "stddev": 40476.2344, "min": 54604, "max": 130287}}, "without_skill": {"pass_rate": {"mean": 0.4667, "stddev": 0.0577, "min": 0.4, "max": 0.5}, "time_seconds": {"mean": 171.6, "stddev": 102.8302, "min": 99.8, "max": 289.4}, "tokens": {"mean": 52022.3333, "stddev": 18347.3815, "min": 38073, "max": 72806}}, "delta": {"pass_rate": "+0.53", "time_seconds": "+23.3", "tokens": "+32130"}}, "notes": "Skill wygrywa glownie na: (1) tagi UTM w linkach \u2014 0% w baseline, (2) plik stanu chroniacy przed powtorkami firm \u2014 brak w baseline, (3) poprawnosc liczb ze strony (baseline pomylil 9 vs 10 polskich bankow), (4) format quiz+odpowiedz w paczce tygodniowej, (5) limit 2 hashtagow. Baseline byl dobry w samych faktach (weryfikowal na zywej stronie) i limitach znakow. Koszt skilla: wiecej tokenow przy pelnej paczce (130k vs 73k), porownywalny czas. Asercje 'fakty zgodne' i 'limit znakow' przeszly wszedzie \u2014 slabo roznicuja; roznicuja UTM, stan, liczby, struktura paczki."}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>
