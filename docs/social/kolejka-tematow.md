@@ -19,7 +19,7 @@ Zasady:
 - [ ] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu
 - [ ] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym
 - [ ] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy
-- [ ] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom
+- [x] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom (2026-08-15)
 - [ ] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury
 - [ ] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco
 - [ ] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie
