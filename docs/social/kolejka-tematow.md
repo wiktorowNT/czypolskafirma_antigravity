@@ -16,8 +16,8 @@ Zasady:
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
-- [ ] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu
-- [ ] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym
+- [x] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu (2026-08-12)
+- [x] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym (2026-08-13)
 - [ ] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy
 - [ ] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom
 - [ ] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury
