@@ -11,6 +11,7 @@
     { "temat": "UniCredit blisko kontroli nad Commerzbankiem, właścicielem mBanku (paczka zamknięta bez publikacji)", "data": "2026-07-28", "marki": ["mBank"], "tryb": "news" },
     { "temat": "Novaturas, turecki inwestor i wezwanie na resztę akcji (paczka zamknięta bez publikacji)", "data": "2026-07-29", "marki": ["Novaturas"], "tryb": "news" },
     { "temat": "Pepco: odwołany skup akcji i nowy program za 400 mln euro (dwie paczki zamknięte bez publikacji)", "data": "2026-07-31", "marki": ["Pepco"], "tryb": "news" },
-    { "temat": "Couche-Tard (Circle K) ogłasza wezwanie na 100 proc. akcji Grupy Żabka po 32 zł, wycena 32,6 mld zł; temat opisany dziewięć razy pod rząd, wszystkie paczki zamknięte bez publikacji", "data": "2026-08-09", "marki": ["Żabka", "Circle K"], "tryb": "news" }
+    { "temat": "Couche-Tard (Circle K) ogłasza wezwanie na 100 proc. akcji Grupy Żabka po 32 zł, wycena 32,6 mld zł; temat opisany dziewięć razy pod rząd, wszystkie paczki zamknięte bez publikacji", "data": "2026-08-09", "marki": ["Żabka", "Circle K"], "tryb": "news" },
+    { "temat": "Evergreen: kto jest właścicielem Empiku, od klubów MPiK z 1948 roku przez Eastbridge i Pentę po wykup menedżerski prezeski (51/49) w 2022", "data": "2026-08-17", "marki": ["Empik"], "tryb": "evergreen" }
   ]
 }
