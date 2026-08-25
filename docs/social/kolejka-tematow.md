@@ -30,7 +30,7 @@ Zasady:
 - [ ] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami
 - [ ] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich
 - [ ] Marki odzieżowe uznawane za włoskie, które powstały w Polsce
-- [ ] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup
+- [x] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup (2026-08-25)
 
 ## Mechanizmy wyjaśnione na konkretach
 
