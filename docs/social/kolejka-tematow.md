@@ -13,29 +13,47 @@ Zasady:
 - Możesz dopisywać tematy ręcznie w dowolnym miejscu listy. Kolejność ma znaczenie:
   automat idzie od góry.
 
+> 2026-09-09: kolejka została zsynchronizowana z listą zużytych tematów z wiadomości
+> uruchomieniowej. Pozycje opisane w paczkach z sierpnia były wcześniej odhaczone tylko
+> w tytułach paczek, nie w tym pliku, przez co groziły powtórką.
+
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
-- [ ] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu
-- [ ] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym
-- [ ] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy
-- [ ] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom
-- [ ] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury
-- [ ] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco
-- [ ] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie
+- [x] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu (2026-08-12)
+- [x] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym (2026-08-13)
+- [x] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy (2026-08-14)
+- [x] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom (2026-08-15)
+- [x] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury (2026-08-17)
+- [x] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco (2026-08-21)
+- [x] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie (2026-08-22)
 
 ## Zestawienia kategorii
 
-- [ ] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał
+- [x] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał (2026-08-31)
 - [ ] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami
-- [ ] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich
-- [ ] Marki odzieżowe uznawane za włoskie, które powstały w Polsce
-- [ ] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup
+- [x] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich (2026-08-23)
+- [x] Marki odzieżowe uznawane za włoskie, które powstały w Polsce (2026-08-24)
+- [x] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup (2026-08-25)
 
 ## Mechanizmy wyjaśnione na konkretach
 
-- [ ] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo
+- [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
 - [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
-- [ ] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy
+- [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
+
+## Dopisane 2026-09-09
+
+- [ ] Sieci restauracji i pizzerii w Polsce: kto stoi za szyldami z gastronomii
+- [ ] Leki bez recepty z polskiej apteki: producenci krajowi kontra koncerny farmaceutyczne
+- [ ] Operatorzy komórkowi w Polsce: gdzie kończy się piramida właścicielska każdego z czterech
+- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
+- [ ] Ubezpieczyciele działający w Polsce i kraje, z których pochodzi ich kapitał
+- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
+- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
+- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
+- [ ] Sprzęt AGD i elektronika: marki z polskim rodowodem i ich dzisiejsi właściciele
+- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+</content>
