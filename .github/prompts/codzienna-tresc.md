@@ -54,6 +54,15 @@ z żywej strony: `https://czypolskafirma.pl/firma/[slug]`, `/kategoria/[slug]`,
 `/kategorie`. Fakty tylko z pobranych stron i z oficjalnych rejestrów. Odhacz temat
 w kolejce (`- [x]`) i dopisz w nawiasie datę.
 
+**Tytuł wpisu o pojedynczej marce zaczynaj od frazy, której ludzie realnie szukają:**
+„Kto jest właścicielem [Marki]" albo „Czy [Marka] to polska firma". To nie jest
+upodobanie stylistyczne, tylko wniosek z Search Console: wpisy blogowe z taką frazą
+mają CTR 5,7% i 2,2%, podczas gdy profile firm zbierają 0,1–0,8% przy dziesiątkach
+tysięcy wyświetleń. Profil firmy odpowiada na zapytanie nawigacyjne („żabka"),
+gdzie użytkownik szuka sklepu albo gazetki i nie kliknie. Wpis blogowy łapie
+zapytanie z intencją własnościową — i to jest ruch, o który w tym projekcie chodzi.
+Doprecyzowanie po dwukropku jest w porządku, byle fraza była na początku tytułu.
+
 Tryb i ewentualny narzucony temat dostajesz w wiadomości uruchomieniowej. `auto`
 oznacza: najpierw spróbuj `news`, w razie porażki `evergreen`.
 

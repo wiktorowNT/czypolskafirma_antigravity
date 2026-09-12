@@ -29,6 +29,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | Data | Zgłoszono | Uwagi |
 |------|-----------|-------|
 | 2026-07-23 | strona główna, /companies, zabka, lidl, orlen, rossmann, kaufland, pepco, inpost, allegro, reserved (11) | Biedronka już była w indeksie. Orlen miał stary „błąd przekierowania" — teraz zwraca 200 OK. Limit dzienny wyczerpany (mBank odbił się o limit). |
+| 2026-09-12 | netto, aldi, auchan, carrefour, stokrotka, polomarket, lewiatan, hebe, super-pharm, bp, shell (11) | Wznowienie po 7 tygodniach przerwy. Limit wyczerpany na 12. URL-u (circle-k odbił się o limit — pierwszy na jutro). Przy okazji: ponownie przesłana sitemapa (ostatni odczyt Google był 23.07) i uruchomiona walidacja poprawki dla `/firma/zara`. |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -36,20 +37,20 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `zabka`  — zgłoszone 2026-07-23
 - [x] `lidl`  — zgłoszone 2026-07-23
 - [x] `kaufland`  — zgłoszone 2026-07-23
-- [ ] `netto`
-- [ ] `aldi`
-- [ ] `auchan`
-- [ ] `carrefour`
-- [ ] `stokrotka`
-- [ ] `polomarket`
-- [ ] `lewiatan`
+- [x] `netto`  — zgłoszone 2026-09-12
+- [x] `aldi`  — zgłoszone 2026-09-12
+- [x] `auchan`  — zgłoszone 2026-09-12
+- [x] `carrefour`  — zgłoszone 2026-09-12
+- [x] `stokrotka`  — zgłoszone 2026-09-12
+- [x] `polomarket`  — zgłoszone 2026-09-12
+- [x] `lewiatan`  — zgłoszone 2026-09-12
 - [x] `pepco`  — zgłoszone 2026-07-23
 - [x] `rossmann`  — zgłoszone 2026-07-23
-- [ ] `hebe`
-- [ ] `super-pharm`
+- [x] `hebe`  — zgłoszone 2026-09-12
+- [x] `super-pharm`  — zgłoszone 2026-09-12
 - [x] `orlen`  — zgłoszone 2026-07-23
-- [ ] `bp`
-- [ ] `shell`
+- [x] `bp`  — zgłoszone 2026-09-12
+- [x] `shell`  — zgłoszone 2026-09-12
 - [ ] `circle-k`
 - [ ] `moya`
 - [ ] `amic-energy`

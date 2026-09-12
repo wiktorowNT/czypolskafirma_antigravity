@@ -13,6 +13,19 @@ Zasady:
 - Możesz dopisywać tematy ręcznie w dowolnym miejscu listy. Kolejność ma znaczenie:
   automat idzie od góry.
 
+## Priorytet: marki z potwierdzonym popytem w wyszukiwarce
+
+Kolejność w tej sekcji nie jest przypadkowa — to marki, których profile zbierają
+w Search Console tysiące wyświetleń przy CTR poniżej 1% (dane za 90 dni, 2026-09-12).
+Popyt jest udowodniony, brakuje treści, która na to zapytanie odpowiada w tytule.
+Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż profil firmy.
+
+- [ ] Kto jest właścicielem Żabki (6 863 wyświetlenia profilu, CTR 0,29%)
+- [ ] Kto jest właścicielem Lidla (6 276 wyświetleń, CTR 0,13% — najgorszy wynik w serwisie)
+- [ ] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu)
+- [ ] Kto jest właścicielem Pepco (5 037 wyświetleń, CTR 0,32%)
+- [ ] Kto jest właścicielem Kauflandu (3 782 wyświetlenia; „kaufland właściciel" w top 5 zapytań)
+
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)

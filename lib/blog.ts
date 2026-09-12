@@ -99,8 +99,12 @@ function listPostFiles(): string[] {
       .readdirSync(BLOG_DIR)
       .filter((f) => f.toLowerCase().endsWith(".md") && !f.startsWith("_"))
       .map((f) => path.join(BLOG_DIR, f))
-  } catch {
-    // Brak katalogu content/blog — traktujemy jak brak wpisów.
+  } catch (err) {
+    // Brak katalogu content/blog — traktujemy jak brak wpisów, ale GŁOŚNO.
+    // Cichy [] kosztował nas wszystkie wpisy blogowe w sitemapie (patrz
+    // outputFileTracingIncludes w next.config.mjs): strony /blog działały, bo są
+    // prerenderowane, więc nic nie sygnalizowało problemu.
+    console.error(`[blog] Nie udało się odczytać ${BLOG_DIR} — wpisy bloga nie będą widoczne:`, err)
     return []
   }
 }

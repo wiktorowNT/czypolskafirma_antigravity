@@ -342,18 +342,37 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const countryName = getCountryName(company.country_code)
   const owner = company.owner_name || company.parent_company_name
 
-  // Sufiks "| CzyPolskaFirma.pl" dodaje title.template z layoutu — tu tylko część zmienna.
-  const longTitle = `Czy ${brand} to polska firma? Kto jest właścicielem`
-  const title = longTitle.length > 60 ? `Czy ${brand} to polska firma?` : longTitle
+  const isPolish = company.country_code?.toUpperCase() === "PL"
+  const hasCountry = countryName !== "Brak danych"
 
+  // Tytuł MUSI zawierać odpowiedź, nie samo pytanie. Wniosek z Search Console
+  // (90 dni, 2026-09-12): profile firm zebrały 48,7 tys. wyświetleń przy CTR 0,4% —
+  // snippet zadawał pytanie i nie dawał powodu, żeby kliknąć. Werdykt w tytule to
+  // najtańsza dźwignia, jaką mamy: przy tym wolumenie +0,5 pp CTR to więcej kliknięć
+  // niż cały dotychczasowy ruch serwisu.
+  //
+  // Kraj podajemy w nawiasie i w mianowniku — nazwy z getCountryName() nie dają się
+  // bezpiecznie odmienić przez przypadki, a "Nie (Wielka Brytania)" jest poprawne zawsze.
+  // Sufiks "| CzyPolskaFirma.pl" dodaje title.template z layoutu — tu tylko część zmienna.
+  const verdictTitle = isPolish
+    ? `Czy ${brand} to polska firma? Tak, kapitał polski`
+    : hasCountry
+      ? `Czy ${brand} to polska firma? Nie (${countryName})`
+      : `Czy ${brand} to polska firma? Kto jest właścicielem`
+  const title = verdictTitle.length > 60 ? `Czy ${brand} to polska firma?` : verdictTitle
+
+  // Opis też zaczyna się od odpowiedzi, a nie od "Sprawdź, czy...".
+  const verdictSentence = isPolish
+    ? `${brand} to firma z polskim kapitałem.`
+    : hasCountry
+      ? `${brand} to firma z kapitałem zagranicznym — kraj pochodzenia: ${countryName}.`
+      : `${brand} to firma z kapitałem zagranicznym.`
   const ownerPart = owner ? ` Właściciel: ${owner}.` : ""
-  const description = `Sprawdź, czy ${brand} to polska firma. Kraj pochodzenia: ${countryName}.${ownerPart} Struktura kapitału, siedziba i dane rejestrowe.`
+  const description = `${verdictSentence}${ownerPart} Struktura kapitału, siedziba i dane rejestrowe.`
 
   // Tytuł dla social mediów jest krótszy niż tytuł SEO: X nakłada go jako
   // plakietkę na dolną krawędź obrazka OG, więc długie zdanie z sufiksem
   // "| CzyPolskaFirma.pl" zasłaniało pół karty.
-  const isPolish = company.country_code?.toUpperCase() === "PL"
-  const hasCountry = countryName !== "Brak danych"
   const socialTitle = isPolish
     ? `${brand} — polska firma`
     : hasCountry
