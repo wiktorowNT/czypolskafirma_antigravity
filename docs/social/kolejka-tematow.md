@@ -16,26 +16,38 @@ Zasady:
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
-- [ ] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu
-- [ ] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym
-- [ ] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy
-- [ ] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom
-- [ ] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury
-- [ ] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco
-- [ ] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie
+- [x] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu (2026-08-12)
+- [x] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym (2026-08-13)
+- [x] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy (2026-08-14)
+- [x] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom (2026-08-15)
+- [x] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury (2026-08-17)
+- [x] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco (2026-08-21)
+- [x] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie (2026-08-22)
+- [ ] Wawel i Mieszko: kto kontroluje marki słodyczy kojarzone z polską tradycją
+- [ ] Mlekovita i Mlekpol: spółdzielnie mleczarskie, które wyrosły na największych graczy
 
 ## Zestawienia kategorii
 
-- [ ] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał
-- [ ] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami
-- [ ] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich
-- [ ] Marki odzieżowe uznawane za włoskie, które powstały w Polsce
-- [ ] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup
+- [x] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał (2026-08-31)
+- [x] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami (2026-09-13)
+- [x] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich (2026-08-23)
+- [x] Marki odzieżowe uznawane za włoskie, które powstały w Polsce (2026-08-24)
+- [x] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup (2026-08-25)
+- [ ] Drogerie w Polsce: Rossmann, Hebe, Super-Pharm i Drogerie Natura według właścicieli
+- [ ] Elektronika i RTV: Media Expert, RTV Euro AGD, NEONET i x-kom, czyli kto ma polski kapitał
+- [ ] Piwo w Polsce: Żywiec, Tyskie, Okocim i regionalne browary z polskim kapitałem
+- [ ] Stacje paliw: Orlen, Shell, BP, Circle K i MOYA po zmianie właściciela
+- [ ] Sieci restauracji i pizzerii: kto jest właścicielem marek, które Polacy biorą za swoje
+- [ ] Operatorzy komórkowi: Orange, Play, Plus i T-Mobile, gdzie kończy się piramida właścicielska
+- [ ] Ubezpieczyciele działający w Polsce: PZU, Warta, Link4 i Allianz według kapitału kontrolnego
+- [ ] Leki i apteki: Polpharma, Adamed, Neuca i sieci apteczne z polskim kapitałem
 
 ## Mechanizmy wyjaśnione na konkretach
 
-- [ ] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo
+- [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
 - [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
-- [ ] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy
+- [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
+- [ ] Franczyza: dlaczego sklep należy do polskiego kupca, a sieć do zagranicznej grupy
+- [ ] Fundusz private equity jako właściciel marki: co się zmienia dla klienta przy półce
