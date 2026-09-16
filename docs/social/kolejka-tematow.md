@@ -13,10 +13,6 @@ Zasady:
 - Możesz dopisywać tematy ręcznie w dowolnym miejscu listy. Kolejność ma znaczenie:
   automat idzie od góry.
 
-> 2026-09-09: kolejka została zsynchronizowana z listą zużytych tematów z wiadomości
-> uruchomieniowej. Pozycje opisane w paczkach z sierpnia były wcześniej odhaczone tylko
-> w tytułach paczek, nie w tym pliku, przez co groziły powtórką.
-
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
@@ -44,16 +40,15 @@ Zasady:
 - [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
 
-## Dopisane 2026-09-09
+## Dopisane 2026-09-10
 
-- [ ] Sieci restauracji i pizzerii w Polsce: kto stoi za szyldami z gastronomii
-- [ ] Leki bez recepty z polskiej apteki: producenci krajowi kontra koncerny farmaceutyczne
-- [ ] Operatorzy komórkowi w Polsce: gdzie kończy się piramida właścicielska każdego z czterech
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Ubezpieczyciele działający w Polsce i kraje, z których pochodzi ich kapitał
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
-- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
-- [ ] Sprzęt AGD i elektronika: marki z polskim rodowodem i ich dzisiejsi właściciele
-- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
-</content>
+- [ ] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma
+- [ ] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem
+- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
+- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
+- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
+- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
+- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
+- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
