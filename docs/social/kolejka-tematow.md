@@ -16,25 +16,25 @@ Zasady:
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
-- [ ] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu
-- [ ] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym
-- [ ] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy
-- [ ] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom
-- [ ] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury
-- [ ] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco
-- [ ] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie
+- [x] Wedel: jak najbardziej polska marka czekolady trafiła do koreańskiego koncernu (2026-08-12)
+- [x] Dino kontra Biedronka i Lidl: jedyna duża sieć spożywcza z polskim kapitałem kontrolnym (2026-08-13)
+- [x] LPP: Reserved, Cropp, Sinsay i pytanie o cypryjskie spółki w strukturze grupy (2026-08-14)
+- [x] Ziaja i Dr Irena Eris: dwie polskie firmy kosmetyczne, które nie sprzedały się koncernom (2026-08-15)
+- [x] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury (2026-08-17)
+- [x] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco (2026-08-21)
+- [x] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie (2026-08-22)
 
 ## Zestawienia kategorii
 
 - [ ] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał
 - [ ] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami
-- [ ] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich
-- [ ] Marki odzieżowe uznawane za włoskie, które powstały w Polsce
-- [ ] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup
+- [x] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich (2026-08-23)
+- [x] Marki odzieżowe uznawane za włoskie, które powstały w Polsce (2026-08-24)
+- [x] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup (2026-08-25)
 
 ## Mechanizmy wyjaśnione na konkretach
 
-- [ ] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo
+- [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
 - [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
 - [ ] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy
