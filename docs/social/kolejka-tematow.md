@@ -23,8 +23,6 @@ Zasady:
 - [x] Empik: kto naprawdę stoi za siecią, która wygląda na instytucję kultury (2026-08-17)
 - [x] Netto w Polsce: duńska sieć, która przejęła sklepy po Tesco (2026-08-21)
 - [x] CCC: polska ekspansja obuwnicza i struktura właścicielska po zmianach w grupie (2026-08-22)
-- [ ] Wawel i Mieszko: kto kontroluje marki słodyczy kojarzone z polską tradycją
-- [ ] Mlekovita i Mlekpol: spółdzielnie mleczarskie, które wyrosły na największych graczy
 
 ## Zestawienia kategorii
 
@@ -33,14 +31,6 @@ Zasady:
 - [x] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich (2026-08-23)
 - [x] Marki odzieżowe uznawane za włoskie, które powstały w Polsce (2026-08-24)
 - [x] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup (2026-08-25)
-- [ ] Drogerie w Polsce: Rossmann, Hebe, Super-Pharm i Drogerie Natura według właścicieli
-- [ ] Elektronika i RTV: Media Expert, RTV Euro AGD, NEONET i x-kom, czyli kto ma polski kapitał
-- [ ] Piwo w Polsce: Żywiec, Tyskie, Okocim i regionalne browary z polskim kapitałem
-- [ ] Stacje paliw: Orlen, Shell, BP, Circle K i MOYA po zmianie właściciela
-- [ ] Sieci restauracji i pizzerii: kto jest właścicielem marek, które Polacy biorą za swoje
-- [ ] Operatorzy komórkowi: Orange, Play, Plus i T-Mobile, gdzie kończy się piramida właścicielska
-- [ ] Ubezpieczyciele działający w Polsce: PZU, Warta, Link4 i Allianz według kapitału kontrolnego
-- [ ] Leki i apteki: Polpharma, Adamed, Neuca i sieci apteczne z polskim kapitałem
 
 ## Mechanizmy wyjaśnione na konkretach
 
@@ -49,5 +39,26 @@ Zasady:
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
 - [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
-- [ ] Franczyza: dlaczego sklep należy do polskiego kupca, a sieć do zagranicznej grupy
-- [ ] Fundusz private equity jako właściciel marki: co się zmienia dla klienta przy półce
+
+## Dopisane 2026-09-10
+
+- [ ] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma
+- [ ] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem
+- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
+- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
+- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
+- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
+- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
+- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+
+## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
+
+- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
+- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
+- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
+- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
+- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
+- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
+- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
