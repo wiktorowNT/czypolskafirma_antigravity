@@ -26,7 +26,7 @@ Zasady:
 
 ## Zestawienia kategorii
 
-- [ ] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał
+- [x] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał (2026-08-31)
 - [ ] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami
 - [x] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich (2026-08-23)
 - [x] Marki odzieżowe uznawane za włoskie, które powstały w Polsce (2026-08-24)
@@ -39,3 +39,16 @@ Zasady:
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
 - [ ] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
+
+## Kolejka uzupełniona 2026-08-31
+
+- [ ] Meble z Polski: kategoria, w której krajowi producenci grają w europejskiej lidze
+- [ ] Farmacja w Polsce: które leki z apteki robi firma z krajowym właścicielem
+- [ ] Elektronika i AGD sprzedawane pod polskimi nazwami: kto stoi za tymi markami
+- [ ] Gastronomia sieciowa w Polsce: franczyza zagranicznej marki a właściciel lokalu
+- [ ] Motoryzacja: polskie fabryki części, o których nikt nie mówi, i ich właściciele
+- [ ] Telekomunikacja w Polsce: czterej operatorzy i cztery różne kraje kapitału
+- [ ] Ubezpieczenia: gdzie kończy się struktura właścicielska polis kupowanych w Polsce
+- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
+- [ ] Chemia domowa na półce: proszki, płyny i pasty według pochodzenia kapitału
+- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
