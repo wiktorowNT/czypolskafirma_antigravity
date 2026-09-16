@@ -1,7 +1,7 @@
 ---
 title: "Supermarkety w Polsce i ich właściciele: skąd pochodzi kapitał sieci"
 slug: "supermarkety-w-polsce-wlasciciele"
-date: 2026-09-13
+date: 2026-09-16
 description: "Za szyldami sklepów, w których Polacy robią codzienne zakupy, stoją rodziny z Niemiec, Francji, Danii i Portugalii. Polski kapitał kontroluje trzy sieci."
 image: "/images/blog/supermarkety-w-polsce-wlasciciele.png"
 imageAlt: "Grafika z tytułem wpisu o właścicielach supermarketów w Polsce i trzema liczbami: 44,04 proc. kapitału Eurocash, ponad 51 proc. akcji Dino, 31 stycznia 2025 jako data przejęcia SPAR Polska"
