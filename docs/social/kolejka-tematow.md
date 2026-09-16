@@ -13,6 +13,10 @@ Zasady:
 - Możesz dopisywać tematy ręcznie w dowolnym miejscu listy. Kolejność ma znaczenie:
   automat idzie od góry.
 
+> 2026-09-09: kolejka została zsynchronizowana z listą zużytych tematów z wiadomości
+> uruchomieniowej. Pozycje opisane w paczkach z sierpnia były wcześniej odhaczone tylko
+> w tytułach paczek, nie w tym pliku, przez co groziły powtórką.
+
 ## Analizy pojedynczych marek
 
 - [x] Kto jest właścicielem Biedronki i ile zostaje w Polsce z każdej wydanej złotówki (2026-07-27)
@@ -37,18 +41,19 @@ Zasady:
 - [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
 - [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
-- [ ] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy
+- [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
 
-## Kolejka uzupełniona 2026-08-31
+## Dopisane 2026-09-09
 
-- [ ] Meble z Polski: kategoria, w której krajowi producenci grają w europejskiej lidze
-- [ ] Farmacja w Polsce: które leki z apteki robi firma z krajowym właścicielem
-- [ ] Elektronika i AGD sprzedawane pod polskimi nazwami: kto stoi za tymi markami
-- [ ] Gastronomia sieciowa w Polsce: franczyza zagranicznej marki a właściciel lokalu
-- [ ] Motoryzacja: polskie fabryki części, o których nikt nie mówi, i ich właściciele
-- [ ] Telekomunikacja w Polsce: czterej operatorzy i cztery różne kraje kapitału
-- [ ] Ubezpieczenia: gdzie kończy się struktura właścicielska polis kupowanych w Polsce
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na półce: proszki, płyny i pasty według pochodzenia kapitału
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
+- [ ] Sieci restauracji i pizzerii w Polsce: kto stoi za szyldami z gastronomii
+- [ ] Leki bez recepty z polskiej apteki: producenci krajowi kontra koncerny farmaceutyczne
+- [ ] Operatorzy komórkowi w Polsce: gdzie kończy się piramida właścicielska każdego z czterech
+- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
+- [ ] Ubezpieczyciele działający w Polsce i kraje, z których pochodzi ich kapitał
+- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
+- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
+- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
+- [ ] Sprzęt AGD i elektronika: marki z polskim rodowodem i ich dzisiejsi właściciele
+- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+</content>
