@@ -27,7 +27,7 @@ Zasady:
 ## Zestawienia kategorii
 
 - [x] Polskie kosmetyki na półce: ile marek z kategorii ma faktycznie polski kapitał (2026-08-31)
-- [ ] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami
+- [x] Supermarkety w Polsce według pochodzenia kapitału: pełne zestawienie z werdyktami (2026-09-13)
 - [x] Banki działające w Polsce: gdzie kończy się piramida właścicielska największych z nich (2026-08-23)
 - [x] Marki odzieżowe uznawane za włoskie, które powstały w Polsce (2026-08-24)
 - [x] Woda mineralna i napoje: które popularne butelki należą do zagranicznych grup (2026-08-25)
