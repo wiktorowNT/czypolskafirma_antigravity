@@ -1,7 +1,7 @@
 ---
 title: "Polska marka, polska spółka, zagraniczny właściciel. To nie to samo"
 slug: "polska-marka-polska-spolka-zagraniczny-wlasciciel"
-date: 2026-08-29
+date: 2026-09-16
 description: "Wawel, Pudliszki, Sokołów i Mieszko mają polskie nazwy, polskie fabryki i polskie NIP-y. Właściciel każdej z tych firm siedzi gdzie indziej."
 image: "/images/blog/polska-marka-polska-spolka-zagraniczny-wlasciciel.png"
 imageAlt: "Grafika z hasłem: polska marka, polski NIP, obcy właściciel, oraz trzema liczbami: 52 proc. akcji Wawelu u grupy Hosta, 100 proc. Pudliszek u Kraft Heinza, 2024 rok przejścia Indykpolu do LDC"

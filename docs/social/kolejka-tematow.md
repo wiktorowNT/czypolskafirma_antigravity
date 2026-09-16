@@ -52,3 +52,13 @@ Zasady:
 - [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
 - [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
 - [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+
+## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
+
+- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
+- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
+- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
+- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
+- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
+- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
+- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną

@@ -1,7 +1,7 @@
 ---
 title: "Co się dzieje z polską marką po przejęciu. Lekcja z branży meblowej"
 slug: "co-sie-dzieje-z-marka-po-przejeciu"
-date: 2026-09-09
+date: 2026-09-16
 description: "Black Red White, Agnella i Bydgoskie Meble zmieniły właścicieli, a szyldy zostały na miejscu. Co po przejęciu zmienia się naprawdę, a co tylko w papierach."
 image: "/images/blog/co-sie-dzieje-z-marka-po-przejeciu.png"
 imageAlt: "Grafika z tytułem wpisu i trzema danymi: dwa etapy przejęcia Black Red White, cztery kraje w łańcuchu właścicielskim Bydgoskich Mebli, rok 1881 jako początek fabryki Fameg"

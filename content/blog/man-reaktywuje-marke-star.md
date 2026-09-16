@@ -1,7 +1,7 @@
 ---
 title: "MAN reaktywuje Stara. Czyja jest dziś marka ze Starachowic"
 slug: "man-reaktywuje-marke-star"
-date: 2026-09-10
+date: 2026-09-16
 description: "Na targach w Kielcach stanęła ciężarówka ze znaczkiem Star. Pod blachą jest MAN TGS, a prawa do nazwy ze Starachowic od 1999 roku są w niemieckich rękach."
 image: "/images/blog/man-reaktywuje-marke-star.png"
 imageAlt: "Grafika z napisem „Star wraca, ale nie do Starachowic” i trzema datami z historii marki: 1948, 2006 oraz ponad 10 tys. pojazdów wciąż w eksploatacji"

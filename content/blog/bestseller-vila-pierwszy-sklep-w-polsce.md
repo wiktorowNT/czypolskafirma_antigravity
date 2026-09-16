@@ -1,7 +1,7 @@
 ---
 title: "Duński Bestseller wchodzi do polskich galerii. Kto stoi za marką Vila"
 slug: "bestseller-vila-pierwszy-sklep-w-polsce"
-date: 2026-09-04
+date: 2026-09-16
 description: "Vila otworzyła pierwszy sklep w Polsce, w poznańskiej Posnanii. Stoi za nią duński dom mody Bestseller, który od 1975 roku należy do jednej rodziny."
 image: "/images/blog/bestseller-vila-pierwszy-sklep-w-polsce.png"
 imageAlt: "Grafika z pytaniem „Kto stoi za marką Vila” i trzema liczbami: 115 mkw pierwszego sklepu w Poznaniu, 38,1 mld koron obrotu grupy Bestseller w roku 2024/25 i jeden właściciel firmy rodzinnej od 1975 roku"

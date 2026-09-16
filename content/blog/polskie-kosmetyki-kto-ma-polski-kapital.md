@@ -1,7 +1,7 @@
 ---
 title: "Polskie kosmetyki: 37 z 54 marek na półce ma polski kapitał"
 slug: "polskie-kosmetyki-kto-ma-polski-kapital"
-date: 2026-08-31
+date: 2026-09-16
 description: "W kategorii kosmetycznej polski kapitał kontroluje 37 z 54 marek. Kto zbudował te firmy i które swojsko brzmiące nazwy należą dziś do zagranicznych grup."
 image: "/images/blog/polskie-kosmetyki-kto-ma-polski-kapital.png"
 imageAlt: "Grafika z napisem Kosmetyki: półka z polskim kapitałem i trzema liczbami: 37 z 54 marek z polskim kapitałem, rok 1990 jako początek Bielendy, przejście Dax Cosmetics pod japońską kontrolę w 2014"

@@ -1,7 +1,7 @@
 ---
 title: "InPost zmienia właściciela. Kto przejmuje paczkomaty Rafała Brzoski"
 slug: "inpost-przejecie-advent-fedex-paczkomaty"
-date: 2026-09-01
+date: 2026-09-16
 description: "Ostatnia zgoda regulatora otworzyła drogę do przejęcia InPostu za 7,8 mld euro. Kto będzie właścicielem paczkomatów i co się zmienia dla odbierających paczki."
 image: "/images/blog/inpost-przejecie-advent-fedex-paczkomaty.png"
 imageAlt: "Grafika z pytaniem, kto przejmuje paczkomaty, oraz liczbami transakcji: 7,8 mld euro, 68 925 paczkomatów, po 37 procent dla Adventu i FedEksu"
