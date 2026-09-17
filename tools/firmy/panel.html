@@ -433,11 +433,16 @@ async function ekranNowa() {
 
 function szacunek() {
   const ile = trybWejscia === "kategoria" ? Number($("#seedIle").value) || 40 : $("#firmyTekst").value.split(/\r?\n/).filter((s) => s.trim()).length;
-  const minuty = Math.ceil((ile * 3.5) / 2);
-  $("#nowaSzacunek").innerHTML = ile ? `${ile} firm · szacowany czas <b style="color:var(--tekst)">ok. ${minuty} min</b> · zużyje ${ile} zapytań do MF` : "Wpisz nazwy firm albo wybierz kategorię.";
+  const doPrzystanku = Math.ceil((ile * 1.5) / 2);
+  const calosc = Math.ceil((ile * 3.5) / 2);
+  const czas = $("#optPrzystanek").checked
+    ? `<b style="color:var(--tekst)">ok. ${doPrzystanku} min do przystanku na NIP</b>, potem ok. ${calosc - doPrzystanku} min`
+    : `szacowany czas <b style="color:var(--tekst)">ok. ${calosc} min</b>`;
+  $("#nowaSzacunek").innerHTML = ile ? `${ile} firm · ${czas} · zużyje ${ile} zapytań do MF` : "Wpisz nazwy firm albo wybierz kategorię.";
 }
 $("#firmyTekst").addEventListener("input", szacunek);
 $("#seedIle").addEventListener("input", szacunek);
+$("#optPrzystanek").addEventListener("change", szacunek);
 
 $("#btnUruchom").onclick = async () => {
   $("#btnUruchom").disabled = true;
@@ -476,6 +481,20 @@ async function ekranPraca() {
   $("#pracaPusto").style.display = "none";
   $("#pracaTresc").style.display = "";
   $("#pracaTytul").textContent = `Partia ${p.nazwa}`;
+  if (p.przygotowanie) {
+    // Automat wystartował, ale pierwsza firma jeszcze się nie skończyła.
+    $("#pracaLicznik").textContent = "Przygotowuję partię…";
+    $("#pracaPasek").style.width = "0%";
+    $("#pracaCzas").textContent = "pierwsza firma zajmuje do 2 minut";
+    $("#pracaFirmy").innerHTML = '<span class="pusto">Zaraz pojawi się lista firm z numerem kroku.</span>';
+    $("#btnZatrzymaj").disabled = !p.zadanie;
+    STAN.zadanie = p.zadanie || STAN.zadanie;
+    if (STAN.zadanie) {
+      const z = await pobierz("/api/panel/zadanie?id=" + STAN.zadanie);
+      if (z.log) { $("#pracaLog").textContent = z.log.join("\n"); $("#pracaLog").scrollTop = $("#pracaLog").scrollHeight; }
+    }
+    return;
+  }
   const razem = p.firm - p.pominiete;
   const gotowe = p.gotowe;
   $("#pracaLicznik").textContent = `${gotowe} z ${razem} gotowe` + (p.czekaNaNip ? ` · ${p.czekaNaNip} czeka na potwierdzenie NIP` : "");
@@ -504,6 +523,7 @@ async function ekranNip() {
   if (!STAN.partia) { $("#nipTabela").innerHTML = '<span class="pusto">Nie wybrano partii.</span>'; return; }
   const j = await pobierz("/api/panel/nip?partia=" + encodeURIComponent(STAN.partia));
   if (j.blad) { $("#nipTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  if (j.przygotowanie) { $("#nipTabela").innerHTML = '<span class="pusto">Automat dopiero szuka numerów NIP. Wróć tu za chwilę — albo zajrzyj do „Praca w toku”.</span>'; $("#nipPodsumowanie").textContent = ""; return; }
   $("#nipPodtytul").textContent = `Partia ${j.nazwa} · potwierdź, że automat trafił we właściwe spółki.`;
   const wiersze = j.firmy.map((f, i) => {
     const plakietka = f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
@@ -515,7 +535,7 @@ async function ekranNip() {
       <td><b>${esc(f.nazwa)}</b>${f.wBazie ? `<br><span style="font-size:12.5px;color:var(--slaby)">jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}</span>` : ""}</td>
       <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}">${f.podanyPrzezCiebie ? `<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span>` : ""}</td>
       <td>${esc(f.spolka || "—")}${f.krs ? `<br><span style="font-size:12.5px;color:var(--slaby)">KRS ${esc(f.krs)}</span>` : ""}</td>
-      <td>${plakietka}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}</td>
+      <td>${plakietka}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}${f.tenSamNipCo?.length ? `<br><span style="font-size:13px;color:var(--slaby)">ta sama spółka co: ${esc(f.tenSamNipCo.join(", "))} — w bazie zostaną osobnymi markami</span>` : ""}</td>
     </tr>`;
   }).join("");
   $("#nipTabela").innerHTML = `<table><tr><th style="width:26px"></th><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th></tr>${wiersze}</table>`;

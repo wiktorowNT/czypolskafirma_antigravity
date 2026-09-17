@@ -137,7 +137,17 @@ function podsumowaniePartii(partia) {
   return { ...s, tryb: partia.tryb || "nowe", utworzono: partia.utworzono || null, przystanekNip: !!partia.przystanekNip, konsylia: partia.konsylia || [] };
 }
 
+const pustePodsumowanie = { firm: 0, WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, gotowe: 0, zatwierdzone: 0, zaimportowane: 0, pominiete: 0, bledy: 0, czekaNaNip: 0, tryb: "nowe", konsylia: [] };
+const zadanieDlaPartii = (nazwa) => [...zadania.values()].filter((z) => z.partia === nazwa && z.status === "pracuje").map((z) => z.id)[0] || null;
+
 function postepPartii(nazwa) {
+  if (!nazwa) return { blad: "Nie wybrano partii." };
+  // Świeżo uruchomiona partia: automat startuje bazę i pierwszy krok, pliku jeszcze nie ma.
+  if (!fs.existsSync(plikPartii(nazwa))) {
+    const zadanie = zadanieDlaPartii(nazwa);
+    if (zadanie) return { nazwa, przygotowanie: true, ...pustePodsumowanie, firmy: [], minutyDoKonca: null, zadanie };
+    return { blad: `Nie ma partii „${nazwa}".` };
+  }
   const partia = wczytajPartie(plikPartii(nazwa));
   const firmy = partia.firmy.map((f) => ({
     nazwa: f.nazwa,
@@ -150,12 +160,25 @@ function postepPartii(nazwa) {
   }));
   const pod = podsumowaniePartii(partia);
   const zostalo = firmy.filter((f) => f.etap !== "gotowe" && f.etap !== "pominięta" && f.etap !== "czeka na potwierdzenie NIP").length;
-  return { nazwa, ...pod, firmy, minutyDoKonca: Math.ceil((zostalo * 3.5) / 2), zadanie: [...zadania.values()].filter((z) => z.partia === nazwa && z.status === "pracuje").map((z) => z.id)[0] || null };
+  // Do przystanku na NIP idzie tylko krok 1 i 2 (ok. 1,5 min na firmę); pełny przebieg to ok. 3,5 min.
+  const minutNaFirme = partia.przystanekNip ? 1.5 : 3.5;
+  return { nazwa, ...pod, firmy, doPrzystanku: !!partia.przystanekNip, minutyDoKonca: Math.ceil((zostalo * minutNaFirme) / 2), zadanie: zadanieDlaPartii(nazwa) };
 }
 
 // Tabela przystanku na NIP: co model znalazł i co mówią rejestry.
 function tabelaNip(nazwa) {
+  if (!nazwa) return { blad: "Nie wybrano partii." };
+  if (!fs.existsSync(plikPartii(nazwa))) {
+    return zadanieDlaPartii(nazwa) ? { nazwa, przygotowanie: true, firmy: [] } : { blad: `Nie ma partii „${nazwa}".` };
+  }
   const partia = wczytajPartie(plikPartii(nazwa));
+  // Jedna spółka potrafi prowadzić kilka marek z listy (np. Sweet Gallery: Lodolandia,
+  // Bafra Kebab, Kołacz na Okrągło). Pokazujemy to jako informację, nie jako błąd.
+  const wgNipu = new Map();
+  for (const f of partia.firmy) {
+    const nip = f.tozsamosc?.nip || f.nipPodany;
+    if (nip) wgNipu.set(nip, [...(wgNipu.get(nip) || []), f.nazwa]);
+  }
   return {
     nazwa,
     firmy: partia.firmy.map((f) => {
@@ -172,6 +195,7 @@ function tabelaNip(nazwa) {
         wynik: !t.nip ? "brak" : problem ? "zle" : uwaga || f.uwagiTozsamosci ? "uwaga" : "ok",
         powod: problem || f.uwagiTozsamosci || null,
         wBazie: t.istniejeWBazie ? { slug: t.istniejeWBazie.slug, kraj: t.istniejeWBazie.country_code, wlasciciel: t.istniejeWBazie.owner_name } : null,
+        tenSamNipCo: (wgNipu.get(t.nip || f.nipPodany) || []).filter((n) => n !== f.nazwa),
         pomin: !!f.pomin,
         gotowa: !!f.rekord,
       };
@@ -491,7 +515,9 @@ const serwer = http.createServer(async (req, res) => {
 
     if (req.method === "POST" && p === "/api/panel/zamknij") {
       json(res, { ok: true });
-      setTimeout(() => process.exit(0), 200);
+      // Bez tego automat zostałby w tle jako proces bez nadzoru (strona ostrzega o przerwaniu).
+      for (const z of zadania.values()) if (z.status === "pracuje") zatrzymaj(z);
+      setTimeout(() => process.exit(0), 300);
       return;
     }
 

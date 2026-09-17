@@ -95,6 +95,10 @@ if (arg.plik) {
   }
 }
 
+// Plik partii zapisujemy od razu po wczytaniu wejścia, żeby panel miał co pokazać,
+// zanim skończy się pierwsza firma (krok 1 trwa do dwóch minut).
+if (partia.firmy.length) zapiszPartie();
+
 // ---------- główny przebieg ----------
 const DZIS = dzisiaj();
 const kategorie = await pobierzKategorie();

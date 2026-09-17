@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import { dzisiaj } from "./env.mjs";
 import { aktualizuj, indeksFirm, kategorie as pobierzKategorie, kolumnaIstnieje, wstaw } from "./supabase.mjs";
-import { normalizujNip, slugify } from "./tekst.mjs";
+import { normalizujNip, podobienstwoNazw, slugify } from "./tekst.mjs";
 import { walidujRekord } from "./walidacja.mjs";
 
 // Pola, które automat może ustawić przy INSERT i które nadpisuje przy UPDATE.
@@ -20,6 +20,23 @@ export async function kontekstImportu() {
   return { kategorie, indeks, maSources, maConfidence };
 }
 
+// Jedna spółka może prowadzić kilka marek (np. Sweet Gallery: Lodolandia, Bafra Kebab,
+// Kołacz na Okrągło). Każda marka jest w bazie osobnym wierszem, więc sam zgodny NIP nie
+// wystarczy, żeby uznać rekord za "ten sam" — inaczej druga marka nadpisałaby pierwszą.
+function znajdzWBazie(r, f, indeks) {
+  const poId = f.tozsamosc?.istniejeWBazie?.id ? indeks.find((x) => x.id === f.tozsamosc.istniejeWBazie.id) : null;
+  if (poId) return { rekord: poId, jak: "id" };
+  const poSlugu = indeks.find((x) => slugify(x.slug) === r.slug);
+  if (poSlugu) return { rekord: poSlugu, jak: "slug" };
+  const poNip = r.nip ? indeks.filter((x) => normalizujNip(x.nip) === normalizujNip(r.nip)) : [];
+  for (const kandydat of poNip) {
+    const nazwy = [kandydat.name, kandydat.display_name, ...String(kandydat.brand_aliases || "").split(",")].filter(Boolean);
+    if (nazwy.some((n) => podobienstwoNazw(n, r.display_name || r.name) >= 0.6)) return { rekord: kandydat, jak: "nip" };
+  }
+  // NIP już jest w bazie, ale pod inną marką: nowa firma, z ostrzeżeniem do przejrzenia.
+  return { rekord: null, innaMarkaTejSpolki: poNip.map((x) => x.slug) };
+}
+
 export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence }) {
   const plan = [];
   for (const f of partia.firmy) {
@@ -28,7 +45,9 @@ export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence 
     const kat = kategorie.find((k) => k.slug === r.category_slug);
     r.category_id = kat?.id || r.category_id || null;
     const w = walidujRekord(r, kategorie);
-    const istnieje = indeks.find((x) => (r.nip && normalizujNip(x.nip) === normalizujNip(r.nip)) || slugify(x.slug) === r.slug || (f.tozsamosc?.istniejeWBazie?.id && x.id === f.tozsamosc.istniejeWBazie.id));
+    const dopasowanie = znajdzWBazie(r, f, indeks);
+    const istnieje = dopasowanie.rekord;
+    if (dopasowanie.innaMarkaTejSpolki?.length) w.ostrzezenia.push(`ten NIP ma już w bazie inną markę tej samej spółki (${dopasowanie.innaMarkaTejSpolki.join(", ")}) — zostanie dodana jako nowa firma`);
     const wiersz = {};
     for (const p of istnieje ? POLA_UPDATE : POLA_INSERT) if (r[p] !== undefined) wiersz[p] = r[p];
     if (!istnieje && !wiersz.category_id) w.bledy.push("brak category_id (wybierz kategorię w przeglądzie)");
@@ -42,11 +61,19 @@ export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence 
       id: istnieje?.id || null,
       slugWBazie: istnieje?.slug || null,
       kategoria: kategorie.find((k) => k.id === wiersz.category_id)?.name || null,
+      nipRekordu: r.nip || null,
       wiersz,
       bledy: w.bledy,
       ostrzezenia: w.ostrzezenia,
       bylo: istnieje ? { country_code: istnieje.country_code, owner_name: istnieje.owner_name } : null,
     });
+  }
+  // Marki tej samej spółki wewnątrz jednej partii: informacja, nie błąd.
+  const poNip = new Map();
+  for (const p of plan) if (p.nipRekordu) poNip.set(p.nipRekordu, [...(poNip.get(p.nipRekordu) || []), p]);
+  for (const grupa of poNip.values()) {
+    if (grupa.length < 2) continue;
+    for (const p of grupa) p.ostrzezenia.push(`ta sama spółka co: ${grupa.filter((x) => x !== p).map((x) => x.nazwa).join(", ")} (jedna spółka, kilka marek)`);
   }
   return plan;
 }
