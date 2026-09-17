@@ -111,7 +111,9 @@ function uruchomClaude({ prompt, model, schemat, narzedzia, timeoutMs, systemDod
           tury: wynik.num_turns,
           sekundy: Math.round((Date.now() - start) / 1000),
           kosztUsd: wynik.total_cost_usd ?? null,
-          tokenyWe: (wynik.usage?.input_tokens || 0) + (wynik.usage?.cache_read_input_tokens || 0) + (wynik.usage?.cache_creation_input_tokens || 0),
+          // Wejście liczone bez odczytów z cache (te są ~10x tańsze); cache osobno.
+          tokenyWe: (wynik.usage?.input_tokens || 0) + (wynik.usage?.cache_creation_input_tokens || 0),
+          tokenyCache: wynik.usage?.cache_read_input_tokens || 0,
           tokenyWy: wynik.usage?.output_tokens || 0,
           wyszukiwan: wynik.usage?.server_tool_use?.web_search_requests || 0,
           pobran: wynik.usage?.server_tool_use?.web_fetch_requests || 0,

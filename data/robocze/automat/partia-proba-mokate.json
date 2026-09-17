@@ -1,0 +1,493 @@
+{
+  "nazwa": "proba-mokate",
+  "utworzono": "2026-09-17T15:04:05.384Z",
+  "tryb": "reweryfikacja",
+  "firmy": [
+    {
+      "nazwa": "Mokate",
+      "plik": "mokate",
+      "tryb": "reweryfikacja",
+      "etapy": {
+        "tozsamosc": "OK",
+        "rejestr": "OK",
+        "sledztwo": "OK",
+        "kontrola": "zgodna",
+        "opisy": "OK"
+      },
+      "tozsamosc": {
+        "nazwa_marki": "Mokate",
+        "nazwa_spolki": "MOKATE Spółka Akcyjna",
+        "nip": "5482135881",
+        "krs": "0000010037",
+        "forma": "Spółka Akcyjna",
+        "website_url": "https://mokate.com",
+        "notowana_gpw": false,
+        "pewnosc": "wysoka",
+        "kandydaci_alternatywni": [
+          {
+            "nazwa_spolki": "FPUH MOKATE Sp. z o.o.",
+            "nip": "5482663841",
+            "dlaczego": "Powiązana spółka z tej samej grupy rodzinnej (Katowicka 265, Ustroń), KRS 0000472196, zarejestrowana w 2013 r. Prawdopodobnie pełni funkcję dystrybucyjną/usługową wobec Mokate S.A., a nie jest głównym producentem/operatorem marki, dlatego nie została wybrana jako spółka główna."
+          }
+        ],
+        "zrodla": [
+          "https://aleo.com/int/company/mokate-spolka-akcyjna",
+          "https://www.bizraport.pl/krs/0000010037/mokate-spolka-akcyjna",
+          "https://rejestr.io/krs/10037/mokate",
+          "http://krs.infoveriti.pl/Mokate,Ustron,KRS,0000010037.html",
+          "https://mapa.targeo.pl/5482135881/nip/firma",
+          "https://www.forbes.pl/biznes/mokate-kawowo-herbaciane-rodzinne-imperium-o-rodzinnym-biznesie-mowia-teresa-i-adam/yv91gns"
+        ],
+        "uwagi": "Mokate to rodzinna firma (rodzina Mokrysz), 100% kapitał polski - marka nie podlega problemowi \"złotej klatki\". NIP 5482135881 zweryfikowany wg sumy kontrolnej (poprawna). Spółka MOKATE S.A. (KRS 0000010037) jest operatorem produkcyjnym z PKD 10.83.Z (przetwórstwo herbaty i kawy) - to główny podmiot produkujący pod marką Mokate. Istnieje powiązana spółka FPUH MOKATE Sp. z o.o. (inny NIP/KRS) pod tym samym adresem - potraktowana jako kandydat alternatywny, gdyż wygląda na spółkę dystrybucyjną/usługową, nie znaleziono jednoznacznego potwierdzenia jej dokładnej roli w grupie. Nie natrafiono w źródłach na żadne treści przypominające próbę wstrzyknięcia poleceń do modelu.",
+        "zModelu": true,
+        "meta": {
+          "model": "sonnet",
+          "tury": 9,
+          "sekundy": 44,
+          "kosztUsd": 1.3638637999999998,
+          "tokenyWe": 677982,
+          "tokenyWy": 2545,
+          "wyszukiwan": 0,
+          "pobran": 0
+        },
+        "mf": {
+          "nazwa": "'MOKATE' SPÓŁKA AKCYJNA",
+          "nip": "5482135881",
+          "krs": "0000010037",
+          "regon": "072250034",
+          "statusVat": "Czynny",
+          "adres": "KATOWICKA 265A, 43-450 USTROŃ",
+          "dataRejestracji": "1999-01-06",
+          "dataWykreslenia": null
+        },
+        "status": "OK",
+        "powod": null,
+        "istniejeWBazie": {
+          "slug": "mokate",
+          "country_code": "PL",
+          "owner_name": "Rodzina Mokrysz",
+          "nip": "6511749127",
+          "krs": "0001142134",
+          "verified_at": null,
+          "id": "9a42178e-cd30-4153-832b-0e4a095c9e2f"
+        }
+      },
+      "rejestr": {
+        "krs": "0000010037",
+        "nazwa": "\"MOKATE\" SPÓŁKA AKCYJNA",
+        "nip": "5482135881",
+        "regon": "07225003400000",
+        "formaPrawna": "SPÓŁKA AKCYJNA",
+        "stanZDnia": "26.06.2026",
+        "dataRejestracji": "26.04.2001",
+        "ostatniWpis": 116,
+        "siedziba": "USTROŃ, POLSKA",
+        "kapitalZakladowy": "166325000,00 PLN",
+        "liczbaAkcjiUdzialow": "16632500",
+        "wspolnicy": [],
+        "jedynyAkcjonariusz": [],
+        "emisjeAkcji": [
+          {
+            "seria": "AKCJE IMIENNE SERII A",
+            "liczba": "150000",
+            "uprzywilejowanie": "150.000 - UPRZYWILEJOWANIE CO DO DYWIDENDY, PODZIAŁU MAJĄTKU W RAZIE LIKWIDACJI A TAKŻE UMORZENIA AKCJI"
+          },
+          {
+            "seria": "AKCJE IMIENNE SERII B",
+            "liczba": "482500",
+            "uprzywilejowanie": "482.500 - UPRZYWILEJOWANIE CO DO DYWIDENDY, PODZIAŁU MAJĄTKU W RAZIE LIKWIDACJI A TAKŻE UMORZENIA AKCJI"
+          },
+          {
+            "seria": "C",
+            "liczba": "16000000",
+            "uprzywilejowanie": "16.000.000 AKCJE SERII C O NUMERACH OD 1 DO 8.000.000 SĄ UPRZYWILEJOWANE CO DO DYWIDENDY, PODZIAŁU MAJĄTKU, UMORZENIA W SPOSÓB OKREŚLONY W PAR. 8 UST.3,4,5 STATUTU ORAZ CO DO GŁOSU; NA JEDNĄ AKCJĘ PRZ"
+          }
+        ],
+        "liczbaCzlonkowZarzadu": 2,
+        "organNadzoru": [
+          "RADA NADZORCZA"
+        ],
+        "pkdPrzewazajace": "10 PRZETWÓRSTWO HERBATY I KAWY",
+        "sprawozdaniaGrupy": false,
+        "zrodloUrl": "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/0000010037?rejestr=P&format=json"
+      },
+      "historiaKrs": {
+        "historia": [],
+        "liczbaWpisow": 116,
+        "zrodloUrl": "https://api-krs.ms.gov.pl/api/krs/OdpisPelny/0000010037?rejestr=P&format=json"
+      },
+      "sledztwo": {
+        "country_code": "PL",
+        "lancuch": [
+          {
+            "podmiot": "MOKATE Spółka Akcyjna (NIP 5482135881, KRS 0000010037)",
+            "kraj": "PL",
+            "rola": "spolka_polska",
+            "proc_kapitalu": null,
+            "proc_glosow": null,
+            "stan_na": "2026-06-26",
+            "uwaga": "KRS nie ujawnia listy akcjonariuszy (typowe dla S.A. niepublicznej) ani jedynego akcjonariusza. Rada nadzorcza: Kazimierz Józef Mokrysz, Teresa Mokrysz, Janusz Malarz; prokurenci: Sylwia Mokrysz, Adam Mokrysz.",
+            "zrodlo_tytul": "KRS 0000010037 / rejestr.io",
+            "zrodlo_url": "https://rejestr.io/krs/129433/mokate"
+          },
+          {
+            "podmiot": "Rodzina Mokrysz (Kazimierz Mokrysz, Teresa Mokrysz, Adam Mokrysz, Sylwia Mokrysz i in. członkowie rodziny)",
+            "kraj": "PL",
+            "rola": "ostateczny",
+            "proc_kapitalu": null,
+            "proc_glosow": null,
+            "stan_na": "2026",
+            "uwaga": "Wielokrotnie potwierdzone w mediach branżowych i na stronie korporacyjnej jako firma rodzinna w 100% polskiego kapitału, obecnie zarządzana przez czwarte pokolenie (Adam Mokrysz, CEO od 2016). Dokładny rozkład % akcji/głosów pomiędzy członków rodziny nie jest publicznie ujawniony.",
+            "zrodlo_tytul": "Mokate.com – Historia / Zarząd; Forbes.pl",
+            "zrodlo_url": "https://mokate.com/zarzad/"
+          }
+        ],
+        "ostateczny_wlasciciel": "Rodzina Mokrysz",
+        "typ_wlasciciela": "osoba/rodzina",
+        "regula": "D1",
+        "uzasadnienie": "Mokate S.A. to firma rodzinna założona i nieprzerwanie kontrolowana przez rodzinę Mokrysz od 1990 r. (nazwa od MOkrysz-KAzimierz-TEresa), obecnie w rękach czwartego pokolenia (CEO Adam Mokrysz od 2016 r., rada nadzorcza z udziałem Kazimierza i Teresy Mokrysz). KRS nie ujawnia struktury akcjonariatu (typowe dla S.A. niepublicznej bez obowiązku publikacji), ale spójne, wielokrotne potwierdzenia w mediach branżowych i na stronie korporacyjnej wskazują na pełną, rodzinną kontrolę polskiego kapitału bez udziału podmiotów zagranicznych. Kraj kapitału: Polska.",
+        "luki": [
+          "Dokładny procentowy rozkład akcji/głosów pomiędzy poszczególnymi członkami rodziny Mokrysz nie jest publicznie ujawniony (KRS S.A. nie pokazuje listy akcjonariuszy; brak obowiązku publikacji, spółka nie jest notowana)",
+          "Brak dostępu do pełnego odpisu KRS z historią zmian kapitałowych/akcjonariuszy na przestrzeni lat",
+          "Nie potwierdzono formalnie w źródle pierwotnym (KRS/CRBR), czy jakikolwiek pojedynczy członek rodziny przekracza indywidualnie 50% głosów, czy kontrola jest łączna rodzinna"
+        ],
+        "historia": [
+          {
+            "rok": "1900",
+            "zdarzenie": "Józef Mokrysz zakłada sklep kolonialny w miejscowości Dobra (dziś Czechy) – początek działalności handlowej rodziny Mokrysz.",
+            "zrodlo_url": "https://eranowychkobiet.com/mokate-rodzinny-biznes-od-pokolen/"
+          },
+          {
+            "rok": "1927",
+            "zdarzenie": "Powstaje przedsiębiorstwo pod nazwą Mokrysz w Goleszowie (sklep, restauracja, betoniarnia).",
+            "zrodlo_url": "https://biznes.wprost.pl/firmy-i-rynki/11947897/historia-marki-mokate.html"
+          },
+          {
+            "rok": "1990",
+            "zdarzenie": "Kazimierz Mokrysz przekazuje firmę żonie Teresie; zmiana nazwy na Mokate (od Mokrysz, Kazimierz, Teresa), start produkcji śmietanki do kawy.",
+            "zrodlo_url": "https://mokate.com/historia-mokate/"
+          },
+          {
+            "rok": "1995",
+            "zdarzenie": "Uruchomienie nowoczesnego zakładu produkującego kawę oraz czekoladę do picia.",
+            "zrodlo_url": "https://mokate.com/historia-mokate/"
+          },
+          {
+            "rok": "2001-04-26",
+            "zdarzenie": "Rejestracja spółki MOKATE S.A. w KRS pod numerem 0000010037.",
+            "zrodlo_url": "https://krs-pobierz.pl/mokate-spolka-akcyjna-i302308"
+          },
+          {
+            "rok": "2016",
+            "zdarzenie": "Teresa Mokrysz przekazuje kierownictwo grupy synowi Adamowi Mokryszowi, który zostaje CEO Grupy Mokate (czwarte pokolenie właścicieli).",
+            "zrodlo_url": "https://sylwiamokrysz.pl/en/about-me/"
+          },
+          {
+            "rok": "2026",
+            "zdarzenie": "Grupa Mokate obejmuje ok. 9 spółek/zakładów w Polsce, Czechach, na Słowacji, Węgrzech, w Wielkiej Brytanii, RPA i Dubaju; przychody grupy ok. 1,5 mld zł rocznie; spółka pozostaje w 100% w rękach rodziny Mokrysz.",
+            "zrodlo_url": "https://mokate.com/zarzad/"
+          }
+        ],
+        "zrodla": [
+          {
+            "url": "https://rejestr.io/krs/129433/mokate",
+            "tytul": "Rejestr.io – MOKATE (dane KRS: zarząd, rada nadzorcza, prokurenci)",
+            "czego_dotyczy": "skład organów spółki, dane rejestrowe",
+            "data": "2026-06-06"
+          },
+          {
+            "url": "https://krs-pobierz.pl/mokate-spolka-akcyjna-i302308",
+            "tytul": "krs-pobierz.pl – Mokate Spółka Akcyjna",
+            "czego_dotyczy": "dane rejestrowe, kapitał zakładowy, data rejestracji, organy spółki",
+            "data": null
+          },
+          {
+            "url": "https://mokate.com/historia-mokate/",
+            "tytul": "Mokate.com – Historia Mokate",
+            "czego_dotyczy": "historia założenia firmy i rodziny Mokrysz",
+            "data": null
+          },
+          {
+            "url": "https://mokate.com/zarzad/",
+            "tytul": "Mokate.com – Zarząd",
+            "czego_dotyczy": "skład zarządu, potwierdzenie rodzinnej, polskiej kontroli kapitałowej",
+            "data": null
+          },
+          {
+            "url": "https://ccprogres.pl/wlasciciele/mokate/",
+            "tytul": "ccProgres – Mokate: kto jest właścicielem?",
+            "czego_dotyczy": "potwierdzenie 100% polskiego kapitału rodzinnego, czwarte pokolenie właścicieli",
+            "data": null
+          },
+          {
+            "url": "https://sylwiamokrysz.pl/en/about-me/",
+            "tytul": "Sylwia Mokrysz – strona personalna",
+            "czego_dotyczy": "przekazanie zarządzania Adamowi Mokryszowi w 2016 r.",
+            "data": null
+          },
+          {
+            "url": "https://www.forbes.pl/sylwetka/teresa-i-kazimierz-mokryszowie",
+            "tytul": "Forbes.pl – Teresa i Kazimierz Mokryszowie",
+            "czego_dotyczy": "sylwetka założycieli, historia biznesu rodzinnego",
+            "data": null
+          },
+          {
+            "url": "https://biznes.wprost.pl/firmy-i-rynki/11947897/historia-marki-mokate.html",
+            "tytul": "Biznes Wprost – Historia marki Mokate",
+            "czego_dotyczy": "historia marki i rodziny Mokrysz",
+            "data": null
+          },
+          {
+            "url": "https://eranowychkobiet.com/mokate-rodzinny-biznes-od-pokolen/",
+            "tytul": "Era Nowych Kobiet – Rodzinny biznes od pokoleń. Historia MOKATE",
+            "czego_dotyczy": "geneza rodziny Mokrysz od 1900 r.",
+            "data": null
+          },
+          {
+            "url": "https://sukces.rp.pl/styl-zycia/art39446431-mokate-polska-firma-rodzinna-o-miedzynarodowym-zasiegu-rozmowa-o-biznesie-i-szachach",
+            "tytul": "Rzeczpospolita (sukces.rp.pl) – Mokate: polska firma rodzinna o międzynarodowym zasięgu",
+            "czego_dotyczy": "zasięg międzynarodowy grupy, charakter rodzinny firmy",
+            "data": null
+          }
+        ],
+        "uwagi": "Dane z rejestrów podane w poleceniu (KRS 0000010037, NIP 5482135881, kapitał 166 325 000 PLN, struktura akcji uprzywilejowanych serii A/B/C) są zgodne z niezależnie odnalezionymi wpisami KRS/rejestr.io/krs-pobierz.pl – brak sprzeczności. KRS nie wykazuje pojedynczego akcjonariusza z >50% głosów w sposób jawny (S.A. wieloakcjonariuszowa), dlatego ostateczne ustalenie oparto na spójnych, wielokrotnych potwierdzeniach rodzinnej, w pełni polskiej własności z materiałów korporacyjnych i branżowych, przy czym są to źródła niższego poziomu hierarchii (poziom 2–3) niż formalny wykaz akcjonariatu. Nie napotkano żadnych treści z internetu zawierających próby wstrzyknięcia poleceń do modelu (prompt injection) w przetworzonych źródłach.",
+        "meta": {
+          "model": "sonnet",
+          "tury": 10,
+          "sekundy": 90,
+          "kosztUsd": 1.5335324,
+          "tokenyWe": 699107,
+          "tokenyWy": 6477,
+          "wyszukiwan": 0,
+          "pobran": 0
+        }
+      },
+      "kontrola": {
+        "zgadza_sie": true,
+        "country_code": "PL",
+        "ostateczny_wlasciciel": "Rodzina Mokrysz",
+        "regula": "D1 (zadeklarowana przez analityka) — w praktyce niepełna: żadne ogniwo łańcucha nie ma wypełnionego proc_glosow (obie wartości null), więc twierdzenie \">50% głosów\" nie jest oparte na liczbie z żadnego źródła, tylko na jakościowej, powtarzanej deklaracji \"firma w 100% polskiego kapitału / rodzinna\". Mechaniczne czytanie samych pól liczbowych łańcucha nie potwierdza D1 wprost — bliżej D2 (największy/jedyny blok kontrolny bez ujawnionego %) albo, przy rygorystycznym podejściu do braku jakiejkolwiek liczby, D4 (nie da się ustalić precyzyjnie, kto ile głosów posiada). Kraj i właściciel wynikające z łańcucha (PL / Rodzina Mokrysz) pozostają jednak niesporne, bo żaden fragment łańcucha nie wskazuje podmiotu zagranicznego.",
+        "zastrzezenia": [
+          "Brak jakiejkolwiek liczby (% kapitału lub głosów) potwierdzającej kontrolę >50% wymaganą przez regułę D1 — pola proc_kapitalu i proc_glosow są null w obu ogniwach; klasyfikacja D1 oparta wyłącznie na jakościowych deklaracjach medialnych/korporacyjnych, co jest niezgodne z zasadą hierarchii źródeł ('liczba bez źródła nie wchodzi do wyniku' — tu nie ma nawet liczby do zweryfikowania).",
+          "Nie sprawdzono CRBR (Centralny Rejestr Beneficjentów Rzeczywistych) — to źródło poziomu 1 najbardziej właściwe do ustalenia ostatecznego beneficjenta prywatnej S.A. i nie zostało włączone do łańcucha ani do źródeł.",
+          "Źródło zrodlo_url dla faktu z KRS (rejestr.io/krs/129433/mokate) zwróciło HTTP 403 Forbidden przy weryfikacji — nie można było potwierdzić treści (forma prawna, brak wspólników/jedynego akcjonariusza) z tej konkretnej strony; potwierdzenie oparte tylko na deklaracji w łańcuchu, nie na własnej weryfikacji.",
+          "Dla ogniwa 'Rodzina Mokrysz' podano zrodlo_tytul wskazujące również na Forbes.pl, ale nie podano konkretnego adresu URL artykułu — nie da się zweryfikować tego źródła.",
+          "Strona mokate.com/zarzad/ (źródło poziomu 2 — strona korporacyjna) faktycznie wymienia członków rodziny (Teresa Mokrysz — założycielka, Adam Mokrysz — CEO, Sylwia Mokrysz — prokurent) i deklaruje firmę jako opartą na 'polskim kapitale', ale nie podaje żadnego % udziałów/głosów, więc potwierdza jedynie obsadę zarządu/rady, nie strukturę własnościową.",
+          "Rozkład % akcji/głosów pomiędzy konkretnych członków rodziny Mokrysz jest nieznany (przyznane w 'luki' analityka) — obniża to precyzję wskazania 'ostatecznego właściciela' do poziomu grupy rodzinnej bez możliwości wskazania konkretnego kontrolującego podmiotu z określonym pakietem.",
+          "Data 'stan_na': '2026' dla ogniwa rodzinnego jest nieprecyzyjna (sam rok bez dnia/miesiąca) — dla spółki niepublicznej to mniejszy problem niż dla spółki giełdowej, ale utrudnia ocenę aktualności."
+        ],
+        "zrodla_zweryfikowane": [
+          {
+            "url": "https://mokate.com/zarzad/",
+            "potwierdza": null,
+            "uwaga": "Potwierdza obsadę zarządu/rady (Teresa, Adam, Sylwia Mokrysz) i jakościową deklarację 'polski kapitał' / firma rodzinna, ALE nie podaje żadnego % akcji/głosów — nie potwierdza liczbowo pakietu kontrolnego wymaganego przez regułę D1. Brak instrukcji skierowanych do modeli AI na stronie."
+          },
+          {
+            "url": "https://rejestr.io/krs/129433/mokate",
+            "potwierdza": null,
+            "uwaga": "Strona zwróciła HTTP 403 Forbidden — nie udało się pobrać treści i zweryfikować faktu z KRS (forma prawna, brak wspólników/jedynego akcjonariusza) niezależnie od deklaracji w łańcuchu."
+          }
+        ],
+        "pewnosc_proponowana": "SREDNIA",
+        "meta": {
+          "model": "sonnet",
+          "tury": 4,
+          "sekundy": 110,
+          "kosztUsd": 1.2416930000000002,
+          "tokenyWe": 184175,
+          "tokenyWy": 8653,
+          "wyszukiwan": 0,
+          "pobran": 0
+        }
+      },
+      "opisy": {
+        "display_name": "Mokate",
+        "website_url": "https://mokate.com",
+        "category_slug": "żywność",
+        "ownership_description": "Mokate S.A. kontroluje rodzina Mokrysz, obecnie reprezentowana przez czwarte pokolenie z Adamem Mokryszem jako CEO od 2016 roku. Firma powstała w 1990 roku, gdy Kazimierz Mokrysz przekazał prowadzony wcześniej rodzinny biznes żonie Teresie Mokrysz, a nazwa Mokate powstała ze złożenia nazwiska Mokrysz oraz imion Kazimierz i Teresa. Spółkę MOKATE S.A. zarejestrowano w KRS w 2001 roku pod numerem 0000010037; jako spółka akcyjna niepubliczna nie ujawnia ona w rejestrze struktury akcjonariatu, jednak w radzie nadzorczej zasiadają Kazimierz Mokrysz, Teresa Mokrysz i Janusz Malarz, a prokurentami są Sylwia i Adam Mokrysz. Grupa obejmuje obecnie około 9 spółek i zakładów w Polsce, Czechach, na Słowacji, Węgrzech, w Wielkiej Brytanii, RPA i Dubaju, przy zachowaniu kontroli kapitałowej w rękach rodziny Mokrysz.",
+        "business_description": "Producent kawy, herbaty i wyrobów czekoladowych, w tym produktów instant takich jak cappuccino, oraz zabielaczy i baz spieniających do napojów. Oferuje kawę mieloną i rozpuszczalną, herbaty czarne, zielone i owocowe oraz koncentraty tłuszczowo mleczne i bazy toppingowe dla gastronomii i przemysłu spożywczego. Produkty sprzedaje pod marką flagową Mokate oraz markami Loyd, Minutka i Marila.",
+        "brands": [
+          {
+            "name": "Mokate",
+            "domain": "mokate.com"
+          },
+          {
+            "name": "Loyd",
+            "domain": null
+          },
+          {
+            "name": "Minutka",
+            "domain": null
+          },
+          {
+            "name": "Marila",
+            "domain": null
+          }
+        ],
+        "meta": {
+          "model": "sonnet",
+          "tury": 3,
+          "sekundy": 28,
+          "kosztUsd": 1.127544,
+          "tokenyWe": 181412,
+          "tokenyWy": 2004,
+          "wyszukiwan": 0,
+          "pobran": 0
+        }
+      },
+      "rekord": {
+        "name": "'MOKATE' SPÓŁKA AKCYJNA",
+        "display_name": "Mokate",
+        "slug": "mokate",
+        "nip": "5482135881",
+        "krs": "0000010037",
+        "country_code": "PL",
+        "owner_name": "Rodzina Mokrysz",
+        "ownership_description": "Mokate S.A. kontroluje rodzina Mokrysz, obecnie reprezentowana przez czwarte pokolenie z Adamem Mokryszem jako CEO od 2016 roku. Firma powstała w 1990 roku, gdy Kazimierz Mokrysz przekazał prowadzony wcześniej rodzinny biznes żonie Teresie Mokrysz, a nazwa Mokate powstała ze złożenia nazwiska Mokrysz oraz imion Kazimierz i Teresa. Spółkę MOKATE S.A. zarejestrowano w KRS w 2001 roku pod numerem 0000010037; jako spółka akcyjna niepubliczna nie ujawnia ona w rejestrze struktury akcjonariatu, jednak w radzie nadzorczej zasiadają Kazimierz Mokrysz, Teresa Mokrysz i Janusz Malarz, a prokurentami są Sylwia i Adam Mokrysz. Grupa obejmuje obecnie około 9 spółek i zakładów w Polsce, Czechach, na Słowacji, Węgrzech, w Wielkiej Brytanii, RPA i Dubaju, przy zachowaniu kontroli kapitałowej w rękach rodziny Mokrysz.",
+        "business_description": "Producent kawy, herbaty i wyrobów czekoladowych, w tym produktów instant takich jak cappuccino, oraz zabielaczy i baz spieniających do napojów. Oferuje kawę mieloną i rozpuszczalną, herbaty czarne, zielone i owocowe oraz koncentraty tłuszczowo mleczne i bazy toppingowe dla gastronomii i przemysłu spożywczego. Produkty sprzedaje pod marką flagową Mokate oraz markami Loyd, Minutka i Marila.",
+        "website_url": "https://mokate.com",
+        "registry_url": "https://rejestr.io/krs/10037",
+        "category_slug": "żywność",
+        "category_id": "0c821f7e-a27e-47e9-808b-e577d1a18339",
+        "adres": "KATOWICKA 265A, 43-450 USTROŃ",
+        "siedziba_pl": true,
+        "vat_czynny": true,
+        "founded_at": null,
+        "ownership_type": "osoba/rodzina",
+        "parent_company_name": null,
+        "brand_aliases": "Mokate, Loyd, Minutka, Marila",
+        "brands": [
+          {
+            "name": "Mokate",
+            "domain": "mokate.com"
+          },
+          {
+            "name": "Loyd"
+          },
+          {
+            "name": "Minutka"
+          },
+          {
+            "name": "Marila"
+          }
+        ],
+        "verified_at": "2026-09-17",
+        "confidence": "KONFLIKT",
+        "sources": [
+          {
+            "url": "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/0000010037?rejestr=P&format=json",
+            "tytul": "KRS odpis aktualny (stan 26.06.2026)",
+            "data": "26.06.2026",
+            "czego_dotyczy": "dane rejestrowe, wspólnicy"
+          },
+          {
+            "url": "https://rejestr.io/krs/129433/mokate",
+            "tytul": "Rejestr.io – MOKATE (dane KRS: zarząd, rada nadzorcza, prokurenci)",
+            "czego_dotyczy": "skład organów spółki, dane rejestrowe",
+            "data": "2026-06-06"
+          },
+          {
+            "url": "https://krs-pobierz.pl/mokate-spolka-akcyjna-i302308",
+            "tytul": "krs-pobierz.pl – Mokate Spółka Akcyjna",
+            "czego_dotyczy": "dane rejestrowe, kapitał zakładowy, data rejestracji, organy spółki",
+            "data": null
+          },
+          {
+            "url": "https://mokate.com/historia-mokate/",
+            "tytul": "Mokate.com – Historia Mokate",
+            "czego_dotyczy": "historia założenia firmy i rodziny Mokrysz",
+            "data": null
+          },
+          {
+            "url": "https://mokate.com/zarzad/",
+            "tytul": "Mokate.com – Zarząd",
+            "czego_dotyczy": "skład zarządu, potwierdzenie rodzinnej, polskiej kontroli kapitałowej",
+            "data": null
+          },
+          {
+            "url": "https://ccprogres.pl/wlasciciele/mokate/",
+            "tytul": "ccProgres – Mokate: kto jest właścicielem?",
+            "czego_dotyczy": "potwierdzenie 100% polskiego kapitału rodzinnego, czwarte pokolenie właścicieli",
+            "data": null
+          },
+          {
+            "url": "https://sylwiamokrysz.pl/en/about-me/",
+            "tytul": "Sylwia Mokrysz – strona personalna",
+            "czego_dotyczy": "przekazanie zarządzania Adamowi Mokryszowi w 2016 r.",
+            "data": null
+          },
+          {
+            "url": "https://www.forbes.pl/sylwetka/teresa-i-kazimierz-mokryszowie",
+            "tytul": "Forbes.pl – Teresa i Kazimierz Mokryszowie",
+            "czego_dotyczy": "sylwetka założycieli, historia biznesu rodzinnego",
+            "data": null
+          },
+          {
+            "url": "https://biznes.wprost.pl/firmy-i-rynki/11947897/historia-marki-mokate.html",
+            "tytul": "Biznes Wprost – Historia marki Mokate",
+            "czego_dotyczy": "historia marki i rodziny Mokrysz",
+            "data": null
+          },
+          {
+            "url": "https://eranowychkobiet.com/mokate-rodzinny-biznes-od-pokolen/",
+            "tytul": "Era Nowych Kobiet – Rodzinny biznes od pokoleń. Historia MOKATE",
+            "czego_dotyczy": "geneza rodziny Mokrysz od 1900 r.",
+            "data": null
+          },
+          {
+            "url": "https://sukces.rp.pl/styl-zycia/art39446431-mokate-polska-firma-rodzinna-o-miedzynarodowym-zasiegu-rozmowa-o-biznesie-i-szachach",
+            "tytul": "Rzeczpospolita (sukces.rp.pl) – Mokate: polska firma rodzinna o międzynarodowym zasięgu",
+            "czego_dotyczy": "zasięg międzynarodowy grupy, charakter rodzinny firmy",
+            "data": null
+          }
+        ]
+      },
+      "walidacja": {
+        "bledy": [],
+        "ostrzezenia": []
+      },
+      "status": "KONFLIKT",
+      "konflikty": [
+        "baza ma NIP 6511749127, automat 5482135881"
+      ],
+      "uwagi": [
+        "luki: Dokładny procentowy rozkład akcji/głosów pomiędzy poszczególnymi członkami rodziny Mokrysz nie jest publicznie ujawniony (KRS S.A. nie pokazuje listy akcjonariuszy; brak obowiązku publikacji, spółka nie jest notowana); Brak dostępu do pełnego odpisu KRS z historią zmian kapitałowych/akcjonariuszy na przestrzeni lat; Nie potwierdzono formalnie w źródle pierwotnym (KRS/CRBR), czy jakikolwiek pojedynczy członek rodziny przekracza indywidualnie 50% głosów, czy kontrola jest łączna rodzinna",
+        "kontrola: Brak jakiejkolwiek liczby (% kapitału lub głosów) potwierdzającej kontrolę >50% wymaganą przez regułę D1 — pola proc_kapitalu i proc_glosow są null w obu ogniwach; klasyfikacja D1 oparta wyłącznie na jakościowych deklara",
+        "model: Dane z rejestrów podane w poleceniu (KRS 0000010037, NIP 5482135881, kapitał 166 325 000 PLN, struktura akcji uprzywilejowanych serii A/B/C) są zgodne z niezależnie odnalezionymi wpisami KRS/rejestr.io/krs-pobierz.pl – brak sprzeczności. KRS nie wykazuje pojedynczego akcjonariusza z >50% głosów w sp",
+        "model: Mokate to rodzinna firma (rodzina Mokrysz), 100% kapitał polski - marka nie podlega problemowi \"złotej klatki\". NIP 5482135881 zweryfikowany wg sumy kontrolnej (poprawna). Spółka MOKATE S.A. (KRS 0000010037) jest operatorem produkcyjnym z PKD 10.83.Z (przetwórstwo herbaty i kawy) - to główny podmiot"
+      ],
+      "porownanie": {
+        "slug": "mokate",
+        "country_code": {
+          "bylo": "PL",
+          "jest": "PL",
+          "zmiana": false
+        },
+        "owner_name": {
+          "bylo": "Rodzina Mokrysz",
+          "jest": "Rodzina Mokrysz",
+          "zmiana": false
+        },
+        "nip": {
+          "bylo": "6511749127",
+          "jest": "5482135881",
+          "zmiana": true
+        },
+        "krs": {
+          "bylo": "0001142134",
+          "jest": "0000010037",
+          "zmiana": true
+        }
+      },
+      "decyzja": null
+    }
+  ],
+  "statystyki": {
+    "wywolan": 4,
+    "sekundy": 272,
+    "tokenyWe": 1742676,
+    "tokenyWy": 19679,
+    "wyszukiwan": 0
+  },
+  "zaktualizowano": "2026-09-17T15:08:39.769Z"
+}

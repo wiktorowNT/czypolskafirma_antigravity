@@ -132,7 +132,9 @@ function zliczStat(meta) {
   s.wywolan++;
   s.sekundy += meta.sekundy || 0;
   s.tokenyWe += meta.tokenyWe || 0;
+  s.tokenyCache = (s.tokenyCache || 0) + (meta.tokenyCache || 0);
   s.tokenyWy += meta.tokenyWy || 0;
+  s.tury = (s.tury || 0) + (meta.tury || 0);
   s.wyszukiwan += (meta.wyszukiwan || 0) + (meta.pobran || 0);
 }
 
@@ -328,7 +330,7 @@ zapiszPartie();
 console.log(`\nPartia ${NAZWA_PARTII}: ${partia.firmy.length} firm → WYSOKA ${st.WYSOKA}, ŚREDNIA ${st.SREDNIA}, KONFLIKT ${st.KONFLIKT}, czeka ${st.czeka}, błąd ${st.blad}`);
 if (partia.statystyki.wywolan) {
   const s = partia.statystyki;
-  console.log(`Model: ${s.wywolan} wywołań, ${Math.round(s.sekundy / 60)} min, ${Math.round(s.tokenyWe / 1000)}k tokenów wejścia, ${Math.round(s.tokenyWy / 1000)}k wyjścia, ${s.wyszukiwan} wyszukiwań/pobrań.`);
+  console.log(`Model: ${s.wywolan} wywołań, ${s.tury || "?"} tur, ${Math.round(s.sekundy / 60)} min, ${Math.round(s.tokenyWe / 1000)}k tokenów wejścia (+${Math.round((s.tokenyCache || 0) / 1000)}k z cache), ${Math.round(s.tokenyWy / 1000)}k wyjścia.`);
 }
 if (st.czeka) console.log(`Tryb ręczny: uzupełnij pliki .odpowiedz.json w ${path.join(KATALOG_PARTII, "reczne", NAZWA_PARTII)} i uruchom ponownie z --partia ${NAZWA_PARTII}${arg.reczny ? " --reczny" : ""}.`);
 console.log(`Plik: ${PLIK_PARTII}\nPrzegląd: node tools/firmy/przeglad.mjs --partia ${NAZWA_PARTII}`);
