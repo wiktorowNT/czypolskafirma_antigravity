@@ -35,7 +35,7 @@ Zasady:
 ## Mechanizmy wyjaśnione na konkretach
 
 - [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
-- [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
+- [x] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna (2026-09-17)
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
 - [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
