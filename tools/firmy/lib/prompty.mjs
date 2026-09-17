@@ -1,3 +1,5 @@
+import { kodyKrajow } from "./tekst.mjs";
+
 // Prompty i schematy JSON dla kroków automatu. Metodologia jest tu wpisana raz,
 // w wersji V2 (docs/METODOLOGIA_V2_przypadki_brzegowe.md), i wstrzykiwana do kroków 3 i 4.
 
@@ -121,7 +123,7 @@ export const SCHEMAT_SLEDZTWO = {
   required: ["lancuch", "ostateczny_wlasciciel", "typ_wlasciciela", "country_code", "regula", "uzasadnienie", "luki", "zrodla"],
 };
 
-export function promptSledztwo({ nazwa, tozsamosc, rejestr, historiaKrs, gielda, dzisiaj }) {
+export function promptSledztwo({ nazwa, tozsamosc, rejestr, historiaKrs, gielda, crbr, dzisiaj }) {
   const fakty = [];
   if (rejestr && !rejestr.blad) {
     fakty.push(`KRS ${rejestr.krs} (stan z dnia ${rejestr.stanZDnia}): ${rejestr.nazwa}, ${rejestr.formaPrawna}, NIP ${rejestr.nip}, kapitał ${rejestr.kapitalZakladowy || "?"}.`);
@@ -134,6 +136,9 @@ export function promptSledztwo({ nazwa, tozsamosc, rejestr, historiaKrs, gielda,
   }
   if (historiaKrs?.historia?.length) {
     fakty.push(`Historia wspólników/jedynego akcjonariusza wg KRS (odpis pełny): ${historiaKrs.historia.map((h) => `${h.nazwa} [od ${h.od || "?"}${h.do ? ` do ${h.do}` : ", nadal"}]`).join(" → ")}.`);
+  }
+  if (crbr && !crbr.blad && !crbr.brak) {
+    fakty.push(`${crbr.podsumowanie} (stan CRBR na ${crbr.stanNa || "?"}; dane osobowe pominięte).`);
   }
   if (gielda?.akcjonariusze?.length) {
     fakty.push(`Akcjonariat wg bankier.pl (${gielda.url}, pobrano ${gielda.pobrano}): ${gielda.akcjonariusze.map((a) => `${a.nazwa} ${a.procGlosow ?? a.procKapitalu}% głosów${a.dataZmiany ? ` (zmiana ${a.dataZmiany})` : ""}`).join("; ")}. To jest trop; potwierdź w raporcie spółki lub na stronie IR.`);
@@ -149,6 +154,7 @@ ZADANIE
 1. Zbuduj łańcuch własności od polskiej spółki w górę, aż do ostatecznego właściciela (osoba, rodzina, państwo, korporacja giełdowa z rozproszonym akcjonariatem, GP funduszu). Każde ogniwo: kto posiada poprzednie, z jakim % głosów, na podstawie jakiego źródła (URL) i na jaką datę.
 2. Użyj WebSearch i WebFetch. Preferuj: raporty bieżące/roczne spółek, strony relacji inwestorskich, zawiadomienia o pakietach, KRS/rejestry innych krajów, potem media biznesowe. Wikipedia tylko jako trop.
 3. Zastosuj drzewo decyzyjne i podaj regułę. Dla franczyz, licencji, JV, spółek Skarbu Państwa i funduszy podaj kod reguły brzegowej.
+   country_code wybierz WYŁĄCZNIE z listy: ${Object.keys(kodyKrajow()).join(", ")}. Kody spoza listy (np. JE, KY, VG, LU jako wehikuł, CY, MT) nie są dopuszczalne: to jurysdykcje rejestrowe, a nie kraj kapitału; wskaż kraj zarządzającego/założyciela zgodnie z zasadą 1 i regułą B1. Jeśli kraj kapitału naprawdę jest spoza listy (np. Islandia), wpisz country_code pusty i wyjaśnij w "uwagi".
 4. Wypisz historię zmian właściciela (założenie, przejęcia, IPO, wezwania) z latami i źródłami.
 5. Czego nie potwierdzisz w źródle, nie podawaj jako faktu: wpisz do "luki".
 Zwróć wyłącznie JSON wg schematu.`;

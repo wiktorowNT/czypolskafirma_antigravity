@@ -41,6 +41,7 @@
   <h1>Przegląd partii <span id="nazwaPartii"></span></h1>
   <span class="stat" id="staty"></span>
   <button class="ok" id="btnHurt" title="Zatwierdza wszystkie pozycje o pewności WYSOKA bez decyzji">Zatwierdź wszystkie WYSOKA</button>
+  <button class="ok" id="btnHurtZgodne" title="Re-weryfikacja: ŚREDNIA bez konfliktów, kraj i właściciel zgodne z obecnym rekordem w bazie">Zatwierdź ŚREDNIA zgodne z bazą</button>
   <button id="btnKonsylium">Konsylium innych modeli</button>
   <button id="btnOdswiez">Odśwież</button>
 </header>
@@ -140,7 +141,7 @@ function karta(f) {
       ${(f.sledztwo?.historia || []).length ? `<p style="margin:6px 0 0"><b>Historia:</b> ${f.sledztwo.historia.map((h) => `${esc(h.rok)}: ${esc(h.zdarzenie)}`).join(" · ")}</p>` : ""}
       ${(f.sledztwo?.luki || []).length ? `<p style="margin:6px 0 0"><b>Luki:</b> ${f.sledztwo.luki.map(esc).join("; ")}</p>` : ""}
     </details>
-    <details><summary>Rejestr KRS, historia wspólników, akcjonariat GPW</summary><p style="margin:6px 0">${rej}</p>${hist ? `<p style="margin:6px 0"><b>Historia KRS:</b> ${hist}</p>` : ""}${gielda ? `<p style="margin:6px 0"><b>Akcjonariat (bankier.pl):</b> ${gielda}</p>` : ""}</details>
+    <details><summary>Rejestr KRS, historia wspólników, akcjonariat GPW</summary><p style="margin:6px 0">${rej}</p>${hist ? `<p style="margin:6px 0"><b>Historia KRS:</b> ${hist}</p>` : ""}${gielda ? `<p style="margin:6px 0"><b>Akcjonariat (bankier.pl):</b> ${gielda}</p>` : ""}${f.crbr ? `<p style="margin:6px 0"><b>CRBR:</b> ${esc(f.crbr.podsumowanie || f.crbr.blad || f.crbr.uwaga || "")}</p>` : ""}</details>
     <details><summary>Samokontrola i weryfikacja źródeł</summary><p style="margin:6px 0">${kontrola}</p><ul>${zrodlaKontroli}</ul></details>
     <details><summary>Wszystkie źródła (${(r.sources || []).length})</summary><ul class="zrodla">${(r.sources || []).map((z) => `<li><a href="${esc(z.url)}" target="_blank" rel="noopener">${esc(z.tytul || z.url)}</a> ${z.data ? "(" + esc(z.data) + ")" : ""} · ${esc(z.czego_dotyczy || "")}</li>`).join("")}</ul></details>
     ${kons ? `<details open><summary>Konsylium innych modeli</summary><ul>${kons}</ul></details>` : ""}
@@ -175,6 +176,7 @@ document.addEventListener("click", async (e) => {
 });
 $("#btnOdswiez").onclick = wczytaj;
 $("#btnHurt").onclick = async () => { const r = await fetch("/api/zatwierdz-pewne", { method: "POST" }); const j = await r.json(); alert(`Zatwierdzono ${j.zatwierdzono} pozycji o pewności WYSOKA.`); wczytaj(); };
+$("#btnHurtZgodne").onclick = async () => { const r = await fetch("/api/zatwierdz-zgodne", { method: "POST" }); const j = await r.json(); alert(`Zatwierdzono ${j.zatwierdzono} pozycji ŚREDNIA zgodnych z bazą.`); wczytaj(); };
 $("#btnKonsylium").onclick = () => { $("#panelKonsylium").hidden = !$("#panelKonsylium").hidden; };
 async function kopiujPrompt(tylko) {
   const t = await (await fetch("/api/prompt-konsylium" + (tylko ? "?tylko=niezatwierdzone" : ""))).text();

@@ -14,6 +14,7 @@
 //   --reweryfikacja       firmy już w bazie: porównaj nowe ustalenia z obecnym rekordem
 //   --reczny              zamiast wołać claude, zapisz prompty do plików i czytaj odpowiedzi z plików
 //   --bez-gieldy          pomiń pobieranie akcjonariatu z bankier.pl
+//   --crbr                dołącz beneficjentów rzeczywistych z CRBR (puppeteer, wolniejsze; tylko dane zagregowane)
 //   --tylko-rejestry      wykonaj tylko kroki bez modelu (tożsamość z podanego NIP-u, KRS, giełda)
 //   --przelicz            przelicz pewność i rekordy już gotowych firm (po zmianie reguł), bez wołania modelu
 import fs from "node:fs";
@@ -21,6 +22,7 @@ import path from "node:path";
 import { KATALOG_PARTII, dzisiaj } from "./lib/env.mjs";
 import { MODELE, sprawdzLogowanie, zapytajModel } from "./lib/claude.mjs";
 import { bankierAkcjonariat, krsHistoriaWlascicieli, krsOdpisAktualny, mfPoNipach } from "./lib/rejestry.mjs";
+import { crbrBeneficjenci } from "./lib/crbr.mjs";
 import { indeksFirm, kategorie as pobierzKategorie } from "./lib/supabase.mjs";
 import { czyNip, normalizujKrs, normalizujNip, podobienstwoNazw, slugify } from "./lib/tekst.mjs";
 import { normalizujKrajOdModelu } from "./lib/walidacja.mjs";
@@ -231,6 +233,12 @@ async function przetworzFirme(f) {
     f.rejestr.giełda = f.gielda;
     zapiszPartie();
   }
+  if (arg.crbr && !f.crbr && f.tozsamosc?.nip) {
+    f.crbr = await crbrBeneficjenci(f.tozsamosc.nip);
+    f.etapy.crbr = f.crbr.blad ? `błąd: ${f.crbr.blad}` : f.crbr.brak ? "brak wpisu" : `OK (${f.crbr.liczbaBeneficjentow} benef.)`;
+    zapiszPartie();
+    log(`${f.nazwa}: CRBR ${f.etapy.crbr}`);
+  }
   if (arg["tylko-rejestry"]) {
     f.etapy.sledztwo = "pominieto (--tylko-rejestry)";
     return;
@@ -238,7 +246,7 @@ async function przetworzFirme(f) {
 
   // 3. śledztwo
   if (!f.sledztwo) {
-    const r = await zapytajModel({ nazwaKroku: "3-sledztwo", prompt: promptSledztwo({ nazwa: f.nazwa, tozsamosc: f.tozsamosc, rejestr: f.rejestr, historiaKrs: f.historiaKrs, gielda: f.gielda, dzisiaj: DZIS }), model: MODEL.sledztwo, schemat: SCHEMAT_SLEDZTWO, narzedzia: ["WebSearch", "WebFetch"], opcje, timeoutMs: 25 * 60 * 1000 });
+    const r = await zapytajModel({ nazwaKroku: "3-sledztwo", prompt: promptSledztwo({ nazwa: f.nazwa, tozsamosc: f.tozsamosc, rejestr: f.rejestr, historiaKrs: f.historiaKrs, gielda: f.gielda, crbr: f.crbr, dzisiaj: DZIS }), model: MODEL.sledztwo, schemat: SCHEMAT_SLEDZTWO, narzedzia: ["WebSearch", "WebFetch"], opcje, timeoutMs: 25 * 60 * 1000 });
     if (czekaj(r, "sledztwo")) return;
     if (r.blad) {
       f.etapy.sledztwo = `błąd: ${r.blad}`;

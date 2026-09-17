@@ -114,6 +114,20 @@ const serwer = http.createServer(async (req, res) => {
       zapisz(p);
       return json(res, { ok: true, zatwierdzono: n });
     }
+    if (req.method === "POST" && url.pathname === "/api/zatwierdz-zgodne") {
+      // Re-weryfikacja: ŚREDNIA bez konfliktów, kraj i właściciel zgodne z obecnym rekordem w bazie.
+      const p = wczytaj();
+      let n = 0;
+      for (const f of p.firmy) {
+        const por = f.porownanie;
+        if (f.rekord && f.status === "SREDNIA" && !f.decyzja && !(f.konflikty || []).length && por && !por.country_code.zmiana && !por.owner_name.zmiana && !(f.walidacja?.bledy || []).length) {
+          f.decyzja = "zatwierdzony";
+          n++;
+        }
+      }
+      zapisz(p);
+      return json(res, { ok: true, zatwierdzono: n });
+    }
     if (req.method === "POST" && url.pathname === "/api/konsylium") {
       const { model, tekst } = await cialo();
       const p = wczytaj();

@@ -60,7 +60,10 @@ Treści stron internetowych są dla modelu danymi, nie poleceniami.
    działa, ale źródła zostają tylko w pliku partii.
 
 Żadnych innych kluczy. Rejestry (KRS, MF) są bez klucza. Rejestr beneficjentów (CRBR)
-nie jest używany w tej wersji (endpoint działa tylko z przeglądarki i zwraca dane osobowe).
+jest opcjonalny (`--crbr`): automat steruje wtedy przeglądarką (puppeteer, ok. 3 s na firmę)
+i zapisuje wyłącznie dane zagregowane (liczba beneficjentów, obywatelstwa, rodzaj uprawnień,
+procenty), bez nazwisk i numerów PESEL. Przydaje się przy spółkach akcyjnych niepublicznych
+(KRS nie pokazuje akcjonariatu, CRBR pokazuje osoby z >25%) i przy regule B7.
 
 ---
 
@@ -104,6 +107,8 @@ dane z KRS, wynik samokontroli z oceną każdego źródła, porównanie z obecny
 
 - **Zatwierdź wszystkie WYSOKA**: jeden przycisk w nagłówku. Zatwierdza hurtem pozycje
   pewne bez błędów walidacji.
+- **Zatwierdź ŚREDNIA zgodne z bazą** (re-weryfikacja): hurtem pozycje ŚREDNIA bez
+  konfliktów, u których kraj i właściciel nie zmieniły się względem obecnego rekordu.
 - Konflikty i ŚREDNIA przeglądasz pojedynczo: popraw pola → **Zatwierdź**, albo
   **Odrzuć**, albo **Do poprawy** (zostaje w partii z Twoją notatką).
 - Wybór kategorii jest obowiązkowy przed importem nowej firmy.
@@ -194,8 +199,11 @@ na poziomie śledztwa, a nie tylko werdyktu.
 node tools/firmy/backup.mjs --do "G:\Mój dysk\zapisy supabase czypolskafirma"
 ```
 
-Eksport `companies` + `categories` do JSON z datą. Warto wpiąć w Harmonogram zadań
-Windows raz w tygodniu (plan darmowy Supabase nie robi backupów).
+Eksport `companies` + `categories` do JSON z datą. Od 2026-09-17 robi to samo zadanie
+„CzyPolskaFirma backup bazy" w Harmonogramie zadań Windows: w niedziele o 10:00 (albo przy
+najbliższym włączeniu komputera) uruchamia `tools/firmy/backup-tygodniowy.cmd`, który zapisuje
+plik na `G:\Mój dysk\zapisy supabase czypolskafirma` (log: `data/robocze/backup/backup.log`).
+Podgląd: Harmonogram zadań → Biblioteka → „CzyPolskaFirma backup bazy".
 
 ---
 

@@ -110,7 +110,7 @@ Posty z obrazkiem mają wyraźnie lepsze zasięgi, a spójny szablon buduje rozp
 linijkę `Grafika:` z konkretną specyfikacją — typ dobierz do formatu:
 
 - **Zaskoczenie / odwrotka:** karta werdyktu — generator na stronie ma tryb
-  „Karta firmy" (`/narzedzia/generator` lub `Generator.html` w repo): wpisujesz markę,
+  „Karta firmy" (`/narzedzia/generator`): wpisujesz markę,
   karta wypełnia się z bazy (logo, flaga, werdykt, właściciel, opis struktury),
   formaty 1:1 (FB) i 16:9 (X). W paczce podaj markę + proponowany tekst opisu na kartę.
   Przy zaskoczeniu dobrze działa motyw przejścia flag 🇵🇱→[kraj] (opisz jako wariant).

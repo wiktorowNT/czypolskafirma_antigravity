@@ -42,3 +42,6 @@ Generator.html
 # automat dodawania firm (tools/firmy/): prompty/odpowiedzi trybu recznego i backupy bazy
 /data/robocze/automat/reczne/
 /data/robocze/backup/
+
+# generowany przez fetch-logos.mjs (lista domen bez logo z ostatniego przebiegu)
+/tools/missing-logos.json
