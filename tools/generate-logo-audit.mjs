@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
+import { wczytajEnv } from './firmy/lib/env.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,8 +11,9 @@ const LOGOS_DIR = path.join(PROJECT_ROOT, 'public', 'logos');
 const OUTPUT_FILE = path.join(PROJECT_ROOT, 'tools', 'audyt-logo.html');
 
 // Config do bazy
-const SUPABASE_URL = 'https://bwciuhgrcibtjhhksjqk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3Y2l1aGdyY2lidGpoaGtzanFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5OTA3NjAsImV4cCI6MjA3NDU2Njc2MH0.FcT8xR_nED2Ev7hrQ5ATEIJ3XM1csOP43qz7VqQwxeQ';
+// Klucze z .env.local (po rotacji kluczy 2026-09-17 nic nie jest wpisane na sztywno).
+const { NEXT_PUBLIC_SUPABASE_URL: SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY: SUPABASE_KEY } = wczytajEnv();
+if (!SUPABASE_URL || !SUPABASE_KEY) { console.error('Brak NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY w .env.local'); process.exit(1); }
 
 function getDomainFromUrl(url) {
   if (!url) return null;

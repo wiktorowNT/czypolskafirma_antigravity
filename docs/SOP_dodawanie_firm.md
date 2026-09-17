@@ -1,220 +1,233 @@
-# 🏭 SOP: Rurociąg Danych (Data Pipeline) — Schemat Dodawania Firm do Bazy
+# SOP: dodawanie firm do bazy (automat `tools/firmy/`)
 
-> **Projekt:** czypolskafirma.pl  
-> **Cel dokumentu:** Ustandaryzowany proces zbierania, weryfikacji i importu danych o firmach do Supabase.  
-> **Źródło:** zsynchronizowane z Notion („Projekt czypolskafirma" → SOP Rurociąg Danych). Powiązane: `docs/SOP_logotypy.md`.
+> **Projekt:** czypolskafirma.pl · **Wersja:** wrzesień 2026 (zastępuje proces z 5 czatami
+> i Google Sheets). Powiązane: `docs/METODOLOGIA_V2_przypadki_brzegowe.md` (zasady
+> klasyfikacji), `docs/SOP_logotypy.md` (po imporcie), `docs/AUDYT_PROCESOW_2026-09.md`
+> (dlaczego tak).
 
----
-
-## 🗂️ Checklist Startowy (Przygotowanie)
-
-- [ ] Odpalony Arkusz Google (Google Sheets)
-- [ ] Odpalony Supabase (zakładka Table Editor → `companies`)
-- [ ] Odpalone 5 zakładek z modelami AI (np. Grok, Claude, Gemini, Perplexity, ChatGPT)
+Zasada nadrzędna: **automat proponuje, Ty zatwierdzasz.** Nic nie trafia do tabeli
+`companies` bez Twojej decyzji. Każde ustalenie właścicielskie ma źródło z datą. Brak
+źródła dla pakietu kontrolnego to KONFLIKT, który rozstrzygasz sam.
 
 ---
 
-## 🛠️ KROK 1: Generowanie Listy (Seed)
+## 1. Co robi automat
 
-**Cel:** Zebranie surowej listy (~40 firm) najpopularniejszych firm działających w Polsce z danej kategorii.
+Dla każdej firmy z listy (albo z kategorii) wykonuje pięć kroków i zapisuje wynik do pliku
+partii `data/robocze/automat/partia-<nazwa>.json`:
 
-1. Skopiuj poniższy prompt i wklej do swoich modeli AI.
-2. Porównaj wyniki i wybierz tylko te firmy, które się powtarzają lub mają sens.
-3. Wklej wybrane nazwy do Kolumny A w Google Sheets.
-
-```text
-Podaj listę 40 najpopularniejszych i najbardziej rozpoznawalnych firm działających w Polsce w kategorii: [WPISZ KATEGORIĘ].
-
-Opis tej kategorii: ""
-Zwróć tylko surową listę nazw firm (bez punktorów, bez opisów).
-```
-
----
-
-## ⚙️ KROK 2: Pozyskanie NIP (Twarde dane)
-
-**Cel:** Wyszukanie numerów NIP dla firm z listy — chodzi o numery NIP dla głównych spółek działających w Polsce.
-
-1. Skopiuj listę firm z Arkusza.
-2. Wklej do modelu AI wraz z poniższym promptem.
-3. Uzupełnij numery NIP w Kolumnie B (`nip`) w Google Sheets.
-
-```text
-Dla poniższej listy firm znajdź ich oficjalne numery NIP z rejestru KRS/CEIDG. Na liście są firmy polskie ale też zagraniczne, wypisz NIP dla głównych spółek zarejestrowanych w Polsce dla tych firm.
-Zwróć wynik jako dwukolumnową tabelę: [Nazwa Firmy] | [NIP].
-
-Lista firm:
-```
-
----
-
-## 🕵️ KROK 3: Śledztwo Kapitałowe (Master Prompt)
-
-**Cel:** Ustalenie struktury właścicielskiej i tego, czy to polska firma.
-
-1. Skopiuj poniższy Master Prompt do swoich modeli AI.
-2. Wklej listę firm z Kroku 2.
-3. **Nie porównuj wyników ręcznie** — zbierz surowe tabele ze wszystkich modeli i przejdź do Kroku 3b (Synteza).
-4. Finalną tabelę z Kroku 3b wstaw do Google Sheets.
-
-### Metodologia Weryfikacji (4 zasady)
-
-**1. Zasada Ostatecznego Właściciela (Przejrzystość)**  
-Ignorujemy wehikuły inwestycyjne, fundusze powiernicze i raje podatkowe (Cypr, Luksemburg, Malta). Patrzymy na szczyt piramidy. Jeśli za zagraniczną spółką stoi polski założyciel — kapitał jest polski. Jeśli właścicielem polskiej sp. z o.o. jest zagraniczny fundusz — kapitał przypisujemy do kraju funduszu.
-
-**2. Zasada Efektywnej Kontroli**  
-O przynależności firmy decyduje podmiot posiadający pakiet kontrolny: ponad 50% udziałów LUB największy pojedynczy pakiet akcji (np. 40%), który realnie pozwala powoływać zarząd i dyktować strategię. Mocno rozproszony drobny akcjonariat nie wpływa na główny status firmy.
-
-**3. Zasada "Złotej Klatki" (Przejęcia)**  
-Historyczne pochodzenie marki nie ma znaczenia. Jeśli firma została założona w Polsce i zbudowana przez Polaków (np. Allegro, Żabka, Wedel), ale jej pakiet kontrolny został wykupiony przez zagraniczny kapitał — firma klasyfikowana jest jako podmiot zagraniczny.
-
-**4. Klasyfikacja Binarna**  
-Firma otrzymuje status "Polska Firma" tylko wtedy, gdy ostateczny właściciel sprawujący efektywną kontrolę jest podmiotem polskim. Przypadki mieszane opisujemy w profilu firmy, jednak nie uprawniają one do uzyskania statusu polskiej firmy.
-
-### Wzorzec opisu właścicielskiego (cel jakościowy)
-
-Opis `ownership_description` ma **3–5 zdań** i dąży do poniższego schematu. Nie każdą firmę
-da się w pełni dopasować — ale każdy opis powinien realizować możliwie wiele punktów:
-
-1. **KTO kontroluje** — ostateczny właściciel + wielkość pakietu w % (liczba zawsze, gdy jest publicznie dostępna).
-2. **JAK do tego doszło** — chronologia: rok założenia / przejęcia / IPO, kwoty i strony transakcji.
-3. **STAN OBECNY** — aktualna struktura: free float, pakiety mniejszościowe, wehikuły pośrednie (z krajem rejestracji).
-4. **NIUANS** — wyjaśnienie nieoczywistego przypisania kraju (np. fundusz z Jersey → GB) lub struktury mieszanej.
-
-Zasady stylu: ton suchy, encyklopedyczny; **liczby zamiast przymiotników** („kontroluje 51% akcji",
-nie „większość udziałów"); bez ocen i frazesów. Przy prostych przypadkach (100% w rękach jednego
-właściciela) dopuszczalne są 3 zdania — wtedy dodajemy kontekst historyczny (rok założenia, założyciel).
-
-**Przykład wzorowy (Żabka):**
-> Firma o historycznie polskich korzeniach, założona w 1998 roku. W 2017 roku pakiet kontrolny
-> przejął fundusz CVC Capital Partners od Mid Europa Partners. W październiku 2024 roku Żabka Group
-> zadebiutowała na GPW (IPO wyceniło grupę na ok. 21,5 mld zł). Po sprzedaży kolejnych akcji
-> w listopadzie 2025 roku CVC (poprzez Heket Topco S.à r.l., Luksemburg) zachowuje ok. 37,62% akcji
-> — największy pojedynczy pakiet zapewniający efektywną kontrolę nad spółką.
-
-**Antyprzykład (za miałki):**
-> Kapitał portugalski. Bezpośrednim ostatecznym właścicielem firmy jest notowany na giełdzie
-> w Lizbonie koncern Jerónimo Martins SGPS S.A., kontrolowany przez rodzinę Soares dos Santos.
-
-Ten sam przypadek wg wzorca:
-> Sieć Biedronka należy do portugalskiej grupy Jerónimo Martins, obecnej w Polsce od 1995 roku.
-> Jej operator, Jeronimo Martins Polska S.A., jest spółką zależną notowanego na giełdzie w Lizbonie
-> koncernu Jerónimo Martins SGPS S.A. Największym akcjonariuszem koncernu (ok. 56% akcji) jest
-> holding Sociedade Francisco Manuel dos Santos, kontrolowany przez rodzinę Soares dos Santos.
-> Polska to największy rynek grupy — Biedronka generuje ok. 70% jej przychodów.
-
-### Master Prompt
-
-```text
-Jesteś starszym analitykiem finansowym i ekspertem wywiadu gospodarczego (KYC). Twoim zadaniem jest zbadanie struktury właścicielskiej poniższej listy firm operujących w Polsce i ustalenie ich kraju pochodzenia.
-
-MUSISZ bezwzględnie stosować się do poniższej Metodologii Weryfikacji:
-
-1. Zasada Ostatecznego Właściciela (Przejrzystość)
-Ignorujemy wehikuły inwestycyjne, fundusze powiernicze i tzw. raje podatkowe (Cypr, Luksemburg, Malta). Patrzymy na szczyt piramidy. Jeśli za zagraniczną spółką stoi polski założyciel – kapitał jest polski. Jeśli właścicielem polskiej spółki z o.o. jest zagraniczny fundusz – kapitał przypisujemy do kraju funduszu.
-
-2. Zasada Efektywnej Kontroli
-O przynależności firmy decyduje podmiot posiadający pakiet kontrolny. Wymagane jest ponad 50% udziałów LUB posiadanie największego, pojedynczego pakietu akcji (np. 40%), który realnie pozwala powoływać zarząd i dyktować strategię. Mocno rozproszony drobny akcjonariat nie wpływa na główny status firmy.
-
-3. Zasada "Złotej Klatki" (Przejęcia)
-Historyczne pochodzenie marki nie ma znaczenia. Jeśli firma została założona w Polsce i zbudowana przez Polaków (np. Allegro, Żabka, Wedel), ale jej pakiet kontrolny został wykupiony przez zagraniczny kapitał, tracąc niezależność – firma klasyfikowana jest jako podmiot zagraniczny.
-
-4. Klasyfikacja Binarna
-Firma otrzymuje status "Polska Firma" tylko wtedy, gdy ostateczny właściciel sprawujący efektywną kontrolę jest podmiotem polskim. Przypadki mieszane i niuanse (np. mniejszościowe pakiety udziałów w rękach polskich) opisujemy w profilu firmy, jednak nie uprawniają one do uzyskania statusu polskiej firmy.
-
-Zwróć wynik TYLKO jako tabelę Markdown z dokładnie 4 kolumnami oddzielonymi znakiem | (pipe). Pierwsza linia to nagłówek, druga linia to separator (|---|---|---|---|), następnie dane — jedna firma per linia.
-Kolumny: name | ultimate_owner | country_code | ownership_description
-Nie dodawaj żadnego tekstu przed ani po tabeli.
-
-Opis pól:
-1. name — Nazwa z mojej listy
-2. ultimate_owner — Krótka nazwa ostatecznego właściciela/funduszu/osoby na szczycie. Pomiń spółki pośrednie.
-3. country_code — Tylko 2-literowy kod ISO kraju pochodzenia ostatecznego właściciela, np. PL, US, DE, FR.
-4. ownership_description — Opis struktury właścicielskiej: 3–5 zdań wg schematu: (a) KTO sprawuje kontrolę i jaki ma pakiet — podawaj % zawsze, gdy dane są publiczne; (b) JAK do tego doszło — rok założenia/przejęcia/IPO, kwoty i strony transakcji; (c) STAN OBECNY — free float, pakiety mniejszościowe, wehikuły pośrednie z krajem rejestracji; (d) NIUANS — wyjaśnij nieoczywiste przypisanie kraju lub strukturę mieszaną. KLUCZOWE: Jeśli historycznie polska marka została przejęta przez zagraniczny kapitał, MUSISZ podać rok przejęcia, wielkość pakietu i kto ją kupił. Preferuj liczby nad ogólniki ("kontroluje 51% akcji", nie "większość udziałów"). Jeśli nie znasz konkretnej liczby — NIE zmyślaj; napisz opis bez niej i dodaj na końcu znacznik [DO WERYFIKACJI: czego brakuje]. Ton: suchy, encyklopedyczny. Zignoruj informację, że spółka z.o.o jest polskim oddziałem zagranicznej firmy — opisuj ogólną sytuację firmy, nie skupiaj się na konkretnej spółce dla której jest podany NIP.
-
-Tutaj lista moich firm do badania (kolumny: slug | nip):
-```
-
----
-
-## 🧬 KROK 3b: Synteza Opisów (zamiast ręcznego wyboru)
-
-**Cel:** Scalenie wyników z 5 modeli w jedną finalną tabelę — bez ręcznego czytania
-i wybierania „najlepszej z pięciu". Ty weryfikujesz tylko pozycje oflagowane jako sporne.
-
-**Jak syntezator działa dla każdej firmy:**
-
-1. Porównuje wszystkie wersje opisu i zbiera z nich fakty (%, daty, kwoty, nazwy podmiotów).
-2. Scala je w JEDEN opis zgodny z Wzorcem opisu właścicielskiego (patrz wyżej).
-3. Fakt podany przez jeden model, a nieobecny w pozostałych → trafia do opisu tylko po weryfikacji w źródłach.
-4. Sprzeczności między modelami (inny %, inny rok, inny właściciel) → weryfikacja w źródłach (rejestr.io/KRS, relacje inwestorskie, raporty bieżące, prasa ekonomiczna); jeśli nie da się rozstrzygnąć — firma trafia na listę **KONFLIKTY** do Twojej decyzji.
-5. Rozbieżne `country_code` lub `ultimate_owner` → zawsze na listę KONFLIKTY.
-
-**Procedura (sesja Claude / Cowork z dostępem do folderu projektu):**
-
-1. Zbierz surowe tabele Markdown ze wszystkich modeli (Krok 3).
-2. Wklej je do sesji (lub zapisz jako pliki, np. `tools/robocze/synteza/{model}.md`) i napisz:
-   *„Wykonaj syntezę opisów właścicielskich wg SOP Krok 3b"*.
-3. Otrzymujesz: finalną tabelę `name | ultimate_owner | country_code | ownership_description`
-   (gotową do wklejenia do Google Sheets) + listę KONFLIKTY z opisem rozbieżności i źródłami.
-4. Rozstrzygnij konflikty, resztę wklej do arkusza bez czytania.
-
-> Syntezator ma stosować Metodologię Weryfikacji (4 zasady) i Wzorzec opisu — oba zdefiniowane
-> w Kroku 3 tego dokumentu.
-
----
-
-## ✍️ KROK 4: Generowanie Opisów Działalności (Copywriting)
-
-**Cel:** Stworzenie czystych, encyklopedycznych opisów tego, czym zajmuje się firma (produkty/usługi), bez mieszania w to struktury własnościowej.
-
-> ⚠️ **WAŻNE:** Otwórz **NOWY, czysty czat** w modelach AI — kluczowe, aby wyczyścić kontekst ze śledztwa kapitałowego i uniknąć halucynacji.
-
-1. Otwórz nowy, czysty czat w modelach AI.
-2. Skopiuj poniższy prompt i doklej do niego listę firm.
-3. Skopiuj wygenerowaną tabelę i uzupełnij kolumnę `business_description` w Google Sheets.
-
-```text
-Jesteś copywriterem biznesowym. Twoim zadaniem jest napisanie krótkich, encyklopedycznych opisów działalności dla poniższej listy firm operujących w Polsce.
-
-Wytyczne:
-1. Skup się WYŁĄCZNIE na tym, czym firma się zajmuje (produkty, usługi, sektor). Możesz podawać nazwy produktów, które są bardzo znane od tej firmy, np. dla BEIERSDORF: "Właściciel globalnych marek takich jak NIVEA, Eucerin czy La Prairie."
-2. Całkowicie ZIGNORUJ kwestie właścicielskie, kapitałowe, zarząd i historię przejęć (mam to przeanalizowane w osobnej sekcji).
-3. Styl: Profesjonalny, zwięzły, obiektywny (bez pustych frazesów typu "lider na rynku", "najwyższa jakość"). Maksymalnie 2–3 zdania.
-
-Przykład dobrego opisu: "Producent leków Rx, OTC i wyrobów medycznych. Działa w obszarach gastroenterologii, hepatologii, neurologii, dermatologii oraz okulistyki (marka Bausch + Lomb)."
-
-Zwróć wynik jako tabelę Markdown z dwiema kolumnami:
-1. slug — Nazwa firmy z mojej listy
-2. business_description — Wygenerowany opis działalności
-
-Lista firm do opisania (slug | NIP | opis kwestii właścicielskich — po to, abyś nie powtarzał tych informacji w opisie działalności):
-```
-
----
-
-## 🚀 KROK 5: Import do Supabase (Produkcja)
-
-**Cel:** Przerzucenie zatwierdzonych i zweryfikowanych danych na stronę.
-
-1. Sprawdź, czy nagłówki w Google Sheets (wiersz 1) to: `nip`, `slug`, `owner_name`, `category_slug`, `category_id`, `business_description`, `ownership_description`.
-2. W Google Sheets: **Plik → Pobierz → Wartości rozdzielane przecinkami (.csv)**.
-3. Przejdź do Supabase → **Table Editor** → tabela `companies`.
-4. Kliknij **Insert → Import data from CSV**.
-
----
-
-## 📋 Schemat kolumn Google Sheets
-
-| Kolumna | Pole w Supabase | Opis |
+| Krok | Kto | Co |
 |---|---|---|
-| A | `slug` / `name` | Nazwa firmy |
-| B | `nip` | Numer NIP |
-| C | `ultimate_owner` | Ostateczny właściciel |
-| D | `country_code` | Kod kraju (ISO 2-literowy) |
-| E | `ownership_description` | Uzasadnienie struktury właścicielskiej |
-| F | `business_description` | Opis działalności firmy |
-| G | `category_slug` | Slug kategorii |
-| H | `category_id` | ID kategorii w Supabase |
-| I | `website_url` | Strona główna firmy |
-| J | `registry_url` | Link do rejestr.io (`https://rejestr.io/szukaj?q=[NIP]`) |
+| 1. Tożsamość | model (Sonnet, WebSearch) + kod | nazwa marki → NIP i KRS głównej spółki operacyjnej; kod sprawdza NIP w Białej Liście MF i w KRS: nazwy i numery muszą się zgadzać, inaczej KONFLIKT „tożsamość" |
+| 2. Rejestry | kod | odpis aktualny KRS (forma, kapitał, wspólnicy, jedyny akcjonariusz, akcje uprzywilejowane), odpis pełny (historia wspólników z datami), akcjonariat z bankier.pl dla spółek z GPW |
+| 3. Śledztwo | model (Sonnet, WebSearch/WebFetch) | łańcuch własności do szczytu, każde ogniwo z % głosów, źródłem i datą; klasyfikacja wg drzewa V2 z podaniem reguły; historia; luki |
+| 4. Samokontrola | model (osobny kontekst, WebFetch) | mechanicznie stosuje drzewo do łańcucha z kroku 3, pobiera cytowane źródła i sprawdza, czy potwierdzają tezę; sprawdza zgodność z KRS |
+| 5. Opisy | model (Sonnet, WebFetch strony firmy) | `ownership_description` (KTO → JAK → STAN → NIUANS, liczby tylko z łańcucha), `business_description`, `display_name`, marki, kategoria |
+
+Potem kod waliduje rekord (kody krajów ze słownika, długości, em-dashe, slug, duplikaty)
+i wylicza pewność:
+
+- **WYSOKA**: pakiet kontrolny potwierdzony źródłem poziomu 1–2 (KRS, raport spółki,
+  strona IR) i samokontrola zgodna, bez reguł B5/B10/B11/B12.
+- **ŚREDNIA**: kontrola udokumentowana tylko w mediach albo drobne luki.
+- **KONFLIKT**: brak źródła kontroli, niezgoda między śledztwem a kontrolą, KRS przeczy
+  modelowi, tożsamość niejednoznaczna, trwająca transakcja, kraj spoza słownika, firma
+  już w bazie z innym krajem, niezgoda innego modelu z konsylium.
+
+Dane rejestrowe pobiera kod, nie model. Model dostaje je jako fakty i nie może ich zmienić.
+Treści stron internetowych są dla modelu danymi, nie poleceniami.
+
+---
+
+## 2. Wymagania (jednorazowo)
+
+1. **Claude Code zalogowane na subskrypcji.** W terminalu (nie w apce) uruchom raz:
+
+   ```bash
+   claude auth login
+   ```
+
+   Sprawdzenie: `claude auth status` ma pokazać `"loggedIn": true`. Alternatywa: token
+   z `claude setup-token` wpisany do `.env.local` jako `CLAUDE_CODE_OAUTH_TOKEN=...`.
+   Automat wywołuje `claude -p` (tryb headless) na tej sesji; nie potrzebuje klucza API
+   i nie generuje osobnych kosztów, zużywa limity subskrypcji.
+
+2. **`.env.local`** (już jest): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   (odczyt), `SUPABASE_SERVICE_ROLE_KEY` (tylko do importu).
+
+3. **Kolumny `sources` i `confidence`** w tabeli `companies`: uruchom raz w Supabase
+   SQL Editor plik `tools/sql/2026-09-17-sources-confidence.sql`. Bez nich import
+   działa, ale źródła zostają tylko w pliku partii.
+
+Żadnych innych kluczy. Rejestry (KRS, MF) są bez klucza. Rejestr beneficjentów (CRBR)
+nie jest używany w tej wersji (endpoint działa tylko z przeglądarki i zwraca dane osobowe).
+
+---
+
+## 3. Przebieg partii
+
+### Krok A: uruchom automat
+
+Z listy nazw (przecinki) albo z pliku (jedna nazwa na linię, opcjonalnie `Nazwa | NIP`):
+
+```bash
+node tools/firmy/automat.mjs --firmy "Mokate, Wedel, Vila" --partia 2026-09-20
+```
+
+```bash
+node tools/firmy/automat.mjs --plik data/robocze/automat/kandydaci.txt --partia 2026-09-20
+```
+
+Z kategorii (model proponuje 40 marek, pomijając te, które już są w bazie):
+
+```bash
+node tools/firmy/automat.mjs --kategoria kosmetyki --seed 40
+```
+
+Automat pracuje 2 firmy naraz (`--rownolegle 3` przyspiesza), 3–6 minut na firmę.
+Możesz go przerwać i uruchomić ponownie z `--partia <nazwa>`: kontynuuje od miejsca,
+w którym skończył. Modele: domyślnie Sonnet do wszystkiego; `--model-kontrola opus`
+daje mocniejszą samokontrolę na trudnych partiach.
+
+Na końcu wypisuje podsumowanie (ile WYSOKA / ŚREDNIA / KONFLIKT) i statystykę tokenów.
+
+### Krok B: przegląd w przeglądarce
+
+```bash
+node tools/firmy/przeglad.mjs --partia 2026-09-20
+```
+
+Otwórz http://localhost:3007/. Konflikty są na górze, z listą powodów. Przy każdej firmie:
+pola do edycji (kraj, właściciel, opisy, kategoria, marki), łańcuch własności ze źródłami,
+dane z KRS, wynik samokontroli z oceną każdego źródła, porównanie z obecnym rekordem
+(jeśli firma jest w bazie).
+
+- **Zatwierdź wszystkie WYSOKA**: jeden przycisk w nagłówku. Zatwierdza hurtem pozycje
+  pewne bez błędów walidacji.
+- Konflikty i ŚREDNIA przeglądasz pojedynczo: popraw pola → **Zatwierdź**, albo
+  **Odrzuć**, albo **Do poprawy** (zostaje w partii z Twoją notatką).
+- Wybór kategorii jest obowiązkowy przed importem nowej firmy.
+
+Decyzje zapisują się do pliku partii; strona nie ma dostępu do bazy.
+
+### Krok C: konsylium innych modeli (opcjonalne, zalecane przy nowej kategorii)
+
+W nagłówku przeglądu: **Konsylium innych modeli** → **Kopiuj prompt**. Wklej prompt do
+Gemini, ChatGPT, Groka lub Perplexity (najlepiej z włączonym wyszukiwaniem). Odpowiedź
+modelu (tabela Markdown) wklej z powrotem z jego nazwą i kliknij **Porównaj**.
+
+Program dopasowuje wiersze do firm i porównuje kraj i właściciela:
+
+- niezgoda → KONFLIKT z opisem, co model twierdzi i jakie podaje źródło; hurtowe
+  zatwierdzenie tej firmy zostaje cofnięte,
+- zgoda → notatka „konsylium: N modeli zgodnych". Zgoda innych modeli **nie podnosi**
+  pewności ponad to, co dają źródła (modele mylą się razem), ale niezgoda zawsze ją obniża.
+
+Możesz wkleić odpowiedzi kilku modeli po kolei. To zastępuje dawne porównywanie 5 tabel
+na oko.
+
+### Krok D: import (próbnie, potem naprawdę)
+
+```bash
+node tools/firmy/import.mjs --partia 2026-09-20
+```
+
+Tryb próbny pokazuje każdy rekord: INSERT (nowa firma) albo UPDATE (firma istnieje po NIP
+lub slugu; nadpisywane są tylko pola właścicielskie i opisowe, nic nie jest kasowane),
+plus błędy walidacji, które blokują dany rekord. Gdy lista wygląda dobrze:
+
+```bash
+node tools/firmy/import.mjs --partia 2026-09-20 --apply
+```
+
+Przed zapisem robi backup całej tabeli do `data/robocze/backup/companies-<data>.json`
+(pomijanie: `--bez-backupu`, niezalecane). Zapisuje `verified_at` = dziś, `sources`,
+`confidence`, `brands`, `brand_aliases`.
+
+### Krok E: logotypy i publikacja
+
+```bash
+node tools/fetch-logos.mjs
+```
+
+```bash
+node tools/generate-og-assets.mjs logos
+```
+
+Dalej wg `docs/SOP_logotypy.md` (audyt wzrokowy tylko nowych domen). Commit
+`public/logos` i `public/logos-og` na `develop`, jak dotąd.
+
+---
+
+## 4. Re-weryfikacja istniejących rekordów
+
+Ten sam automat, z flagą `--reweryfikacja` i listą `Nazwa | NIP`:
+
+```bash
+node tools/firmy/automat.mjs --plik data/robocze/automat/do-reweryfikacji.txt --partia rew-2026-10 --reweryfikacja
+```
+
+W przeglądzie każda firma ma blok „Reweryfikacja rekordu": kraj, właściciel, NIP
+było → jest. Każda różnica to KONFLIKT do Twojej decyzji; zatwierdzenie i import robią
+UPDATE tylko pól właścicielskich i ustawiają `verified_at`.
+
+Rytm z `METODOLOGIA_V2`: 12 miesięcy dla zwykłych firm, 6 dla giełdowych i portfelowych
+PE, natychmiast po newsie o przejęciu (kandydaci z PR-ów automatu treści).
+
+---
+
+## 5. Tryb ręczny (bez logowania albo z innym modelem)
+
+`--reczny` zamiast wołać Claude zapisuje prompt każdego kroku do
+`data/robocze/automat/reczne/<partia>/<firma>.<krok>.prompt.md`. Wklejasz go do dowolnego
+modelu, odpowiedź (czysty JSON wg schematu z końca pliku) zapisujesz jako
+`<firma>.<krok>.odpowiedz.json` i uruchamiasz automat ponownie z tą samą `--partia`.
+Tak działała walidacja z września 2026 (prompty wykonywał Sonnet). Ten sam mechanizm
+pozwala przepuścić cały krok przez Gemini czy GPT, jeśli chcesz porównać modele
+na poziomie śledztwa, a nie tylko werdyktu.
+
+---
+
+## 6. Backup bazy (niezależnie od importu)
+
+```bash
+node tools/firmy/backup.mjs --do "G:\Mój dysk\zapisy supabase czypolskafirma"
+```
+
+Eksport `companies` + `categories` do JSON z datą. Warto wpiąć w Harmonogram zadań
+Windows raz w tygodniu (plan darmowy Supabase nie robi backupów).
+
+---
+
+## 7. Wzorzec opisu właścicielskiego (do oceny w przeglądzie)
+
+3–5 zdań: **KTO** kontroluje (z % głosów) → **JAK** do tego doszło (rok założenia,
+przejęcia, IPO, strony transakcji) → **STAN OBECNY** (free float, pakiety mniejszościowe,
+wehikuły pośrednie z krajem rejestracji) → **NIUANS** (franczyza, fundusz, Skarb Państwa,
+holding w Luksemburgu). Ton suchy, liczby zamiast przymiotników, żadnych em-dashy.
+
+Wzór (Biedronka): „Sieć Biedronka należy do portugalskiej grupy Jerónimo Martins, obecnej
+w Polsce od 1995 roku. Jej operator, Jeronimo Martins Polska S.A., jest spółką zależną
+notowanego w Lizbonie koncernu Jerónimo Martins SGPS S.A. Największym akcjonariuszem
+koncernu (ok. 56% akcji) jest holding Sociedade Francisco Manuel dos Santos, kontrolowany
+przez rodzinę Soares dos Santos. Polska to największy rynek grupy."
+
+---
+
+## 8. Gdy coś nie działa
+
+| Objaw | Co zrobić |
+|---|---|
+| „Claude Code nie jest zalogowane" | `claude auth login` w terminalu, albo token w `.env.local`; awaryjnie `--reczny` |
+| Firma kończy z „błąd: timeout" | uruchom ponownie z `--partia`; krok śledztwa ma 25 min limitu |
+| MF: „HTTP 429" albo blokada | limit 100 zapytań/dobę wyczerpany; poczekaj do północy (partia 40 firm to 40 zapytań) |
+| KRS: „brak podmiotu (404)" | zły numer KRS z kroku 1 albo podmiot spoza rejestru przedsiębiorców; popraw NIP w pliku listy (`Nazwa | NIP`) i uruchom ponownie |
+| Wszystko ląduje w KONFLIKT | sprawdź, czy śledztwo zwraca źródła (pole `lancuch[].zrodlo_url`); bez źródeł pewność nie może być wyższa |
+| Import: „column companies.sources does not exist" | uruchom `tools/sql/2026-09-17-sources-confidence.sql` |
+
+Pliki: `tools/firmy/automat.mjs` (przebieg), `lib/prompty.mjs` (prompty i metodologia
+w wersji dla modelu), `lib/walidacja.mjs` (reguły pewności), `lib/rejestry.mjs` (KRS, MF,
+Bankier), `przeglad.mjs` + `przeglad.html` (strona przeglądu), `import.mjs`, `backup.mjs`.
+
+Stare narzędzia `tools/porownywarka-*.html` i `tools/weryfikator-nip.html` zostają jako
+doraźne; `tools/pipeline-v2.html` usunięto (miał wpisany klucz service_role).

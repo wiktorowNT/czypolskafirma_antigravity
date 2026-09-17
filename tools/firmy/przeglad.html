@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Przegląd partii</title>
+<style>
+  :root { --tlo:#f6f7f9; --karta:#fff; --tekst:#1a1a1a; --szary:#6b7280; --linia:#e5e7eb; --ok:#15803d; --okTlo:#dcfce7; --sr:#a16207; --srTlo:#fef9c3; --kon:#b91c1c; --konTlo:#fee2e2; --akcent:#dc2626; }
+  * { box-sizing:border-box } body { margin:0; font:15px/1.45 system-ui, Segoe UI, Arial, sans-serif; background:var(--tlo); color:var(--tekst) }
+  header { position:sticky; top:0; z-index:5; background:#fff; border-bottom:1px solid var(--linia); padding:10px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap }
+  header h1 { font-size:17px; margin:0 12px 0 0 } header .stat { color:var(--szary); font-size:13px }
+  button { cursor:pointer; border:1px solid var(--linia); background:#fff; border-radius:8px; padding:7px 12px; font:inherit; font-size:14px }
+  button.primary { background:var(--tekst); color:#fff; border-color:var(--tekst) } button.ok { background:var(--okTlo); color:var(--ok); border-color:#86efac }
+  button.zle { background:var(--konTlo); color:var(--kon); border-color:#fca5a5 } button:disabled { opacity:.5; cursor:default }
+  main { max-width:1100px; margin:0 auto; padding:16px }
+  .karta { background:var(--karta); border:1px solid var(--linia); border-radius:12px; padding:14px 16px; margin-bottom:14px }
+  .karta.KONFLIKT { border-left:5px solid var(--kon) } .karta.SREDNIA { border-left:5px solid var(--sr) } .karta.WYSOKA { border-left:5px solid var(--ok) }
+  .naglowek { display:flex; gap:10px; align-items:center; flex-wrap:wrap } .naglowek h2 { margin:0; font-size:18px }
+  .badge { font-size:12px; padding:2px 8px; border-radius:999px; font-weight:600 }
+  .badge.KONFLIKT { background:var(--konTlo); color:var(--kon) } .badge.SREDNIA { background:var(--srTlo); color:var(--sr) } .badge.WYSOKA { background:var(--okTlo); color:var(--ok) }
+  .badge.dec { background:#e0e7ff; color:#3730a3 } .badge.odrz { background:#f3f4f6; color:#374151 }
+  .konflikty { margin:8px 0; padding:8px 10px; background:var(--konTlo); border-radius:8px; color:#7f1d1d; font-size:14px } .konflikty li { margin:2px 0 }
+  .uwagi { color:var(--szary); font-size:13px; margin:6px 0 }
+  .pola { display:grid; grid-template-columns:1fr 1fr; gap:8px 14px; margin-top:10px } .pola label { font-size:12px; color:var(--szary); display:block }
+  .pola input, .pola select, .pola textarea { width:100%; font:inherit; padding:6px 8px; border:1px solid var(--linia); border-radius:6px; background:#fff }
+  .pola .szeroki { grid-column:1 / -1 } textarea { min-height:84px; resize:vertical }
+  details { margin-top:8px } summary { cursor:pointer; color:var(--szary); font-size:13px }
+  table { border-collapse:collapse; width:100%; font-size:13px; margin-top:6px } td, th { border-bottom:1px solid var(--linia); padding:4px 6px; text-align:left; vertical-align:top }
+  .akcje { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center }
+  .zrodla a { word-break:break-all }
+  .panel { background:#fff; border:1px solid var(--linia); border-radius:12px; padding:14px 16px; margin-bottom:16px }
+  .panel textarea { width:100%; min-height:110px; font:13px/1.4 ui-monospace, Consolas, monospace }
+  .filtry { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px } .filtry button.aktywny { background:var(--tekst); color:#fff }
+  .porownanie { font-size:13px; background:#eff6ff; border-radius:8px; padding:8px 10px; margin-top:8px }
+  .zmiana { color:var(--kon); font-weight:600 }
+  @media (max-width:700px) { .pola { grid-template-columns:1fr } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Przegląd partii <span id="nazwaPartii"></span></h1>
+  <span class="stat" id="staty"></span>
+  <button class="ok" id="btnHurt" title="Zatwierdza wszystkie pozycje o pewności WYSOKA bez decyzji">Zatwierdź wszystkie WYSOKA</button>
+  <button id="btnKonsylium">Konsylium innych modeli</button>
+  <button id="btnOdswiez">Odśwież</button>
+</header>
+<main>
+  <section class="panel" id="panelKonsylium" hidden>
+    <h3 style="margin:0 0 6px">Konsylium: potwierdzenie w innych modelach AI</h3>
+    <p style="margin:0 0 8px;color:var(--szary);font-size:14px">1. Skopiuj prompt i wklej do Gemini, ChatGPT, Groka lub Perplexity (najlepiej z włączonym wyszukiwaniem). 2. Wklej odpowiedź modelu poniżej z jego nazwą. Program porównuje kraj i właściciela z ustaleniami automatu; każda niezgodność trafia do konfliktów tej firmy. Zgoda innych modeli nie podnosi pewności ponad to, co dają źródła, ale niezgoda zawsze ją obniża.</p>
+    <div class="akcje">
+      <button id="btnPromptWszystkie">Kopiuj prompt (wszystkie firmy)</button>
+      <button id="btnPromptNiezatw">Kopiuj prompt (tylko niezatwierdzone)</button>
+      <span id="infoPrompt" class="stat"></span>
+    </div>
+    <div class="akcje" style="margin-top:12px">
+      <input id="modelNazwa" placeholder="nazwa modelu, np. Gemini" style="padding:7px 10px;border:1px solid var(--linia);border-radius:8px;font:inherit">
+      <button class="primary" id="btnWklej">Porównaj wklejoną odpowiedź</button>
+      <span id="infoKonsylium" class="stat"></span>
+    </div>
+    <textarea id="odpowiedzModelu" placeholder="Wklej tu tabelę Markdown z odpowiedzi modelu (name | country_code | ultimate_owner | zgoda | uwagi | zrodlo)"></textarea>
+    <div id="konsyliaLista" class="stat" style="margin-top:6px"></div>
+  </section>
+  <div class="filtry">
+    <button data-f="wszystkie" class="aktywny">Wszystkie</button>
+    <button data-f="KONFLIKT">Konflikty</button>
+    <button data-f="SREDNIA">Średnia pewność</button>
+    <button data-f="WYSOKA">Wysoka pewność</button>
+    <button data-f="bezdecyzji">Bez decyzji</button>
+    <button data-f="zatwierdzone">Zatwierdzone</button>
+  </div>
+  <div id="lista"></div>
+</main>
+<script>
+let DANE = null, FILTR = "wszystkie";
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const KOLEJNOSC = { KONFLIKT: 0, SREDNIA: 1, WYSOKA: 2 };
+
+async function wczytaj() {
+  const r = await fetch("/api/partia"); DANE = await r.json();
+  $("#nazwaPartii").textContent = DANE.partia.nazwa;
+  renderuj();
+}
+
+function staty() {
+  const f = DANE.partia.firmy;
+  const licz = (s) => f.filter((x) => x.status === s).length;
+  const dec = (d) => f.filter((x) => x.decyzja === d).length;
+  $("#staty").textContent = `${f.length} firm: konflikty ${licz("KONFLIKT")}, średnia ${licz("SREDNIA")}, wysoka ${licz("WYSOKA")}, bez rekordu ${f.filter((x) => !x.rekord).length} · zatwierdzone ${dec("zatwierdzony")}, odrzucone ${dec("odrzucony")}, do poprawy ${dec("do_poprawy")}`;
+  const k = DANE.partia.konsylia || [];
+  $("#konsyliaLista").textContent = k.length ? "Wczytane konsylia: " + k.map((x) => `${x.model} (${x.data}, ${x.dopasowane}/${x.wierszy} firm)`).join(", ") : "";
+}
+
+function pasuje(f) {
+  if (FILTR === "wszystkie") return true;
+  if (FILTR === "bezdecyzji") return !f.decyzja;
+  if (FILTR === "zatwierdzone") return f.decyzja === "zatwierdzony";
+  return f.status === FILTR;
+}
+
+function renderuj() {
+  staty();
+  const firmy = [...DANE.partia.firmy].sort((a, b) => (KOLEJNOSC[a.status] ?? 3) - (KOLEJNOSC[b.status] ?? 3) || a.nazwa.localeCompare(b.nazwa, "pl"));
+  $("#lista").innerHTML = firmy.filter(pasuje).map(karta).join("") || `<p class="stat">Nic do pokazania w tym filtrze.</p>`;
+}
+
+function karta(f) {
+  const r = f.rekord || {};
+  const kat = DANE.kategorie.map((k) => `<option value="${k.slug}" ${k.slug === r.category_slug ? "selected" : ""}>${esc(k.name)}</option>`).join("");
+  const lancuch = (f.sledztwo?.lancuch || []).map((o) => `<tr><td>${esc(o.podmiot)}</td><td>${esc(o.kraj)}</td><td>${esc(o.rola)}</td><td>${o.proc_glosow ?? o.proc_kapitalu ?? ""}${o.proc_glosow != null || o.proc_kapitalu != null ? "%" : ""}</td><td>${o.stan_na ? esc(o.stan_na) : ""}</td><td class="zrodla">${o.zrodlo_url ? `<a href="${esc(o.zrodlo_url)}" target="_blank" rel="noopener">${esc(o.zrodlo_tytul || o.zrodlo_url.replace(/^https?:\/\//, "").slice(0, 60))}</a>` : "<span class=zmiana>brak</span>"}</td></tr>`).join("");
+  const rej = f.rejestr && !f.rejestr.blad ? `${esc(f.rejestr.nazwa)}, ${esc(f.rejestr.formaPrawna)}, stan z ${esc(f.rejestr.stanZDnia)}. Wspólnicy: ${(f.rejestr.wspolnicy || []).map((w) => `${esc(w.nazwa)} (${esc(w.udzialy)}${w.calosc ? ", 100%" : ""})`).join("; ") || "brak"}. Jedyny akcjonariusz: ${(f.rejestr.jedynyAkcjonariusz || []).map((w) => esc(w.nazwa)).join("; ") || "brak"}.` : `KRS: ${esc(f.rejestr?.blad || "brak")}`;
+  const hist = (f.historiaKrs?.historia || []).map((h) => `${esc(h.nazwa)} [${h.od || "?"}${h.do ? " do " + h.do : ", nadal"}]`).join(" → ");
+  const gielda = (f.gielda?.akcjonariusze || []).map((a) => `${esc(a.nazwa)} ${a.procGlosow ?? a.procKapitalu}%`).join("; ");
+  const kontrola = f.kontrola ? `zgadza się: ${f.kontrola.zgadza_sie === true ? "tak" : f.kontrola.zgadza_sie === false ? "<span class=zmiana>NIE</span>" : "?"}; proponowana pewność ${esc(f.kontrola.pewnosc_proponowana || "?")}; reguła ${esc(f.kontrola.regula || "")}. ${(f.kontrola.zastrzezenia || []).map(esc).join(" · ")}` : "brak";
+  const zrodlaKontroli = (f.kontrola?.zrodla_zweryfikowane || []).map((z) => `<li>${z.potwierdza === true ? "✔" : z.potwierdza === false ? "<span class=zmiana>✘</span>" : "?"} <a href="${esc(z.url)}" target="_blank" rel="noopener">${esc(z.url.slice(0, 80))}</a> ${esc(z.uwaga || "")}</li>`).join("");
+  const kons = (f.konsylium || []).map((k) => `<li>${esc(k.model)}: ${k.zgoda === true ? "zgodny" : k.zgoda === false ? "<span class=zmiana>NIEZGODNY</span>" : "niejasny"} (${esc(k.country_code || "?")}, ${esc(k.ultimate_owner || "?")}) ${esc(k.uwagi || "")} ${k.zrodlo && k.zrodlo !== "brak" ? `<a href="${esc(k.zrodlo)}" target="_blank" rel="noopener">źródło</a>` : ""}</li>`).join("");
+  const por = f.porownanie ? `<div class="porownanie"><b>Reweryfikacja rekordu ${esc(f.porownanie.slug)}:</b> kraj ${esc(f.porownanie.country_code.bylo)} → <span class="${f.porownanie.country_code.zmiana ? "zmiana" : ""}">${esc(f.porownanie.country_code.jest)}</span>; właściciel „${esc(f.porownanie.owner_name.bylo)}" → <span class="${f.porownanie.owner_name.zmiana ? "zmiana" : ""}">„${esc(f.porownanie.owner_name.jest)}"</span>; NIP ${esc(f.porownanie.nip.bylo)} → <span class="${f.porownanie.nip.zmiana ? "zmiana" : ""}">${esc(f.porownanie.nip.jest)}</span></div>` : "";
+  const dec = f.decyzja ? `<span class="badge ${f.decyzja === "odrzucony" ? "odrz" : "dec"}">${esc(f.decyzja)}</span>` : "";
+  if (!f.rekord) return `<article class="karta"><div class="naglowek"><h2>${esc(f.nazwa)}</h2><span class="badge odrz">bez rekordu</span></div><div class="uwagi">${esc(Object.entries(f.etapy || {}).map(([k, v]) => k + ": " + v).join(" · "))} ${esc((f.bledy || []).join(" · "))} ${f.czeka ? "Czeka na plik: " + esc(f.czeka) : ""}</div></article>`;
+  return `<article class="karta ${f.status}" data-nazwa="${esc(f.nazwa)}">
+    <div class="naglowek"><h2>${esc(r.display_name || f.nazwa)}</h2><span class="badge ${f.status}">${f.status}</span>${dec}<span class="stat">${esc(r.country_code || "??")} · ${esc(r.owner_name || "?")} · reguła ${esc(f.sledztwo?.regula || "?")} · NIP ${esc(r.nip || "?")} · KRS ${esc(r.krs || "?")}</span></div>
+    ${f.konflikty?.length ? `<ul class="konflikty">${f.konflikty.map((k) => `<li>${esc(k)}</li>`).join("")}</ul>` : ""}
+    ${f.uwagi?.length ? `<div class="uwagi">${f.uwagi.map(esc).join(" · ")}</div>` : ""}
+    ${por}
+    <div class="pola">
+      <div><label>Kraj kapitału (ISO2)</label><input name="country_code" value="${esc(r.country_code || "")}" maxlength="2"></div>
+      <div><label>Ostateczny właściciel</label><input name="owner_name" value="${esc(r.owner_name || "")}"></div>
+      <div><label>Nazwa wyświetlana</label><input name="display_name" value="${esc(r.display_name || "")}"></div>
+      <div><label>Kategoria</label><select name="category_slug"><option value="">(brak)</option>${kat}</select></div>
+      <div><label>Strona www</label><input name="website_url" value="${esc(r.website_url || "")}"></div>
+      <div><label>Marki (brand_aliases, po przecinku)</label><input name="brand_aliases" value="${esc(r.brand_aliases || "")}"></div>
+      <div class="szeroki"><label>Opis właścicielski (${(r.ownership_description || "").length} zn.)</label><textarea name="ownership_description">${esc(r.ownership_description || "")}</textarea></div>
+      <div class="szeroki"><label>Opis działalności (${(r.business_description || "").length} zn.)</label><textarea name="business_description">${esc(r.business_description || "")}</textarea></div>
+      <div class="szeroki"><label>Twoja notatka (nie trafia do bazy)</label><input name="notatka" value="${esc(f.notatka || "")}"></div>
+    </div>
+    <details><summary>Łańcuch własności (${(f.sledztwo?.lancuch || []).length} ogniw), uzasadnienie, historia</summary>
+      <p style="margin:6px 0">${esc(f.sledztwo?.uzasadnienie || "")}</p>
+      <table><tr><th>Podmiot</th><th>Kraj</th><th>Rola</th><th>%</th><th>Stan na</th><th>Źródło</th></tr>${lancuch}</table>
+      ${(f.sledztwo?.historia || []).length ? `<p style="margin:6px 0 0"><b>Historia:</b> ${f.sledztwo.historia.map((h) => `${esc(h.rok)}: ${esc(h.zdarzenie)}`).join(" · ")}</p>` : ""}
+      ${(f.sledztwo?.luki || []).length ? `<p style="margin:6px 0 0"><b>Luki:</b> ${f.sledztwo.luki.map(esc).join("; ")}</p>` : ""}
+    </details>
+    <details><summary>Rejestr KRS, historia wspólników, akcjonariat GPW</summary><p style="margin:6px 0">${rej}</p>${hist ? `<p style="margin:6px 0"><b>Historia KRS:</b> ${hist}</p>` : ""}${gielda ? `<p style="margin:6px 0"><b>Akcjonariat (bankier.pl):</b> ${gielda}</p>` : ""}</details>
+    <details><summary>Samokontrola i weryfikacja źródeł</summary><p style="margin:6px 0">${kontrola}</p><ul>${zrodlaKontroli}</ul></details>
+    <details><summary>Wszystkie źródła (${(r.sources || []).length})</summary><ul class="zrodla">${(r.sources || []).map((z) => `<li><a href="${esc(z.url)}" target="_blank" rel="noopener">${esc(z.tytul || z.url)}</a> ${z.data ? "(" + esc(z.data) + ")" : ""} · ${esc(z.czego_dotyczy || "")}</li>`).join("")}</ul></details>
+    ${kons ? `<details open><summary>Konsylium innych modeli</summary><ul>${kons}</ul></details>` : ""}
+    <div class="akcje">
+      <button class="ok" data-akcja="zatwierdzony">Zatwierdź</button>
+      <button data-akcja="do_poprawy">Do poprawy</button>
+      <button class="zle" data-akcja="odrzucony">Odrzuć</button>
+      <button data-akcja="zapisz">Zapisz zmiany pól</button>
+      <span class="stat" data-info></span>
+    </div>
+  </article>`;
+}
+
+async function decyzja(nazwa, akcja, el) {
+  const rekord = {};
+  for (const inp of el.querySelectorAll("[name]")) if (inp.name !== "notatka") rekord[inp.name] = inp.value.trim();
+  rekord.country_code = rekord.country_code.toUpperCase();
+  rekord.brands = rekord.brand_aliases ? rekord.brand_aliases.split(",").map((s) => s.trim()).filter(Boolean).map((name) => { const stare = (DANE.partia.firmy.find((f) => f.nazwa === nazwa)?.rekord?.brands || []).find((b) => b.name === name); return stare || { name }; }) : [];
+  const body = { nazwa, rekord, notatka: el.querySelector('[name="notatka"]').value };
+  if (akcja !== "zapisz") body.decyzja = akcja;
+  const r = await fetch("/api/decyzja", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const j = await r.json();
+  el.querySelector("[data-info]").textContent = j.ok ? "zapisano" : "błąd: " + j.blad;
+  await wczytaj();
+}
+
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.akcja) return decyzja(b.closest("article").dataset.nazwa, b.dataset.akcja, b.closest("article"));
+  if (b.dataset.f) { FILTR = b.dataset.f; document.querySelectorAll(".filtry button").forEach((x) => x.classList.toggle("aktywny", x === b)); renderuj(); }
+});
+$("#btnOdswiez").onclick = wczytaj;
+$("#btnHurt").onclick = async () => { const r = await fetch("/api/zatwierdz-pewne", { method: "POST" }); const j = await r.json(); alert(`Zatwierdzono ${j.zatwierdzono} pozycji o pewności WYSOKA.`); wczytaj(); };
+$("#btnKonsylium").onclick = () => { $("#panelKonsylium").hidden = !$("#panelKonsylium").hidden; };
+async function kopiujPrompt(tylko) {
+  const t = await (await fetch("/api/prompt-konsylium" + (tylko ? "?tylko=niezatwierdzone" : ""))).text();
+  try { await navigator.clipboard.writeText(t); $("#infoPrompt").textContent = `skopiowano (${t.length} znaków)`; } catch { $("#odpowiedzModelu").value = t; $("#infoPrompt").textContent = "schowek niedostępny, prompt wstawiony do pola poniżej: skopiuj ręcznie"; }
+}
+$("#btnPromptWszystkie").onclick = () => kopiujPrompt(false);
+$("#btnPromptNiezatw").onclick = () => kopiujPrompt(true);
+$("#btnWklej").onclick = async () => {
+  const model = $("#modelNazwa").value.trim() || "inny model";
+  const r = await fetch("/api/konsylium", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model, tekst: $("#odpowiedzModelu").value }) });
+  const j = await r.json();
+  $("#infoKonsylium").textContent = j.ok ? `${model}: ${j.dopasowane} z ${j.wierszy} wierszy dopasowano do firm` : "błąd: " + j.blad;
+  if (j.ok) $("#odpowiedzModelu").value = "";
+  wczytaj();
+};
+wczytaj();
+</script>
+</body>
+</html>

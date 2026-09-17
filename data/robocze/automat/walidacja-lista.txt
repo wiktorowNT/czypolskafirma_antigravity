@@ -1,0 +1,9 @@
+# walidacja automatu: 5 firm z bazy (z NIP) + 3 nowe (bez NIP)
+Żabka | 5223071241
+Orlen | 7740001454
+Dino | 6211766191
+Biedronka | 7791011327
+Mokate | 6511749127
+Medcom
+KIDS&Co
+Vila

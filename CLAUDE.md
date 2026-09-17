@@ -97,7 +97,8 @@ lib/
 ├─ company-utils.ts · countries.ts · rate-limit.ts
 data/                      # categories.json, company-details.json (dane statyczne)
 docs/                      # dokumentacja projektu (workflow, SOP, backup)
-tools/                     # narzędzia pomocnicze (audyt logo, pipeline, weryfikator NIP)
+tools/                     # narzędzia pomocnicze (logotypy, lint treści, okładki)
+├─ firmy/                  # automat dodawania firm (automat, przeglad, import, backup)
 public/                    # zasoby statyczne
 ```
 
@@ -112,14 +113,17 @@ Kluczowe pola przechowywane dla każdej firmy:
 
 - `slug` — identyfikator w URL
 - `nip` — numer NIP głównej spółki zarejestrowanej w Polsce
-- `ultimate_owner` — ostateczny właściciel (szczyt piramidy)
+- `owner_name` — ostateczny właściciel (szczyt piramidy); w starszych dokumentach nazywany `ultimate_owner`
 - `country_code` — kod kraju pochodzenia kapitału
 - `ownership_description` — uzasadnienie struktury właścicielskiej
 - `business_description` — neutralny opis działalności firmy
 
-**Pipeline danych:** firmy zbierane i weryfikowane wg SOP (Google Sheets + modele AI),
-finalny zbiór eksportowany do CSV i importowany do Supabase.
-Pełna procedura: `docs/SOP_dodawanie_firm.md` (proces bazowy opisany też w Notion).
+Pola dodane we wrześniu 2026: `verified_at` (data weryfikacji), `sources` (jsonb, źródła
+z datami), `confidence` (WYSOKA/SREDNIA/KONFLIKT).
+
+**Pipeline danych:** automat `tools/firmy/` (tożsamość → KRS/MF → śledztwo → samokontrola
+→ opisy → przegląd na localhost → import z dry-run). Nic nie trafia do bazy bez
+zatwierdzenia właściciela. Pełna procedura: `docs/SOP_dodawanie_firm.md`.
 
 ---
 
@@ -136,7 +140,9 @@ Pełna procedura: `docs/SOP_dodawanie_firm.md` (proces bazowy opisany też w Not
 ## 7. Dokumenty referencyjne
 
 - `docs/DEVELOPMENT_WORKFLOW.md` — workflow git i proces akceptacji
-- `docs/SOP_dodawanie_firm.md` — pełny pipeline dodawania firm
+- `docs/SOP_dodawanie_firm.md` — automat dodawania firm i przegląd partii
+- `docs/METODOLOGIA_V2_przypadki_brzegowe.md` — drzewo decyzyjne i reguły brzegowe (wersja obowiązująca)
+- `docs/AUDYT_PROCESOW_2026-09.md` — audyt procesów i projekt automatu
 - `docs/SOP_logotypy.md` — zarządzanie logotypami firm (fetch, audyt, Logo Fixer)
 - `docs/AUTOMATYZACJA_TRESCI.md` — codzienny automat treści (blog + X + FB) na GitHub Actions
 - `docs/BACKUP_STRATEGY.md` — strategia backupu bazy

@@ -38,3 +38,7 @@ Generator.html
 
 # audyt bezpieczenstwa - niezalatane podatnosci, repo jest publiczne
 /docs/AUDYT_TECHNICZNY_2026-07.md
+
+# automat dodawania firm (tools/firmy/): prompty/odpowiedzi trybu recznego i backupy bazy
+/data/robocze/automat/reczne/
+/data/robocze/backup/
