@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CzyPolskaFirma — trzy kierunki nowego wyglądu (porównywarka)</title>
+<style>
+  :root { --ink:#1a1918; --ink2:#5e5b55; --line:#e7e4de; --bg:#f7f6f3; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:14px 20px; display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:5; }
+  header b { font-size:15px; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:13.5px; }
+  .ctrl button, .ctrl a { border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 11px; font:inherit; cursor:pointer; color:var(--ink); text-decoration:none; }
+  .ctrl button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .ctrl .sep { width:1px; height:22px; background:var(--line); margin:0 4px; }
+  main { padding:18px 20px 40px; display:grid; gap:18px; }
+  .dir { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .dir h2 { margin:0 0 4px; font-size:18px; }
+  .dir p { margin:0 0 12px; color:var(--ink2); font-size:14px; max-width:900px; }
+  .dir .pal { display:flex; gap:6px; margin-bottom:12px; }
+  .dir .pal i { width:22px; height:22px; border-radius:6px; border:1px solid rgba(0,0,0,.08); display:block; }
+  .frames { display:grid; gap:14px; grid-template-columns: 1fr 395px; align-items:start; }
+  body.mobile-only .frames { grid-template-columns: repeat(2, 395px); }
+  body.desktop-only .frames { grid-template-columns: 1fr; }
+  body.desktop-only .m, body.mobile-only .d { display:none; }
+  .frame { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#fff; }
+  .frame .bar { font-size:12px; color:var(--ink2); padding:6px 10px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; }
+  .frame .bar a { color:var(--ink); }
+  iframe { display:block; width:100%; height:820px; border:0; }
+  .m iframe { width:375px; height:740px; }
+  @media (max-width: 900px) { .frames, body.mobile-only .frames { grid-template-columns:1fr; } .m iframe { width:100%; } }
+</style>
+</head>
+<body>
+<header>
+  <b>CzyPolskaFirma — trzy kierunki nowego wyglądu</b>
+  <div class="ctrl">
+    <span>Strona:</span>
+    <button class="on" data-page="strona-glowna">Strona główna</button>
+    <button data-page="profil">Profil firmy</button>
+    <span class="sep"></span>
+    <span>Widok:</span>
+    <button class="on" data-view="both">Oba</button>
+    <button data-view="desktop-only">Desktop</button>
+    <button data-view="mobile-only">Mobile</button>
+    <span class="sep"></span>
+    <a href="README.md">README (diagnoza i opisy)</a>
+  </div>
+</header>
+<main>
+  <section class="dir" data-dir="a">
+    <h2>A · „Kartoteka”</h2>
+    <div class="pal"><i style="background:#fff"></i><i style="background:#f7f6f3"></i><i style="background:#e7e4de"></i><i style="background:#1a1918"></i><i style="background:#b42318"></i></div>
+    <p>Najbliżej Notion: biel, atrament, linie 1 px i szare wypełnienia zamiast cieni. Inter Tight + Inter + Geist Mono. Metafora: kartoteka śledcza. Ilustracje: kreska z jedną plamą czerwieni. Profil: Żabka.</p>
+    <div class="frames">
+      <div class="frame d"><div class="bar"><span>Desktop</span><a href="a-strona-glowna.html" target="_blank">otwórz w nowej karcie ↗</a></div><iframe src="a-strona-glowna.html" loading="lazy" title="A desktop"></iframe></div>
+      <div class="frame m"><div class="bar"><span>Mobile 375 px</span></div><iframe src="a-strona-glowna.html" loading="lazy" title="A mobile"></iframe></div>
+    </div>
+  </section>
+  <section class="dir" data-dir="b">
+    <h2>B · „Redakcja”</h2>
+    <div class="pal"><i style="background:#fbfaf6"></i><i style="background:#f3f1ea"></i><i style="background:#dcd8ce"></i><i style="background:#14130f"></i><i style="background:#a61b2b"></i></div>
+    <p>Spokój Notion, głos gazety śledczej: papier, serif w tytułach, linie włosowe zamiast kart, kapitaliki, przypisy. IBM Plex Serif + Sans + Mono. Ilustracje: dwubarwny linoryt. Profil: E. Wedel.</p>
+    <div class="frames">
+      <div class="frame d"><div class="bar"><span>Desktop</span><a href="b-strona-glowna.html" target="_blank">otwórz w nowej karcie ↗</a></div><iframe src="b-strona-glowna.html" loading="lazy" title="B desktop"></iframe></div>
+      <div class="frame m"><div class="bar"><span>Mobile 375 px</span></div><iframe src="b-strona-glowna.html" loading="lazy" title="B mobile"></iframe></div>
+    </div>
+  </section>
+  <section class="dir" data-dir="c">
+    <h2>C · „Półka”</h2>
+    <div class="pal"><i style="background:#fff"></i><i style="background:#f6f3ee"></i><i style="background:#ece7df"></i><i style="background:#1f1d1a"></i><i style="background:#c2381f"></i><i style="background:#f2c14e"></i></div>
+    <p>Notion dla konsumenta na telefonie: ciepła biel, zaokrąglenia 16 px, pigułki, duże pola dotykowe, werdykt jako metka. Manrope. Ilustracje: płaskie naklejki produktów. Profil: Reserved (LPP).</p>
+    <div class="frames">
+      <div class="frame d"><div class="bar"><span>Desktop</span><a href="c-strona-glowna.html" target="_blank">otwórz w nowej karcie ↗</a></div><iframe src="c-strona-glowna.html" loading="lazy" title="C desktop"></iframe></div>
+      <div class="frame m"><div class="bar"><span>Mobile 375 px</span></div><iframe src="c-strona-glowna.html" loading="lazy" title="C mobile"></iframe></div>
+    </div>
+  </section>
+</main>
+<script>
+  const pageBtns = document.querySelectorAll("[data-page]"), viewBtns = document.querySelectorAll("[data-view]");
+  pageBtns.forEach(b => b.addEventListener("click", () => {
+    pageBtns.forEach(x => x.classList.toggle("on", x === b));
+    document.querySelectorAll(".dir").forEach(d => {
+      const k = d.dataset.dir, f = `${k}-${b.dataset.page}.html`;
+      d.querySelectorAll("iframe").forEach(i => i.src = f);
+      d.querySelector(".bar a").href = f;
+    });
+  }));
+  viewBtns.forEach(b => b.addEventListener("click", () => {
+    viewBtns.forEach(x => x.classList.toggle("on", x === b));
+    document.body.className = b.dataset.view === "both" ? "" : b.dataset.view;
+  }));
+</script>
+</body>
+</html>

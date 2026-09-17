@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kierunek A „Kartoteka” — strona główna (makieta)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="a-kartoteka.css">
+</head>
+<body>
+
+<header class="hdr">
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect x="2.5" y="5.5" width="21" height="17" rx="2.5" stroke="#1a1918" stroke-width="1.6"/>
+        <path d="M2.5 10.5h21" stroke="#1a1918" stroke-width="1.6"/>
+        <rect x="6" y="2.5" width="8" height="4" rx="1.2" fill="#b42318"/>
+        <path d="M7.5 15.5l3 3 6-6" stroke="#1a1918" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      CzyPolskaFirma
+    </a>
+    <nav class="nav">
+      <a href="#">Kategorie</a><a href="#">Lista firm</a><a href="#">Blog</a><a href="#">Jak to działa</a><a href="#">Metodologia</a><a href="#">FAQ</a>
+    </nav>
+    <div class="hdr-actions">
+      <a class="btn btn-support" href="#">Wesprzyj projekt</a>
+      <button class="btn burger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="eyebrow">Prześwietliliśmy już 750 firm · 36 krajów pochodzenia kapitału</div>
+        <h1>Sprawdź, czy firma jest polska</h1>
+        <p class="lead">Wybieraj świadomie — sprawdź, z jakiego kraju jest dana firma, kto za nią stoi i jaki ma wpływ na polską gospodarkę.</p>
+        <form class="search" onsubmit="return false">
+          <div class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            Szukaj firmy, np. Żabka, Tymbark, Reserved…
+          </div>
+          <button class="btn btn-primary btn-lg" type="submit">Sprawdź</button>
+        </form>
+        <div class="quick">
+          <span class="lbl">Popularne</span>
+          <div class="chips">
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/allegro.pl.svg" alt="">Allegro <img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/pepco.com.webp" alt="">Pepco <img class="flag" src="https://flagcdn.com/w40/za.png" alt="RPA"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/zabkagroup.com.svg" alt="">Żabka <img class="flag" src="https://flagcdn.com/w40/gb.png" alt="Wielka Brytania"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/docplanner.com.webp" alt="">Docplanner <img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/wedel.pl.png" alt="">E. Wedel <img class="flag" src="https://flagcdn.com/w40/kr.png" alt="Korea Południowa"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/velobank.pl.svg" alt="">VeloBank <img class="flag" src="https://flagcdn.com/w40/us.png" alt="USA"></a>
+          </div>
+          <span class="lbl">Ostatnio dodane</span>
+          <div class="chips">
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/fakt.pl.png" alt="">Fakt <img class="flag" src="https://flagcdn.com/w40/ch.png" alt="Szwajcaria"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/browar-amber.pl.webp" alt="">Browar Amber <img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
+            <a class="chip" href="#"><span class="logo" style="width:22px;height:22px;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;font:11px var(--font-m);color:var(--ink-2)">T</span>Tubądzin <img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
+            <a class="chip" href="#"><span class="logo" style="width:22px;height:22px;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;font:11px var(--font-m);color:var(--ink-2)">K</span>Koleje Dolnośląskie <img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ilustracja przewodnia: linia atramentowa + jedna plama czerwieni.
+           To próbka poziomu, jaki da się osiągnąć kodem (obiekty, nie postacie). -->
+      <figure class="ill" aria-label="Ilustracja: kartoteka firm">
+        <span class="tag">Ilustracja A · szkic SVG</span>
+        <svg viewBox="0 0 420 300" fill="none" stroke="#1a1918" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <!-- szuflada kartoteki -->
+          <rect x="60" y="120" width="300" height="150" rx="6"/>
+          <path d="M60 150h300"/>
+          <rect x="185" y="128" width="50" height="10" rx="2"/>
+          <!-- karty w szufladzie (lekko przechylone) -->
+          <path d="M92 118v-56a4 4 0 0 1 4-4h64a4 4 0 0 1 4 4v56"/>
+          <path d="M96 58h24v-9h30v9"/>
+          <path d="M118 118V70a4 4 0 0 1 4-4h64a4 4 0 0 1 4 4v48"/>
+          <path d="M122 66h24v-9h30v9"/>
+          <path d="M146 118V82a4 4 0 0 1 4-4h64a4 4 0 0 1 4 4v36"/>
+          <path d="M150 78h24v-9h30v9"/>
+          <!-- wyciągnięta karta z werdyktem -->
+          <g transform="rotate(-8 300 90)">
+            <rect x="240" y="40" width="120" height="100" rx="5" fill="#fff"/>
+            <path d="M256 66h88M256 82h70M256 98h80M256 114h56"/>
+            <circle cx="336" cy="112" r="17" fill="#b42318" stroke="#b42318"/>
+            <path d="M328 112l6 6 10-11" stroke="#fff" stroke-width="2.2"/>
+          </g>
+          <!-- lupa -->
+          <circle cx="120" cy="230" r="26" fill="#f7f6f3"/>
+          <path d="M139 249l24 24"/>
+          <path d="M108 226a13 13 0 0 1 12-10"/>
+          <!-- podłoga -->
+          <path d="M40 282h340" stroke="#d3cfc7"/>
+        </svg>
+        <figcaption class="cap">Styl A: kreska 1,5 px, jeden kolor plamy, przedmioty zamiast postaci. Tu: karta wyciągnięta z kartoteki, lupa.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="kategorie">
+    <div class="wrap">
+      <div class="section-head">
+        <div><h2>Kategorie firm</h2><p>Wybierz kategorię, aby zobaczyć listę firm. Pasek pokazuje udział polskiego kapitału.</p></div>
+        <a class="mono muted" href="#">Wszystkie 19 kategorii →</a>
+      </div>
+      <div class="cats">
+        <div class="rows">
+          <a class="row" href="#"><span class="name">Żywność</span><span class="meta">80 firm</span><span class="bar"><i style="width:50%"></i></span></a>
+          <a class="row" href="#"><span class="name">Handel</span><span class="meta">76 firm</span><span class="bar"><i style="width:38%"></i></span></a>
+          <a class="row" href="#"><span class="name">Moda</span><span class="meta">62 firmy</span><span class="bar"><i style="width:60%"></i></span></a>
+          <a class="row" href="#"><span class="name">IT-Technologie</span><span class="meta">58 firm</span><span class="bar"><i style="width:48%"></i></span></a>
+          <a class="row" href="#"><span class="name">Kosmetyki</span><span class="meta">54 firmy</span><span class="bar"><i style="width:72%"></i></span></a>
+          <a class="row" href="#"><span class="name">Budownictwo</span><span class="meta">53 firmy</span><span class="bar"><i style="width:55%"></i></span></a>
+          <a class="row" href="#"><span class="name">Motoryzacja</span><span class="meta">50 firm</span><span class="bar"><i style="width:6%"></i></span></a>
+          <a class="row" href="#"><span class="name">Elektronika</span><span class="meta">48 firm</span><span class="bar"><i style="width:38%"></i></span></a>
+          <a class="row" href="#"><span class="name">Meble</span><span class="meta">43 firmy</span><span class="bar"><i style="width:74%"></i></span></a>
+          <a class="row" href="#"><span class="name">Media i Rozrywka</span><span class="meta">40 firm</span><span class="bar"><i style="width:57%"></i></span></a>
+        </div>
+        <div class="rows">
+          <a class="row" href="#"><span class="name">Farmacja</span><span class="meta">40 firm</span><span class="bar"><i style="width:25%"></i></span></a>
+          <a class="row" href="#"><span class="name">Telekomunikacja</span><span class="meta">37 firm</span><span class="bar"><i style="width:54%"></i></span></a>
+          <a class="row" href="#"><span class="name">Banki</span><span class="meta">27 firm</span><span class="bar"><i style="width:37%"></i></span></a>
+          <a class="row" href="#"><span class="name">Transport</span><span class="meta">25 firm</span><span class="bar"><i style="width:44%"></i></span></a>
+          <a class="row" href="#"><span class="name">Gastronomia</span><span class="meta">19 firm</span><span class="bar"><i style="width:26%"></i></span></a>
+          <a class="row" href="#"><span class="name">Energia</span><span class="meta">13 firm</span><span class="bar"><i style="width:69%"></i></span></a>
+          <a class="row" href="#"><span class="name">Ubezpieczenia</span><span class="meta">11 firm</span><span class="bar"><i style="width:9%"></i></span></a>
+          <a class="row" href="#"><span class="name">Chemia</span><span class="meta">8 firm</span><span class="bar"><i style="width:38%"></i></span></a>
+          <a class="row" href="#"><span class="name">Zdrowie</span><span class="meta">6 firm</span><span class="bar"><i style="width:50%"></i></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="statystyki">
+    <div class="wrap">
+      <div class="section-head">
+        <div><h2>Statystyki projektu</h2><p>Podsumowanie danych z naszej bazy. Stan na 17 września 2026.</p></div>
+      </div>
+      <div class="stats">
+        <div>
+          <div class="bignum">47%</div>
+          <p>firm w bazie to <b>polskie firmy</b> — 350 z 750 zweryfikowanych.</p>
+          <div class="kv">
+            <div><span>Najbardziej polska kategoria</span><b>Meble · 74%</b></div>
+            <div><span>Najbardziej zagraniczna</span><b>Motoryzacja · 6%</b></div>
+            <div><span>Kraje pochodzenia kapitału</span><b>36</b></div>
+          </div>
+        </div>
+        <div>
+          <h4>Skąd pochodzi kapitał 750 firm z bazy</h4>
+          <div class="stack" style="margin-top:10px" aria-label="Udział krajów pochodzenia kapitału">
+            <i style="width:46.7%;background:#b42318" title="Polska 350"></i>
+            <i style="width:10.3%;background:#1a1918" title="USA 77"></i>
+            <i style="width:9.6%;background:#3a3834" title="Niemcy 72"></i>
+            <i style="width:5.7%;background:#5e5b55" title="Francja 43"></i>
+            <i style="width:4.3%;background:#7a766e" title="Wielka Brytania 32"></i>
+            <i style="width:2.8%;background:#979289" title="Włochy 21"></i>
+            <i style="width:2.4%;background:#aeaaa1" title="Japonia 18"></i>
+            <i style="width:2.3%;background:#c2beb5" title="Hiszpania 17"></i>
+            <i style="width:16%;background:#e7e4de" title="Pozostałe 120"></i>
+          </div>
+          <div class="legend">
+            <span><i style="background:#b42318"></i>Polska 350</span><span><i style="background:#1a1918"></i>USA 77</span><span><i style="background:#3a3834"></i>Niemcy 72</span><span><i style="background:#5e5b55"></i>Francja 43</span><span><i style="background:#7a766e"></i>Wielka Brytania 32</span><span><i style="background:#979289"></i>Włochy 21</span><span><i style="background:#aeaaa1"></i>Japonia 18</span><span><i style="background:#c2beb5"></i>Hiszpania 17</span><span><i style="background:#e7e4de"></i>28 innych krajów 120</span>
+          </div>
+          <h4 style="margin-top:26px">Udział polskiego kapitału w kategoriach</h4>
+          <div class="hbars">
+            <div class="hbar"><span>Meble</span><span class="track"><i style="width:74%"></i></span><span class="val">74%</span></div>
+            <div class="hbar"><span>Kosmetyki</span><span class="track"><i style="width:72%"></i></span><span class="val">72%</span></div>
+            <div class="hbar"><span>Energia</span><span class="track"><i style="width:69%"></i></span><span class="val">69%</span></div>
+            <div class="hbar"><span>Moda</span><span class="track"><i style="width:60%"></i></span><span class="val">60%</span></div>
+            <div class="hbar"><span>Żywność</span><span class="track"><i style="width:50%"></i></span><span class="val">50%</span></div>
+            <div class="hbar"><span>Handel</span><span class="track"><i style="width:38%"></i></span><span class="val">38%</span></div>
+            <div class="hbar"><span>Banki</span><span class="track"><i style="width:37%"></i></span><span class="val">37%</span></div>
+            <div class="hbar"><span>Farmacja</span><span class="track"><i style="width:25%"></i></span><span class="val">25%</span></div>
+            <div class="hbar"><span>Motoryzacja</span><span class="track"><i style="width:6%"></i></span><span class="val">6%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="jak-to-dziala">
+    <div class="wrap">
+      <div class="section-head"><div><h2>Jak to działa</h2></div></div>
+      <div class="steps">
+        <div class="step"><div class="num">01</div><h3>Wpisz nazwę</h3><p>Wyszukaj markę lub firmę. Baza obejmuje 750 podmiotów z 19 kategorii.</p></div>
+        <div class="step"><div class="num">02</div><h3>Zobacz wynik</h3><p>Kraj pochodzenia kapitału, ostateczny właściciel i ścieżka kontroli — z datą weryfikacji.</p></div>
+        <div class="step"><div class="num">03</div><h3>Poznaj alternatywy</h3><p>Polskie firmy w tej samej kategorii, jeśli marka okaże się zagraniczna.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="blog">
+    <div class="wrap">
+      <div class="section-head">
+        <div><h2>Z bloga: kto stoi za marką</h2><p>Przejęcia, pochodzenie kapitału i sukcesy polskiego biznesu — na twardych danych.</p></div>
+        <a class="mono muted" href="#">Wszystkie wpisy →</a>
+      </div>
+      <div class="posts">
+        <a class="post" href="#"><div class="cover">Okładka (nowy szablon, jasny)</div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>Duński Bestseller wchodzi do polskich galerii. Kto stoi za marką Vila</h3><p>Vila otworzyła pierwszy sklep w Polsce. Stoi za nią duński dom mody, który od 1975 roku należy do jednej rodziny.</p></div></a>
+        <a class="post" href="#"><div class="cover">Okładka (nowy szablon, jasny)</div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>Co się dzieje z polską marką po przejęciu. Lekcja z branży meblowej</h3><p>Black Red White, Agnella i Bydgoskie Meble zmieniały właścicieli, a szyldy zostały na miejscu.</p></div></a>
+        <a class="post" href="#"><div class="cover">Okładka (nowy szablon, jasny)</div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>InPost zmienia właściciela. Kto przejmuje paczkomaty Rafała Brzoski</h3><p>Ostatnia zgoda regulatora otworzyła drogę do przejęcia InPostu za 7,8 mld euro.</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="metodologia">
+    <div class="wrap">
+      <div class="section-head">
+        <div><h2>Metodologia</h2><p>Trzy zasady, według których klasyfikujemy każdą firmę.</p></div>
+        <a class="mono muted" href="#">Pełna metodologia →</a>
+      </div>
+      <div class="principles">
+        <div class="principle"><div class="num">ZASADA 1</div><h3>Ostateczny właściciel</h3><p>Patrzymy na szczyt piramidy i pomijamy raje podatkowe. Polski założyciel ze spółką na Cyprze to nadal polski kapitał.</p></div>
+        <div class="principle"><div class="num">ZASADA 2</div><h3>Efektywna kontrola</h3><p>Decyduje pakiet kontrolny, zwykle powyżej 50% udziałów, a nie pojedyncze pakiety mniejszościowe.</p></div>
+        <div class="principle"><div class="num">ZASADA 3</div><h3>Złota klatka</h3><p>Historycznie polskie marki przejęte przez obcy kapitał (Wedel, Żabka) klasyfikujemy jako zagraniczne.</p></div>
+      </div>
+      <div class="sources"><span>KRS</span><span>CRBR</span><span>CEIDG</span><span>GUS/REGON</span><span>eKRS — sprawozdania</span><span>UOKiK</span><span>Raporty roczne</span><span>OpenCorporates</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="wsparcie">
+    <div class="wrap">
+      <div class="callout">
+        <div><h2 style="font-size:20px">Projekt utrzymuje się z dobrowolnego wsparcia</h2><p style="margin-top:6px">Bez reklam i sponsorów. Wsparcie idzie na bazę danych, weryfikację źródeł i hosting.</p></div>
+        <a class="btn btn-accent" href="#">Wesprzyj projekt</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq" id="faq">
+    <div class="wrap">
+      <div class="section-head"><div><h2>Najczęściej zadawane pytania</h2></div></div>
+      <details open><summary>Co oznacza, że firma jest „polska”?</summary><p>Że pakiet kontrolny należy do polskiego kapitału — osoby, rodziny, fundacji lub Skarbu Państwa. Siedziba w Polsce ani polska nazwa nie wystarczą.</p></details>
+      <details><summary>Skąd bierzecie dane?</summary><p>Z rejestrów publicznych (KRS, CRBR, CEIDG, GUS), sprawozdań finansowych, decyzji UOKiK i raportów rocznych. Każdy profil ma datę weryfikacji.</p></details>
+      <details><summary>Firma ma siedzibę w Polsce i płaci tu podatki. Dlaczego jest zagraniczna?</summary><p>Bo o przynależności decyduje właściciel, nie adres. Oznaczamy osobno siedzibę w Polsce i status VAT.</p></details>
+      <details><summary>Znalazłem błąd. Co zrobić?</summary><p>Na każdym profilu jest przycisk „Zgłoś uwagi”. Sprawdzamy zgłoszenia i aktualizujemy dane wraz z datą.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div>
+      <div class="brand">CzyPolskaFirma</div>
+      <p class="muted" style="font-size:14px;margin-top:8px;max-width:300px">Niezależna baza pochodzenia kapitału firm działających w Polsce.</p>
+    </div>
+    <div><h4>Serwis</h4><a href="#">Lista firm</a><a href="#">Kategorie</a><a href="#">Blog</a><a href="#">Ulubione</a></div>
+    <div><h4>Projekt</h4><a href="#">O projekcie</a><a href="#">Metodologia</a><a href="#">Wesprzyj</a><a href="#">Kontakt</a></div>
+    <div><h4>Śledź</h4><a href="#">X (Twitter)</a><a href="#">Facebook</a></div>
+    <div class="fine"><span>© 2026 CzyPolskaFirma. Wszelkie prawa zastrzeżone.</span><span><a href="#" style="display:inline">Polityka prywatności</a> · <a href="#" style="display:inline">Regulamin</a></span></div>
+  </div>
+</footer>
+</body>
+</html>
