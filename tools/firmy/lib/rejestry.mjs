@@ -2,6 +2,9 @@
 //  - Biała Lista VAT MF: NIP -> nazwa, KRS, REGON, adres (limit: 100 zapytań/dobę, 30 NIP-ów na zapytanie)
 //  - KRS (api-krs.ms.gov.pl): odpis aktualny i pełny w JSON (bez wyszukiwania po nazwie/NIP)
 //  - Bankier: tabela akcjonariatu spółek z GPW (scraping HTML, tylko trop; źródłem finalnym są raporty spółki)
+import fs from "node:fs";
+import path from "node:path";
+import { KATALOG_PARTII, dzisiaj } from "./env.mjs";
 import { normalizujKrs, normalizujNip } from "./tekst.mjs";
 
 const UA = "czypolskafirma-automat/1.0 (+https://czypolskafirma.pl; kontakt przez formularz na stronie)";
@@ -37,12 +40,34 @@ async function pobierzJson(url, klucz, opcje = {}) {
 
 // ---------- Biała Lista VAT (MF) ----------
 
+// Licznik zapytań do Białej Listy (limit MF: 100 zapytań na dobę na adres IP).
+// Panel pokazuje, ile jeszcze zostało na dziś; plik jest poza gitem.
+const PLIK_LICZNIKA = path.join(KATALOG_PARTII, "mf-licznik.json");
+export const LIMIT_MF_NA_DOBE = 100;
+
+export function mfLicznik() {
+  try {
+    const l = JSON.parse(fs.readFileSync(PLIK_LICZNIKA, "utf8"));
+    if (l.data === dzisiaj()) return { data: l.data, zapytan: l.zapytan || 0, zostalo: Math.max(0, LIMIT_MF_NA_DOBE - (l.zapytan || 0)) };
+  } catch {}
+  return { data: dzisiaj(), zapytan: 0, zostalo: LIMIT_MF_NA_DOBE };
+}
+
+function zliczZapytanieMf() {
+  try {
+    const l = mfLicznik();
+    fs.mkdirSync(path.dirname(PLIK_LICZNIKA), { recursive: true });
+    fs.writeFileSync(PLIK_LICZNIKA, JSON.stringify({ data: l.data, zapytan: l.zapytan + 1 }), "utf8");
+  } catch {}
+}
+
 export async function mfPoNipach(nipy, data) {
   const lista = [...new Set(nipy.map(normalizujNip).filter((n) => n.length === 10))];
   const wynik = {};
   for (let i = 0; i < lista.length; i += 30) {
     const paczka = lista.slice(i, i + 30);
     const url = `https://wl-api.mf.gov.pl/api/search/nips/${paczka.join(",")}?date=${data}`;
+    zliczZapytanieMf();
     const r = await pobierzJson(url, "mf");
     if (r.blad) {
       for (const n of paczka) wynik[n] = { blad: r.blad };

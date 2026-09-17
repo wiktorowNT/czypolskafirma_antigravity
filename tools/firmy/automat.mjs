@@ -16,6 +16,8 @@
 //   --bez-gieldy          pomiń pobieranie akcjonariatu z bankier.pl
 //   --crbr                dołącz beneficjentów rzeczywistych z CRBR (puppeteer, wolniejsze; tylko dane zagregowane)
 //   --tylko-rejestry      wykonaj tylko kroki bez modelu (tożsamość z podanego NIP-u, KRS, giełda)
+//   --stop-po-nip         zatrzymaj się po kroku 1 i 2 (NIP, KRS) do potwierdzenia; kolejne
+//                         uruchomienie z tą samą --partia rusza dalej (używa tego panel)
 //   --przelicz            przelicz pewność i rekordy już gotowych firm (po zmianie reguł), bez wołania modelu
 import fs from "node:fs";
 import path from "node:path";
@@ -149,6 +151,11 @@ function juzWBazie(f) {
 }
 
 async function przetworzFirme(f) {
+  // Firma odznaczona w panelu (np. zły NIP, którego nie da się poprawić) nie idzie dalej.
+  if (f.pomin) {
+    f.etapy.pominieta = true;
+    return;
+  }
   const opcje = { ...OPCJE_MODELU, plikFirmy: f.plik };
   const czekaj = (r, krok) => {
     if (r.czeka) {
@@ -243,6 +250,12 @@ async function przetworzFirme(f) {
     f.etapy.sledztwo = "pominieto (--tylko-rejestry)";
     return;
   }
+  // Przystanek na NIP: dalej (śledztwo, opisy) dopiero po potwierdzeniu tożsamości w panelu.
+  if (arg["stop-po-nip"]) {
+    f.etapy.sledztwo = "czeka na potwierdzenie NIP";
+    zapiszPartie();
+    return;
+  }
 
   // 3. śledztwo
   if (!f.sledztwo) {
@@ -309,7 +322,8 @@ if (arg.przelicz) {
 }
 
 // kolejka z ograniczoną równoległością
-const doZrobienia = partia.firmy.filter((f) => !f.rekord || f.etapy?.sledztwo === "czeka" || f.etapy?.kontrola === "czeka" || f.etapy?.opisy === "czeka" || f.etapy?.tozsamosc === "czeka");
+partia.przystanekNip = !!arg["stop-po-nip"];
+const doZrobienia = partia.firmy.filter((f) => !f.pomin && (!f.rekord || f.etapy?.sledztwo === "czeka" || f.etapy?.kontrola === "czeka" || f.etapy?.opisy === "czeka" || f.etapy?.tozsamosc === "czeka"));
 log(`do przetworzenia: ${doZrobienia.length} z ${partia.firmy.length} (równolegle ${ROWNOLEGLE}, modele: ${Object.entries(MODEL).map(([k, v]) => k + "=" + v).join(", ")})`);
 let i = 0;
 await Promise.all(
@@ -328,14 +342,17 @@ await Promise.all(
 );
 
 // podsumowanie
-const st = { WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, czeka: 0, blad: 0 };
+const st = { WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, czeka: 0, nip: 0, pominiete: 0, blad: 0 };
 for (const f of partia.firmy) {
-  if (f.czeka && !f.rekord) st.czeka++;
+  if (f.pomin) st.pominiete++;
+  else if (f.czeka && !f.rekord) st.czeka++;
+  else if (f.etapy?.sledztwo === "czeka na potwierdzenie NIP") st.nip++;
   else if (f.status) st[f.status]++;
   else st.blad++;
 }
 zapiszPartie();
-console.log(`\nPartia ${NAZWA_PARTII}: ${partia.firmy.length} firm → WYSOKA ${st.WYSOKA}, ŚREDNIA ${st.SREDNIA}, KONFLIKT ${st.KONFLIKT}, czeka ${st.czeka}, błąd ${st.blad}`);
+console.log(`\nPartia ${NAZWA_PARTII}: ${partia.firmy.length} firm → WYSOKA ${st.WYSOKA}, ŚREDNIA ${st.SREDNIA}, KONFLIKT ${st.KONFLIKT}, czeka ${st.czeka}, błąd ${st.blad}${st.nip ? `, do potwierdzenia NIP ${st.nip}` : ""}${st.pominiete ? `, pominięte ${st.pominiete}` : ""}`);
+if (st.nip) console.log(`Przystanek na NIP: potwierdź numery w panelu (node tools/firmy/panel.mjs) albo uruchom ponownie bez --stop-po-nip.`);
 if (partia.statystyki.wywolan) {
   const s = partia.statystyki;
   console.log(`Model: ${s.wywolan} wywołań, ${s.tury || "?"} tur, ${Math.round(s.sekundy / 60)} min, ${Math.round(s.tokenyWe / 1000)}k tokenów wejścia (+${Math.round((s.tokenyCache || 0) / 1000)}k z cache), ${Math.round(s.tokenyWy / 1000)}k wyjścia.`);

@@ -42,6 +42,12 @@ Generator.html
 # automat dodawania firm (tools/firmy/): prompty/odpowiedzi trybu recznego i backupy bazy
 /data/robocze/automat/reczne/
 /data/robocze/backup/
+# licznik zapytan do Bialej Listy MF i listy firm generowane przez panel
+/data/robocze/automat/mf-licznik.json
+/data/robocze/automat/lista-*.txt
 
 # generowany przez fetch-logos.mjs (lista domen bez logo z ostatniego przebiegu)
 /tools/missing-logos.json
+# zrzuty makiet panelu (duze PNG, generowane skryptem)
+/docs/design/panel-firm/zrzuty/
+/docs/design/panel-firm/zrzuty-panel/

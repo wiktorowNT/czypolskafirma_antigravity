@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel firm — CzyPolskaFirma</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root{
+    --tlo:#f6f5f2; --papier:#fff; --tekst:#1c1b19; --slaby:#6d6a64; --linia:#ddd9d2;
+    --akcent:#8f1d1d; --zielony:#1f6b3a; --bursztyn:#8a5a10; --czerwony:#a32020;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--tlo);color:var(--tekst);font:15px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+  aside{background:#211f1c;color:#e9e6e0;padding:18px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+  .marka{padding:0 18px 16px;border-bottom:1px solid #3a3733;margin-bottom:12px}
+  .marka b{display:block;font-size:15px}
+  .marka span{font-size:12px;color:#a09b93}
+  nav a{display:flex;gap:10px;align-items:baseline;padding:9px 18px;color:#cdc8c0;text-decoration:none;font-size:14px;cursor:pointer}
+  nav a .nr{font-size:11px;color:#8a847b;width:12px;font-style:italic}
+  nav a:hover{background:#2c2925;color:#fff}
+  nav a.akt{background:#3a3430;color:#fff;box-shadow:inset 3px 0 0 var(--akcent)}
+  nav a.ukryta{display:none}
+  .stopka-boczna{margin-top:auto;padding:14px 18px 0;border-top:1px solid #3a3733;font-size:12px;color:#8a847b}
+  .stopka-boczna button{background:none;border:0;color:#8a847b;padding:0;font-size:12px;text-decoration:underline;cursor:pointer}
+  main{padding:26px 34px 60px;max-width:1000px}
+  h1{font-size:23px;margin:0 0 4px;font-weight:600}
+  .podtytul{color:var(--slaby);margin:0 0 22px}
+  h2{font-size:15px;margin:0 0 12px;font-weight:600}
+  .karta{background:var(--papier);border:1px solid var(--linia);border-radius:6px;padding:18px 20px;margin-bottom:16px}
+  .rzad{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .rozdziel{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  button{font:inherit;border-radius:5px;border:1px solid var(--linia);background:#fff;padding:8px 14px;cursor:pointer;color:var(--tekst)}
+  button:hover:not(:disabled){background:#f2f0ec}
+  button:disabled{opacity:.45;cursor:default}
+  .glowny{background:var(--akcent);border-color:var(--akcent);color:#fff;font-weight:500}
+  .glowny:hover:not(:disabled){background:#7a1818}
+  .glowny:disabled{background:#c9c5bf;border-color:#c9c5bf;color:#fff;opacity:1}
+  input[type=text].nip{min-width:132px}
+  .duzy{padding:11px 20px;font-size:15px}
+  textarea,input[type=text],select{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--linia);border-radius:5px;background:#fff;color:var(--tekst)}
+  textarea{min-height:130px;resize:vertical}
+  label.pole{display:block;margin-bottom:14px}
+  label.pole>span{display:block;font-size:13px;color:var(--slaby);margin-bottom:5px}
+  .opcja{display:flex;gap:9px;align-items:flex-start;padding:7px 0}
+  .opcja input{margin-top:3px}
+  .opcja em{display:block;font-style:normal;font-size:12.5px;color:var(--slaby)}
+  .lampka{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #eeebe6}
+  .lampka:last-child{border-bottom:0}
+  .kropka{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:none}
+  .ok{background:var(--zielony)} .uwaga{background:var(--bursztyn)} .zle{background:var(--czerwony)}
+  .lampka .tresc{flex:1}
+  .lampka small{display:block;color:var(--slaby)}
+  .plakietka{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--linia);color:var(--slaby);white-space:nowrap}
+  .p-ok{color:var(--zielony);border-color:#bcd8c6;background:#f1f8f3}
+  .p-uwaga{color:var(--bursztyn);border-color:#e4d3ae;background:#fbf6ea}
+  .p-zle{color:var(--czerwony);border-color:#e6c2c2;background:#fbf0f0}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;font-weight:500;color:var(--slaby);font-size:12.5px;padding:0 10px 8px 0;border-bottom:1px solid var(--linia)}
+  td{padding:10px 10px 10px 0;border-bottom:1px solid #f0ede8;vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  .pasek{height:7px;background:#eae7e1;border-radius:99px;overflow:hidden;margin:14px 0 8px}
+  .pasek i{display:block;height:100%;background:var(--akcent);transition:width .4s}
+  .krok{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid #f0ede8;font-size:14px}
+  .krok:last-child{border-bottom:0}
+  .krok b{font-weight:500;width:200px;flex:none}
+  .krok span{color:var(--slaby);font-size:13px}
+  .firma{border:1px solid var(--linia);border-radius:6px;background:#fff;margin-bottom:12px}
+  .firma header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--linia)}
+  .firma .tresc{padding:14px 16px}
+  .konflikt{border-left:3px solid var(--czerwony)}
+  .dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .ins{color:var(--zielony)} .upd{color:#1d4f7a} .err{color:var(--czerwony)}
+  .uwagi{font-size:13px;color:var(--slaby);margin:10px 0 0}
+  .ekran{display:none} .ekran.akt{display:block}
+  .pasmo{background:#fbf6ea;border:1px solid #e4d3ae;border-radius:6px;padding:11px 14px;font-size:13.5px;margin-bottom:16px}
+  .pasmo.blad{background:#fbf0f0;border-color:#e6c2c2;color:#7a1818}
+  .pasmo.dobrze{background:#f1f8f3;border-color:#bcd8c6}
+  .prompt,.log{font:12.5px/1.6 ui-monospace,Consolas,monospace;background:#f6f5f2;border:1px solid var(--linia);border-radius:5px;padding:12px 14px;color:var(--slaby);white-space:pre-wrap;max-height:220px;overflow:auto;margin:0}
+  .log{background:#211f1c;color:#cdc8c0;border-color:#211f1c;max-height:260px}
+  .etap{display:flex;gap:13px;margin-bottom:20px}
+  .etap:last-child{margin-bottom:0}
+  .etap .nrb{width:25px;height:25px;border-radius:50%;background:#211f1c;color:#fff;flex:none;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .etap .tresc-etapu{flex:1}
+  .etap p{margin:0 0 10px;font-size:13.5px;color:var(--slaby)}
+  iframe{width:100%;height:calc(100vh - 150px);border:1px solid var(--linia);border-radius:6px;background:#fff}
+  .pusto{color:var(--slaby);font-size:14px}
+  .wybor-partii{display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--slaby);margin-bottom:16px}
+  .wybor-partii select{max-width:340px}
+  .kreska{text-decoration:line-through;color:var(--slaby)}
+  a{color:var(--akcent)}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="marka"><b>CzyPolskaFirma</b><span>Panel dodawania firm</span></div>
+    <nav>
+      <a data-e="start" class="akt"><i class="nr">1</i> Gotowość</a>
+      <a data-e="nowa"><i class="nr">2</i> Nowa partia</a>
+      <a data-e="praca"><i class="nr">→</i> Praca w toku</a>
+      <a data-e="nip"><i class="nr">→</i> Przystanek na NIP</a>
+      <a data-e="partie"><i class="nr">3</i> Moje partie</a>
+      <a data-e="przeglad"><i class="nr">4</i> Przegląd</a>
+      <a data-e="konsylium"><i class="nr">→</i> Konsylium modeli</a>
+      <a data-e="import"><i class="nr">5</i> Import do bazy</a>
+      <a data-e="logo"><i class="nr">6</i> Logotypy</a>
+      <a data-e="backup"><i class="nr">7</i> Backup</a>
+    </nav>
+    <div class="stopka-boczna">
+      Działa na Twoim komputerze.<br>Nic nie trafia do bazy bez Twojego kliknięcia.<br><br>
+      <button id="btnZamknij">Zamknij panel</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- 1. GOTOWOŚĆ -->
+    <section class="ekran akt" id="e-start">
+      <h1>Gotowość</h1>
+      <p class="podtytul">Sprawdzenie przed rozpoczęciem pracy.</p>
+      <div class="karta" id="lampki"><span class="pusto">Sprawdzam…</span></div>
+      <div class="karta rozdziel">
+        <div id="startPodsumowanie" class="pusto"></div>
+        <div class="rzad">
+          <button class="glowny duzy" data-idz="nowa">Nowa partia</button>
+          <button class="duzy" data-idz="partie">Moje partie</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. NOWA PARTIA -->
+    <section class="ekran" id="e-nowa">
+      <h1>Nowa partia</h1>
+      <p class="podtytul">Podaj firmy do sprawdzenia. Automat szuka właściciela, Ty potem zatwierdzasz.</p>
+      <div id="nowaBlad"></div>
+      <div class="karta">
+        <div class="rzad" style="margin-bottom:16px">
+          <button class="glowny" id="trybNazwy">Wpisuję nazwy firm</button>
+          <button id="trybKategoria">Wybieram kategorię</button>
+        </div>
+        <div id="polaNazwy">
+          <label class="pole">
+            <span>Nazwy firm — każda w osobnej linii. Jeśli znasz NIP, dopisz go po kresce, np. „Nałęczowianka | 7160001594”.</span>
+            <textarea id="firmyTekst" placeholder="Mokate&#10;Ziaja&#10;Vila"></textarea>
+          </label>
+        </div>
+        <div id="polaKategoria" style="display:none">
+          <div class="rzad" style="align-items:flex-end;margin-bottom:14px">
+            <label class="pole" style="flex:1;margin-bottom:0"><span>Kategoria</span><select id="kategoriaWybor"></select></label>
+            <label class="pole" style="width:150px;margin-bottom:0"><span>Ile firm</span><input type="text" id="seedIle" value="40"></label>
+          </div>
+          <p class="uwagi" style="margin-top:0">Model zaproponuje marki z tej kategorii, pomijając te, które już są w bazie.</p>
+        </div>
+        <label class="pole" style="max-width:320px"><span>Nazwa partii</span><input type="text" id="nazwaPartii"></label>
+        <h2 style="margin-top:6px">Opcje</h2>
+        <label class="opcja"><input type="checkbox" id="optPrzystanek" checked><span><b>Zatrzymaj się po znalezieniu NIP-ów</b><em>Najpierw potwierdzasz, że automat trafił we właściwe spółki, dopiero potem rusza długa część.</em></span></label>
+        <label class="opcja"><input type="checkbox" id="optKontrola"><span><b>Dokładniejsza kontrola</b><em>Mocniejszy model sprawdza ustalenia. Wolniej, ale mniej pomyłek przy trudnych spółkach.</em></span></label>
+        <label class="opcja"><input type="checkbox" id="optCrbr"><span><b>Sprawdź beneficjentów w CRBR</b><em>Przydatne przy spółkach akcyjnych, których KRS nie pokazuje. Dodaje ok. 3 sekundy na firmę.</em></span></label>
+        <label class="opcja"><input type="checkbox" id="optReweryfikacja"><span><b>To firmy, które już są w bazie</b><em>Re-weryfikacja: każda różnica wobec obecnego rekordu będzie konfliktem do Twojej decyzji.</em></span></label>
+      </div>
+      <div class="karta rozdziel">
+        <div id="nowaSzacunek" class="pusto"></div>
+        <button class="glowny duzy" id="btnUruchom">Uruchom automat</button>
+      </div>
+    </section>
+
+    <!-- PRACA W TOKU -->
+    <section class="ekran" id="e-praca">
+      <h1 id="pracaTytul">Praca w toku</h1>
+      <p class="podtytul">Możesz zamknąć to okno. Automat pracuje dalej, wrócisz tu później.</p>
+      <div id="pracaPusto" class="karta pusto">Nie wybrano partii. Wejdź w „Moje partie”.</div>
+      <div id="pracaTresc" style="display:none">
+        <div class="karta">
+          <div class="rozdziel"><b id="pracaLicznik"></b><span id="pracaCzas" style="color:var(--slaby);font-size:13.5px"></span></div>
+          <div class="pasek"><i id="pracaPasek" style="width:0%"></i></div>
+          <div class="rzad" style="margin-top:12px">
+            <button id="btnZatrzymaj">Zatrzymaj</button>
+            <button id="btnLog">Pokaż szczegóły techniczne</button>
+            <button class="glowny" id="btnDoPrzegladu" style="margin-left:auto">Przejdź do przeglądu</button>
+          </div>
+          <pre class="log" id="pracaLog" style="display:none;margin-top:14px"></pre>
+        </div>
+        <div class="karta">
+          <h2>Firmy</h2>
+          <div id="pracaFirmy"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRZYSTANEK NA NIP -->
+    <section class="ekran" id="e-nip">
+      <h1>Sprawdzenie numerów NIP</h1>
+      <p class="podtytul" id="nipPodtytul">Zanim automat ruszy dalej, potwierdź, że trafił we właściwe spółki.</p>
+      <div class="pasmo">Program znalazł numery NIP i sprawdził je w Białej Liście Ministerstwa Finansów oraz w KRS. Dopiero po Twoim potwierdzeniu zacznie się dłuższa część, czyli śledztwo właścicielskie i opisy.</div>
+      <div class="karta"><div id="nipTabela" class="pusto">Wczytuję…</div></div>
+      <div class="karta rozdziel">
+        <div id="nipPodsumowanie" class="pusto"></div>
+        <div class="rzad">
+          <button class="duzy" id="btnSprawdzNip">Zapisz poprawki i sprawdź ponownie</button>
+          <button class="glowny duzy" id="btnDalej">Sprawdzaj dalej</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MOJE PARTIE -->
+    <section class="ekran" id="e-partie">
+      <h1>Moje partie</h1>
+      <p class="podtytul">Każda partia to jedna paczka firm. Zostaje na dysku, dopóki jej nie usuniesz.</p>
+      <div class="karta"><div id="partieTabela" class="pusto">Wczytuję…</div></div>
+    </section>
+
+    <!-- 4. PRZEGLĄD -->
+    <section class="ekran" id="e-przeglad">
+      <h1>Przegląd</h1>
+      <p class="podtytul">Automat proponuje, Ty decydujesz. Konflikty są na górze.</p>
+      <div class="wybor-partii">Partia: <select id="przegladPartia"></select>
+        <button id="btnKonsyliumSkrot">Zapytaj inne modele</button>
+        <button class="glowny" data-idz="import">Przejdź do importu</button>
+      </div>
+      <iframe id="ramkaPrzegladu" title="Przegląd partii"></iframe>
+    </section>
+
+    <!-- KONSYLIUM -->
+    <section class="ekran" id="e-konsylium">
+      <h1>Konsylium modeli</h1>
+      <p class="podtytul">Dajesz te same firmy innym modelom i sprawdzasz, czy mówią to samo.</p>
+      <div class="wybor-partii">Partia: <select id="konsyliumPartia"></select></div>
+      <div class="karta">
+        <div class="etap">
+          <i class="nrb">1</i>
+          <div class="tresc-etapu">
+            <h2>Skopiuj pytanie</h2>
+            <p>Gotowy tekst z listą firm i Twoimi ustaleniami. Model ma odpowiedzieć tabelką.</p>
+            <div class="rzad" style="margin-bottom:10px">
+              <button class="glowny" id="btnKopiujPrompt">Kopiuj pytanie</button>
+              <select id="konsyliumZakres" style="max-width:280px">
+                <option value="niezatwierdzone">Tylko niezatwierdzone</option>
+                <option value="wszystkie">Wszystkie firmy z partii</option>
+              </select>
+              <span id="kopiujInfo" style="font-size:13px;color:var(--zielony)"></span>
+            </div>
+            <pre class="prompt" id="podgladPromptu">Wczytuję…</pre>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">2</i>
+          <div class="tresc-etapu">
+            <h2>Wklej je do innego modelu</h2>
+            <p>Najlepiej z włączonym wyszukiwaniem w internecie. Otwiera się w nowej karcie przeglądarki.</p>
+            <div class="rzad">
+              <button data-model="https://gemini.google.com/app">Otwórz Gemini</button>
+              <button data-model="https://chatgpt.com/">Otwórz ChatGPT</button>
+              <button data-model="https://grok.com/">Otwórz Grok</button>
+              <button data-model="https://www.perplexity.ai/">Otwórz Perplexity</button>
+            </div>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">3</i>
+          <div class="tresc-etapu">
+            <h2>Wklej odpowiedź tutaj</h2>
+            <p>Wklej całą odpowiedź, razem z tabelką. Program sam wyłuska wiersze i dopasuje je do firm.</p>
+            <label class="pole" style="max-width:260px"><span>Który to model</span>
+              <select id="konsyliumModel">
+                <option>Gemini</option><option>ChatGPT</option><option>Grok</option><option>Perplexity</option><option>inny model</option>
+              </select>
+            </label>
+            <label class="pole"><span>Odpowiedź modelu</span><textarea id="konsyliumTekst" placeholder="Wklej tutaj (Ctrl+V)"></textarea></label>
+            <button class="glowny duzy" id="btnPorownaj">Porównaj z moimi ustaleniami</button>
+          </div>
+        </div>
+      </div>
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:14px">
+          <h2 style="margin:0">Modele, które już odpowiedziały</h2>
+          <span style="font-size:13.5px;color:var(--slaby)">Zgoda innych modeli nie podnosi pewności. Niezgoda zawsze ją obniża.</span>
+        </div>
+        <div id="konsyliumLista" class="pusto">Jeszcze żaden.</div>
+      </div>
+      <div id="konsyliumNiezgody"></div>
+    </section>
+
+    <!-- 5. IMPORT -->
+    <section class="ekran" id="e-import">
+      <h1>Import do bazy</h1>
+      <p class="podtytul" id="importPodtytul">Najpierw zobacz, co się zmieni.</p>
+      <div class="wybor-partii">Partia: <select id="importPartia"></select>
+        <button id="btnPlan">Pokaż, co się zmieni</button>
+      </div>
+      <div class="pasmo">Zapis wykona się dopiero po kliknięciu „Zapisz do bazy” i potwierdzeniu. Backup bazy robi się automatycznie tuż przed zapisem.</div>
+      <div id="importOstrzezenie"></div>
+      <div class="karta"><div id="importTabela" class="pusto">Kliknij „Pokaż, co się zmieni”.</div></div>
+      <div class="karta rozdziel">
+        <div id="importPodsumowanie" class="pusto"></div>
+        <button class="glowny duzy" id="btnZapisz" disabled>Zapisz do bazy</button>
+      </div>
+      <pre class="log" id="importLog" style="display:none"></pre>
+    </section>
+
+    <!-- 6. LOGOTYPY -->
+    <section class="ekran" id="e-logo">
+      <h1>Logotypy</h1>
+      <p class="podtytul">Po imporcie nowe firmy nie mają jeszcze znaków graficznych.</p>
+      <div class="karta" id="logoLampki"><span class="pusto">Wczytuję…</span></div>
+      <div class="karta">
+        <div class="rozdziel">
+          <div><h2 style="margin-bottom:2px">Wyślij logotypy na podgląd</h2>
+            <span style="font-size:13.5px;color:var(--slaby)" id="logoGitOpis">Sprawdzam…</span></div>
+          <button class="glowny duzy" id="btnWyslijLogo" disabled>Wyślij</button>
+        </div>
+        <p class="uwagi" id="logoGitStopka"></p>
+      </div>
+      <pre class="log" id="logoLog" style="display:none"></pre>
+    </section>
+
+    <!-- 7. BACKUP -->
+    <section class="ekran" id="e-backup">
+      <h1>Backup bazy</h1>
+      <p class="podtytul">Kopia wszystkich firm i kategorii na Dysku Google.</p>
+      <div class="karta"><div id="backupTabela" class="pusto">Wczytuję…</div></div>
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)" id="backupInfo"></span>
+        <button class="glowny duzy" id="btnBackup">Zrób backup teraz</button>
+      </div>
+      <pre class="log" id="backupLog" style="display:none"></pre>
+    </section>
+  </main>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pobierz = async (u, o) => { const r = await fetch(u, o); const j = await r.json().catch(() => ({ blad: "zła odpowiedź serwera" })); if (!r.ok && !j.blad) j.blad = "błąd " + r.status; return j; };
+const wyslij = (u, dane) => pobierz(u, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(dane || {}) });
+const kiedy = (ms) => { const d = new Date(ms); const dzis = new Date(); const ten = d.toDateString() === dzis.toDateString(); return (ten ? "dzisiaj" : d.toLocaleDateString("pl-PL")) + ", " + d.toTimeString().slice(0, 5); };
+
+let STAN = { ekran: "start", partia: localStorage.getItem("panel.partia") || null, zadanie: null, partie: [], kategorie: [], odliczanie: null };
+
+// ---------- nawigacja ----------
+function pokaz(id) {
+  STAN.ekran = id;
+  document.querySelectorAll(".ekran").forEach((s) => s.classList.toggle("akt", s.id === "e-" + id));
+  document.querySelectorAll("nav a").forEach((a) => a.classList.toggle("akt", a.dataset.e === id));
+  window.scrollTo(0, 0);
+  odswiezEkran();
+}
+document.querySelectorAll("nav a").forEach((a) => a.addEventListener("click", () => pokaz(a.dataset.e)));
+document.querySelectorAll("[data-idz]").forEach((b) => b.addEventListener("click", () => pokaz(b.dataset.idz)));
+
+function ustawPartie(nazwa) {
+  STAN.partia = nazwa;
+  if (nazwa) localStorage.setItem("panel.partia", nazwa);
+  for (const s of ["#przegladPartia", "#konsyliumPartia", "#importPartia"]) { const el = $(s); if (el) el.value = nazwa || ""; }
+}
+
+async function wczytajListePartii() {
+  const j = await pobierz("/api/panel/partie");
+  STAN.partie = j.partie || [];
+  if (!STAN.partia && STAN.partie[0]) STAN.partia = STAN.partie[0].nazwa;
+  for (const s of ["#przegladPartia", "#konsyliumPartia", "#importPartia"]) {
+    const el = $(s);
+    if (!el) continue;
+    el.innerHTML = STAN.partie.map((p) => `<option value="${esc(p.nazwa)}">${esc(p.nazwa)} — ${p.firm} firm</option>`).join("") || `<option value="">brak partii</option>`;
+    el.value = STAN.partia || "";
+  }
+  return STAN.partie;
+}
+
+function odswiezEkran() {
+  if (STAN.ekran === "start") ekranGotowosc();
+  if (STAN.ekran === "nowa") ekranNowa();
+  if (STAN.ekran === "praca") ekranPraca();
+  if (STAN.ekran === "nip") ekranNip();
+  if (STAN.ekran === "partie") ekranPartie();
+  if (STAN.ekran === "przeglad") ekranPrzeglad();
+  if (STAN.ekran === "konsylium") ekranKonsylium();
+  if (STAN.ekran === "import") ekranImport();
+  if (STAN.ekran === "logo") ekranLogo();
+  if (STAN.ekran === "backup") ekranBackup();
+}
+
+// ---------- 1. gotowość ----------
+function lampka(stan, tytul, opis, prawa) {
+  return `<div class="lampka"><i class="kropka ${stan}"></i><div class="tresc"><b>${tytul}</b><small>${opis}</small></div>${prawa || ""}</div>`;
+}
+
+async function ekranGotowosc() {
+  const g = await pobierz("/api/panel/gotowosc");
+  if (g.blad) { $("#lampki").innerHTML = `<span class="pusto">Nie udało się sprawdzić: ${esc(g.blad)}</span>`; return; }
+  const l = [];
+  l.push(lampka(g.claude.ok ? "ok" : "zle", "Claude " + (g.claude.ok ? "jest zalogowany" : "nie jest zalogowany"),
+    g.claude.ok ? `Tryb: ${esc(g.claude.metoda || "subskrypcja")}. Automat zużywa limity subskrypcji, bez osobnych kosztów.` : `${esc(g.claude.powod || "brak sesji")}. Otwórz terminal i uruchom raz: claude auth login`,
+    `<span class="plakietka ${g.claude.ok ? "p-ok" : "p-zle"}">${g.claude.ok ? "w porządku" : "do naprawy"}</span>`));
+  l.push(lampka(g.baza.ok ? "ok" : "zle", "Połączenie z bazą",
+    g.baza.ok ? `Supabase odpowiada. W bazie: ${g.baza.firm} firm, ${g.baza.kategorii} kategorii.` : esc(g.baza.blad || "brak połączenia"),
+    `<span class="plakietka ${g.baza.ok ? "p-ok" : "p-zle"}">${g.baza.ok ? "w porządku" : "błąd"}</span>`));
+  const kol = g.kolumny.sources && g.kolumny.confidence;
+  l.push(lampka(kol ? "ok" : "uwaga", "Kolumny źródeł i pewności",
+    kol ? "Tabela companies ma pola sources i confidence." : "Brakuje kolumn sources/confidence. Import zadziała, ale źródła zostaną tylko w pliku partii (plik tools/sql/2026-09-17-sources-confidence.sql w edytorze SQL Supabase).",
+    `<span class="plakietka ${kol ? "p-ok" : "p-uwaga"}">${kol ? "w porządku" : "do zrobienia raz"}</span>`));
+  const mfStan = g.mf.zostalo > 30 ? "ok" : g.mf.zostalo > 0 ? "uwaga" : "zle";
+  l.push(lampka(mfStan, "Limit zapytań do Ministerstwa Finansów",
+    `Zużyto ${g.mf.zapytan} ze ${g.mf.limit} na dziś. Odnawia się o północy. Starczy na ok. ${g.mf.zostalo} firm.`,
+    `<span class="plakietka ${mfStan === "ok" ? "p-ok" : mfStan === "uwaga" ? "p-uwaga" : "p-zle"}">${g.mf.zostalo} zostało</span>`));
+  const dni = g.backup ? Math.floor((Date.now() - g.backup.kiedy) / 86400000) : null;
+  l.push(lampka(!g.backup ? "zle" : dni > 10 ? "uwaga" : "ok", "Ostatni backup bazy",
+    g.backup ? `${kiedy(g.backup.kiedy)} — ${esc(g.backup.skad)}, ${g.backup.firm || "?"} firm.` : "Nie znaleziono żadnego backupu.",
+    `<span class="plakietka ${!g.backup ? "p-zle" : dni > 10 ? "p-uwaga" : "p-ok"}">${g.backup ? (dni === 0 ? "dzisiaj" : dni + " dni temu") : "brak"}</span>`));
+  $("#lampki").innerHTML = l.join("");
+  const wToku = g.partie.find((p) => p.gotowe < p.firm - p.pominiete);
+  $("#startPodsumowanie").innerHTML = g.automatPracuje
+    ? `<b>Automat teraz pracuje</b><br><span style="font-size:13.5px">Partia ${esc(wToku?.nazwa || "")} — zobacz „Praca w toku”.</span>`
+    : g.partie.length ? `<b>Wszystko gotowe</b><br><span style="font-size:13.5px">Ostatnia partia: ${esc(g.partie[0].nazwa)} (${g.partie[0].firm} firm, ${g.partie[0].zatwierdzone} zatwierdzonych).</span>` : `<b>Wszystko gotowe</b><br><span style="font-size:13.5px">Nie masz jeszcze żadnej partii.</span>`;
+}
+
+// ---------- 2. nowa partia ----------
+let trybWejscia = "nazwy";
+$("#trybNazwy").onclick = () => { trybWejscia = "nazwy"; $("#trybNazwy").classList.add("glowny"); $("#trybKategoria").classList.remove("glowny"); $("#polaNazwy").style.display = ""; $("#polaKategoria").style.display = "none"; szacunek(); };
+$("#trybKategoria").onclick = () => { trybWejscia = "kategoria"; $("#trybKategoria").classList.add("glowny"); $("#trybNazwy").classList.remove("glowny"); $("#polaNazwy").style.display = "none"; $("#polaKategoria").style.display = ""; szacunek(); };
+
+function dzisiajTekst() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+
+async function ekranNowa() {
+  if (!$("#nazwaPartii").value) $("#nazwaPartii").value = dzisiajTekst();
+  if (!STAN.kategorie.length) {
+    const j = await pobierz("/api/panel/kategorie");
+    STAN.kategorie = j.kategorie || [];
+    $("#kategoriaWybor").innerHTML = STAN.kategorie.map((k) => `<option value="${esc(k.slug)}">${esc(k.name)}</option>`).join("");
+  }
+  szacunek();
+}
+
+function szacunek() {
+  const ile = trybWejscia === "kategoria" ? Number($("#seedIle").value) || 40 : $("#firmyTekst").value.split(/\r?\n/).filter((s) => s.trim()).length;
+  const minuty = Math.ceil((ile * 3.5) / 2);
+  $("#nowaSzacunek").innerHTML = ile ? `${ile} firm · szacowany czas <b style="color:var(--tekst)">ok. ${minuty} min</b> · zużyje ${ile} zapytań do MF` : "Wpisz nazwy firm albo wybierz kategorię.";
+}
+$("#firmyTekst").addEventListener("input", szacunek);
+$("#seedIle").addEventListener("input", szacunek);
+
+$("#btnUruchom").onclick = async () => {
+  $("#btnUruchom").disabled = true;
+  const dane = {
+    partia: $("#nazwaPartii").value.trim() || dzisiajTekst(),
+    firmy: trybWejscia === "nazwy" ? $("#firmyTekst").value : "",
+    kategoria: trybWejscia === "kategoria" ? $("#kategoriaWybor").value : null,
+    seed: $("#seedIle").value,
+    przystanekNip: $("#optPrzystanek").checked,
+    dokladnaKontrola: $("#optKontrola").checked,
+    crbr: $("#optCrbr").checked,
+    reweryfikacja: $("#optReweryfikacja").checked,
+  };
+  const j = await wyslij("/api/panel/uruchom", dane);
+  $("#btnUruchom").disabled = false;
+  if (j.blad) { $("#nowaBlad").innerHTML = `<div class="pasmo blad">${esc(j.blad)}</div>`; return; }
+  $("#nowaBlad").innerHTML = "";
+  ustawPartie(j.partia);
+  STAN.zadanie = j.zadanie;
+  await wczytajListePartii();
+  pokaz("praca");
+};
+
+// ---------- praca w toku ----------
+let pokazLog = false;
+$("#btnLog").onclick = () => { pokazLog = !pokazLog; $("#pracaLog").style.display = pokazLog ? "" : "none"; $("#btnLog").textContent = pokazLog ? "Ukryj szczegóły techniczne" : "Pokaż szczegóły techniczne"; };
+$("#btnZatrzymaj").onclick = async () => { if (STAN.zadanie && confirm("Zatrzymać automat? Zrobione firmy zostaną zapisane, resztę dokończysz później.")) { await wyslij("/api/panel/zatrzymaj", { id: STAN.zadanie }); ekranPraca(); } };
+$("#btnDoPrzegladu").onclick = () => pokaz("przeglad");
+
+const OPIS_KROKU = { 1: "krok 1 z 5 — szukanie NIP-u", 2: "krok 2 z 5 — pobieranie odpisu z KRS", 3: "krok 3 z 5 — śledztwo właścicielskie", 4: "krok 4 z 5 — samokontrola", 5: "krok 5 z 5 — pisanie opisów" };
+
+async function ekranPraca() {
+  if (!STAN.partia) { $("#pracaPusto").style.display = ""; $("#pracaTresc").style.display = "none"; return; }
+  const p = await pobierz("/api/panel/postep?partia=" + encodeURIComponent(STAN.partia));
+  if (p.blad) { $("#pracaPusto").style.display = ""; $("#pracaPusto").textContent = p.blad; $("#pracaTresc").style.display = "none"; return; }
+  $("#pracaPusto").style.display = "none";
+  $("#pracaTresc").style.display = "";
+  $("#pracaTytul").textContent = `Partia ${p.nazwa}`;
+  const razem = p.firm - p.pominiete;
+  const gotowe = p.gotowe;
+  $("#pracaLicznik").textContent = `${gotowe} z ${razem} gotowe` + (p.czekaNaNip ? ` · ${p.czekaNaNip} czeka na potwierdzenie NIP` : "");
+  $("#pracaPasek").style.width = razem ? Math.round((gotowe / razem) * 100) + "%" : "0%";
+  $("#pracaCzas").textContent = p.zadanie ? (p.minutyDoKonca ? `pozostało ok. ${p.minutyDoKonca} min` : "kończy…") : gotowe >= razem && razem ? "partia gotowa" : "automat nie pracuje";
+  $("#btnZatrzymaj").disabled = !p.zadanie;
+  STAN.zadanie = p.zadanie || STAN.zadanie;
+  $("#pracaFirmy").innerHTML = p.firmy.map((f) => {
+    const prawa = f.etap === "gotowe"
+      ? `<span class="plakietka ${f.status === "WYSOKA" ? "p-ok" : f.status === "KONFLIKT" ? "p-zle" : "p-uwaga"}">${f.status === "WYSOKA" ? "gotowe · pewność wysoka" : f.status === "KONFLIKT" ? "gotowe · konflikt" : "gotowe · do obejrzenia"}</span><span>${esc(f.kraj || "")} ${f.wlasciciel ? "· " + esc(f.wlasciciel) : ""}</span>`
+      : f.etap === "pominięta" ? `<span class="plakietka">pominięta</span>`
+      : f.etap === "czeka na potwierdzenie NIP" ? `<span class="plakietka p-uwaga">czeka na potwierdzenie NIP</span><span>${esc(f.nip || "")}</span>`
+      : f.bledy.length ? `<span class="plakietka p-zle">błąd</span><span>${esc(f.bledy[0])}</span>`
+      : `<span>${esc(OPIS_KROKU[f.krok] || f.etap)}</span>`;
+    return `<div class="krok"><b>${esc(f.nazwa)}</b>${prawa}</div>`;
+  }).join("");
+  if (p.czekaNaNip && !p.zadanie) $("#pracaCzas").innerHTML = `<a href="#" onclick="pokaz('nip');return false">przejdź do potwierdzenia NIP-ów</a>`;
+  if (STAN.zadanie) {
+    const z = await pobierz("/api/panel/zadanie?id=" + STAN.zadanie);
+    if (z.log) { $("#pracaLog").textContent = z.log.join("\n"); $("#pracaLog").scrollTop = $("#pracaLog").scrollHeight; }
+  }
+}
+
+// ---------- przystanek na NIP ----------
+async function ekranNip() {
+  if (!STAN.partia) { $("#nipTabela").innerHTML = '<span class="pusto">Nie wybrano partii.</span>'; return; }
+  const j = await pobierz("/api/panel/nip?partia=" + encodeURIComponent(STAN.partia));
+  if (j.blad) { $("#nipTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  $("#nipPodtytul").textContent = `Partia ${j.nazwa} · potwierdź, że automat trafił we właściwe spółki.`;
+  const wiersze = j.firmy.map((f, i) => {
+    const plakietka = f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
+      : f.wynik === "uwaga" ? `<span class="plakietka p-uwaga">do sprawdzenia</span>`
+      : f.wynik === "brak" ? `<span class="plakietka">nie sprawdzono</span>`
+      : `<span class="plakietka p-zle">nie zgadza się</span>`;
+    return `<tr>
+      <td><input type="checkbox" data-nip-pomin="${i}" ${f.pomin ? "" : "checked"}></td>
+      <td><b>${esc(f.nazwa)}</b>${f.wBazie ? `<br><span style="font-size:12.5px;color:var(--slaby)">jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}</span>` : ""}</td>
+      <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}">${f.podanyPrzezCiebie ? `<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span>` : ""}</td>
+      <td>${esc(f.spolka || "—")}${f.krs ? `<br><span style="font-size:12.5px;color:var(--slaby)">KRS ${esc(f.krs)}</span>` : ""}</td>
+      <td>${plakietka}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}</td>
+    </tr>`;
+  }).join("");
+  $("#nipTabela").innerHTML = `<table><tr><th style="width:26px"></th><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th></tr>${wiersze}</table>`;
+  $("#nipTabela").dataset.firmy = JSON.stringify(j.firmy.map((f) => ({ nazwa: f.nazwa, nip: f.nip })));
+  const ile = j.firmy.filter((f) => !f.pomin).length;
+  $("#nipPodsumowanie").innerHTML = `${ile} z ${j.firmy.length} firm pójdzie dalej · szacowany czas ok. ${Math.ceil((ile * 3) / 2)} min`;
+}
+
+function zmianyNip() {
+  const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
+  return bazowe.map((f, i) => ({ nazwa: f.nazwa, nip: document.querySelector(`[data-nip-pole="${i}"]`)?.value.trim() || "", pomin: !document.querySelector(`[data-nip-pomin="${i}"]`)?.checked }));
+}
+
+$("#btnSprawdzNip").onclick = async () => {
+  const j = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
+  if (j.blad) return alert(j.blad);
+  if (j.doSprawdzenia) {
+    const u = await wyslij("/api/panel/dalej", { partia: STAN.partia, tylkoNip: true });
+    if (u.blad) return alert(u.blad);
+    STAN.zadanie = u.zadanie;
+    alert(`Sprawdzam ponownie ${j.doSprawdzenia} numer(y). Za chwilę odświeżę tabelę.`);
+  }
+  ekranNip();
+};
+
+$("#btnDalej").onclick = async () => {
+  const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
+  if (z.blad) return alert(z.blad);
+  if (z.doSprawdzenia) return alert("Zmieniłeś numer NIP. Kliknij najpierw „Zapisz poprawki i sprawdź ponownie”.");
+  const j = await wyslij("/api/panel/dalej", { partia: STAN.partia });
+  if (j.blad) return alert(j.blad);
+  STAN.zadanie = j.zadanie;
+  pokaz("praca");
+};
+
+// ---------- moje partie ----------
+async function ekranPartie() {
+  const partie = await wczytajListePartii();
+  if (!partie.length) { $("#partieTabela").innerHTML = '<span class="pusto">Nie masz jeszcze żadnej partii. Zacznij od „Nowa partia”.</span>'; return; }
+  $("#partieTabela").innerHTML = `<table><tr><th>Partia</th><th>Firmy</th><th>Stan</th><th></th></tr>` + partie.map((p) => {
+    const stan = p.blad ? `<span class="plakietka p-zle">uszkodzony plik</span>`
+      : p.zaimportowane === p.zatwierdzone + p.zaimportowane && p.zaimportowane ? `<span class="plakietka p-ok">zaimportowana</span>`
+      : p.czekaNaNip ? `<span class="plakietka p-uwaga">czeka na potwierdzenie NIP</span>`
+      : p.gotowe < p.firm - p.pominiete ? `<span class="plakietka p-uwaga">niedokończona</span>`
+      : `<span class="plakietka">${p.zatwierdzone} zatwierdzonych${p.zaimportowane ? `, ${p.zaimportowane} w bazie` : ""}</span>`;
+    return `<tr>
+      <td><b>${esc(p.nazwa)}</b><br><span style="color:var(--slaby);font-size:13px">${kiedy(p.zmieniono)}${p.tryb === "reweryfikacja" ? " · re-weryfikacja" : ""}</span></td>
+      <td>${p.blad ? "—" : `${p.firm} firm${p.gotowe ? ` · ${p.WYSOKA} pewnych · ${p.SREDNIA} do obejrzenia · ${p.KONFLIKT} konfliktów` : ""}`}</td>
+      <td>${stan}</td>
+      <td><button data-partia="${esc(p.nazwa)}">Otwórz</button></td>
+    </tr>`;
+  }).join("") + `</table>`;
+  $("#partieTabela").querySelectorAll("[data-partia]").forEach((b) => b.addEventListener("click", async () => {
+    ustawPartie(b.dataset.partia);
+    const p = STAN.partie.find((x) => x.nazwa === b.dataset.partia);
+    pokaz(p && p.czekaNaNip ? "nip" : p && p.gotowe < p.firm - p.pominiete ? "praca" : "przeglad");
+  }));
+}
+
+// ---------- przegląd ----------
+function ekranPrzeglad() {
+  if (!STAN.partia) return;
+  const src = "/przeglad?partia=" + encodeURIComponent(STAN.partia);
+  if ($("#ramkaPrzegladu").getAttribute("src") !== src) $("#ramkaPrzegladu").setAttribute("src", src);
+}
+$("#przegladPartia").onchange = (e) => { ustawPartie(e.target.value); $("#ramkaPrzegladu").setAttribute("src", "/przeglad?partia=" + encodeURIComponent(STAN.partia)); };
+$("#btnKonsyliumSkrot").onclick = () => pokaz("konsylium");
+
+// ---------- konsylium ----------
+$("#konsyliumPartia").onchange = (e) => { ustawPartie(e.target.value); ekranKonsylium(); };
+$("#konsyliumZakres").onchange = () => ekranKonsylium();
+document.querySelectorAll("[data-model]").forEach((b) => b.addEventListener("click", () => window.open(b.dataset.model, "_blank", "noopener")));
+
+let PROMPT_KONSYLIUM = "";
+async function ekranKonsylium() {
+  if (!STAN.partia) return;
+  const tylko = $("#konsyliumZakres").value === "niezatwierdzone" ? "?tylko=niezatwierdzone&" : "?";
+  const r = await fetch("/api/prompt-konsylium" + tylko + "partia=" + encodeURIComponent(STAN.partia));
+  PROMPT_KONSYLIUM = await r.text();
+  $("#podgladPromptu").textContent = PROMPT_KONSYLIUM.slice(0, 700) + (PROMPT_KONSYLIUM.length > 700 ? "\n…" : "");
+  const j = await pobierz("/api/partia?partia=" + encodeURIComponent(STAN.partia));
+  const partia = j.partia || { firmy: [] };
+  const konsylia = partia.konsylia || [];
+  $("#konsyliumLista").innerHTML = konsylia.length
+    ? `<table><tr><th>Model</th><th>Kiedy</th><th>Dopasowano</th><th>Wynik</th></tr>` + konsylia.map((k) => `<tr><td><b>${esc(k.model)}</b></td><td>${k.kiedy ? kiedy(new Date(k.kiedy).getTime()) : esc(k.data)}</td><td>${k.dopasowane} z ${k.wierszy} wierszy</td><td>${k.niezgody ? `<span class="plakietka p-uwaga">${k.niezgody} niezgód</span>` : `<span class="plakietka p-ok">bez niezgód</span>`}</td></tr>`).join("") + `</table>`
+    : '<span class="pusto">Jeszcze żaden.</span>';
+  const niezgody = [];
+  for (const f of partia.firmy || []) for (const k of f.konsylium || []) if (k.zgoda === false) niezgody.push({ f, k });
+  $("#konsyliumNiezgody").innerHTML = niezgody.map(({ f, k }) => `
+    <div class="firma konflikt">
+      <header><b>${esc(f.nazwa)}</b><span class="plakietka p-zle">niezgoda — ${esc(k.model)}</span></header>
+      <div class="tresc">
+        <div class="dwie">
+          <div><span style="font-size:13px;color:var(--slaby)">Moje ustalenie</span>
+            <p style="margin:4px 0 0"><b>${esc(f.rekord?.country_code || "?")}</b> · ${esc(f.rekord?.owner_name || "")}</p></div>
+          <div><span style="font-size:13px;color:var(--slaby)">${esc(k.model)} twierdzi</span>
+            <p style="margin:4px 0 0"><b>${esc(k.country_code || "?")}</b> · ${esc(k.ultimate_owner || "")}<br>
+            <span style="font-size:13px;color:var(--slaby)">${esc(k.uwagi || "")} ${k.zrodlo && k.zrodlo !== "brak" ? `<a href="${esc(k.zrodlo)}" target="_blank" rel="noopener">źródło</a>` : "bez źródła"}</span></p></div>
+        </div>
+        <p class="uwagi">Zatwierdzenie tej firmy zostało cofnięte. Rozstrzygnij w przeglądzie: jeśli Twoje źródło jest lepsze, zatwierdź ponownie.</p>
+      </div>
+    </div>`).join("");
+}
+
+$("#btnKopiujPrompt").onclick = async () => {
+  await navigator.clipboard.writeText(PROMPT_KONSYLIUM);
+  $("#kopiujInfo").textContent = "skopiowane";
+  setTimeout(() => ($("#kopiujInfo").textContent = ""), 2500);
+};
+
+$("#btnPorownaj").onclick = async () => {
+  const tekst = $("#konsyliumTekst").value.trim();
+  if (!tekst) return alert("Najpierw wklej odpowiedź modelu.");
+  const j = await pobierz("/api/konsylium?partia=" + encodeURIComponent(STAN.partia), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: $("#konsyliumModel").value, tekst }) });
+  if (j.blad) return alert(j.blad);
+  $("#konsyliumTekst").value = "";
+  alert(`Dopasowano ${j.dopasowane} z ${j.wierszy} wierszy. Niezgód: ${j.niezgody}.`);
+  ekranKonsylium();
+};
+
+// ---------- import ----------
+$("#importPartia").onchange = (e) => { ustawPartie(e.target.value); $("#importTabela").innerHTML = '<span class="pusto">Kliknij „Pokaż, co się zmieni”.</span>'; $("#btnZapisz").disabled = true; };
+$("#btnPlan").onclick = () => planImportu();
+
+let PLAN = [];
+async function ekranImport() { if (!STAN.partia) return; }
+
+async function planImportu() {
+  $("#importTabela").innerHTML = '<span class="pusto">Liczę…</span>';
+  const j = await pobierz("/api/panel/import-plan?partia=" + encodeURIComponent(STAN.partia));
+  if (j.blad) { $("#importTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  PLAN = j.plan;
+  $("#importOstrzezenie").innerHTML = j.brakKolumn.length ? `<div class="pasmo">W bazie brakuje kolumn ${esc(j.brakKolumn.join(", "))}. Import zadziała, ale źródła i pewność zostaną tylko w pliku partii.</div>` : "";
+  if (!PLAN.length) {
+    $("#importTabela").innerHTML = '<span class="pusto">W tej partii nie ma zatwierdzonych firm. Wróć do przeglądu i zatwierdź, co ma trafić do bazy.</span>';
+    $("#importPodsumowanie").textContent = "";
+    $("#btnZapisz").disabled = true;
+    return;
+  }
+  const nowe = PLAN.filter((p) => p.akcja === "INSERT" && !p.bledy.length).length;
+  const akt = PLAN.filter((p) => p.akcja === "UPDATE" && !p.bledy.length).length;
+  const bledne = PLAN.filter((p) => p.bledy.length).length;
+  $("#importTabela").innerHTML = `<table><tr><th>Firma</th><th>Co się stanie</th><th>Szczegóły</th></tr>` + PLAN.map((p) => {
+    const co = p.bledy.length ? `<span class="err">zablokowana</span>` : p.akcja === "INSERT" ? `<span class="ins">nowa firma</span>` : `<span class="upd">aktualizacja</span>`;
+    const zmiana = p.bylo && (p.bylo.country_code !== p.kraj || p.bylo.owner_name !== p.wlasciciel)
+      ? `kraj/właściciel: <span class="kreska">${esc(p.bylo.country_code)} · ${esc(p.bylo.owner_name)}</span> → ${esc(p.kraj)} · ${esc(p.wlasciciel)}`
+      : `${esc(p.kraj || "")} · ${esc(p.wlasciciel || "")}${p.kategoria ? " · " + esc(p.kategoria) : ""}`;
+    return `<tr><td><b>${esc(p.nazwa)}</b></td><td>${co}</td><td>${zmiana}${p.bledy.length ? `<br><span class="err" style="font-size:13px">${esc(p.bledy.join("; "))}</span>` : ""}${p.ostrzezenia.length ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(p.ostrzezenia.join("; "))}</span>` : ""}</td></tr>`;
+  }).join("") + `</table><p class="uwagi">Przy aktualizacji zmieniane są tylko pola o właścicielu i opisy. Logotypy, adresy i statystyki odwiedzin zostają nietknięte.</p>`;
+  $("#importPodsumowanie").innerHTML = `<b class="ins">${nowe} nowych</b> · <b class="upd">${akt} aktualizacji</b>${bledne ? ` · <b class="err">${bledne} zablokowanych</b>` : ""}`;
+  $("#btnZapisz").disabled = nowe + akt === 0;
+  $("#btnZapisz").textContent = `Zapisz ${nowe + akt} firm do bazy`;
+}
+
+$("#btnZapisz").onclick = async () => {
+  const ile = PLAN.filter((p) => !p.bledy.length).length;
+  if (!confirm(`Zapisać ${ile} firm do bazy? Najpierw zrobi się backup. Tej operacji nie cofniesz jednym kliknięciem.`)) return;
+  $("#btnZapisz").disabled = true;
+  const j = await wyslij("/api/panel/import", { partia: STAN.partia });
+  if (j.blad) { alert(j.blad); return; }
+  $("#importLog").style.display = "";
+  sledzZadanie(j.zadanie, "#importLog", () => { planImportu(); ekranLogo(); });
+};
+
+// ---------- logotypy ----------
+async function ekranLogo() {
+  const j = await pobierz("/api/panel/logo-stan");
+  if (j.blad) { $("#logoLampki").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  $("#logoLampki").innerHTML =
+    lampka(j.brakujacych ? "uwaga" : "ok", `${j.brakujacych} firm bez logotypu`, j.brakujacych ? `Na dysku: ${j.plikow} plików. Pobranie dotyczy tylko brakujących.` : `Wszystkie firmy z adresem strony mają logotyp (${j.plikow} plików).`, `<button class="glowny" id="btnPobierzLogo" ${j.brakujacych ? "" : "disabled"}>Pobierz logotypy</button>`) +
+    lampka("ok", "Obrazki do udostępniania", "Używane, gdy ktoś wrzuca link do firmy na Facebooka albo X.", `<button id="btnOg">Przygotuj obrazki</button>`) +
+    lampka(j.bezUrl ? "uwaga" : "ok", `${j.bezUrl} firm bez adresu strony`, "Dla nich logotypu nie da się pobrać automatycznie. Uzupełnij adres w bazie albo wstaw plik ręcznie.", "");
+  $("#btnPobierzLogo").onclick = async () => { const z = await wyslij("/api/panel/logo-pobierz"); $("#logoLog").style.display = ""; sledzZadanie(z.zadanie, "#logoLog", ekranLogo); };
+  $("#btnOg").onclick = async () => { const z = await wyslij("/api/panel/logo-og"); $("#logoLog").style.display = ""; sledzZadanie(z.zadanie, "#logoLog", ekranLogo); };
+  const g = j.git;
+  $("#logoGitOpis").innerHTML = !g.naDevelop
+    ? `Jesteś na gałęzi <b>${esc(g.galaz)}</b>. Wysyłka działa tylko z gałęzi develop.`
+    : g.plikow ? `${g.plikow} nowych plików. Trafią na gałąź develop i za chwilę zobaczysz je na stronie podglądu. Strona czypolskafirma.pl się nie zmieni.` : "Nie ma nowych plików do wysłania.";
+  $("#btnWyslijLogo").disabled = !g.naDevelop || !g.plikow;
+  $("#logoGitStopka").innerHTML = (g.ostatniCommit ? `Ostatnia zmiana logotypów: ${esc(g.ostatniCommit)}. ` : "") + `<a href="https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app/" target="_blank" rel="noopener">Otwórz stronę podglądu</a>`;
+}
+
+$("#btnWyslijLogo").onclick = async () => {
+  if (!confirm("Wysłać logotypy na gałąź develop? Zobaczysz je na stronie podglądu, nie na czypolskafirma.pl.")) return;
+  const z = await wyslij("/api/panel/logo-wyslij");
+  if (z.blad) return alert(z.blad);
+  $("#logoLog").style.display = "";
+  sledzZadanie(z.zadanie, "#logoLog", ekranLogo);
+};
+
+// ---------- backup ----------
+async function ekranBackup() {
+  const j = await pobierz("/api/panel/backup-stan");
+  if (j.blad) { $("#backupTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  $("#backupTabela").innerHTML = j.backupy.length
+    ? `<table><tr><th>Kiedy</th><th>Gdzie</th><th>Zawartość</th></tr>` + j.backupy.map((b) => `<tr><td>${kiedy(b.kiedy)}</td><td>${esc(b.skad)}</td><td>${b.firm || "?"} firm · ${b.kb} KB</td></tr>`).join("") + `</table>`
+    : '<span class="pusto">Nie znaleziono żadnego backupu.</span>';
+  $("#backupInfo").innerHTML = j.dysk
+    ? `Kopie trafiają na Dysk Google. Automatyczny backup: w niedziele o 10:00.`
+    : `Nie widzę katalogu na Dysku Google (${esc(j.katalogDysku)}). Kopie zapiszą się lokalnie w data/robocze/backup.`;
+}
+$("#btnBackup").onclick = async () => { const z = await wyslij("/api/panel/backup"); $("#backupLog").style.display = ""; sledzZadanie(z.zadanie, "#backupLog", ekranBackup); };
+
+// ---------- śledzenie zadań ----------
+function sledzZadanie(id, gdzie, poKoncu) {
+  if (!id) return;
+  const el = $(gdzie);
+  const tik = async () => {
+    const z = await pobierz("/api/panel/zadanie?id=" + id);
+    if (z.blad) return;
+    el.textContent = z.log.join("\n");
+    el.scrollTop = el.scrollHeight;
+    if (z.status === "pracuje") setTimeout(tik, 1500);
+    else poKoncu?.();
+  };
+  tik();
+}
+
+$("#btnZamknij").onclick = async () => {
+  if (!confirm("Zamknąć panel? Trwające zadania zostaną przerwane.")) return;
+  await wyslij("/api/panel/zamknij");
+  document.body.innerHTML = '<div style="padding:60px;font:16px system-ui">Panel zamknięty. Możesz zamknąć tę kartę.</div>';
+};
+
+// ---------- start ----------
+(async () => {
+  await wczytajListePartii();
+  ustawPartie(STAN.partia);
+  pokaz("start");
+  setInterval(() => { if (["praca", "start"].includes(STAN.ekran)) odswiezEkran(); }, 5000);
+})();
+</script>
+</body>
+</html>

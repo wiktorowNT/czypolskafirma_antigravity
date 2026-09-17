@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel firm — makieta</title>
+<style>
+  :root{
+    --tlo:#f6f5f2;
+    --papier:#ffffff;
+    --tekst:#1c1b19;
+    --slaby:#6d6a64;
+    --linia:#ddd9d2;
+    --akcent:#8f1d1d;
+    --zielony:#1f6b3a;
+    --bursztyn:#8a5a10;
+    --czerwony:#a32020;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--tlo);color:var(--tekst);
+    font:15px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+
+  /* pasek boczny */
+  aside{background:#211f1c;color:#e9e6e0;padding:18px 0;display:flex;flex-direction:column}
+  .marka{padding:0 18px 16px;border-bottom:1px solid #3a3733;margin-bottom:12px}
+  .marka b{display:block;font-size:15px;letter-spacing:.02em}
+  .marka span{font-size:12px;color:#a09b93}
+  nav a{display:flex;gap:10px;align-items:baseline;padding:9px 18px;color:#cdc8c0;
+    text-decoration:none;font-size:14px;cursor:pointer}
+  nav a .nr{font-size:11px;color:#8a847b;width:12px}
+  nav a:hover{background:#2c2925;color:#fff}
+  nav a.akt{background:#3a3430;color:#fff;box-shadow:inset 3px 0 0 var(--akcent)}
+  .stopka-boczna{margin-top:auto;padding:14px 18px 0;border-top:1px solid #3a3733;font-size:12px;color:#8a847b}
+
+  /* treść */
+  main{padding:26px 34px 60px;max-width:960px}
+  h1{font-size:23px;margin:0 0 4px;font-weight:600}
+  .podtytul{color:var(--slaby);margin:0 0 22px}
+  h2{font-size:15px;margin:0 0 12px;font-weight:600}
+  .karta{background:var(--papier);border:1px solid var(--linia);border-radius:6px;padding:18px 20px;margin-bottom:16px}
+  .rzad{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .rozdziel{display:flex;justify-content:space-between;align-items:center;gap:16px}
+
+  button{font:inherit;border-radius:5px;border:1px solid var(--linia);background:#fff;
+    padding:8px 14px;cursor:pointer;color:var(--tekst)}
+  button:hover{background:#f2f0ec}
+  .glowny{background:var(--akcent);border-color:var(--akcent);color:#fff;font-weight:500}
+  .glowny:hover{background:#7a1818}
+  .duzy{padding:11px 20px;font-size:15px}
+  textarea,input[type=text],select{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--linia);
+    border-radius:5px;background:#fff;color:var(--tekst)}
+  textarea{min-height:130px;resize:vertical}
+  label.pole{display:block;margin-bottom:14px}
+  label.pole > span{display:block;font-size:13px;color:var(--slaby);margin-bottom:5px}
+  .opcja{display:flex;gap:9px;align-items:flex-start;padding:7px 0}
+  .opcja input{margin-top:3px}
+  .opcja em{display:block;font-style:normal;font-size:12.5px;color:var(--slaby)}
+
+  .lampka{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #eeebe6}
+  .lampka:last-child{border-bottom:0}
+  .kropka{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:none}
+  .ok{background:var(--zielony)} .uwaga{background:var(--bursztyn)} .zle{background:var(--czerwony)}
+  .lampka div{flex:1}
+  .lampka small{display:block;color:var(--slaby)}
+
+  .plakietka{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--linia);color:var(--slaby)}
+  .p-ok{color:var(--zielony);border-color:#bcd8c6;background:#f1f8f3}
+  .p-uwaga{color:var(--bursztyn);border-color:#e4d3ae;background:#fbf6ea}
+  .p-zle{color:var(--czerwony);border-color:#e6c2c2;background:#fbf0f0}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;font-weight:500;color:var(--slaby);font-size:12.5px;padding:0 10px 8px 0;border-bottom:1px solid var(--linia)}
+  td{padding:10px 10px 10px 0;border-bottom:1px solid #f0ede8;vertical-align:top}
+  tr:last-child td{border-bottom:0}
+
+  .pasek{height:7px;background:#eae7e1;border-radius:99px;overflow:hidden;margin:14px 0 8px}
+  .pasek i{display:block;height:100%;background:var(--akcent);width:46%}
+  .krok{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #f0ede8;font-size:14px}
+  .krok:last-child{border-bottom:0}
+  .krok b{font-weight:500;width:190px}
+  .krok span{color:var(--slaby);font-size:13px}
+  .kropki{color:var(--slaby);font-size:12px;letter-spacing:.12em}
+
+  .firma{border:1px solid var(--linia);border-radius:6px;background:#fff;margin-bottom:12px}
+  .firma header{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:12px 16px;border-bottom:1px solid var(--linia)}
+  .firma header b{font-size:15px}
+  .firma .tresc{padding:14px 16px}
+  .konflikt{border-left:3px solid var(--czerwony)}
+  .powod{font-size:13.5px;color:var(--czerwony);margin:0 0 12px}
+  .dwie{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .lancuch{font-size:13.5px;color:var(--slaby);margin:0;padding-left:18px}
+  .lancuch li{margin-bottom:4px}
+
+  .wynik td:first-child{font-weight:500}
+  .ins{color:var(--zielony)} .upd{color:#1d4f7a} .err{color:var(--czerwony)}
+  .uwagi{font-size:13px;color:var(--slaby);margin:10px 0 0}
+  .prompt{font:12.5px/1.6 ui-monospace,Consolas,monospace;background:#f6f5f2;border:1px solid var(--linia);
+    border-radius:5px;padding:12px 14px;color:var(--slaby);white-space:pre-wrap;max-height:132px;overflow:hidden;margin:0}
+  .etap{display:flex;gap:13px;margin-bottom:20px}
+  .etap:last-child{margin-bottom:0}
+  .etap .nrb{width:25px;height:25px;border-radius:50%;background:#211f1c;color:#fff;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:13px}
+  .etap .tresc-etapu{flex:1}
+  .etap h2{margin-bottom:6px}
+  .etap p{margin:0 0 10px;font-size:13.5px;color:var(--slaby)}
+  .ekran{display:none} .ekran.akt{display:block}
+  .pasmo{background:#fbf6ea;border:1px solid #e4d3ae;border-radius:6px;padding:11px 14px;
+    font-size:13.5px;margin-bottom:16px}
+  .naglowek-makiety{background:#211f1c;color:#cdc8c0;font-size:12.5px;padding:7px 34px}
+</style>
+</head>
+<body>
+<div class="naglowek-makiety">Makieta do oceny — przyciski nic nie robią, dane są przykładowe. Klikaj pozycje po lewej.</div>
+<div class="app">
+  <aside>
+    <div class="marka"><b>CzyPolskaFirma</b><span>Panel dodawania firm</span></div>
+    <nav>
+      <a data-e="start" class="akt"><i class="nr">1</i> Gotowość</a>
+      <a data-e="nowa"><i class="nr">2</i> Nowa partia</a>
+      <a data-e="praca"><i class="nr">→</i> Praca w toku</a>
+      <a data-e="nip"><i class="nr">→</i> Przystanek na NIP</a>
+      <a data-e="partie"><i class="nr">3</i> Moje partie</a>
+      <a data-e="przeglad"><i class="nr">4</i> Przegląd</a>
+      <a data-e="konsylium"><i class="nr">→</i> Konsylium modeli</a>
+      <a data-e="import"><i class="nr">5</i> Import do bazy</a>
+      <a data-e="logo"><i class="nr">6</i> Logotypy</a>
+      <a data-e="backup"><i class="nr">7</i> Backup</a>
+    </nav>
+    <div class="stopka-boczna">Działa na Twoim komputerze.<br>Nic nie trafia do bazy bez Twojego kliknięcia.</div>
+  </aside>
+
+  <main>
+
+    <!-- 1. GOTOWOŚĆ -->
+    <section class="ekran akt" id="e-start">
+      <h1>Gotowość</h1>
+      <p class="podtytul">Sprawdzenie przed rozpoczęciem pracy. Wykonuje się samo po otwarciu panelu.</p>
+
+      <div class="karta">
+        <div class="lampka"><i class="kropka ok"></i><div><b>Claude jest zalogowany</b><small>Konto wiktorow123@gmail.com, subskrypcja. Automat nie generuje osobnych kosztów.</small></div><span class="plakietka p-ok">w porządku</span></div>
+        <div class="lampka"><i class="kropka ok"></i><div><b>Połączenie z bazą</b><small>Supabase odpowiada. W bazie: 750 firm, 24 kategorie.</small></div><span class="plakietka p-ok">w porządku</span></div>
+        <div class="lampka"><i class="kropka ok"></i><div><b>Kolumny źródeł i pewności</b><small>Tabela companies ma pola sources i confidence.</small></div><span class="plakietka p-ok">w porządku</span></div>
+        <div class="lampka"><i class="kropka uwaga"></i><div><b>Limit zapytań do Ministerstwa Finansów</b><small>Zużyto 62 ze 100 na dziś. Odnawia się o północy. Starczy na ok. 38 firm.</small></div><span class="plakietka p-uwaga">38 zostało</span></div>
+        <div class="lampka"><i class="kropka ok"></i><div><b>Ostatni backup bazy</b><small>Niedziela 14.09.2026, 10:02 — Dysk Google, 1,4 MB.</small></div><span class="plakietka p-ok">3 dni temu</span></div>
+      </div>
+
+      <div class="karta rozdziel">
+        <div><h2 style="margin-bottom:2px">Wszystko gotowe</h2>
+          <span style="color:var(--slaby);font-size:13.5px">Możesz zacząć nową partię firm albo wrócić do partii z 15.09.</span></div>
+        <div class="rzad"><button class="glowny duzy" data-idz="nowa">Nowa partia</button><button class="duzy" data-idz="partie">Moje partie</button></div>
+      </div>
+    </section>
+
+    <!-- 2. NOWA PARTIA -->
+    <section class="ekran" id="e-nowa">
+      <h1>Nowa partia</h1>
+      <p class="podtytul">Podaj firmy do sprawdzenia. Automat szuka właściciela, Ty potem zatwierdzasz.</p>
+
+      <div class="karta">
+        <div class="rzad" style="margin-bottom:16px">
+          <button class="glowny">Wpisuję nazwy firm</button>
+          <button>Wybieram kategorię</button>
+          <button>Firmy już w bazie (re-weryfikacja)</button>
+        </div>
+
+        <label class="pole">
+          <span>Nazwy firm — każda w osobnej linii. Jeśli znasz NIP, dopisz go po kresce.</span>
+          <textarea>Mokate
+Vila
+Ziaja
+Nałęczowianka | 7160001594
+Torf Corporation</textarea>
+        </label>
+
+        <label class="pole" style="max-width:320px">
+          <span>Nazwa partii</span>
+          <input type="text" value="2026-09-20">
+        </label>
+
+        <h2 style="margin-top:6px">Opcje</h2>
+        <label class="opcja"><input type="checkbox"><span><b>Dokładniejsza kontrola</b><em>Mocniejszy model sprawdza ustalenia. Wolniej, ale mniej pomyłek przy trudnych spółkach.</em></span></label>
+        <label class="opcja"><input type="checkbox"><span><b>Sprawdź beneficjentów w CRBR</b><em>Przydatne przy spółkach akcyjnych, których KRS nie pokazuje. Dodaje ok. 3 sekundy na firmę.</em></span></label>
+        <label class="opcja"><input type="checkbox" checked><span><b>Pobierz akcjonariat spółek z giełdy</b><em>Dla firm notowanych na GPW.</em></span></label>
+      </div>
+
+      <div class="karta rozdziel">
+        <div style="font-size:13.5px;color:var(--slaby)">5 firm · szacowany czas <b style="color:var(--tekst)">ok. 18 minut</b> · zużyje 5 ze 100 zapytań do MF</div>
+        <button class="glowny duzy" data-idz="praca">Uruchom automat</button>
+      </div>
+    </section>
+
+    <!-- PRACA W TOKU -->
+    <section class="ekran" id="e-praca">
+      <h1>Partia 2026-09-20 — w toku</h1>
+      <p class="podtytul">Możesz zamknąć to okno. Automat pracuje dalej, wrócisz tu później.</p>
+
+      <div class="karta">
+        <div class="rozdziel"><b>2 z 5 gotowe</b><span style="color:var(--slaby);font-size:13.5px">pozostało ok. 11 minut</span></div>
+        <div class="pasek"><i></i></div>
+        <div class="rzad" style="margin-top:12px"><button>Wstrzymaj</button><button>Pokaż szczegóły techniczne</button></div>
+      </div>
+
+      <div class="karta">
+        <h2>Firmy</h2>
+        <div class="krok"><b>Mokate</b><span class="plakietka p-ok">gotowe · pewność wysoka</span><span>Polska · Mokate S.A. (rodzina Mokrysz)</span></div>
+        <div class="krok"><b>Vila</b><span class="plakietka p-uwaga">gotowe · do obejrzenia</span><span>Dania · Vila A/S, brak źródła dla pakietu kontrolnego</span></div>
+        <div class="krok"><b>Ziaja</b><span class="kropki">krok 3 z 5 — śledztwo własnościowe</span></div>
+        <div class="krok"><b>Nałęczowianka</b><span class="kropki">krok 2 z 5 — pobieranie odpisu z KRS</span></div>
+        <div class="krok"><b>Torf Corporation</b><span style="color:var(--slaby)">w kolejce</span></div>
+      </div>
+    </section>
+
+    <!-- PRZYSTANEK NA NIP -->
+    <section class="ekran" id="e-nip">
+      <h1>Sprawdzenie numerów NIP</h1>
+      <p class="podtytul">Partia 2026-09-20 · automat zatrzymał się po 2 minutach. Zanim ruszy dalej, potwierdź, że trafił we właściwe spółki.</p>
+
+      <div class="pasmo">Program znalazł numery NIP i sprawdził je w Białej Liście Ministerstwa Finansów oraz w KRS. Dopiero po Twoim potwierdzeniu zacznie się dłuższa część, czyli śledztwo właścicielskie i opisy.</div>
+
+      <div class="karta">
+        <table>
+          <tr><th style="width:24px"></th><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th></tr>
+          <tr>
+            <td><input type="checkbox" checked></td><td><b>Mokate</b></td>
+            <td>5480087538</td><td>MOKATE S.A., Ustroń</td>
+            <td><span class="plakietka p-ok">zgadza się</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" checked></td><td><b>Vila</b></td>
+            <td>5252445721</td><td>BESTSELLER POLAND SP. Z O.O., Warszawa</td>
+            <td><span class="plakietka p-uwaga">nazwa marki nie występuje w nazwie spółki</span><br><span style="font-size:13px;color:var(--slaby)">Zwykle w porządku: Vila to marka duńskiej grupy Bestseller.</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" checked></td><td><b>Ziaja</b></td>
+            <td>5830001854</td><td>ZIAJA LTD SP. Z O.O., Gdańsk</td>
+            <td><span class="plakietka p-ok">zgadza się</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td><td><b>Torf Corporation</b></td>
+            <td><input type="text" value="9542214352" style="max-width:150px"></td><td>—</td>
+            <td><span class="plakietka p-zle">NIP nie występuje w Białej Liście</span><br><span style="font-size:13px;color:var(--slaby)">Popraw numer albo odznacz firmę.</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" checked></td><td><b>Nałęczowianka</b></td>
+            <td>7160001594<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span></td>
+            <td>NESTLÉ WATERS POLSKA S.A., Warszawa</td>
+            <td><span class="plakietka p-ok">zgadza się</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)">4 z 5 firm pójdzie dalej · szacowany czas ok. 15 minut</span>
+        <div class="rzad"><button class="duzy">Sprawdź poprawione numery</button><button class="glowny duzy" data-idz="praca">Sprawdzaj dalej</button></div>
+      </div>
+    </section>
+
+    <!-- 3. MOJE PARTIE -->
+    <section class="ekran" id="e-partie">
+      <h1>Moje partie</h1>
+      <p class="podtytul">Każda partia to jedna paczka firm. Zostaje na dysku, dopóki jej nie usuniesz.</p>
+
+      <div class="karta">
+        <table>
+          <tr><th>Partia</th><th>Firmy</th><th>Stan</th><th></th></tr>
+          <tr>
+            <td><b>2026-09-20</b><br><span style="color:var(--slaby);font-size:13px">dzisiaj, 5 firm</span></td>
+            <td>2 pewne · 1 do obejrzenia · 0 konfliktów</td>
+            <td><span class="plakietka p-uwaga">automat pracuje</span></td>
+            <td><button data-idz="praca">Podgląd</button></td>
+          </tr>
+          <tr>
+            <td><b>2026-09-15-kosmetyki</b><br><span style="color:var(--slaby);font-size:13px">15.09, 40 firm</span></td>
+            <td>31 pewnych · 6 do obejrzenia · 3 konflikty</td>
+            <td><span class="plakietka">28 zatwierdzonych, nie zaimportowana</span></td>
+            <td><button class="glowny" data-idz="przeglad">Przeglądaj</button></td>
+          </tr>
+          <tr>
+            <td><b>rew-2026-09</b><br><span style="color:var(--slaby);font-size:13px">10.09, 22 firmy · re-weryfikacja</span></td>
+            <td>19 bez zmian · 3 zmiany właściciela</td>
+            <td><span class="plakietka p-ok">zaimportowana 11.09</span></td>
+            <td><button>Otwórz</button></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. PRZEGLĄD -->
+    <section class="ekran" id="e-przeglad">
+      <h1>Przegląd partii 2026-09-15-kosmetyki</h1>
+      <p class="podtytul">Automat proponuje, Ty decydujesz. Konflikty są na górze.</p>
+
+      <div class="karta rozdziel">
+        <div class="rzad">
+          <button class="glowny">Zatwierdź 31 pewnych</button>
+          <button>Zatwierdź zgodne z bazą</button>
+          <button data-idz="konsylium">Zapytaj inne modele</button>
+        </div>
+        <span style="color:var(--slaby);font-size:13.5px">28 z 40 zatwierdzonych</span>
+      </div>
+
+      <div class="firma konflikt">
+        <header><b>Vila</b><span class="plakietka p-zle">konflikt — wymaga Twojej decyzji</span></header>
+        <div class="tresc">
+          <p class="powod">Brak źródła dla pakietu kontrolnego. Media podają rodzinę Brandt, ale duński rejestr tego nie potwierdza.</p>
+          <div class="dwie">
+            <div>
+              <label class="pole"><span>Kraj kapitału</span><select><option>Dania</option><option>Polska</option></select></label>
+              <label class="pole"><span>Ostateczny właściciel</span><input type="text" value="Rodzina Brandt (Vila A/S)"></label>
+            </div>
+            <div>
+              <span style="font-size:13px;color:var(--slaby)">Łańcuch własności</span>
+              <ol class="lancuch">
+                <li>Vila Polska sp. z o.o. — 100% — KRS, 12.09.2026</li>
+                <li>Bestseller A/S — 100% — raport roczny, 2025</li>
+                <li>Rodzina Brandt — <b style="color:var(--czerwony)">% nieznany</b> — brak źródła</li>
+              </ol>
+            </div>
+          </div>
+          <div class="rzad" style="margin-top:6px">
+            <button class="glowny">Zatwierdź</button><button>Do poprawy</button><button>Odrzuć</button>
+            <button style="margin-left:auto">Pokaż odpis z KRS</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="firma">
+        <header><b>Ziaja</b><span class="plakietka p-ok">pewność wysoka · zatwierdzona</span></header>
+        <div class="tresc" style="color:var(--slaby);font-size:13.5px">Polska · Ziaja Ltd sp. z o.o. (Aleksandra i Zenon Ziaja, 100%) · kategoria: kosmetyki · <a href="#" style="color:var(--akcent)">rozwiń</a></div>
+      </div>
+
+      <div class="firma">
+        <header><b>Eveline Cosmetics</b><span class="plakietka p-ok">pewność wysoka · zatwierdzona</span></header>
+        <div class="tresc" style="color:var(--slaby);font-size:13.5px">Polska · Eveline Cosmetics S.A. (rodzina Kasprzyk) · kategoria: kosmetyki · <a href="#" style="color:var(--akcent)">rozwiń</a></div>
+      </div>
+
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)">Gdy skończysz zatwierdzać, przejdź do importu.</span>
+        <button class="glowny duzy" data-idz="import">Przejdź do importu</button>
+      </div>
+    </section>
+
+    <!-- KONSYLIUM -->
+    <section class="ekran" id="e-konsylium">
+      <h1>Konsylium modeli</h1>
+      <p class="podtytul">Partia 2026-09-15-kosmetyki · dajesz te same firmy innym modelom i sprawdzasz, czy mówią to samo.</p>
+
+      <div class="karta">
+        <div class="etap">
+          <i class="nrb">1</i>
+          <div class="tresc-etapu">
+            <h2>Skopiuj pytanie</h2>
+            <p>Gotowy tekst z listą firm i Twoimi ustaleniami. Model ma odpowiedzieć tabelką.</p>
+            <div class="rzad" style="margin-bottom:10px">
+              <button class="glowny">Kopiuj pytanie</button>
+              <select style="max-width:280px"><option>Tylko niezatwierdzone (12 firm)</option><option>Wszystkie firmy z partii (40)</option><option>Tylko konflikty (3)</option></select>
+            </div>
+            <p class="prompt">Sprawdź, do jakiego kraju należy kapitał poniższych firm działających w Polsce. Patrz na ostatecznego właściciela na szczycie struktury, nie na spółkę zarejestrowaną w Polsce. Odpowiedz tabelą Markdown z kolumnami: nazwa | kod kraju | ostateczny właściciel | czy zgadzasz się z moim ustaleniem | uwagi | źródło.
+
+| nazwa | moje ustalenie |
+| Ziaja | PL — Aleksandra i Zenon Ziaja |
+| Soraya | SE — Cederroth / Orkla …</p>
+          </div>
+        </div>
+
+        <div class="etap">
+          <i class="nrb">2</i>
+          <div class="tresc-etapu">
+            <h2>Wklej je do innego modelu</h2>
+            <p>Najlepiej z włączonym wyszukiwaniem w internecie. Otwiera się w nowej karcie przeglądarki.</p>
+            <div class="rzad">
+              <button>Otwórz Gemini</button><button>Otwórz ChatGPT</button><button>Otwórz Grok</button><button>Otwórz Perplexity</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="etap">
+          <i class="nrb">3</i>
+          <div class="tresc-etapu">
+            <h2>Wklej odpowiedź tutaj</h2>
+            <p>Wklej całą odpowiedź, razem z tabelką. Program sam wyłuska wiersze i dopasuje je do firm.</p>
+            <label class="pole" style="max-width:260px"><span>Który to model</span>
+              <select><option>Gemini</option><option>ChatGPT</option><option>Grok</option><option>Perplexity</option><option>inny</option></select>
+            </label>
+            <label class="pole"><span>Odpowiedź modelu</span><textarea placeholder="Wklej tutaj (Ctrl+V)"></textarea></label>
+            <button class="glowny duzy">Porównaj z moimi ustaleniami</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:14px">
+          <h2 style="margin:0">Modele, które już odpowiedziały</h2>
+          <span style="font-size:13.5px;color:var(--slaby)">Zgoda innych modeli nie podnosi pewności. Niezgoda zawsze ją obniża.</span>
+        </div>
+        <table>
+          <tr><th>Model</th><th>Kiedy</th><th>Dopasowano</th><th>Wynik</th></tr>
+          <tr><td><b>Gemini</b></td><td>dzisiaj, 12:41</td><td>38 z 40 firm</td><td><span class="plakietka p-uwaga">2 niezgody</span></td></tr>
+          <tr><td><b>ChatGPT</b></td><td>dzisiaj, 12:52</td><td>40 z 40 firm</td><td><span class="plakietka p-ok">bez niezgód</span></td></tr>
+        </table>
+      </div>
+
+      <div class="firma konflikt">
+        <header><b>Soraya</b><span class="plakietka p-zle">niezgoda — Gemini</span></header>
+        <div class="tresc">
+          <div class="dwie">
+            <div>
+              <span style="font-size:13px;color:var(--slaby)">Moje ustalenie</span>
+              <p style="margin:4px 0 0"><b>Szwecja</b> · Orkla Care AB (przejęcie 2025)<br>
+                <span style="font-size:13px;color:var(--slaby)">źródło: komunikat Orkla, 14.03.2025</span></p>
+            </div>
+            <div>
+              <span style="font-size:13px;color:var(--slaby)">Gemini twierdzi</span>
+              <p style="margin:4px 0 0"><b>Polska</b> · Soraya S.A., Radzymin<br>
+                <span style="font-size:13px;color:var(--slaby)">źródło: strona marki soraya.pl (bez daty)</span></p>
+            </div>
+          </div>
+          <p class="uwagi">Zatwierdzenie tej firmy zostało cofnięte. Rozstrzygnij sam: jeśli Twoje źródło jest lepsze, zatwierdź ponownie.</p>
+          <div class="rzad" style="margin-top:10px">
+            <button class="glowny">Zostaję przy swoim</button><button>Przyznaję rację Gemini</button><button>Do poprawy</button>
+            <button style="margin-left:auto" data-idz="przeglad">Otwórz firmę w przeglądzie</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="firma konflikt">
+        <header><b>Bielenda</b><span class="plakietka p-zle">niezgoda — Gemini</span></header>
+        <div class="tresc" style="font-size:13.5px;color:var(--slaby)">Ja: Polska · rodzina Bielenda. Gemini: Polska · Innova Capital (fundusz). <a href="#" style="color:var(--akcent)">rozwiń</a></div>
+      </div>
+
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)">Gdy rozstrzygniesz niezgody, wróć do przeglądu albo idź do importu.</span>
+        <div class="rzad"><button class="duzy" data-idz="przeglad">Wróć do przeglądu</button><button class="glowny duzy" data-idz="import">Import do bazy</button></div>
+      </div>
+    </section>
+
+    <!-- 5. IMPORT -->
+    <section class="ekran" id="e-import">
+      <h1>Import do bazy</h1>
+      <p class="podtytul">Partia 2026-09-15-kosmetyki · 28 zatwierdzonych firm</p>
+
+      <div class="pasmo">Najpierw zobacz, co się zmieni. Zapis wykona się dopiero po kliknięciu drugiego przycisku i potwierdzeniu. Backup bazy robi się automatycznie tuż przed zapisem.</div>
+
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:14px">
+          <h2 style="margin:0">Co się zmieni</h2>
+          <span style="font-size:13.5px;color:var(--slaby)"><b class="ins">24 nowe firmy</b> · <b class="upd">3 aktualizacje</b> · <b class="err">1 błąd</b></span>
+        </div>
+        <table class="wynik">
+          <tr><th>Firma</th><th>Co się stanie</th><th>Szczegóły</th></tr>
+          <tr><td>Ziaja</td><td class="ins">nowa firma</td><td>Polska · Ziaja Ltd sp. z o.o. · kosmetyki</td></tr>
+          <tr><td>Eveline Cosmetics</td><td class="ins">nowa firma</td><td>Polska · rodzina Kasprzyk · kosmetyki</td></tr>
+          <tr><td>Dr Irena Eris</td><td class="upd">aktualizacja</td><td>właściciel: <s style="color:var(--slaby)">Irena Eris S.A.</s> → Irena i Henryk Orfinger (100%)</td></tr>
+          <tr><td>Soraya</td><td class="upd">aktualizacja</td><td>kraj: <s style="color:var(--slaby)">Polska</s> → Szwecja (przejęcie 2025)</td></tr>
+          <tr><td>Bielenda</td><td class="err">zablokowana</td><td>nie wybrano kategorii — wróć do przeglądu i uzupełnij</td></tr>
+        </table>
+        <p class="uwagi">Przy aktualizacji zmieniane są tylko pola o właścicielu i opisy. Logotypy, adresy i statystyki odwiedzin zostają nietknięte.</p>
+      </div>
+
+      <div class="karta rozdziel">
+        <div class="rzad"><button class="duzy">Odśwież listę</button></div>
+        <button class="glowny duzy">Zapisz 27 firm do bazy</button>
+      </div>
+    </section>
+
+    <!-- 6. LOGOTYPY -->
+    <section class="ekran" id="e-logo">
+      <h1>Logotypy</h1>
+      <p class="podtytul">Po imporcie nowe firmy nie mają jeszcze znaków graficznych.</p>
+
+      <div class="karta">
+        <div class="lampka"><i class="kropka uwaga"></i><div><b>24 firmy bez logotypu</b><small>Wszystkie z ostatniego importu.</small></div><button class="glowny">Pobierz logotypy</button></div>
+        <div class="lampka"><i class="kropka ok"></i><div><b>Obrazki do udostępniania</b><small>Używane, gdy ktoś wrzuca link do firmy na Facebooka albo X.</small></div><button>Przygotuj obrazki</button></div>
+        <div class="lampka"><i class="kropka ok"></i><div><b>Sprawdzenie wzrokowe</b><small>Otwiera Logo Fixer z podglądem nowych znaków.</small></div><button>Otwórz Logo Fixer</button></div>
+      </div>
+
+      <div class="karta">
+        <div class="rozdziel">
+          <div><h2 style="margin-bottom:2px">Wyślij logotypy na podgląd</h2>
+            <span style="font-size:13.5px;color:var(--slaby)">24 nowe pliki. Trafią na gałąź develop i za chwilę zobaczysz je na stronie podglądu. Strona czypolskafirma.pl się nie zmieni.</span></div>
+          <button class="glowny duzy">Wyślij</button>
+        </div>
+        <p class="uwagi">Ostatnio wysłano: 11.09.2026, 19 plików. <a href="#" style="color:var(--akcent)">Otwórz stronę podglądu</a></p>
+      </div>
+    </section>
+
+    <!-- 7. BACKUP -->
+    <section class="ekran" id="e-backup">
+      <h1>Backup bazy</h1>
+      <p class="podtytul">Kopia wszystkich firm i kategorii na Dysku Google.</p>
+
+      <div class="karta">
+        <table>
+          <tr><th>Kiedy</th><th>Skąd</th><th>Rozmiar</th></tr>
+          <tr><td>niedziela 14.09.2026, 10:02</td><td>automatycznie co tydzień</td><td>750 firm · 1,4 MB</td></tr>
+          <tr><td>czwartek 11.09.2026, 18:44</td><td>przed importem</td><td>726 firm · 1,3 MB</td></tr>
+          <tr><td>niedziela 07.09.2026, 10:01</td><td>automatycznie co tydzień</td><td>726 firm · 1,3 MB</td></tr>
+        </table>
+      </div>
+
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)">Następny automatyczny backup: niedziela 21.09, godz. 10:00.</span>
+        <button class="glowny duzy">Zrób backup teraz</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const pokaz = (id) => {
+    document.querySelectorAll(".ekran").forEach(s => s.classList.toggle("akt", s.id === "e" + "-" + id));
+    document.querySelectorAll("nav a").forEach(a => a.classList.toggle("akt", a.dataset.e === id));
+    window.scrollTo(0, 0);
+  };
+  document.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => pokaz(a.dataset.e)));
+  document.querySelectorAll("[data-idz]").forEach(b => b.addEventListener("click", () => pokaz(b.dataset.idz)));
+</script>
+</body>
+</html>

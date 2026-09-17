@@ -12,6 +12,18 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "start"],
       "port": 3000
+    },
+    {
+      "name": "panel-firm",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/firmy/panel.mjs", "--bez-przegladarki"],
+      "port": 3010
+    },
+    {
+      "name": "makiety",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--bind", "127.0.0.1"],
+      "port": 8765
     }
   ]
 }
