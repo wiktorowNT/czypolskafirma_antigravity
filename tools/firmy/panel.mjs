@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { KATALOG_PARTII, KATALOG_REPO, dzisiaj, wczytajEnv } from "./lib/env.mjs";
 import { sprawdzLogowanie } from "./lib/claude.mjs";
-import { geminiZainstalowany, stanLogowaniaGemini } from "./lib/gemini.mjs";
+import { stanLogowaniaGemini, wybierzModelGemini } from "./lib/gemini.mjs";
 import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
@@ -296,10 +296,20 @@ async function gotowosc() {
   }
   const mf = mfLicznik();
   const backupy = stanBackupu().backupy;
+  // Lista modeli Gemini nic nie kosztuje; przy okazji sprawdza, czy klucz w ogóle działa.
   const gm = stanLogowaniaGemini();
+  let gModel = null;
+  if (gm.zalogowany) {
+    try {
+      gModel = await wybierzModelGemini();
+    } catch (e) {
+      gm.zalogowany = false;
+      gm.powod = e.message;
+    }
+  }
   return {
     claude: { ok: !!lg.zalogowany, metoda: lg.metoda || null, powod: lg.powod || null },
-    gemini: { ok: gm.zalogowany, zainstalowany: geminiZainstalowany(), metoda: gm.metoda || null, powod: gm.powod || null },
+    gemini: { ok: gm.zalogowany, model: gModel, metoda: gm.metoda || null, powod: gm.powod || null, maKlucz: !!wczytajEnv().GEMINI_API_KEY },
     baza: { ok: !bazaBlad, firm: indeks.length, kategorii: kategorie.length, blad: bazaBlad },
     zapis: { ok: !!env.SUPABASE_SERVICE_ROLE_KEY },
     kolumny,

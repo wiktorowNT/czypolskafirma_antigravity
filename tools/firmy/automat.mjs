@@ -184,7 +184,7 @@ function juzWBazie(f) {
 // Tryb ręczny zawsze idzie przez pliki, niezależnie od wyboru.
 function szukajNipu(f, dokladnie, opcje) {
   const prompt = promptTozsamosc({ nazwa: f.nazwa, dokladnie });
-  if (NIP_GEMINI && !arg.reczny) return zapytajGemini({ prompt, schemat: SCHEMAT_TOZSAMOSC });
+  if (NIP_GEMINI && !arg.reczny) return zapytajGemini({ prompt, schemat: SCHEMAT_TOZSAMOSC, dokladnie });
   if (dokladnie) return zapytajModel({ nazwaKroku: "1-tozsamosc-dokladnie", prompt, model: MODELE.sredni, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje });
   return zapytajModel({ nazwaKroku: "1-tozsamosc", prompt, model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch"], opcje });
 }
