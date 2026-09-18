@@ -116,7 +116,7 @@ log(`baza: ${indeks.length} firm, ${kategorie.length} kategorii; partia "${NAZWA
 if (NIP_GEMINI && !arg.reczny && !arg["tylko-rejestry"]) {
   const g = stanLogowaniaGemini();
   if (!g.zalogowany) {
-    console.error(`\nNIP-y ma szukać Gemini, ale ${g.powod}. Zaloguj się w panelu (ekran "Gotowość" → "Zaloguj Gemini") albo wybierz Claude.\n`);
+    console.error(`\nNIP-y ma szukać Gemini, ale: ${g.powod}. Wybierz Claude (w panelu: "Kto szuka numerów NIP") albo sprawdź lampkę Gemini na ekranie "Gotowość".\n`);
     process.exit(2);
   }
 }

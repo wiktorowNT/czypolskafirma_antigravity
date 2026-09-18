@@ -403,13 +403,13 @@ async function ekranGotowosc() {
   l.push(lampka(g.claude.ok ? "ok" : "zle", "Claude " + (g.claude.ok ? "jest zalogowany" : "nie jest zalogowany"),
     g.claude.ok ? `Tryb: ${esc(g.claude.metoda || "subskrypcja")}. Automat zużywa limity subskrypcji, bez osobnych kosztów.` : `${esc(g.claude.powod || "brak sesji")}. Otwórz terminal i uruchom raz: claude auth login`,
     `<span class="plakietka ${g.claude.ok ? "p-ok" : "p-zle"}">${g.claude.ok ? "w porządku" : "do naprawy"}</span>`));
-  l.push(lampka(g.gemini.ok ? "ok" : g.gemini.maKlucz ? "zle" : "uwaga", "Gemini do szukania NIP-ów " + (g.gemini.ok ? "jest gotowy" : g.gemini.maKlucz ? "nie działa" : "jest wyłączony"),
+  l.push(lampka(g.gemini.ok ? "ok" : "uwaga", "Gemini do szukania NIP-ów " + (g.gemini.ok ? "jest gotowy" : g.gemini.maKlucz ? "nie działa" : "jest wyłączony"),
     g.gemini.ok
       ? `Model: ${esc(g.gemini.model)}. Szukanie NIP-ów może iść na Gemini zamiast Claude.`
       : g.gemini.maKlucz
-        ? `Klucz jest wpisany, ale Google go nie przyjmuje: ${esc(g.gemini.powod || "")}`
+        ? `${esc(g.gemini.powod || "Klucz jest wpisany, ale Google go nie przyjmuje.")}. NIP-y szuka Claude. Panel sprawdzi to ponownie za dobę.`
         : "Opcjonalne. Potrzebny klucz API z Google AI Studio wpisany do pliku .env.local jako GEMINI_API_KEY. Do tego czasu NIP-y szuka Claude.",
-    `<span class="plakietka ${g.gemini.ok ? "p-ok" : g.gemini.maKlucz ? "p-zle" : ""}">${g.gemini.ok ? "w porządku" : g.gemini.maKlucz ? "błąd klucza" : "nieaktywne"}</span>`));
+    `<span class="plakietka ${g.gemini.ok ? "p-ok" : g.gemini.maKlucz ? "p-uwaga" : ""}">${g.gemini.ok ? "w porządku" : g.gemini.maKlucz ? "bez wyszukiwania" : "nieaktywne"}</span>`));
   l.push(lampka(g.baza.ok ? "ok" : "zle", "Połączenie z bazą",
     g.baza.ok ? `Supabase odpowiada. W bazie: ${g.baza.firm} firm, ${g.baza.kategorii} kategorii.` : esc(g.baza.blad || "brak połączenia"),
     `<span class="plakietka ${g.baza.ok ? "p-ok" : "p-zle"}">${g.baza.ok ? "w porządku" : "błąd"}</span>`));

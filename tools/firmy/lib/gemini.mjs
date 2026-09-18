@@ -8,7 +8,9 @@
 //
 // Jedno zapytanie = jedno wywołanie generateContent z narzędziem google_search: model sam szuka
 // w Google i od razu odpowiada, bez wieloturowej rozmowy (to tanie).
-import { wczytajEnv } from "./env.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import { KATALOG_PARTII, wczytajEnv } from "./env.mjs";
 
 const API = "https://generativelanguage.googleapis.com/v1beta";
 
@@ -16,9 +18,36 @@ function klucz() {
   return wczytajEnv().GEMINI_API_KEY || null;
 }
 
+// Darmowy pakiet AI Studio potrafi przepuszczać zwykłe zapytania, a odrzucać każde z wyszukiwaniem
+// Google (429 "exceeded your current quota" od pierwszego zapytania). Lista modeli tego nie wykaże,
+// więc zapamiętujemy blokadę po pierwszym takim odrzuceniu, a zdejmujemy po udanym wyszukiwaniu.
+const PLIK_BLOKADY = path.join(KATALOG_PARTII, "gemini-blokada.json");
+
+function blokadaWyszukiwania() {
+  try {
+    const b = JSON.parse(fs.readFileSync(PLIK_BLOKADY, "utf8"));
+    // po dobie próbujemy znowu (np. po włączeniu płatności albo zmianie limitów)
+    if (Date.now() - new Date(b.kiedy).getTime() < 24 * 3600 * 1000) return b;
+  } catch {}
+  return null;
+}
+
+function ustawBlokade(powod) {
+  try {
+    fs.mkdirSync(path.dirname(PLIK_BLOKADY), { recursive: true });
+    fs.writeFileSync(PLIK_BLOKADY, JSON.stringify({ kiedy: new Date().toISOString(), powod }), "utf8");
+  } catch {}
+}
+
+function zdejmijBlokade() {
+  try { fs.unlinkSync(PLIK_BLOKADY); } catch {}
+}
+
 export function stanLogowaniaGemini() {
-  if (klucz()) return { zalogowany: true, metoda: "klucz API z Google AI Studio" };
-  return { zalogowany: false, powod: "brak klucza GEMINI_API_KEY w .env.local" };
+  if (!klucz()) return { zalogowany: false, powod: "brak klucza GEMINI_API_KEY w .env.local" };
+  const b = blokadaWyszukiwania();
+  if (b) return { zalogowany: false, klucz: true, powod: "klucz działa, ale Google nie pozwala na nim wyszukiwać (darmowy pakiet bez wyszukiwania Google)", blokada: b };
+  return { zalogowany: true, metoda: "klucz API z Google AI Studio" };
 }
 
 // Klucz idzie w nagłówku, nie w adresie (adresy lądują w logach).
@@ -122,9 +151,13 @@ export async function zapytajGemini({ prompt, schemat, dokladnie = false, timeou
     break;
   }
   if (!r.ok) {
-    if (r.kod === 429) return { blad: `Gemini: wyczerpany limit zapytań klucza API (${opisBledu(r).slice(0, 150)})` };
+    if (r.kod === 429) {
+      if (/exceeded your current quota/i.test(opisBledu(r))) ustawBlokade(opisBledu(r).slice(0, 200));
+      return { blad: `Gemini: brak limitu na wyszukiwanie Google dla tego klucza (${opisBledu(r).slice(0, 120)})` };
+    }
     return { blad: `Gemini ${r.kod || ""}: ${opisBledu(r)}`.trim() };
   }
+  zdejmijBlokade();
   const kandydat = r.dane?.candidates?.[0];
   const tekst = (kandydat?.content?.parts || []).map((p) => p.text || "").join("");
   const dane = wyciagnijJson(tekst);
