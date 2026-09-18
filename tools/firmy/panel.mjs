@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { KATALOG_PARTII, KATALOG_REPO, dzisiaj, wczytajEnv } from "./lib/env.mjs";
 import { sprawdzLogowanie } from "./lib/claude.mjs";
+import { geminiZainstalowany, plikGemini, stanLogowaniaGemini } from "./lib/gemini.mjs";
 import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
@@ -172,6 +173,10 @@ function postepPartii(nazwa) {
     minutyDoKonca: Math.ceil((zostalo * minutNaFirme) / 2),
     zadanie: zadanieDlaPartii(nazwa),
     zuzycie: { wywolan: s.wywolan || 0, tokenow, naFirme: pod.firm ? Math.round(tokenow / pod.firm) : 0, minutModelu: Math.round((s.sekundy || 0) / 60) },
+    nipModel: partia.nipModel || "claude",
+    zuzycieGemini: partia.statystykiGemini
+      ? { wywolan: partia.statystykiGemini.wywolan, tokenow: partia.statystykiGemini.tokenyWe + partia.statystykiGemini.tokenyCache + partia.statystykiGemini.tokenyWy }
+      : null,
   };
 }
 
@@ -291,8 +296,10 @@ async function gotowosc() {
   }
   const mf = mfLicznik();
   const backupy = stanBackupu().backupy;
+  const gm = stanLogowaniaGemini();
   return {
     claude: { ok: !!lg.zalogowany, metoda: lg.metoda || null, powod: lg.powod || null },
+    gemini: { ok: gm.zalogowany, zainstalowany: geminiZainstalowany(), metoda: gm.metoda || null, powod: gm.powod || null },
     baza: { ok: !bazaBlad, firm: indeks.length, kategorii: kategorie.length, blad: bazaBlad },
     zapis: { ok: !!env.SUPABASE_SERVICE_ROLE_KEY },
     kolumny,
@@ -384,6 +391,7 @@ const serwer = http.createServer(async (req, res) => {
       if (dane.dokladnaKontrola) argumenty.push("--model-kontrola", "opus");
       if (dane.przystanekNip !== false) argumenty.push("--stop-po-nip");
       if (dane.rownolegle) argumenty.push("--rownolegle", String(Number(dane.rownolegle) || 2));
+      if (dane.nipModel === "gemini" || dane.nipModel === "claude") argumenty.push("--nip-model", dane.nipModel);
       const z = zadanieProcesu({ typ: "automat", opis: `Partia ${nazwa}`, plik: argumenty[0], argumenty: argumenty.slice(1), partia: nazwa });
       return json(res, { ok: true, partia: nazwa, zadanie: z.id });
     }
@@ -395,6 +403,7 @@ const serwer = http.createServer(async (req, res) => {
       if (!fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Nie ma takiej partii." }, 404);
       const argumenty = ["--partia", nazwa];
       if (dane.tylkoNip) argumenty.push("--stop-po-nip");
+      if (dane.nipModel === "gemini" || dane.nipModel === "claude") argumenty.push("--nip-model", dane.nipModel);
       if (dane.crbr) argumenty.push("--crbr");
       if (dane.dokladnaKontrola) argumenty.push("--model-kontrola", "opus");
       const z = zadanieProcesu({ typ: "automat", opis: dane.tylkoNip ? `Sprawdzenie NIP-ów (${nazwa})` : `Partia ${nazwa} — dalszy ciąg`, plik: path.join(KATALOG, "automat.mjs"), argumenty, partia: nazwa });
@@ -546,6 +555,18 @@ const serwer = http.createServer(async (req, res) => {
       const cel = fs.existsSync(DYSK_GOOGLE) ? DYSK_GOOGLE : KATALOG_BACKUPU;
       const z = zadanieProcesu({ typ: "backup", opis: `Backup bazy → ${cel}`, plik: path.join(KATALOG, "backup.mjs"), argumenty: ["--do", cel] });
       return json(res, { ok: true, zadanie: z.id });
+    }
+
+    // Logowanie Gemini jest interaktywne (wybór konta Google w przeglądarce), więc otwieramy
+    // zwykłe okno z Gemini CLI. Użytkownik wybiera "Sign in with Google", potem zamyka okno.
+    if (req.method === "POST" && p === "/api/panel/zaloguj-gemini") {
+      if (!geminiZainstalowany()) return json(res, { blad: "Gemini CLI nie jest zainstalowany." }, 400);
+      const katalog = path.join(KATALOG_PARTII, "gemini-cwd");
+      fs.mkdirSync(katalog, { recursive: true });
+      if (process.platform === "win32") {
+        spawn("cmd", ["/c", "start", "Logowanie Gemini", "/D", katalog, "cmd", "/k", plikGemini()], { detached: true, stdio: "ignore", windowsHide: false }).unref();
+      }
+      return json(res, { ok: true });
     }
 
     if (req.method === "POST" && p === "/api/panel/odswiez-baze") {

@@ -16,6 +16,8 @@
 //   --bez-gieldy          pomiń pobieranie akcjonariatu z bankier.pl
 //   --crbr                dołącz beneficjentów rzeczywistych z CRBR (puppeteer, wolniejsze; tylko dane zagregowane)
 //   --tylko-rejestry      wykonaj tylko kroki bez modelu (tożsamość z podanego NIP-u, KRS, giełda)
+//   --nip-model M         kto szuka NIP-u w kroku 1: claude (domyślnie) albo gemini (Gemini CLI na
+//                         koncie Google); wybór zapamiętuje się w partii
 //   --stop-po-nip         zatrzymaj się po kroku 1 i 2 (NIP, KRS) do potwierdzenia; kolejne
 //                         uruchomienie z tą samą --partia rusza dalej (używa tego panel)
 //   --przelicz            przelicz pewność i rekordy już gotowych firm (po zmianie reguł), bez wołania modelu
@@ -23,6 +25,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { KATALOG_PARTII, dzisiaj } from "./lib/env.mjs";
 import { MODELE, sprawdzLogowanie, zapytajModel } from "./lib/claude.mjs";
+import { stanLogowaniaGemini, zapytajGemini } from "./lib/gemini.mjs";
 import { bankierAkcjonariat, krsHistoriaWlascicieli, krsOdpisAktualny, mfPoNipach } from "./lib/rejestry.mjs";
 import { crbrBeneficjenci } from "./lib/crbr.mjs";
 import { indeksFirm, kategorie as pobierzKategorie } from "./lib/supabase.mjs";
@@ -73,6 +76,9 @@ let partia = fs.existsSync(PLIK_PARTII)
   ? JSON.parse(fs.readFileSync(PLIK_PARTII, "utf8"))
   : { nazwa: NAZWA_PARTII, utworzono: new Date().toISOString(), tryb: arg.reweryfikacja ? "reweryfikacja" : "nowe", firmy: [], statystyki: { wywolan: 0, sekundy: 0, tokenyWe: 0, tokenyWy: 0, wyszukiwan: 0 } };
 if (arg.reweryfikacja) partia.tryb = "reweryfikacja";
+// Kto szuka NIP-u: wybór z pierwszego uruchomienia obowiązuje też przy wznowieniach partii.
+if (arg["nip-model"]) partia.nipModel = String(arg["nip-model"]).toLowerCase() === "gemini" ? "gemini" : "claude";
+const NIP_GEMINI = partia.nipModel === "gemini";
 
 function zapiszPartie() {
   partia.zaktualizowano = new Date().toISOString();
@@ -107,6 +113,13 @@ const kategorie = await pobierzKategorie();
 const indeks = await indeksFirm();
 log(`baza: ${indeks.length} firm, ${kategorie.length} kategorii; partia "${NAZWA_PARTII}"`);
 
+if (NIP_GEMINI && !arg.reczny && !arg["tylko-rejestry"]) {
+  const g = stanLogowaniaGemini();
+  if (!g.zalogowany) {
+    console.error(`\nNIP-y ma szukać Gemini, ale ${g.powod}. Zaloguj się w panelu (ekran "Gotowość" → "Zaloguj Gemini") albo wybierz Claude.\n`);
+    process.exit(2);
+  }
+}
 if (!arg.reczny && !arg["tylko-rejestry"]) {
   const lg = await sprawdzLogowanie();
   if (!lg.zalogowany) {
@@ -138,6 +151,16 @@ if (arg.kategoria && !partia.seedZrobiony) {
 
 function zliczStat(meta) {
   if (!meta || meta.model === "reczny") return;
+  // Gemini liczymy osobno, żeby licznik zużycia Claude w panelu był uczciwy.
+  if (meta.dostawca === "gemini") {
+    const g = (partia.statystykiGemini ||= { wywolan: 0, sekundy: 0, tokenyWe: 0, tokenyCache: 0, tokenyWy: 0 });
+    g.wywolan++;
+    g.sekundy += meta.sekundy || 0;
+    g.tokenyWe += meta.tokenyWe || 0;
+    g.tokenyCache += meta.tokenyCache || 0;
+    g.tokenyWy += meta.tokenyWy || 0;
+    return;
+  }
   const s = partia.statystyki;
   s.wywolan++;
   s.sekundy += meta.sekundy || 0;
@@ -154,6 +177,16 @@ function juzWBazie(f) {
   if (poNip) return poNip;
   const s = slugify(f.nazwa);
   return indeks.find((x) => slugify(x.slug) === s || slugify(x.display_name || "") === s || (x.brand_aliases || "").split(",").some((b) => slugify(b) === s)) || null;
+}
+
+// Krok 1: kto szuka numeru. Gemini (konto Google, bez zużycia limitu Claude) albo Claude.
+// Pierwsze podejście jest tanie (tylko wyszukiwanie); `dokladnie` wolno pobierać strony.
+// Tryb ręczny zawsze idzie przez pliki, niezależnie od wyboru.
+function szukajNipu(f, dokladnie, opcje) {
+  const prompt = promptTozsamosc({ nazwa: f.nazwa, dokladnie });
+  if (NIP_GEMINI && !arg.reczny) return zapytajGemini({ prompt, schemat: SCHEMAT_TOZSAMOSC });
+  if (dokladnie) return zapytajModel({ nazwaKroku: "1-tozsamosc-dokladnie", prompt, model: MODELE.sredni, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje });
+  return zapytajModel({ nazwaKroku: "1-tozsamosc", prompt, model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch"], opcje });
 }
 
 async function przetworzFirme(f) {
@@ -186,9 +219,7 @@ async function przetworzFirme(f) {
       // Wyjątek: firma, której numer rejestry już raz odrzuciły i którą w panelu oznaczono
       // "Szukaj numeru ponownie" — od razu dokładniejsza droga (mocniejszy model, ze stronami).
       const dokladnie = !!f.szukajDokladnie;
-      const r = dokladnie
-        ? await zapytajModel({ nazwaKroku: "1-tozsamosc-dokladnie", prompt: promptTozsamosc({ nazwa: f.nazwa, dokladnie: true }), model: MODELE.sredni, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje })
-        : await zapytajModel({ nazwaKroku: "1-tozsamosc", prompt: promptTozsamosc({ nazwa: f.nazwa }), model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch"], opcje });
+      const r = await szukajNipu(f, dokladnie, opcje);
       if (czekaj(r, "tozsamosc")) return;
       if (r.blad) {
         f.etapy.tozsamosc = `błąd: ${r.blad}`;
@@ -201,7 +232,7 @@ async function przetworzFirme(f) {
     }
     // Tani model + weryfikacja w rejestrach; dopiero gdy numer nie przechodzi kontroli,
     // powtarzamy krok mocniejszym modelem (to rzadkie, więc partia zostaje tania).
-    const wolnoPowtorzyc = t.zModelu && !t.powtorzone && !arg["model-tozsamosc"] && MODEL.tozsamosc === MODELE.tani;
+    const wolnoPowtorzyc = t.zModelu && !t.powtorzone && (NIP_GEMINI || (!arg["model-tozsamosc"] && MODEL.tozsamosc === MODELE.tani));
     // weryfikacja w MF i KRS (te same reguły dla numeru z modelu i podanego ręcznie)
     async function zweryfikuj(x) {
       x.nip = normalizujNip(x.nip);
@@ -229,7 +260,7 @@ async function przetworzFirme(f) {
     let problemy = await zweryfikuj(t);
     if (problemy.length && wolnoPowtorzyc) {
       log(`${f.nazwa}: tani model nie przeszedł kontroli (${problemy.join("; ")}), powtarzam mocniejszym`);
-      const r2 = await zapytajModel({ nazwaKroku: "1-tozsamosc-powtorka", prompt: promptTozsamosc({ nazwa: f.nazwa, dokladnie: true }), model: MODELE.sredni, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje });
+      const r2 = await szukajNipu(f, true, opcje);
       if (!r2.blad && !r2.czeka && r2.dane) {
         zliczStat(r2.meta);
         const t2 = { ...r2.dane, zModelu: true, meta: r2.meta, powtorzone: true, pierwszaProba: { nip: t.nip, problemy } };
