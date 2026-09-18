@@ -183,7 +183,12 @@ async function przetworzFirme(f) {
       return;
     } else {
       // Bez WebFetch: pobrana strona wchodzi w całości do kontekstu i jest czytana w każdej turze.
-      const r = await zapytajModel({ nazwaKroku: "1-tozsamosc", prompt: promptTozsamosc({ nazwa: f.nazwa }), model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch"], opcje });
+      // Wyjątek: firma, której numer rejestry już raz odrzuciły i którą w panelu oznaczono
+      // "Szukaj numeru ponownie" — od razu dokładniejsza droga (mocniejszy model, ze stronami).
+      const dokladnie = !!f.szukajDokladnie;
+      const r = dokladnie
+        ? await zapytajModel({ nazwaKroku: "1-tozsamosc-dokladnie", prompt: promptTozsamosc({ nazwa: f.nazwa, dokladnie: true }), model: MODELE.sredni, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje })
+        : await zapytajModel({ nazwaKroku: "1-tozsamosc", prompt: promptTozsamosc({ nazwa: f.nazwa }), model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch"], opcje });
       if (czekaj(r, "tozsamosc")) return;
       if (r.blad) {
         f.etapy.tozsamosc = `błąd: ${r.blad}`;
@@ -191,11 +196,12 @@ async function przetworzFirme(f) {
         return;
       }
       zliczStat(r.meta);
-      t = { ...r.dane, zModelu: true, meta: r.meta };
+      t = { ...r.dane, zModelu: true, meta: r.meta, ...(dokladnie ? { powtorzone: true } : {}) };
+      delete f.szukajDokladnie;
     }
     // Tani model + weryfikacja w rejestrach; dopiero gdy numer nie przechodzi kontroli,
     // powtarzamy krok mocniejszym modelem (to rzadkie, więc partia zostaje tania).
-    const wolnoPowtorzyc = t.zModelu && !arg["model-tozsamosc"] && MODEL.tozsamosc === MODELE.tani;
+    const wolnoPowtorzyc = t.zModelu && !t.powtorzone && !arg["model-tozsamosc"] && MODEL.tozsamosc === MODELE.tani;
     // weryfikacja w MF i KRS (te same reguły dla numeru z modelu i podanego ręcznie)
     async function zweryfikuj(x) {
       x.nip = normalizujNip(x.nip);

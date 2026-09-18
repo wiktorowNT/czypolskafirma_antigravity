@@ -529,52 +529,87 @@ async function ekranNip() {
   const j = await pobierz("/api/panel/nip?partia=" + encodeURIComponent(STAN.partia));
   if (j.blad) { $("#nipTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
   if (j.przygotowanie) { $("#nipTabela").innerHTML = '<span class="pusto">Automat dopiero szuka numerów NIP. Wróć tu za chwilę — albo zajrzyj do „Praca w toku”.</span>'; $("#nipPodsumowanie").textContent = ""; return; }
-  $("#nipPodtytul").textContent = `Partia ${j.nazwa} · potwierdź, że automat trafił we właściwe spółki.`;
+  $("#nipPodtytul").textContent = `Partia ${j.nazwa} · przy każdej firmie wybierz, co dalej.`;
   const wiersze = j.firmy.map((f, i) => {
     const plakietka = f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
       : f.wynik === "uwaga" ? `<span class="plakietka p-uwaga">do sprawdzenia</span>`
-      : f.wynik === "brak" ? (f.blad ? `<span class="plakietka p-zle">nie udało się</span>` : `<span class="plakietka">nie sprawdzono</span>`)
+      : f.wynik === "brak" ? (f.blad ? `<span class="plakietka p-zle">nie udało się</span>` : `<span class="plakietka p-zle">brak numeru</span>`)
       : `<span class="plakietka p-zle">nie zgadza się</span>`;
+    // Domyślny wybór: dobre idą dalej, złe i puste do ponownego szukania.
+    const domyslnie = f.pomin ? "pomin" : f.wynik === "ok" || f.wynik === "uwaga" ? "dalej" : "szukaj";
+    const opcja = (w, tekst) => `<option value="${w}" ${domyslnie === w ? "selected" : ""}>${tekst}</option>`;
     return `<tr>
-      <td><input type="checkbox" data-nip-pomin="${i}" ${f.pomin ? "" : "checked"}></td>
       <td><b>${esc(f.nazwa)}</b>${f.wBazie ? `<br><span style="font-size:12.5px;color:var(--slaby)">jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}</span>` : ""}</td>
-      <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}">${f.podanyPrzezCiebie ? `<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span>` : ""}</td>
+      <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}" placeholder="wpisz NIP">${f.podanyPrzezCiebie ? `<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span>` : ""}</td>
       <td>${esc(f.spolka || "—")}${f.krs ? `<br><span style="font-size:12.5px;color:var(--slaby)">KRS ${esc(f.krs)}</span>` : ""}</td>
       <td>${plakietka}${f.blad ? `<br><span style="font-size:13px;color:var(--czerwony)">${esc(f.blad)}</span>` : ""}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}${f.tenSamNipCo?.length ? `<br><span style="font-size:13px;color:var(--slaby)">ta sama spółka co: ${esc(f.tenSamNipCo.join(", "))} — w bazie zostaną osobnymi markami</span>` : ""}</td>
+      <td><select class="decyzja-nip" data-nip-decyzja="${i}" data-wynik="${f.wynik}">
+        ${opcja("dalej", "Idzie dalej")}${opcja("szukaj", "Szukaj numeru ponownie")}${opcja("pomin", "Pomiń firmę")}
+      </select></td>
     </tr>`;
   }).join("");
-  $("#nipTabela").innerHTML = `<table><tr><th style="width:26px"></th><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th></tr>${wiersze}</table>`;
+  $("#nipTabela").innerHTML = `<table><tr><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th><th style="width:210px">Co dalej</th></tr>${wiersze}</table>
+    <p class="uwagi">„Idzie dalej” przy czerwonej firmie znaczy: akceptuję ten numer mimo ostrzeżenia. Wpisany ręcznie NIP sprawdzą same rejestry, bez modelu.</p>`;
   $("#nipTabela").dataset.firmy = JSON.stringify(j.firmy.map((f) => ({ nazwa: f.nazwa, nip: f.nip })));
-  const ile = j.firmy.filter((f) => !f.pomin).length;
-  $("#nipPodsumowanie").innerHTML = `${ile} z ${j.firmy.length} firm pójdzie dalej · szacowany czas ok. ${Math.ceil((ile * 3) / 2)} min`;
+  $("#nipTabela").querySelectorAll("select, input").forEach((el) => { el.addEventListener("input", podsumowanieNip); el.addEventListener("change", podsumowanieNip); });
+  podsumowanieNip();
 }
 
 function zmianyNip() {
   const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
-  return bazowe.map((f, i) => ({ nazwa: f.nazwa, nip: document.querySelector(`[data-nip-pole="${i}"]`)?.value.trim() || "", pomin: !document.querySelector(`[data-nip-pomin="${i}"]`)?.checked }));
+  return bazowe.map((f, i) => ({
+    nazwa: f.nazwa,
+    nip: document.querySelector(`[data-nip-pole="${i}"]`)?.value.trim() || "",
+    decyzja: document.querySelector(`[data-nip-decyzja="${i}"]`)?.value || "dalej",
+  }));
+}
+
+// Licznik na dole liczy się na żywo z wyborów w tabeli.
+function podsumowanieNip() {
+  const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
+  const z = zmianyNip();
+  const wpisane = z.filter((x, i) => x.nip && x.nip.replace(/\D/g, "") !== String(bazowe[i]?.nip || "").replace(/\D/g, "")).length;
+  const dalej = z.filter((x) => x.decyzja === "dalej").length;
+  const szukaj = z.filter((x) => x.decyzja === "szukaj").length;
+  const pomin = z.filter((x) => x.decyzja === "pomin").length;
+  const czesci = [`<b style="color:var(--tekst)">${dalej} idzie dalej</b>`];
+  if (szukaj) czesci.push(`<span class="err">${szukaj} do ponownego szukania</span>`);
+  if (wpisane) czesci.push(`${wpisane} z wpisanym numerem do sprawdzenia`);
+  if (pomin) czesci.push(`${pomin} pominiętych`);
+  $("#nipPodsumowanie").innerHTML = czesci.join(" · ");
+  const trzebaSprawdzic = szukaj + wpisane;
+  $("#btnSprawdzNip").disabled = !trzebaSprawdzic;
+  $("#btnSprawdzNip").textContent = trzebaSprawdzic ? `Sprawdź ponownie (${trzebaSprawdzic})` : "Sprawdź ponownie";
+  $("#btnDalej").disabled = !!trzebaSprawdzic || !dalej;
+  $("#btnDalej").title = trzebaSprawdzic ? "Najpierw sprawdź ponownie firmy oznaczone na czerwono albo zmień im wybór" : "";
 }
 
 $("#btnSprawdzNip").onclick = async () => {
   const j = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip(), ponow: true });
   if (j.blad) return alert(j.blad);
-  const ile = j.doSprawdzenia + (j.bezNumeru?.length || 0);
-  if (!ile) return alert("Nie ma nic do ponownego sprawdzenia. Jeśli wszystko się zgadza, kliknij „Sprawdzaj dalej”.");
+  const ile = j.doSprawdzenia;
+  if (!ile) return alert("Nie ma nic do ponownego sprawdzenia.");
   const u = await wyslij("/api/panel/dalej", { partia: STAN.partia, tylkoNip: true });
   if (u.blad) return alert(u.blad);
   STAN.zadanie = u.zadanie;
-  alert(`Sprawdzam ${ile} firm(y). Zajmie to ok. pół minuty na firmę — tabela odświeży się sama.`);
+  $("#nipPodsumowanie").innerHTML = `Sprawdzam ${ile} firm(y)… tabela odświeży się sama, gdy skończę.`;
+  $("#btnSprawdzNip").disabled = true;
+  $("#btnDalej").disabled = true;
   const odswiez = setInterval(async () => {
     const z = await pobierz("/api/panel/zadanie?id=" + u.zadanie);
-    if (STAN.ekran === "nip") ekranNip();
-    if (z.status !== "pracuje") clearInterval(odswiez);
+    if (z.status !== "pracuje") {
+      clearInterval(odswiez);
+      if (STAN.ekran === "nip") ekranNip();
+    }
   }, 4000);
 };
 
 $("#btnDalej").onclick = async () => {
   const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
   if (z.blad) return alert(z.blad);
-  if (z.doSprawdzenia) return alert("Zmieniłeś numer NIP. Kliknij najpierw „Zapisz poprawki i sprawdź ponownie”.");
-  if (z.bezNumeru?.length) return alert(`Te firmy nie mają jeszcze numeru NIP: ${z.bezNumeru.join(", ")}.\n\nKliknij „Zapisz poprawki i sprawdź ponownie”, wpisz NIP ręcznie albo odznacz je.`);
+  if (z.doSprawdzenia) return alert("Część firm czeka na ponowne sprawdzenie. Kliknij najpierw „Sprawdź ponownie”.");
+  const ile = zmianyNip().filter((x) => x.decyzja === "dalej").length;
+  if (!confirm(`Ruszyć ze śledztwem właścicielskim dla ${ile} firm? To najcięższa część pracy modelu (kilka minut na firmę).`)) return;
   const j = await wyslij("/api/panel/dalej", { partia: STAN.partia });
   if (j.blad) return alert(j.blad);
   STAN.zadanie = j.zadanie;

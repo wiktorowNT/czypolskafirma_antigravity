@@ -407,44 +407,51 @@ const serwer = http.createServer(async (req, res) => {
       return json(res, { ok: zatrzymaj(z) });
     }
 
-    // Poprawki na przystanku: zmiana NIP-u kasuje dotychczasową tożsamość, żeby sprawdzić ją od nowa.
+    // Decyzje z przystanku. Każda firma dostaje jedno z trzech: "dalej" (akceptuję numer),
+    // "szukaj" (szukaj numeru jeszcze raz) albo "pomin". Wpisany ręcznie NIP ma pierwszeństwo
+    // i sprawdzają go same rejestry. Bez `ponow` tylko liczymy, co wymaga sprawdzenia.
     if (req.method === "POST" && p === "/api/panel/nip") {
       const { partia: nazwa, zmiany, ponow } = await cialo();
       const sciezka = plikPartii(nazwa);
       const partia = wczytajPartie(sciezka);
-      let doSprawdzenia = 0;
-      const poprawione = new Set();
+      const doSprawdzeniaNazwy = [];
+      const wyczyscTozsamosc = (f) => {
+        delete f.tozsamosc;
+        delete f.rejestr;
+        delete f.historiaKrs;
+        delete f.crbr;
+        f.etapy = {};
+        f.bledy = [];
+      };
       for (const zm of zmiany || []) {
         const f = partia.firmy.find((x) => x.nazwa === zm.nazwa);
         if (!f) continue;
-        if (zm.pomin !== undefined) f.pomin = !!zm.pomin;
+        const decyzja = zm.decyzja || (zm.pomin ? "pomin" : "dalej");
+        f.pomin = decyzja === "pomin";
+        if (f.pomin) continue;
         const nowy = normalizujNip(zm.nip || "");
         const stary = normalizujNip(f.tozsamosc?.nip || f.nipPodany || "");
         if (nowy && nowy !== stary) {
-          f.nipPodany = nowy;
-          delete f.tozsamosc;
-          delete f.rejestr;
-          delete f.historiaKrs;
-          delete f.crbr;
-          f.etapy = {};
-          f.bledy = [];
-          doSprawdzenia++;
-          poprawione.add(f.nazwa);
+          doSprawdzeniaNazwy.push(f.nazwa);
+          if (ponow) {
+            wyczyscTozsamosc(f);
+            f.nipPodany = nowy;
+            delete f.szukajDokladnie;
+          }
+        } else if (decyzja === "szukaj" || !f.tozsamosc) {
+          doSprawdzeniaNazwy.push(f.nazwa);
+          if (ponow) {
+            // Była już próba i rejestry jej nie potwierdziły: szukamy dokładniej (mocniejszy
+            // model, z pobieraniem stron). Firma bez żadnej próby (np. limit) idzie tanią drogą.
+            const bylaProba = !!f.tozsamosc;
+            wyczyscTozsamosc(f);
+            delete f.nipPodany;
+            if (bylaProba) f.szukajDokladnie = true;
+          }
         }
-      }
-      // Firmy, którym krok 1 się nie udał (np. skończył się limit subskrypcji), idą do ponownego
-      // sprawdzenia razem z poprawionymi numerami. Czyścimy stary błąd, żeby nie wisiał na liście.
-      const bezNumeru = [];
-      for (const f of partia.firmy) {
-        if (f.pomin || f.tozsamosc || poprawione.has(f.nazwa)) continue;
-        if (ponow) {
-          f.bledy = [];
-          f.etapy = {};
-        }
-        bezNumeru.push(f.nazwa);
       }
       zapiszPartie(sciezka, partia);
-      return json(res, { ok: true, doSprawdzenia, bezNumeru });
+      return json(res, { ok: true, doSprawdzenia: doSprawdzeniaNazwy.length, nazwy: doSprawdzeniaNazwy });
     }
 
     if (req.method === "GET" && p === "/api/panel/import-plan") {
