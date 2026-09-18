@@ -456,8 +456,8 @@ async function ekranGotowosc() {
   if (g.blad) { $("#lampki").innerHTML = `<span class="pusto">Nie udało się sprawdzić: ${esc(g.blad)}</span>`; return; }
   const l = [];
   l.push(lampka(g.claude.ok ? "ok" : "zle", "Claude " + (g.claude.ok ? "jest zalogowany" : "nie jest zalogowany"),
-    g.claude.ok ? `Tryb: ${esc(g.claude.metoda || "subskrypcja")}. Automat zużywa limity subskrypcji, bez osobnych kosztów.` : `${esc(g.claude.powod || "brak sesji")}. Otwórz terminal i uruchom raz: claude auth login`,
-    `<span class="plakietka ${g.claude.ok ? "p-ok" : "p-zle"}">${g.claude.ok ? "w porządku" : "do naprawy"}</span>`));
+    g.claude.ok ? `Tryb: ${esc(g.claude.metoda || "subskrypcja")}. Automat zużywa limity subskrypcji, bez osobnych kosztów.` : "Logowanie automatu wygasło. Kliknij „Zaloguj Claude”: otworzy się okno i przeglądarka, zatwierdź logowanie swoim kontem, potem zamknij okno i odśwież tę stronę (F5).",
+    g.claude.ok ? `<span class="plakietka p-ok">w porządku</span>` : `<button class="glowny" id="btnZalogujClaude">Zaloguj Claude</button>`));
   l.push(lampka(g.gemini.ok ? "ok" : "uwaga", "Gemini do szukania NIP-ów " + (g.gemini.ok ? "jest gotowy" : g.gemini.maKlucz ? "nie działa" : "jest wyłączony"),
     g.gemini.ok
       ? `Model: ${esc(g.gemini.model)}. Szukanie NIP-ów może iść na Gemini zamiast Claude.`
@@ -482,6 +482,11 @@ async function ekranGotowosc() {
     `<span class="plakietka ${!g.backup ? "p-zle" : dni > 10 ? "p-uwaga" : "p-ok"}">${g.backup ? (dni === 0 ? "dzisiaj" : dni + " dni temu") : "brak"}</span>`));
   $("#lampki").innerHTML = l.join("");
   STAN.geminiOk = !!g.gemini.ok;
+  const przyciskClaude = $("#btnZalogujClaude");
+  if (przyciskClaude) przyciskClaude.onclick = async () => {
+    await wyslij("/api/panel/zaloguj-claude");
+    alert("Otworzyło się okno „Logowanie Claude” i przeglądarka.\n\n1. W przeglądarce zatwierdź logowanie swoim kontem Claude.\n2. Gdy okno napisze, że logowanie się udało, zamknij je.\n3. Wróć tutaj i naciśnij F5.");
+  };
   const wToku = g.partie.find((p) => p.gotowe < p.firm - p.pominiete);
   $("#startPodsumowanie").innerHTML = g.automatPracuje
     ? `<b>Automat teraz pracuje</b><br><span style="font-size:13.5px">Partia ${esc(wToku?.nazwa || "")} — zobacz „Praca w toku”.</span>`
@@ -625,10 +630,11 @@ async function ekranNip() {
   const wiersze = j.firmy.map((f, i) => {
     const plakietka = f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
       : f.wynik === "uwaga" ? `<span class="plakietka p-uwaga">do sprawdzenia</span>`
+      : f.wynik === "czeka" ? `<span class="plakietka p-uwaga">czeka na sprawdzenie w rejestrach</span>`
       : f.wynik === "brak" ? (f.blad ? `<span class="plakietka p-zle">nie udało się</span>` : `<span class="plakietka p-zle">brak numeru</span>`)
       : `<span class="plakietka p-zle">nie zgadza się</span>`;
     // Domyślny wybór: dobre idą dalej, złe i puste do ponownego szukania.
-    const domyslnie = f.pomin ? "pomin" : f.wynik === "ok" || f.wynik === "uwaga" ? "dalej" : "szukaj";
+    const domyslnie = f.pomin ? "pomin" : ["ok", "uwaga", "czeka"].includes(f.wynik) ? "dalej" : "szukaj";
     const opcja = (w, tekst) => `<option value="${w}" ${domyslnie === w ? "selected" : ""}>${tekst}</option>`;
     return `<tr>
       <td><b>${esc(f.nazwa)}</b>${f.wBazie ? `<br><span style="font-size:12.5px;color:var(--slaby)">jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}</span>` : ""}</td>
@@ -660,13 +666,16 @@ function zmianyNip() {
 function podsumowanieNip() {
   const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
   const z = zmianyNip();
-  const wpisane = z.filter((x, i) => x.nip && x.nip.replace(/\D/g, "") !== String(bazowe[i]?.nip || "").replace(/\D/g, "")).length;
+  const wpisaneIdx = new Set(z.map((x, i) => (x.nip && x.nip.replace(/\D/g, "") !== String(bazowe[i]?.nip || "").replace(/\D/g, "") ? i : -1)).filter((i) => i >= 0));
+  // numery zapisane wcześniej (ręcznie albo z Gemini), które jeszcze nie przeszły przez rejestry
+  const czekaIdx = new Set(z.map((x, i) => (x.decyzja !== "pomin" && document.querySelector(`[data-nip-decyzja="${i}"]`)?.dataset.wynik === "czeka" ? i : -1)).filter((i) => i >= 0));
+  const wpisane = new Set([...wpisaneIdx, ...czekaIdx].filter((i) => z[i].decyzja !== "pomin")).size;
   const dalej = z.filter((x) => x.decyzja === "dalej").length;
-  const szukaj = z.filter((x) => x.decyzja === "szukaj").length;
+  const szukaj = z.filter((x, i) => x.decyzja === "szukaj" && !wpisaneIdx.has(i)).length;
   const pomin = z.filter((x) => x.decyzja === "pomin").length;
   const czesci = [`<b style="color:var(--tekst)">${dalej} idzie dalej</b>`];
   if (szukaj) czesci.push(`<span class="err">${szukaj} do ponownego szukania</span>`);
-  if (wpisane) czesci.push(`${wpisane} z wpisanym numerem do sprawdzenia`);
+  if (wpisane) czesci.push(`${wpisane} z numerem do sprawdzenia w rejestrach`);
   if (pomin) czesci.push(`${pomin} pominiętych`);
   $("#nipPodsumowanie").innerHTML = czesci.join(" · ");
   const trzebaSprawdzic = szukaj + wpisane;
@@ -691,7 +700,10 @@ $("#btnSprawdzNip").onclick = async () => {
     const z = await pobierz("/api/panel/zadanie?id=" + u.zadanie);
     if (z.status !== "pracuje") {
       clearInterval(odswiez);
-      if (STAN.ekran === "nip") ekranNip();
+      if (STAN.ekran === "nip") await ekranNip();
+      // Gdy automat stanął (np. wygasło logowanie Claude), pokaż dlaczego, zamiast cichego odświeżenia.
+      const przyczyna = (z.log || []).filter((l) => /nie jest zalogowany|Failed to authenticate|spend limit|usage limit|brak limitu|WYJĄTEK|tożsamość błąd/i.test(l)).slice(-2).join("\n");
+      if (z.status === "blad" || przyczyna) alert(`Sprawdzanie nie powiodło się dla części firm.\n\n${przyczyna || (z.log || []).slice(-3).join("\n")}\n\nJeśli chodzi o logowanie: ekran „Gotowość” → „Zaloguj Claude”.`);
     }
   }, 4000);
 };
@@ -787,7 +799,7 @@ document.querySelectorAll("[data-gemini-kopiuj]").forEach((b) => b.addEventListe
   setTimeout(() => (info.textContent = ""), 4000);
 }));
 
-document.querySelectorAll("[data-gemini-wczytaj]").forEach((b) => b.addEventListener("click", () => {
+document.querySelectorAll("[data-gemini-wczytaj]").forEach((b) => b.addEventListener("click", async () => {
   const gdzie = b.dataset.geminiWczytaj;
   const nazwy = nazwyDoGemini(gdzie);
   const tekst = document.querySelector(`[data-gemini-odpowiedz="${gdzie}"]`).value;
@@ -811,25 +823,26 @@ document.querySelectorAll("[data-gemini-wczytaj]").forEach((b) => b.addEventList
     });
     $("#firmyTekst").value = linie.join("\n");
     szacunek();
-  } else {
-    const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
-    bazowe.forEach((f, i) => {
-      if (!w[f.nazwa]?.poprawny) return;
-      const pole = document.querySelector(`[data-nip-pole="${i}"]`);
-      if (pole) pole.value = w[f.nazwa].nip;
-      // numer już jest, więc firma nie czeka na szukanie, tylko na sprawdzenie w rejestrach
-      const wybor = document.querySelector(`[data-nip-decyzja="${i}"]`);
-      if (wybor) wybor.value = "dalej";
-    });
-    podsumowanieNip();
+  }
+
+  // Przystanek: numery od razu zapisujemy w partii (odświeżenie tabeli ich nie zgubi).
+  let takieSame = [];
+  if (gdzie === "nip") {
+    const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zapiszNumery: true, zmiany: dobre.map((n) => ({ nazwa: n, nip: w[n].nip })) });
+    if (z.blad) return alert(z.blad);
+    takieSame = z.takieSame || [];
+    await ekranNip();
   }
 
   const bez = nazwy.length - dobre.length;
   const dopisek = gdzie === "nowa"
     ? bez ? `${bez} firm bez numeru: przy uruchomieniu poszuka ich Claude (ok. 250 tys. tokenów na firmę) — albo usuń je z listy.` : "Wszystkie numery dopisane. Możesz uruchamiać automat."
-    : bez ? `${bez} firm bez numeru: zostaw „Szukaj numeru ponownie” (poszuka Claude) albo wybierz „Pomiń firmę”.` : "Numery są w tabeli. Kliknij „Sprawdź ponownie” — sprawdzą je same rejestry.";
+    : bez ? `${bez} firm bez numeru: zostaw „Szukaj numeru ponownie” (poszuka Claude) albo wybierz „Pomiń firmę”. Numery zapisane — kliknij „Sprawdź ponownie”, sprawdzą je same rejestry.` : "Numery zapisane w partii. Kliknij „Sprawdź ponownie” — sprawdzą je same rejestry, bez modelu.";
+  const ostrzezenie = takieSame.length
+    ? `<div class="pasmo blad" style="margin-top:10px">Gemini podał ten sam numer, który rejestry już odrzuciły: ${takieSame.map((x) => `<b>${esc(x.nazwa)}</b> (${esc(x.powod || "")})`).join(", ")}. Dla nich wybierz „Pomiń firmę” albo poszukaj numeru jeszcze raz — np. zapytaj Gemini o następcę wykreślonej spółki.</div>`
+    : "";
   document.querySelector(`[data-gemini-wynik="${gdzie}"]`).innerHTML =
-    `<table><tr><th>Marka</th><th>NIP</th><th>Spółka wg Gemini</th><th></th></tr>${wiersze}</table><p class="uwagi">${esc(dopisek)}</p>`;
+    `<table><tr><th>Marka</th><th>NIP</th><th>Spółka wg Gemini</th><th></th></tr>${wiersze}</table><p class="uwagi">${esc(dopisek)}</p>${ostrzezenie}`;
 }));
 
 // ---------- moje partie ----------

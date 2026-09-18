@@ -216,7 +216,8 @@ function tabelaNip(nazwa) {
         spolka: t.mf?.nazwa || t.nazwa_spolki || null,
         adres: t.mf?.adres || null,
         podanyPrzezCiebie: !!f.nipPodany,
-        wynik: !t.nip ? "brak" : problem ? "zle" : uwaga || f.uwagiTozsamosci ? "uwaga" : "ok",
+        // "czeka": numer wpisany ręcznie albo wczytany z Gemini, jeszcze niesprawdzony w rejestrach
+        wynik: !f.tozsamosc && f.nipPodany ? "czeka" : !t.nip ? "brak" : problem ? "zle" : uwaga || f.uwagiTozsamosci ? "uwaga" : "ok",
         powod: problem || f.uwagiTozsamosci || null,
         wBazie: t.istniejeWBazie ? { slug: t.istniejeWBazie.slug, kraj: t.istniejeWBazie.country_code, wlasciciel: t.istniejeWBazie.owner_name } : null,
         tenSamNipCo: (wgNipu.get(t.nip || f.nipPodany) || []).filter((n) => n !== f.nazwa),
@@ -430,7 +431,7 @@ const serwer = http.createServer(async (req, res) => {
     // "szukaj" (szukaj numeru jeszcze raz) albo "pomin". Wpisany ręcznie NIP ma pierwszeństwo
     // i sprawdzają go same rejestry. Bez `ponow` tylko liczymy, co wymaga sprawdzenia.
     if (req.method === "POST" && p === "/api/panel/nip") {
-      const { partia: nazwa, zmiany, ponow } = await cialo();
+      const { partia: nazwa, zmiany, ponow, zapiszNumery } = await cialo();
       const sciezka = plikPartii(nazwa);
       const partia = wczytajPartie(sciezka);
       const doSprawdzeniaNazwy = [];
@@ -442,6 +443,32 @@ const serwer = http.createServer(async (req, res) => {
         f.etapy = {};
         f.bledy = [];
       };
+
+      // Numery wczytane z Gemini zapisujemy od razu do partii, żeby odświeżenie tabeli ich nie
+      // zgubiło. Sprawdzą je rejestry przy "Sprawdź ponownie". Ten sam numer, który rejestry już
+      // odrzuciły (np. spółka wykreślona), odsyłamy z powrotem jako ostrzeżenie.
+      if (zapiszNumery) {
+        const zapisane = [];
+        const takieSame = [];
+        for (const zm of zmiany || []) {
+          const f = partia.firmy.find((x) => x.nazwa === zm.nazwa);
+          const nowy = normalizujNip(zm.nip || "");
+          if (!f || nowy.length !== 10) continue;
+          const stary = normalizujNip(f.tozsamosc?.nip || f.nipPodany || "");
+          if (nowy === stary) {
+            if (f.tozsamosc?.status === "KONFLIKT") takieSame.push({ nazwa: f.nazwa, powod: f.tozsamosc.powod });
+            continue;
+          }
+          wyczyscTozsamosc(f);
+          f.nipPodany = nowy;
+          f.pomin = false;
+          delete f.szukajDokladnie;
+          zapisane.push(f.nazwa);
+        }
+        zapiszPartie(sciezka, partia);
+        return json(res, { ok: true, zapisane, takieSame });
+      }
+
       for (const zm of zmiany || []) {
         const f = partia.firmy.find((x) => x.nazwa === zm.nazwa);
         if (!f) continue;
@@ -457,6 +484,9 @@ const serwer = http.createServer(async (req, res) => {
             f.nipPodany = nowy;
             delete f.szukajDokladnie;
           }
+        } else if (!f.tozsamosc && f.nipPodany && decyzja !== "szukaj") {
+          // numer już zapisany (ręcznie albo z Gemini), czeka tylko na sprawdzenie w rejestrach
+          doSprawdzeniaNazwy.push(f.nazwa);
         } else if (decyzja === "szukaj" || !f.tozsamosc) {
           doSprawdzeniaNazwy.push(f.nazwa);
           if (ponow) {
@@ -565,6 +595,16 @@ const serwer = http.createServer(async (req, res) => {
       const cel = fs.existsSync(DYSK_GOOGLE) ? DYSK_GOOGLE : KATALOG_BACKUPU;
       const z = zadanieProcesu({ typ: "backup", opis: `Backup bazy → ${cel}`, plik: path.join(KATALOG, "backup.mjs"), argumenty: ["--do", cel] });
       return json(res, { ok: true, zadanie: z.id });
+    }
+
+    // Logowanie Claude (automatu) jest interaktywne: otwieramy okno z "claude auth login",
+    // które samo otwiera przeglądarkę. Użytkownik klika zgodę na swoim koncie.
+    if (req.method === "POST" && p === "/api/panel/zaloguj-claude") {
+      const cmdClaude = process.env.APPDATA && fs.existsSync(path.join(process.env.APPDATA, "npm", "claude.cmd")) ? path.join(process.env.APPDATA, "npm", "claude.cmd") : "claude";
+      if (process.platform === "win32") {
+        spawn("cmd", ["/c", "start", "Logowanie Claude", "cmd", "/k", cmdClaude, "auth", "login"], { detached: true, stdio: "ignore", windowsHide: false }).unref();
+      }
+      return json(res, { ok: true });
     }
 
     if (req.method === "POST" && p === "/api/panel/odswiez-baze") {

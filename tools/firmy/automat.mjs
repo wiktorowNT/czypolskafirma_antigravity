@@ -120,10 +120,13 @@ if (NIP_GEMINI && !arg.reczny && !arg["tylko-rejestry"]) {
     process.exit(2);
   }
 }
-if (!arg.reczny && !arg["tylko-rejestry"]) {
+// Do przystanku na NIP firmy z gotowym numerem (ręcznie albo z Gemini) sprawdzają same rejestry,
+// więc logowanie do Claude jest wtedy zbędne.
+const tylkoRejestryTeraz = arg["stop-po-nip"] && !arg.kategoria && partia.firmy.filter((f) => !f.pomin && !f.rekord).every((f) => f.tozsamosc || f.nipPodany || NIP_GEMINI);
+if (!arg.reczny && !arg["tylko-rejestry"] && !tylkoRejestryTeraz) {
   const lg = await sprawdzLogowanie();
   if (!lg.zalogowany) {
-    console.error(`\nClaude Code nie jest zalogowane (${lg.powod || lg.metoda || "brak sesji"}).\nZaloguj się raz w terminalu: claude auth login\nalbo wpisz do .env.local token z "claude setup-token" jako CLAUDE_CODE_OAUTH_TOKEN=...\nAlternatywa bez logowania: dodaj --reczny (prompty do plików).\n`);
+    console.error(`\nClaude nie jest zalogowany (${lg.powod || lg.metoda || "brak sesji"}).\nW panelu: ekran "Gotowość" → przycisk "Zaloguj Claude". Z wiersza poleceń: claude auth login\nalbo wpisz do .env.local token z "claude setup-token" jako CLAUDE_CODE_OAUTH_TOKEN=...\nAlternatywa bez logowania: dodaj --reczny (prompty do plików).\n`);
     process.exit(2);
   }
 }
@@ -224,6 +227,8 @@ async function przetworzFirme(f) {
       if (r.blad) {
         f.etapy.tozsamosc = `błąd: ${r.blad}`;
         f.bledy = [...(f.bledy || []), `tożsamość: ${r.blad}`];
+        log(`${f.nazwa}: tożsamość błąd — ${String(r.blad).slice(0, 160)}`);
+        zapiszPartie();
         return;
       }
       zliczStat(r.meta);
