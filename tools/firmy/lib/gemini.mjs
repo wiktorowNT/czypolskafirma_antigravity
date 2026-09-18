@@ -23,18 +23,32 @@ export function plikGemini() {
   return "gemini";
 }
 
+// Na Windows `gemini` to skrypt .cmd; przez cmd.exe argumenty ze spacjami rozpadają się na słowa.
+// Wołamy więc skrypt JS pakietu bezpośrednio przez Node (tak samo robimy z claude.exe).
+function poleceniaGemini() {
+  if (process.platform === "win32" && process.env.APPDATA) {
+    const js = path.join(process.env.APPDATA, "npm", "node_modules", "@google", "gemini-cli", "bundle", "gemini.js");
+    if (fs.existsSync(js)) return { cmd: process.execPath, przed: [js], shell: false };
+  }
+  return { cmd: "gemini", przed: [], shell: false };
+}
+
 export function geminiZainstalowany() {
   const p = plikGemini();
   return p !== "gemini" || process.platform !== "win32";
 }
 
-/** Czy jest zapisane logowanie (plik z tokenem OAuth) albo klucz API. Nie wysyła żadnego zapytania. */
+/**
+ * Czy Gemini da się użyć. Liczy się wyłącznie klucz API (GEMINI_API_KEY w .env.local).
+ * Logowanie kontem Google w Gemini CLI Google wyłączył dla kont prywatnych we wrześniu 2026
+ * (IneligibleTierError "UNSUPPORTED_CLIENT", odsyła do Antigravity), więc sam plik
+ * oauth_creds.json nie oznacza, że wywołania zadziałają.
+ */
 export function stanLogowaniaGemini() {
   const env = wczytajEnv();
   if (env.GEMINI_API_KEY) return { zalogowany: true, metoda: "klucz API" };
-  const oauth = path.join(KATALOG_GEMINI, "oauth_creds.json");
-  if (fs.existsSync(oauth)) return { zalogowany: true, metoda: "konto Google" };
-  return { zalogowany: false, powod: geminiZainstalowany() ? "Gemini CLI nie jest zalogowany" : "Gemini CLI nie jest zainstalowany" };
+  if (!geminiZainstalowany()) return { zalogowany: false, powod: "Gemini CLI nie jest zainstalowany" };
+  return { zalogowany: false, powod: "brak klucza GEMINI_API_KEY w .env.local (logowanie kontem Google Google wyłączył)" };
 }
 
 function wyciagnijJson(tekst) {
@@ -81,7 +95,8 @@ export function zapytajGemini({ prompt, schemat, model, timeoutMs = 5 * 60 * 100
     const m = model || wczytajEnv().GEMINI_MODEL_NIP;
     if (m) args.push("-m", m);
     const start = Date.now();
-    const p = spawn(plikGemini(), args, { cwd: KATALOG_ROBOCZY, shell: process.platform === "win32", windowsHide: true, env: { ...process.env } });
+    const { cmd, przed, shell } = poleceniaGemini();
+    const p = spawn(cmd, [...przed, ...args], { cwd: KATALOG_ROBOCZY, shell, windowsHide: true, env: { ...process.env } });
     let out = "", err = "";
     const timer = setTimeout(() => {
       p.kill();
