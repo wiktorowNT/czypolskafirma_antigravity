@@ -105,6 +105,19 @@ Dwa tryby wejścia:
 - **Wybieram kategorię** — model proponuje N marek z kategorii, pomijając te, które
   już są w bazie.
 
+**Numery NIP z Gemini (za darmo).** Pod polem nazw jest rozwijany blok „Numery NIP
+z Gemini”: **Kopiuj polecenie dla Gemini** (z listą firm bez numeru) → wklejasz je do Gemini
+w Antigravity albo na gemini.google.com (wyszukiwanie w ramach subskrypcji Google) →
+wklejasz odpowiedź i klikasz **Wczytaj numery**. Panel dopisuje `Nazwa | NIP` do listy,
+odrzuca numery ze złą sumą kontrolną, a firmy bez numeru zostawia do wyszukania przez
+Claude (albo je usuwasz). Krok 1 dla firm z numerem nie zużywa wtedy żadnych tokenów;
+numery i tak sprawdzają Biała Lista MF i KRS. Ten sam blok jest na przystanku NIP dla
+firm oznaczonych „Szukaj numeru ponownie”.
+
+Automatyczne podłączenie Gemini (bez kopiowania) wymaga klucza API z wyszukiwaniem Google;
+na darmowym kluczu AI Studio wyszukiwanie jest zablokowane (stan: wrzesień 2026), a Gemini
+CLI nie działa na kontach prywatnych. Lampka Gemini na ekranie „Gotowość” pokazuje stan.
+
 Opcje: przystanek na NIP (domyślnie włączony), dokładniejsza kontrola (Opus zamiast
 Sonneta w kroku 4), CRBR, re-weryfikacja. Pod przyciskiem widać liczbę firm, szacowany
 czas i zużycie limitu MF.

@@ -90,6 +90,9 @@
   .wybor-partii select{max-width:340px}
   .kreska{text-decoration:line-through;color:var(--slaby)}
   a{color:var(--akcent)}
+  .gemini-reczny{border:1px dashed var(--linia);border-radius:6px;padding:12px 14px;margin:4px 0 14px;background:#fcfbf9}
+  .gemini-reczny summary{cursor:pointer;font-size:14px}
+  .gemini-reczny summary b{color:var(--akcent)}
 </style>
 </head>
 <body>
@@ -144,6 +147,31 @@
             <span>Nazwy firm — każda w osobnej linii. Jeśli znasz NIP, dopisz go po kresce, np. „Nałęczowianka | 7160001594”.</span>
             <textarea id="firmyTekst" placeholder="Mokate&#10;Ziaja&#10;Vila"></textarea>
           </label>
+          <details class="gemini-reczny" id="geminiNowa">
+            <summary><b>Numery NIP z Gemini</b> — za darmo, bez zużycia Claude</summary>
+            <div class="etap" style="margin-top:14px">
+              <i class="nrb">1</i>
+              <div class="tresc-etapu">
+                <p>Wpisz nazwy firm w polu powyżej i skopiuj gotowe polecenie z tą listą.</p>
+                <div class="rzad"><button class="glowny" data-gemini-kopiuj="nowa">Kopiuj polecenie dla Gemini</button><span class="info-kopiuj" style="font-size:13px;color:var(--zielony)"></span></div>
+              </div>
+            </div>
+            <div class="etap">
+              <i class="nrb">2</i>
+              <div class="tresc-etapu">
+                <p>Wklej je do Gemini w Antigravity albo na <a href="https://gemini.google.com/app" target="_blank" rel="noopener">gemini.google.com</a>. Gemini odpowie tabelką z numerami.</p>
+              </div>
+            </div>
+            <div class="etap">
+              <i class="nrb">3</i>
+              <div class="tresc-etapu">
+                <p>Wklej tu całą odpowiedź Gemini. Panel dopisze numery do listy powyżej, a rejestry i tak sprawdzą każdy z nich.</p>
+                <textarea data-gemini-odpowiedz="nowa" placeholder="Wklej tutaj odpowiedź Gemini (Ctrl+V)" style="min-height:90px"></textarea>
+                <div class="rzad" style="margin-top:10px"><button data-gemini-wczytaj="nowa">Wczytaj numery</button></div>
+                <div data-gemini-wynik="nowa" style="margin-top:12px"></div>
+              </div>
+            </div>
+          </details>
         </div>
         <div id="polaKategoria" style="display:none">
           <div class="rzad" style="align-items:flex-end;margin-bottom:14px">
@@ -201,6 +229,33 @@
       <p class="podtytul" id="nipPodtytul">Zanim automat ruszy dalej, potwierdź, że trafił we właściwe spółki.</p>
       <div class="pasmo">Program znalazł numery NIP i sprawdził je w Białej Liście Ministerstwa Finansów oraz w KRS. Dopiero po Twoim potwierdzeniu zacznie się dłuższa część, czyli śledztwo właścicielskie i opisy.</div>
       <div class="karta"><div id="nipTabela" class="pusto">Wczytuję…</div></div>
+      <div class="karta">
+        <details class="gemini-reczny" id="geminiNip">
+          <summary><b>Znajdź brakujące numery w Gemini</b> — za darmo, dla firm oznaczonych „Szukaj numeru ponownie”</summary>
+          <div class="etap" style="margin-top:14px">
+            <i class="nrb">1</i>
+            <div class="tresc-etapu">
+              <p>Skopiuj polecenie z listą firm oznaczonych „Szukaj numeru ponownie”.</p>
+              <div class="rzad"><button class="glowny" data-gemini-kopiuj="nip">Kopiuj polecenie dla Gemini</button><span class="info-kopiuj" style="font-size:13px;color:var(--zielony)"></span></div>
+            </div>
+          </div>
+          <div class="etap">
+            <i class="nrb">2</i>
+            <div class="tresc-etapu">
+              <p>Wklej je do Gemini w Antigravity albo na <a href="https://gemini.google.com/app" target="_blank" rel="noopener">gemini.google.com</a>.</p>
+            </div>
+          </div>
+          <div class="etap">
+            <i class="nrb">3</i>
+            <div class="tresc-etapu">
+              <p>Wklej odpowiedź. Numery trafią do tabeli wyżej; potem kliknij „Sprawdź ponownie” — sprawdzą je same rejestry, bez modelu.</p>
+              <textarea data-gemini-odpowiedz="nip" placeholder="Wklej tutaj odpowiedź Gemini (Ctrl+V)" style="min-height:90px"></textarea>
+              <div class="rzad" style="margin-top:10px"><button data-gemini-wczytaj="nip">Wczytaj numery</button></div>
+              <div data-gemini-wynik="nip" style="margin-top:12px"></div>
+            </div>
+          </div>
+        </details>
+      </div>
       <div class="karta rozdziel">
         <div id="nipPodsumowanie" class="pusto"></div>
         <div class="rzad">
@@ -652,6 +707,130 @@ $("#btnDalej").onclick = async () => {
   STAN.zadanie = j.zadanie;
   pokaz("praca");
 };
+
+// ---------- NIP-y z Gemini ręcznie: kopiuj polecenie → wklej odpowiedź ----------
+// Gemini w aplikacji (Antigravity, gemini.google.com) ma wyszukiwanie w ramach subskrypcji Google,
+// więc numer kosztuje zero tokenów Claude. Każdy wczytany numer i tak sprawdzają MF i KRS.
+function promptGemini(nazwy) {
+  return `Znajdź numery NIP spółek zarejestrowanych w Polsce, które prowadzą działalność pod podanymi markami. Dla każdej marki użyj wyszukiwarki Google (np. „<marka> NIP KRS”).
+
+Zasady:
+- Szukasz operatora marki na polskim rynku (sieć, producent, usługodawca), nie spółki celowej, nie sklepu internetowego, nie spółki nieruchomościowej.
+- Jeśli marka należy do zagranicznej grupy, podaj jej polską spółkę operacyjną (np. Biedronka → Jeronimo Martins Polska S.A.).
+- Jeśli marka jest jedną z marek polskiej grupy, podaj spółkę-matkę (np. Tymbark → Maspex).
+- NIP ma 10 cyfr. Podawaj tylko numer, który widzisz w źródle (rejestr KRS, rejestr.io, aleo.com, stopka albo regulamin strony firmy). Nie podawaj numerów z pamięci.
+- Jeśli spółka ze źródła jest wykreślona z rejestru, szukaj jej następcy.
+- Jeśli nie znajdziesz numeru, wpisz BRAK.
+- Nie ustalaj właścicieli ani historii firmy.
+
+Odpowiedz WYŁĄCZNIE tabelą w tym formacie, jeden wiersz na markę, w tej samej kolejności:
+| marka | NIP | pełna nazwa spółki | źródło (adres strony) |
+
+Marki:
+${nazwy.map((n, i) => `${i + 1}. ${n}`).join("\n")}`;
+}
+
+function czyNipPoprawny(nip) {
+  if (!/^\d{10}$/.test(nip)) return false;
+  const wagi = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+  const suma = wagi.reduce((s, w, i) => s + w * Number(nip[i]), 0);
+  return suma % 11 === Number(nip[9]);
+}
+
+const normNazwa = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ł/g, "l").replace(/[^a-z0-9]/g, "");
+
+// Odpowiedź Gemini → { nazwa: { nip, spolka, zrodlo, poprawny } }. Rozumie tabelę Markdown,
+// a gdy Gemini jej nie zrobi — linie w stylu "Marka: 1234567890".
+function parsujGemini(tekst, nazwy) {
+  const wynik = {};
+  const dopasuj = (marka) => {
+    const m = normNazwa(String(marka).replace(/^\s*\d+[.)]\s*/, "").replace(/\*\*/g, ""));
+    if (!m) return null;
+    return nazwy.find((n) => normNazwa(n) === m) || nazwy.find((n) => normNazwa(n).length > 2 && (m.includes(normNazwa(n)) || normNazwa(n).includes(m))) || null;
+  };
+  for (const linia of String(tekst || "").split(/\r?\n/)) {
+    let marka, nipTekst, spolka = "", zrodlo = "";
+    if (linia.includes("|")) {
+      const kom = linia.split("|").map((x) => x.trim());
+      if (kom[0] === "") kom.shift();
+      if (kom[kom.length - 1] === "") kom.pop();
+      if (kom.length < 2 || /^:?-+:?$/.test(kom[0]) || /^marka$/i.test(kom[0])) continue;
+      [marka, nipTekst, spolka = "", zrodlo = ""] = kom;
+    } else {
+      const m = linia.match(/^(.*?)[\s:–-]+((?:\d[\s-]?){10}|BRAK)\b/i);
+      if (!m) continue;
+      [, marka, nipTekst] = m;
+    }
+    const nazwa = dopasuj(marka);
+    if (!nazwa || wynik[nazwa]) continue;
+    const cyfry = String(nipTekst || "").replace(/\D/g, "");
+    const nip = cyfry.length === 10 ? cyfry : null;
+    wynik[nazwa] = { nip, spolka: spolka.replace(/\*\*/g, ""), zrodlo, poprawny: nip ? czyNipPoprawny(nip) : false };
+  }
+  return wynik;
+}
+
+// Skąd brać listę firm: "nowa" — linie z pola nazw bez NIP-u; "nip" — firmy z wyborem "Szukaj numeru ponownie".
+function nazwyDoGemini(gdzie) {
+  if (gdzie === "nowa") {
+    return $("#firmyTekst").value.split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !/\|\s*\d{3}/.test(l)).map((l) => l.split("|")[0].trim());
+  }
+  return zmianyNip().filter((z) => z.decyzja === "szukaj").map((z) => z.nazwa);
+}
+
+document.querySelectorAll("[data-gemini-kopiuj]").forEach((b) => b.addEventListener("click", async () => {
+  const nazwy = nazwyDoGemini(b.dataset.geminiKopiuj);
+  if (!nazwy.length) return alert(b.dataset.geminiKopiuj === "nowa" ? "Najpierw wpisz nazwy firm (te bez numeru NIP)." : "Żadna firma nie ma wyboru „Szukaj numeru ponownie”.");
+  await navigator.clipboard.writeText(promptGemini(nazwy));
+  const info = b.parentElement.querySelector(".info-kopiuj");
+  info.textContent = `skopiowane (${nazwy.length} firm) — wklej w Gemini`;
+  setTimeout(() => (info.textContent = ""), 4000);
+}));
+
+document.querySelectorAll("[data-gemini-wczytaj]").forEach((b) => b.addEventListener("click", () => {
+  const gdzie = b.dataset.geminiWczytaj;
+  const nazwy = nazwyDoGemini(gdzie);
+  const tekst = document.querySelector(`[data-gemini-odpowiedz="${gdzie}"]`).value;
+  if (!tekst.trim()) return alert("Najpierw wklej odpowiedź Gemini.");
+  const w = parsujGemini(tekst, nazwy);
+  const wiersze = nazwy.map((n) => {
+    const x = w[n];
+    const stan = !x ? `<span class="plakietka">brak w odpowiedzi</span>`
+      : !x.nip ? `<span class="plakietka p-uwaga">Gemini nie znalazł</span>`
+      : !x.poprawny ? `<span class="plakietka p-zle">zła suma kontrolna — pominięty</span>`
+      : `<span class="plakietka p-ok">dopisany</span>`;
+    return `<tr><td><b>${esc(n)}</b></td><td>${esc(x?.nip || "—")}</td><td style="font-size:13px">${esc(x?.spolka || "")}</td><td>${stan}</td></tr>`;
+  }).join("");
+  const dobre = nazwy.filter((n) => w[n]?.poprawny);
+
+  if (gdzie === "nowa") {
+    const linie = $("#firmyTekst").value.split(/\r?\n/).map((l) => {
+      const nazwa = l.split("|")[0].trim();
+      if (!nazwa || /\|\s*\d{3}/.test(l)) return l;
+      return w[nazwa]?.poprawny ? `${nazwa} | ${w[nazwa].nip}` : l;
+    });
+    $("#firmyTekst").value = linie.join("\n");
+    szacunek();
+  } else {
+    const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
+    bazowe.forEach((f, i) => {
+      if (!w[f.nazwa]?.poprawny) return;
+      const pole = document.querySelector(`[data-nip-pole="${i}"]`);
+      if (pole) pole.value = w[f.nazwa].nip;
+      // numer już jest, więc firma nie czeka na szukanie, tylko na sprawdzenie w rejestrach
+      const wybor = document.querySelector(`[data-nip-decyzja="${i}"]`);
+      if (wybor) wybor.value = "dalej";
+    });
+    podsumowanieNip();
+  }
+
+  const bez = nazwy.length - dobre.length;
+  const dopisek = gdzie === "nowa"
+    ? bez ? `${bez} firm bez numeru: przy uruchomieniu poszuka ich Claude (ok. 250 tys. tokenów na firmę) — albo usuń je z listy.` : "Wszystkie numery dopisane. Możesz uruchamiać automat."
+    : bez ? `${bez} firm bez numeru: zostaw „Szukaj numeru ponownie” (poszuka Claude) albo wybierz „Pomiń firmę”.` : "Numery są w tabeli. Kliknij „Sprawdź ponownie” — sprawdzą je same rejestry.";
+  document.querySelector(`[data-gemini-wynik="${gdzie}"]`).innerHTML =
+    `<table><tr><th>Marka</th><th>NIP</th><th>Spółka wg Gemini</th><th></th></tr>${wiersze}</table><p class="uwagi">${esc(dopisek)}</p>`;
+}));
 
 // ---------- moje partie ----------
 async function ekranPartie() {
