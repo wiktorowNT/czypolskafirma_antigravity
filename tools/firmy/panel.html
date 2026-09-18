@@ -533,14 +533,14 @@ async function ekranNip() {
   const wiersze = j.firmy.map((f, i) => {
     const plakietka = f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
       : f.wynik === "uwaga" ? `<span class="plakietka p-uwaga">do sprawdzenia</span>`
-      : f.wynik === "brak" ? `<span class="plakietka">nie sprawdzono</span>`
+      : f.wynik === "brak" ? (f.blad ? `<span class="plakietka p-zle">nie udało się</span>` : `<span class="plakietka">nie sprawdzono</span>`)
       : `<span class="plakietka p-zle">nie zgadza się</span>`;
     return `<tr>
       <td><input type="checkbox" data-nip-pomin="${i}" ${f.pomin ? "" : "checked"}></td>
       <td><b>${esc(f.nazwa)}</b>${f.wBazie ? `<br><span style="font-size:12.5px;color:var(--slaby)">jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}</span>` : ""}</td>
       <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}">${f.podanyPrzezCiebie ? `<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span>` : ""}</td>
       <td>${esc(f.spolka || "—")}${f.krs ? `<br><span style="font-size:12.5px;color:var(--slaby)">KRS ${esc(f.krs)}</span>` : ""}</td>
-      <td>${plakietka}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}${f.tenSamNipCo?.length ? `<br><span style="font-size:13px;color:var(--slaby)">ta sama spółka co: ${esc(f.tenSamNipCo.join(", "))} — w bazie zostaną osobnymi markami</span>` : ""}</td>
+      <td>${plakietka}${f.blad ? `<br><span style="font-size:13px;color:var(--czerwony)">${esc(f.blad)}</span>` : ""}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}${f.tenSamNipCo?.length ? `<br><span style="font-size:13px;color:var(--slaby)">ta sama spółka co: ${esc(f.tenSamNipCo.join(", "))} — w bazie zostaną osobnymi markami</span>` : ""}</td>
     </tr>`;
   }).join("");
   $("#nipTabela").innerHTML = `<table><tr><th style="width:26px"></th><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th></tr>${wiersze}</table>`;
@@ -555,21 +555,26 @@ function zmianyNip() {
 }
 
 $("#btnSprawdzNip").onclick = async () => {
-  const j = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
+  const j = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip(), ponow: true });
   if (j.blad) return alert(j.blad);
-  if (j.doSprawdzenia) {
-    const u = await wyslij("/api/panel/dalej", { partia: STAN.partia, tylkoNip: true });
-    if (u.blad) return alert(u.blad);
-    STAN.zadanie = u.zadanie;
-    alert(`Sprawdzam ponownie ${j.doSprawdzenia} numer(y). Za chwilę odświeżę tabelę.`);
-  }
-  ekranNip();
+  const ile = j.doSprawdzenia + (j.bezNumeru?.length || 0);
+  if (!ile) return alert("Nie ma nic do ponownego sprawdzenia. Jeśli wszystko się zgadza, kliknij „Sprawdzaj dalej”.");
+  const u = await wyslij("/api/panel/dalej", { partia: STAN.partia, tylkoNip: true });
+  if (u.blad) return alert(u.blad);
+  STAN.zadanie = u.zadanie;
+  alert(`Sprawdzam ${ile} firm(y). Zajmie to ok. pół minuty na firmę — tabela odświeży się sama.`);
+  const odswiez = setInterval(async () => {
+    const z = await pobierz("/api/panel/zadanie?id=" + u.zadanie);
+    if (STAN.ekran === "nip") ekranNip();
+    if (z.status !== "pracuje") clearInterval(odswiez);
+  }, 4000);
 };
 
 $("#btnDalej").onclick = async () => {
   const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
   if (z.blad) return alert(z.blad);
   if (z.doSprawdzenia) return alert("Zmieniłeś numer NIP. Kliknij najpierw „Zapisz poprawki i sprawdź ponownie”.");
+  if (z.bezNumeru?.length) return alert(`Te firmy nie mają jeszcze numeru NIP: ${z.bezNumeru.join(", ")}.\n\nKliknij „Zapisz poprawki i sprawdź ponownie”, wpisz NIP ręcznie albo odznacz je.`);
   const j = await wyslij("/api/panel/dalej", { partia: STAN.partia });
   if (j.blad) return alert(j.blad);
   STAN.zadanie = j.zadanie;

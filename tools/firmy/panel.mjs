@@ -175,6 +175,15 @@ function postepPartii(nazwa) {
   };
 }
 
+// Błędy z wywołań modelu po ludzku (surowy tekst zostaje w logu technicznym).
+function opiszBlad(tekst) {
+  const t = String(tekst || "");
+  if (/spend limit|usage limit|hit your|rate limit|limit/i.test(t)) return "Zabrakło limitu Claude. Spróbuj ponownie, gdy limit się odnowi, albo wpisz NIP ręcznie.";
+  if (/timeout/i.test(t)) return "Model nie zdążył w limicie czasu. Spróbuj ponownie.";
+  if (/nie udało się uruchomić claude|ENOENT/i.test(t)) return "Nie udało się uruchomić Claude na tym komputerze.";
+  return t.replace(/^tożsamość:\s*/, "").slice(0, 200);
+}
+
 // Tabela przystanku na NIP: co model znalazł i co mówią rejestry.
 function tabelaNip(nazwa) {
   if (!nazwa) return { blad: "Nie wybrano partii." };
@@ -206,6 +215,7 @@ function tabelaNip(nazwa) {
         powod: problem || f.uwagiTozsamosci || null,
         wBazie: t.istniejeWBazie ? { slug: t.istniejeWBazie.slug, kraj: t.istniejeWBazie.country_code, wlasciciel: t.istniejeWBazie.owner_name } : null,
         tenSamNipCo: (wgNipu.get(t.nip || f.nipPodany) || []).filter((n) => n !== f.nazwa),
+        blad: !f.tozsamosc && f.bledy?.length ? opiszBlad(f.bledy[0]) : null,
         pomin: !!f.pomin,
         gotowa: !!f.rekord,
       };
@@ -399,10 +409,11 @@ const serwer = http.createServer(async (req, res) => {
 
     // Poprawki na przystanku: zmiana NIP-u kasuje dotychczasową tożsamość, żeby sprawdzić ją od nowa.
     if (req.method === "POST" && p === "/api/panel/nip") {
-      const { partia: nazwa, zmiany } = await cialo();
+      const { partia: nazwa, zmiany, ponow } = await cialo();
       const sciezka = plikPartii(nazwa);
       const partia = wczytajPartie(sciezka);
       let doSprawdzenia = 0;
+      const poprawione = new Set();
       for (const zm of zmiany || []) {
         const f = partia.firmy.find((x) => x.nazwa === zm.nazwa);
         if (!f) continue;
@@ -418,10 +429,22 @@ const serwer = http.createServer(async (req, res) => {
           f.etapy = {};
           f.bledy = [];
           doSprawdzenia++;
+          poprawione.add(f.nazwa);
         }
       }
+      // Firmy, którym krok 1 się nie udał (np. skończył się limit subskrypcji), idą do ponownego
+      // sprawdzenia razem z poprawionymi numerami. Czyścimy stary błąd, żeby nie wisiał na liście.
+      const bezNumeru = [];
+      for (const f of partia.firmy) {
+        if (f.pomin || f.tozsamosc || poprawione.has(f.nazwa)) continue;
+        if (ponow) {
+          f.bledy = [];
+          f.etapy = {};
+        }
+        bezNumeru.push(f.nazwa);
+      }
       zapiszPartie(sciezka, partia);
-      return json(res, { ok: true, doSprawdzenia });
+      return json(res, { ok: true, doSprawdzenia, bezNumeru });
     }
 
     if (req.method === "GET" && p === "/api/panel/import-plan") {
