@@ -162,7 +162,17 @@ function postepPartii(nazwa) {
   const zostalo = firmy.filter((f) => f.etap !== "gotowe" && f.etap !== "pominięta" && f.etap !== "czeka na potwierdzenie NIP").length;
   // Do przystanku na NIP idzie tylko krok 1 i 2 (ok. 1,5 min na firmę); pełny przebieg to ok. 3,5 min.
   const minutNaFirme = partia.przystanekNip ? 1.5 : 3.5;
-  return { nazwa, ...pod, firmy, doPrzystanku: !!partia.przystanekNip, minutyDoKonca: Math.ceil((zostalo * minutNaFirme) / 2), zadanie: zadanieDlaPartii(nazwa) };
+  const s = partia.statystyki || {};
+  const tokenow = (s.tokenyWe || 0) + (s.tokenyCache || 0) + (s.tokenyWy || 0);
+  return {
+    nazwa,
+    ...pod,
+    firmy,
+    doPrzystanku: !!partia.przystanekNip,
+    minutyDoKonca: Math.ceil((zostalo * minutNaFirme) / 2),
+    zadanie: zadanieDlaPartii(nazwa),
+    zuzycie: { wywolan: s.wywolan || 0, tokenow, naFirme: pod.firm ? Math.round(tokenow / pod.firm) : 0, minutModelu: Math.round((s.sekundy || 0) / 60) },
+  };
 }
 
 // Tabela przystanku na NIP: co model znalazł i co mówią rejestry.

@@ -43,7 +43,9 @@ const ROWNOLEGLE = Math.max(1, Number(arg.rownolegle) || 2);
 const OPCJE_MODELU = { reczny: !!arg.reczny, katalogPartii: KATALOG_PARTII, partia: NAZWA_PARTII };
 const MODEL = {
   seed: MODELE[arg["model-seed"]] || arg["model-seed"] || MODELE.tani,
-  tozsamosc: MODELE[arg["model-tozsamosc"]] || arg["model-tozsamosc"] || MODELE.sredni,
+  // Krok 1 to wyszukanie numeru, który i tak weryfikują rejestry — tańszy model wystarcza.
+  // Gdy rejestry go nie potwierdzą, automat powtarza krok mocniejszym modelem (niżej).
+  tozsamosc: MODELE[arg["model-tozsamosc"]] || arg["model-tozsamosc"] || MODELE.tani,
   sledztwo: MODELE[arg["model-sledztwo"]] || arg["model-sledztwo"] || MODELE.sredni,
   kontrola: MODELE[arg["model-kontrola"]] || arg["model-kontrola"] || MODELE.sredni,
   opisy: MODELE[arg["model-opisy"]] || arg["model-opisy"] || MODELE.sredni,
@@ -180,7 +182,8 @@ async function przetworzFirme(f) {
       f.etapy.tozsamosc = "pominieto (brak NIP, --tylko-rejestry)";
       return;
     } else {
-      const r = await zapytajModel({ nazwaKroku: "1-tozsamosc", prompt: promptTozsamosc({ nazwa: f.nazwa }), model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje });
+      // Bez WebFetch: pobrana strona wchodzi w całości do kontekstu i jest czytana w każdej turze.
+      const r = await zapytajModel({ nazwaKroku: "1-tozsamosc", prompt: promptTozsamosc({ nazwa: f.nazwa }), model: MODEL.tozsamosc, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch"], opcje });
       if (czekaj(r, "tozsamosc")) return;
       if (r.blad) {
         f.etapy.tozsamosc = `błąd: ${r.blad}`;
@@ -190,22 +193,45 @@ async function przetworzFirme(f) {
       zliczStat(r.meta);
       t = { ...r.dane, zModelu: true, meta: r.meta };
     }
-    t.nip = normalizujNip(t.nip);
-    t.krs = t.krs ? normalizujKrs(t.krs) : null;
-    // weryfikacja w MF i KRS
-    const problemy = [];
-    if (!czyNip(t.nip)) problemy.push(`NIP ${t.nip || "(pusty)"} ma złą sumę kontrolną`);
-    else {
-      const mf = (await mfPoNipach([t.nip], DZIS))[t.nip];
-      t.mf = mf;
-      if (!mf || mf.brak || mf.blad) problemy.push(`MF: ${mf?.blad || "NIP nie występuje w Białej Liście"}`);
-      else {
-        if (mf.krs && t.krs && mf.krs !== t.krs) problemy.push(`KRS wg MF ${mf.krs} ≠ KRS wg modelu ${t.krs}`);
-        if (!t.krs && mf.krs) t.krs = mf.krs;
-        if (t.nazwa_spolki && podobienstwoNazw(mf.nazwa, t.nazwa_spolki) < 0.5) problemy.push(`nazwa wg MF "${mf.nazwa}" nie pasuje do "${t.nazwa_spolki}"`);
-        if (!t.nazwa_spolki) t.nazwa_spolki = mf.nazwa;
-        if (mf.dataWykreslenia) problemy.push(`MF: podmiot wykreślony ${mf.dataWykreslenia}`);
-        if (podobienstwoNazw(mf.nazwa, f.nazwa) < 0.3 && !t.zModelu) f.uwagiTozsamosci = `nazwa marki "${f.nazwa}" nie występuje w nazwie spółki "${mf.nazwa}" (może być OK dla spółki-matki)`;
+    // Tani model + weryfikacja w rejestrach; dopiero gdy numer nie przechodzi kontroli,
+    // powtarzamy krok mocniejszym modelem (to rzadkie, więc partia zostaje tania).
+    const wolnoPowtorzyc = t.zModelu && !arg["model-tozsamosc"] && MODEL.tozsamosc === MODELE.tani;
+    // weryfikacja w MF i KRS (te same reguły dla numeru z modelu i podanego ręcznie)
+    async function zweryfikuj(x) {
+      x.nip = normalizujNip(x.nip);
+      x.krs = x.krs ? normalizujKrs(x.krs) : null;
+      const problemy = [];
+      if (!czyNip(x.nip)) {
+        problemy.push(`NIP ${x.nip || "(pusty)"} ma złą sumę kontrolną`);
+        return problemy;
+      }
+      const mf = (await mfPoNipach([x.nip], DZIS))[x.nip];
+      x.mf = mf;
+      if (!mf || mf.brak || mf.blad) {
+        problemy.push(`MF: ${mf?.blad || "NIP nie występuje w Białej Liście"}`);
+        return problemy;
+      }
+      if (mf.krs && x.krs && mf.krs !== x.krs) problemy.push(`KRS wg MF ${mf.krs} ≠ KRS wg modelu ${x.krs}`);
+      if (!x.krs && mf.krs) x.krs = mf.krs;
+      if (x.nazwa_spolki && podobienstwoNazw(mf.nazwa, x.nazwa_spolki) < 0.5) problemy.push(`nazwa wg MF "${mf.nazwa}" nie pasuje do "${x.nazwa_spolki}"`);
+      if (!x.nazwa_spolki) x.nazwa_spolki = mf.nazwa;
+      if (mf.dataWykreslenia) problemy.push(`MF: podmiot wykreślony ${mf.dataWykreslenia}`);
+      if (podobienstwoNazw(mf.nazwa, f.nazwa) < 0.3 && !x.zModelu) f.uwagiTozsamosci = `nazwa marki "${f.nazwa}" nie występuje w nazwie spółki "${mf.nazwa}" (może być OK dla spółki-matki)`;
+      return problemy;
+    }
+
+    let problemy = await zweryfikuj(t);
+    if (problemy.length && wolnoPowtorzyc) {
+      log(`${f.nazwa}: tani model nie przeszedł kontroli (${problemy.join("; ")}), powtarzam mocniejszym`);
+      const r2 = await zapytajModel({ nazwaKroku: "1-tozsamosc-powtorka", prompt: promptTozsamosc({ nazwa: f.nazwa, dokladnie: true }), model: MODELE.sredni, schemat: SCHEMAT_TOZSAMOSC, narzedzia: ["WebSearch", "WebFetch"], opcje });
+      if (!r2.blad && !r2.czeka && r2.dane) {
+        zliczStat(r2.meta);
+        const t2 = { ...r2.dane, zModelu: true, meta: r2.meta, powtorzone: true, pierwszaProba: { nip: t.nip, problemy } };
+        const problemy2 = await zweryfikuj(t2);
+        if (problemy2.length < problemy.length) {
+          t = t2;
+          problemy = problemy2;
+        }
       }
     }
     t.status = problemy.length ? "KONFLIKT" : "OK";

@@ -179,6 +179,7 @@
             <button id="btnLog">Pokaż szczegóły techniczne</button>
             <button class="glowny" id="btnDoPrzegladu" style="margin-left:auto">Przejdź do przeglądu</button>
           </div>
+          <p class="uwagi" id="pracaZuzycie"></p>
           <pre class="log" id="pracaLog" style="display:none;margin-top:14px"></pre>
         </div>
         <div class="karta">
@@ -502,6 +503,10 @@ async function ekranPraca() {
   $("#pracaCzas").textContent = p.zadanie ? (p.minutyDoKonca ? `pozostało ok. ${p.minutyDoKonca} min` : "kończy…") : gotowe >= razem && razem ? "partia gotowa" : "automat nie pracuje";
   $("#btnZatrzymaj").disabled = !p.zadanie;
   STAN.zadanie = p.zadanie || STAN.zadanie;
+  const mln = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + " mln" : Math.round(n / 1000) + " tys.");
+  $("#pracaZuzycie").innerHTML = p.zuzycie?.wywolan
+    ? `Zużycie subskrypcji: ${p.zuzycie.wywolan} wywołań modelu · ${mln(p.zuzycie.tokenow)} tokenów (${mln(p.zuzycie.naFirme)} na firmę) · ${p.zuzycie.minutModelu} min pracy modelu`
+    : "";
   $("#pracaFirmy").innerHTML = p.firmy.map((f) => {
     const prawa = f.etap === "gotowe"
       ? `<span class="plakietka ${f.status === "WYSOKA" ? "p-ok" : f.status === "KONFLIKT" ? "p-zle" : "p-uwaga"}">${f.status === "WYSOKA" ? "gotowe · pewność wysoka" : f.status === "KONFLIKT" ? "gotowe · konflikt" : "gotowe · do obejrzenia"}</span><span>${esc(f.kraj || "")} ${f.wlasciciel ? "· " + esc(f.wlasciciel) : ""}</span>`

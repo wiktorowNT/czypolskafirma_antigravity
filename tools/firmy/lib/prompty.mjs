@@ -75,15 +75,30 @@ export const SCHEMAT_TOZSAMOSC = {
   required: ["nazwa_marki", "nazwa_spolki", "nip", "pewnosc"],
 };
 
-export function promptTozsamosc({ nazwa }) {
-  return `Ustal główną spółkę zarejestrowaną w Polsce, która prowadzi działalność pod marką: "${nazwa}".
-
-Definicja "głównej spółki": operator marki na polskim rynku (sieć sklepów, producent, usługodawca), nie spółka celowa, nie e-commerce, nie spółka nieruchomościowa, nie spółka-córka od logistyki. Jeśli marka należy do zagranicznej grupy, podaj polską spółkę operacyjną tej grupy (np. dla Biedronki: Jeronimo Martins Polska S.A.). Jeśli marka jest jedną z wielu marek polskiej spółki, podaj tę spółkę-matkę (np. dla Tymbarku: Maspex).
-
-Użyj wyszukiwania (WebSearch) i pobierz (WebFetch) źródło, w którym NIP lub KRS jest podany wprost: wyszukiwarka KRS, rejestr.io, aleo.com, stopka strony firmy, KRS w regulaminie sklepu. NIP musi mieć 10 cyfr i poprawną sumę kontrolną. Nie podawaj NIP-u z pamięci: jeśli nie znajdziesz go w źródle, wpisz pewnosc "niska" i opisz w "uwagi".
-Jeśli jest kilka spółek pod podobną nazwą (np. "X S.A." i "X E-COM sp. z o.o."), wybierz operacyjną, a pozostałe wypisz w kandydaci_alternatywni z uzasadnieniem.
-Jeśli spółka jest notowana na GPW, podaj notowana_gpw=true i ticker w formacie bankier.pl (np. DINOPL).
+// Krok 1 jest tylko wyszukaniem numeru: NIP i tak weryfikuje kod w Białej Liście MF i w KRS.
+// Dlatego twardy limit wyszukiwań i zakaz pobierania stron - to one robiły z kroku 1 najdroższą
+// część partii (pobrana strona wchodzi w całości do kontekstu i jest czytana w każdej turze).
+// Wersja `dokladnie` (drugie podejście, mocniejszy model) wolno pobierać strony.
+export function promptTozsamosc({ nazwa, dokladnie = false }) {
+  const definicja = `Szukasz operatora marki na polskim rynku (sieć sklepów, producent, usługodawca), nie spółki celowej, nie e-commerce, nie spółki nieruchomościowej, nie córki od logistyki. Jeśli marka należy do zagranicznej grupy, podaj jej polską spółkę operacyjną (np. dla Biedronki: Jeronimo Martins Polska S.A.). Jeśli marka jest jedną z marek polskiej grupy, podaj spółkę-matkę (np. dla Tymbarku: Maspex).
+Nie ustalaj struktury właścicielskiej, historii spółki ani przychodów - to osobny krok. Jeśli spółka jest notowana na GPW, podaj notowana_gpw=true i ticker w formacie bankier.pl (np. DINOPL).
 Zwróć wyłącznie JSON wg schematu.`;
+
+  if (dokladnie) {
+    return `Ustal spółkę zarejestrowaną w Polsce, która prowadzi działalność pod marką "${nazwa}", i podaj jej NIP. Poprzednie, pobieżne podejście dało numer, którego nie potwierdziły rejestry, więc tym razem sprawdź rzecz dokładnie.
+
+Użyj wyszukiwania, a gdy trzeba, pobierz źródło, w którym NIP lub KRS jest podany wprost: wyszukiwarka KRS, rejestr.io, aleo.com, stopka strony firmy, KRS w regulaminie sklepu. Masz najwyżej 4 wyszukiwania i 3 pobrania stron. NIP musi mieć 10 cyfr i poprawną sumę kontrolną. Nie podawaj NIP-u z pamięci: jeśli nie znajdziesz go w źródle, wpisz pewnosc "niska" i opisz w "uwagi".
+Jeśli jest kilka spółek pod podobną nazwą (np. "X S.A." i "X E-COM sp. z o.o."), wybierz operacyjną, a pozostałe (najwyżej dwie, jedno zdanie uzasadnienia) wypisz w kandydaci_alternatywni.
+
+${definicja}`;
+  }
+
+  return `Ustal spółkę zarejestrowaną w Polsce, która prowadzi działalność pod marką "${nazwa}", i podaj jej NIP.
+
+TWARDY LIMIT: wykonaj najwyżej DWA wyszukiwania i nie pobieraj stron. Pierwsze wyszukanie: "${nazwa} NIP KRS". Numery bardzo często są już w samych wynikach wyszukiwania. Gdy masz NIP (10 cyfr, poprawna suma kontrolna) albo numer KRS (10 cyfr), natychmiast kończ i zwróć JSON. Numer i tak zostanie niezależnie sprawdzony w Białej Liście MF i w KRS.
+Jeśli po dwóch wyszukiwaniach nie masz numeru, zwróć pewnosc "niska" i napisz w uwagach, czego zabrakło. Pole "uwagi" to najwyżej jedno zdanie, "zrodla" najwyżej dwa adresy.
+
+${definicja}`;
 }
 
 // ---------- krok 3: śledztwo właścicielskie ----------
