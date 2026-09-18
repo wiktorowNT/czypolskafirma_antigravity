@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { KATALOG_PARTII, KATALOG_REPO, dzisiaj, wczytajEnv } from "./lib/env.mjs";
 import { sprawdzLogowanie } from "./lib/claude.mjs";
-import { geminiZainstalowany, plikGemini, stanLogowaniaGemini } from "./lib/gemini.mjs";
+import { geminiZainstalowany, stanLogowaniaGemini } from "./lib/gemini.mjs";
 import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
@@ -555,18 +555,6 @@ const serwer = http.createServer(async (req, res) => {
       const cel = fs.existsSync(DYSK_GOOGLE) ? DYSK_GOOGLE : KATALOG_BACKUPU;
       const z = zadanieProcesu({ typ: "backup", opis: `Backup bazy → ${cel}`, plik: path.join(KATALOG, "backup.mjs"), argumenty: ["--do", cel] });
       return json(res, { ok: true, zadanie: z.id });
-    }
-
-    // Logowanie Gemini jest interaktywne (wybór konta Google w przeglądarce), więc otwieramy
-    // zwykłe okno z Gemini CLI. Użytkownik wybiera "Sign in with Google", potem zamyka okno.
-    if (req.method === "POST" && p === "/api/panel/zaloguj-gemini") {
-      if (!geminiZainstalowany()) return json(res, { blad: "Gemini CLI nie jest zainstalowany." }, 400);
-      const katalog = path.join(KATALOG_PARTII, "gemini-cwd");
-      fs.mkdirSync(katalog, { recursive: true });
-      if (process.platform === "win32") {
-        spawn("cmd", ["/c", "start", "Logowanie Gemini", "/D", katalog, "cmd", "/k", plikGemini()], { detached: true, stdio: "ignore", windowsHide: false }).unref();
-      }
-      return json(res, { ok: true });
     }
 
     if (req.method === "POST" && p === "/api/panel/odswiez-baze") {

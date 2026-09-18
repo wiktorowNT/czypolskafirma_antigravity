@@ -425,12 +425,6 @@ async function ekranGotowosc() {
     `<span class="plakietka ${!g.backup ? "p-zle" : dni > 10 ? "p-uwaga" : "p-ok"}">${g.backup ? (dni === 0 ? "dzisiaj" : dni + " dni temu") : "brak"}</span>`));
   $("#lampki").innerHTML = l.join("");
   STAN.geminiOk = !!g.gemini.ok;
-  const przyciskGemini = $("#btnZalogujGemini");
-  if (przyciskGemini) przyciskGemini.onclick = async () => {
-    const j = await wyslij("/api/panel/zaloguj-gemini");
-    if (j.blad) return alert(j.blad);
-    alert("Otworzyło się czarne okno „Logowanie Gemini”.\n\n1. Jeśli zapyta o motyw kolorów, naciśnij Enter.\n2. Wybierz „Sign in with Google” strzałkami i Enter.\n3. Zaloguj się w przeglądarce kontem z Google AI Pro.\n4. Gdy okno pokaże pole do pisania, zamknij je krzyżykiem.\n5. Wróć tutaj i odśwież stronę (F5).");
-  };
   const wToku = g.partie.find((p) => p.gotowe < p.firm - p.pominiete);
   $("#startPodsumowanie").innerHTML = g.automatPracuje
     ? `<b>Automat teraz pracuje</b><br><span style="font-size:13.5px">Partia ${esc(wToku?.nazwa || "")} — zobacz „Praca w toku”.</span>`
