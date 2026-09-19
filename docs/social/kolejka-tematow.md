@@ -22,7 +22,7 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [ ] Kto jest właścicielem Żabki (6 863 wyświetlenia profilu, CTR 0,29%)
 - [ ] Kto jest właścicielem Lidla (6 276 wyświetleń, CTR 0,13% — najgorszy wynik w serwisie)
-- [ ] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu)
+- [x] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu) (2026-09-19)
 - [ ] Kto jest właścicielem Pepco (5 037 wyświetleń, CTR 0,32%)
 - [ ] Kto jest właścicielem Kauflandu (3 782 wyświetlenia; „kaufland właściciel" w top 5 zapytań)
 
