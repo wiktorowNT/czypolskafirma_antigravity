@@ -18,12 +18,18 @@ każdej firmy) przekraczało limity. Dlatego **domyślnie panel nie wywołuje ż
 Kod robi to, co darmowe (Biała Lista MF, KRS, historia KRS, CRBR, bankier), a śledztwo
 i opisy robisz sam w czatach (Gemini, ChatGPT, Claude.ai) na prompcie zbiorczym z panelu.
 
-Nad ekranami partii jest pasek ścieżki. Pokazuje, na którym kroku jesteś i co zrobić teraz:
+Nad ekranami partii jest pasek ścieżki. Pokazuje, na którym kroku jesteś i co zrobić teraz.
+Menu boczne ma te same numery kroków:
 
-1. **Lista firm** → 2. **NIP-y** (przystanek; brakujące numery z Gemini, kopiuj i wklej)
-→ 3. **Rejestry** („Sprawdzaj dalej: rejestry i czaty”, same rejestry, bez modelu)
-→ 4. **Śledztwo w czatach** → 5. **Porównanie** → 6. **Przegląd** → 7. **Import**
-→ 8. **Logotypy**.
+1. **Lista firm i NIP-y**: wklejasz listę z numerami z czatu (`Marka | NIP`, `Marka | NIP | Spółka`,
+   tabela z czatu albo kolumny z arkusza). Podgląd od razu pokazuje sumę kontrolną NIP. Panel
+   ma gotowe polecenie do czatu o numery. „Utwórz partię i sprawdź NIP-y” uruchamia same rejestry.
+2. **Sprawdzenie NIP-ów**: dla każdego numeru wynik z Białej Listy MF (czy firma istnieje, czy nie
+   jest wykreślona, status VAT, czy nazwa spółki podana przez czat zgadza się z MF) i z KRS.
+   Wybierasz „Numer dobry”, „Numer do wymiany” (wpisujesz nowy albo bierzesz z czatu, potem
+   „Sprawdź w Białej Liście”) albo „Pomiń firmę”. Nic tu nie szuka numerów automatem.
+3. **Rejestry**: odpis KRS, historia wspólników, CRBR, giełda (pobierane razem ze sprawdzeniem NIP).
+4. **Śledztwo w czatach** → 5. **Porównanie** → 6. **Przegląd** → 7. **Import** → 8. **Logotypy**.
 
 **Śledztwo w czatach:**
 
@@ -182,7 +188,7 @@ w nazwie spółki, co przy spółkach-matkach jest normalne), *nie zgadza się*.
 
 - poprawiasz numer → **Zapisz poprawki i sprawdź ponownie** (sprawdza tylko poprawione),
 - odznaczasz firmę, która ma nie iść dalej,
-- **Sprawdzaj dalej: rejestry i czaty** pobiera dane z rejestrów (bez modelu) i prowadzi do
+- **Numery potwierdzone: dalej do czatów** dobiera brakujące dane z rejestrów (bez modelu) i prowadzi do
   ekranu „Śledztwo w czatach”; stare błędy limitu z partii znikają (kopia pliku:
   `kopia-przed-czatami-partia-<nazwa>.json`),
 - sekcja **Śledztwo automatem Claude** uruchamia kroki 3–5 automatem (płatne, patrz sekcja 0).

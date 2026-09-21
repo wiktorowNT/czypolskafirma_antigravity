@@ -20,6 +20,8 @@
 //                         koncie Google); wybór zapamiętuje się w partii
 //   --stop-po-nip         zatrzymaj się po kroku 1 i 2 (NIP, KRS) do potwierdzenia; kolejne
 //                         uruchomienie z tą samą --partia rusza dalej (używa tego panel)
+//   --sciezka reczna      partia na ścieżce ręcznej (śledztwo w czatach): z --tylko-rejestry sprawdza
+//                         podane NIP-y w MF i KRS, pobiera KRS/CRBR i staje na przystanku NIP
 //   --przelicz            przelicz pewność i rekordy już gotowych firm (po zmianie reguł), bez wołania modelu
 import fs from "node:fs";
 import path from "node:path";
@@ -76,6 +78,9 @@ let partia = fs.existsSync(PLIK_PARTII)
   ? JSON.parse(fs.readFileSync(PLIK_PARTII, "utf8"))
   : { nazwa: NAZWA_PARTII, utworzono: new Date().toISOString(), tryb: arg.reweryfikacja ? "reweryfikacja" : "nowe", firmy: [], statystyki: { wywolan: 0, sekundy: 0, tokenyWe: 0, tokenyWy: 0, wyszukiwan: 0 } };
 if (arg.reweryfikacja) partia.tryb = "reweryfikacja";
+if (arg.sciezka === "reczna") partia.sciezka = "reczna";
+// Ścieżka ręczna: dopóki numery nie są potwierdzone w panelu, każda firma kończy na przystanku NIP.
+const PRZYSTANEK_RECZNY = partia.sciezka === "reczna" && !partia.nipPotwierdzone;
 // Kto szuka NIP-u: wybór z pierwszego uruchomienia obowiązuje też przy wznowieniach partii.
 if (arg["nip-model"]) partia.nipModel = String(arg["nip-model"]).toLowerCase() === "gemini" ? "gemini" : "claude";
 const NIP_GEMINI = partia.nipModel === "gemini";
@@ -92,14 +97,14 @@ function dodajFirme(nazwa, dodatkowe = {}) {
   partia.firmy.push({ nazwa: n, plik: slugify(n) || `firma-${partia.firmy.length + 1}`, tryb: partia.tryb, etapy: {}, ...dodatkowe });
 }
 
-// wejście: --firmy / --plik (linie "Nazwa" albo "Nazwa | NIP")
+// wejście: --firmy / --plik (linie "Nazwa", "Nazwa | NIP" albo "Nazwa | NIP | Spółka")
 if (arg.firmy) for (const n of String(arg.firmy).split(/[,;\n]/)) dodajFirme(n);
 if (arg.plik) {
   for (const linia of fs.readFileSync(arg.plik, "utf8").split(/\r?\n/)) {
     const l = linia.trim();
     if (!l || l.startsWith("#")) continue;
-    const [n, nip] = l.split("|").map((x) => x.trim());
-    dodajFirme(n, nip ? { nipPodany: normalizujNip(nip) } : {});
+    const [n, nip, spolka] = l.split("|").map((x) => x.trim());
+    dodajFirme(n, { ...(nip ? { nipPodany: normalizujNip(nip) } : {}), ...(spolka ? { spolkaPodana: spolka } : {}) });
   }
 }
 
@@ -213,7 +218,8 @@ async function przetworzFirme(f) {
   if (!f.tozsamosc) {
     let t;
     if (f.nipPodany && czyNip(f.nipPodany)) {
-      t = { nazwa_marki: f.nazwa, nip: f.nipPodany, zrodla: ["NIP podany na wejściu"], pewnosc: "wysoka", zModelu: false };
+      // Spółka podana razem z numerem (np. z odpowiedzi czatu) jest sprawdzana z nazwą w Białej Liście MF.
+      t = { nazwa_marki: f.nazwa, nip: f.nipPodany, ...(f.spolkaPodana ? { nazwa_spolki: f.spolkaPodana, spolkaPodana: f.spolkaPodana } : {}), zrodla: ["NIP podany na wejściu"], pewnosc: "wysoka", zModelu: false };
     } else if (arg["tylko-rejestry"]) {
       f.etapy.tozsamosc = "pominieto (brak NIP, --tylko-rejestry)";
       return;
@@ -319,7 +325,7 @@ async function przetworzFirme(f) {
     log(`${f.nazwa}: CRBR ${f.etapy.crbr}`);
   }
   if (arg["tylko-rejestry"]) {
-    f.etapy.sledztwo = "pominieto (--tylko-rejestry)";
+    f.etapy.sledztwo = PRZYSTANEK_RECZNY ? "czeka na potwierdzenie NIP" : partia.sciezka === "reczna" ? "czeka na czaty" : "pominieto (--tylko-rejestry)";
     return;
   }
   // Przystanek na NIP: dalej (śledztwo, opisy) dopiero po potwierdzeniu tożsamości w panelu.
@@ -394,7 +400,7 @@ if (arg.przelicz) {
 }
 
 // kolejka z ograniczoną równoległością
-partia.przystanekNip = !!arg["stop-po-nip"];
+partia.przystanekNip = !!arg["stop-po-nip"] || PRZYSTANEK_RECZNY;
 const doZrobienia = partia.firmy.filter((f) => !f.pomin && (!f.rekord || f.etapy?.sledztwo === "czeka" || f.etapy?.kontrola === "czeka" || f.etapy?.opisy === "czeka" || f.etapy?.tozsamosc === "czeka"));
 log(`do przetworzenia: ${doZrobienia.length} z ${partia.firmy.length} (równolegle ${ROWNOLEGLE}, modele: ${Object.entries(MODEL).map(([k, v]) => k + "=" + v).join(", ")})`);
 let i = 0;
@@ -420,10 +426,12 @@ for (const f of partia.firmy) {
   else if (f.czeka && !f.rekord) st.czeka++;
   else if (f.etapy?.sledztwo === "czeka na potwierdzenie NIP") st.nip++;
   else if (f.status) st[f.status]++;
+  else if (partia.sciezka === "reczna" && f.etapy?.sledztwo === "czeka na czaty") st.czaty = (st.czaty || 0) + 1;
+  else if (partia.sciezka === "reczna" && !f.tozsamosc) st.bezNip = (st.bezNip || 0) + 1;
   else st.blad++;
 }
 zapiszPartie();
-console.log(`\nPartia ${NAZWA_PARTII}: ${partia.firmy.length} firm → WYSOKA ${st.WYSOKA}, ŚREDNIA ${st.SREDNIA}, KONFLIKT ${st.KONFLIKT}, czeka ${st.czeka}, błąd ${st.blad}${st.nip ? `, do potwierdzenia NIP ${st.nip}` : ""}${st.pominiete ? `, pominięte ${st.pominiete}` : ""}`);
+console.log(`\nPartia ${NAZWA_PARTII}: ${partia.firmy.length} firm → WYSOKA ${st.WYSOKA}, ŚREDNIA ${st.SREDNIA}, KONFLIKT ${st.KONFLIKT}, czeka ${st.czeka}, błąd ${st.blad}${st.czaty ? `, czeka na czaty ${st.czaty}` : ""}${st.bezNip ? `, bez numeru NIP ${st.bezNip}` : ""}${st.nip ? `, do potwierdzenia NIP ${st.nip}` : ""}${st.pominiete ? `, pominięte ${st.pominiete}` : ""}`);
 if (st.nip) console.log(`Przystanek na NIP: potwierdź numery w panelu (node tools/firmy/panel.mjs) albo uruchom ponownie bez --stop-po-nip.`);
 if (partia.statystyki.wywolan) {
   const s = partia.statystyki;

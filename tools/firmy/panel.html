@@ -22,6 +22,10 @@
   nav a:hover{background:#2c2925;color:#fff}
   nav a.akt{background:#3a3430;color:#fff;box-shadow:inset 3px 0 0 var(--akcent)}
   nav a.ukryta{display:none}
+  .nav-grupa{padding:16px 18px 6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8a847b}
+  .szary{background:#b7b2aa}
+  .jak ol{margin:6px 0 0;padding-left:20px;font-size:14px}
+  .jak li{margin-bottom:3px}
   .stopka-boczna{margin-top:auto;padding:14px 18px 0;border-top:1px solid #3a3733;font-size:12px;color:#8a847b}
   .stopka-boczna button{background:none;border:0;color:#8a847b;padding:0;font-size:12px;text-decoration:underline;cursor:pointer}
   main{padding:26px 34px 60px;max-width:1000px}
@@ -123,18 +127,20 @@
   <aside>
     <div class="marka"><b>CzyPolskaFirma</b><span>Panel dodawania firm</span></div>
     <nav>
-      <a data-e="start" class="akt"><i class="nr">1</i> Gotowość</a>
-      <a data-e="nowa"><i class="nr">2</i> Nowa partia</a>
-      <a data-e="praca"><i class="nr">→</i> Praca w toku</a>
-      <a data-e="nip"><i class="nr">→</i> Przystanek na NIP</a>
-      <a data-e="czaty"><i class="nr">→</i> Śledztwo w czatach</a>
-      <a data-e="porownanie"><i class="nr">→</i> Porównanie czatów</a>
-      <a data-e="partie"><i class="nr">3</i> Moje partie</a>
-      <a data-e="przeglad"><i class="nr">4</i> Przegląd</a>
-      <a data-e="konsylium"><i class="nr">→</i> Konsylium modeli</a>
-      <a data-e="import"><i class="nr">5</i> Import do bazy</a>
-      <a data-e="logo"><i class="nr">6</i> Logotypy</a>
-      <a data-e="backup"><i class="nr">7</i> Backup</a>
+      <a data-e="start" class="akt"><i class="nr">·</i> Gotowość</a>
+      <a data-e="partie"><i class="nr">·</i> Moje partie</a>
+      <div class="nav-grupa">Dodawanie firm, krok po kroku</div>
+      <a data-e="nowa"><i class="nr">1</i> Lista firm i NIP-y</a>
+      <a data-e="nip"><i class="nr">2</i> Sprawdzenie NIP-ów</a>
+      <a data-e="praca"><i class="nr">3</i> Rejestry (postęp)</a>
+      <a data-e="czaty"><i class="nr">4</i> Śledztwo w czatach</a>
+      <a data-e="porownanie"><i class="nr">5</i> Porównanie</a>
+      <a data-e="przeglad"><i class="nr">6</i> Przegląd</a>
+      <a data-e="import"><i class="nr">7</i> Import do bazy</a>
+      <a data-e="logo"><i class="nr">8</i> Logotypy</a>
+      <div class="nav-grupa">Dodatki</div>
+      <a data-e="konsylium"><i class="nr">·</i> Konsylium modeli</a>
+      <a data-e="backup"><i class="nr">·</i> Backup</a>
     </nav>
     <div class="stopka-boczna">
       Działa na Twoim komputerze.<br>Nic nie trafia do bazy bez Twojego kliknięcia.<br><br>
@@ -148,87 +154,95 @@
     <section class="ekran akt" id="e-start">
       <h1>Gotowość</h1>
       <p class="podtytul">Sprawdzenie przed rozpoczęciem pracy.</p>
+      <div class="karta jak">
+        <h2 style="margin:0">Jak dodajesz firmy</h2>
+        <ol>
+          <li><b>Lista firm i NIP-y</b>: wklejasz firmy z numerami NIP z czatu.</li>
+          <li><b>Sprawdzenie NIP-ów</b>: panel sprawdza każdy numer w Białej Liście MF i KRS, Ty potwierdzasz.</li>
+          <li><b>Rejestry</b>: panel pobiera odpis KRS, historię wspólników i CRBR.</li>
+          <li><b>Śledztwo w czatach</b>: kopiujesz jeden prompt dla wszystkich firm do Gemini / ChatGPT / Claude.ai i wklejasz odpowiedzi.</li>
+          <li><b>Porównanie</b>: czaty obok siebie, przyjmujesz jedną wersję.</li>
+          <li><b>Przegląd</b>, <b>7. Import</b>, <b>8. Logotypy</b>: jak dotąd.</li>
+        </ol>
+        <p class="uwagi">Na tej ścieżce panel nie wywołuje żadnego modelu. Automat Claude jest tylko jako osobna, płatna opcja.</p>
+      </div>
       <div class="karta" id="lampki"><span class="pusto">Sprawdzam…</span></div>
       <div class="karta rozdziel">
         <div id="startPodsumowanie" class="pusto"></div>
         <div class="rzad">
-          <button class="glowny duzy" data-idz="nowa">Nowa partia</button>
+          <button class="glowny duzy" data-idz="nowa">Nowa partia (krok 1)</button>
           <button class="duzy" data-idz="partie">Moje partie</button>
         </div>
       </div>
     </section>
 
-    <!-- 2. NOWA PARTIA -->
+    <!-- KROK 1. LISTA FIRM I NIP-Y -->
     <section class="ekran" id="e-nowa">
-      <h1>Nowa partia</h1>
-      <p class="podtytul">Podaj firmy do sprawdzenia. Automat szuka właściciela, Ty potem zatwierdzasz.</p>
+      <h1>Lista firm i numery NIP</h1>
+      <p class="podtytul">Krok 1. Wklej firmy z numerami NIP, które dał Ci czat. Panel sprawdzi każdy numer w Białej Liście MF i w KRS, bez żadnego modelu i za darmo.</p>
       <div id="nowaBlad"></div>
       <div class="karta">
-        <div class="rzad" style="margin-bottom:16px">
-          <button class="glowny" id="trybNazwy">Wpisuję nazwy firm</button>
-          <button id="trybKategoria">Wybieram kategorię</button>
-        </div>
-        <div id="polaNazwy">
-          <label class="pole">
-            <span>Nazwy firm — każda w osobnej linii. Jeśli znasz NIP, dopisz go po kresce, np. „Nałęczowianka | 7160001594”.</span>
-            <textarea id="firmyTekst" placeholder="Mokate&#10;Ziaja&#10;Vila"></textarea>
-          </label>
-          <details class="gemini-reczny" id="geminiNowa">
-            <summary><b>Numery NIP z Gemini</b> — za darmo, bez zużycia Claude</summary>
-            <div class="etap" style="margin-top:14px">
-              <i class="nrb">1</i>
-              <div class="tresc-etapu">
-                <p>Wpisz nazwy firm w polu powyżej i skopiuj gotowe polecenie z tą listą.</p>
-                <div class="rzad"><button class="glowny" data-gemini-kopiuj="nowa">Kopiuj polecenie dla Gemini</button><span class="info-kopiuj" style="font-size:13px;color:var(--zielony)"></span></div>
-              </div>
+        <div class="etap">
+          <i class="nrb">1</i>
+          <div class="tresc-etapu">
+            <h2>Numery z czatu</h2>
+            <p>Masz już numery? Przejdź do punktu 2. Jeśli nie: wpisz w polu niżej same nazwy, po jednej w linii, i skopiuj polecenie. Wklej je do Gemini albo ChatGPT (z wyszukiwaniem). Odpowiedź czatu, czyli tabelę, wklej potem w to samo pole zamiast nazw.</p>
+            <div class="rzad">
+              <button class="glowny" data-gemini-kopiuj="nowa">Kopiuj polecenie o numery NIP</button>
+              <button data-model="https://gemini.google.com/app">Otwórz Gemini</button>
+              <button data-model="https://chatgpt.com/">Otwórz ChatGPT</button>
+              <span class="info-kopiuj" style="font-size:13px;color:var(--zielony)"></span>
             </div>
-            <div class="etap">
-              <i class="nrb">2</i>
-              <div class="tresc-etapu">
-                <p>Wklej je do Gemini w Antigravity albo na <a href="https://gemini.google.com/app" target="_blank" rel="noopener">gemini.google.com</a>. Gemini odpowie tabelką z numerami.</p>
-              </div>
-            </div>
-            <div class="etap">
-              <i class="nrb">3</i>
-              <div class="tresc-etapu">
-                <p>Wklej tu całą odpowiedź Gemini. Panel dopisze numery do listy powyżej, a rejestry i tak sprawdzą każdy z nich.</p>
-                <textarea data-gemini-odpowiedz="nowa" placeholder="Wklej tutaj odpowiedź Gemini (Ctrl+V)" style="min-height:90px"></textarea>
-                <div class="rzad" style="margin-top:10px"><button data-gemini-wczytaj="nowa">Wczytaj numery</button></div>
-                <div data-gemini-wynik="nowa" style="margin-top:12px"></div>
-              </div>
-            </div>
-          </details>
-        </div>
-        <div id="polaKategoria" style="display:none">
-          <div class="rzad" style="align-items:flex-end;margin-bottom:14px">
-            <label class="pole" style="flex:1;margin-bottom:0"><span>Kategoria</span><select id="kategoriaWybor"></select></label>
-            <label class="pole" style="width:150px;margin-bottom:0"><span>Ile firm</span><input type="text" id="seedIle" value="40"></label>
           </div>
-          <p class="uwagi" style="margin-top:0">Model zaproponuje marki z tej kategorii, pomijając te, które już są w bazie.</p>
         </div>
-        <label class="pole" style="max-width:320px"><span>Nazwa partii</span><input type="text" id="nazwaPartii"></label>
-        <label class="pole" style="max-width:420px"><span>Kto szuka numerów NIP</span>
-          <select id="nipModel">
-            <option value="gemini">Gemini — klucz API Google (nie zużywa limitu Claude)</option>
-            <option value="claude">Claude</option>
-          </select>
-        </label>
-        <h2 style="margin-top:6px">Opcje</h2>
-        <label class="opcja"><input type="checkbox" id="optPrzystanek" checked><span><b>Zatrzymaj się po znalezieniu NIP-ów</b><em>Najpierw potwierdzasz, że automat trafił we właściwe spółki, dopiero potem rusza długa część.</em></span></label>
-        <label class="opcja"><input type="checkbox" id="optKontrola"><span><b>Dokładniejsza kontrola</b><em>Mocniejszy model sprawdza ustalenia. Wolniej, ale mniej pomyłek przy trudnych spółkach.</em></span></label>
-        <label class="opcja"><input type="checkbox" id="optCrbr"><span><b>Sprawdź beneficjentów w CRBR</b><em>Przydatne przy spółkach akcyjnych, których KRS nie pokazuje. Dodaje ok. 3 sekundy na firmę.</em></span></label>
-        <label class="opcja"><input type="checkbox" id="optReweryfikacja"><span><b>To firmy, które już są w bazie</b><em>Re-weryfikacja: każda różnica wobec obecnego rekordu będzie konfliktem do Twojej decyzji.</em></span></label>
+        <div class="etap">
+          <i class="nrb">2</i>
+          <div class="tresc-etapu">
+            <h2>Wklej listę</h2>
+            <p>Dowolny z tych zapisów, po jednej firmie w linii: <b>Marka | NIP</b>, <b>Marka | NIP | Nazwa spółki</b>, tabela skopiowana z czatu albo kolumny z arkusza. Nazwa spółki jest nieobowiązkowa, ale gdy ją podasz, panel sprawdzi też, czy zgadza się z Białą Listą.</p>
+            <textarea id="firmyTekst" placeholder="Nazwa marki | NIP | Nazwa spółki&#10;Nazwa marki | NIP&#10;(albo wklej tu całą tabelę z czatu)"></textarea>
+            <div id="listaPodglad" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">3</i>
+          <div class="tresc-etapu">
+            <h2>Utwórz partię</h2>
+            <div class="rzad" style="align-items:flex-end">
+              <label class="pole" style="max-width:260px;margin-bottom:0"><span>Nazwa partii</span><input type="text" id="nazwaPartii"></label>
+              <label class="opcja" style="margin:0"><input type="checkbox" id="optReweryfikacja"><span><b>To firmy, które już są w bazie</b><em>Każda różnica wobec obecnego rekordu będzie konfliktem do Twojej decyzji.</em></span></label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="karta rozdziel">
         <div id="nowaSzacunek" class="pusto"></div>
-        <button class="glowny duzy" id="btnUruchom">Uruchom automat</button>
+        <button class="glowny duzy" id="btnUtworz">Utwórz partię i sprawdź NIP-y</button>
       </div>
+      <details class="gemini-reczny">
+        <summary>Automat Claude (płatny, zużywa limit subskrypcji)</summary>
+        <p style="font-size:13.5px;color:var(--slaby)">Stary sposób: Claude sam szuka numerów NIP, robi śledztwo i opisy, każda firma osobno. Na planie Pro to kilkaset tysięcy do ponad miliona tokenów na firmę. Tylko tutaj działa też propozycja firm z kategorii. Bierze listę z pola wyżej.</p>
+        <div class="rzad" style="align-items:flex-end;margin-bottom:10px">
+          <label class="pole" style="flex:1;margin-bottom:0"><span>Albo: model sam zaproponuje firmy z kategorii</span><select id="kategoriaWybor"></select></label>
+          <label class="pole" style="width:120px;margin-bottom:0"><span>Ile firm</span><input type="text" id="seedIle" value="40"></label>
+        </div>
+        <label class="pole" style="max-width:420px"><span>Kto szuka numerów NIP</span>
+          <select id="nipModel">
+            <option value="gemini">Gemini (klucz API Google)</option>
+            <option value="claude">Claude</option>
+          </select>
+        </label>
+        <label class="opcja"><input type="checkbox" id="optPrzystanek" checked><span><b>Zatrzymaj się po znalezieniu NIP-ów</b><em>Najpierw potwierdzasz numery, dopiero potem rusza długa część.</em></span></label>
+        <label class="opcja"><input type="checkbox" id="optKontrola"><span><b>Dokładniejsza kontrola</b><em>Mocniejszy model sprawdza ustalenia. Drożej.</em></span></label>
+        <label class="opcja"><input type="checkbox" id="optCrbr" checked><span><b>Sprawdź beneficjentów w CRBR</b><em>Darmowe, ok. 3 sekundy na firmę.</em></span></label>
+        <div class="rzad"><span id="nowaSzacunekAuto" style="font-size:13.5px;color:var(--slaby)"></span><button id="btnUruchom" style="margin-left:auto">Uruchom automat Claude (płatny)</button></div>
+      </details>
     </section>
 
     <!-- PRACA W TOKU -->
     <section class="ekran" id="e-praca">
       <h1 id="pracaTytul">Praca w toku</h1>
-      <p class="podtytul">Możesz zamknąć to okno. Automat pracuje dalej, wrócisz tu później.</p>
+      <p class="podtytul">Postęp pracy programu nad partią. Możesz zamknąć to okno, program pracuje dalej.</p>
       <div id="pracaPusto" class="karta pusto">Nie wybrano partii. Wejdź w „Moje partie”.</div>
       <div id="pracaTresc" style="display:none">
         <div class="karta">
@@ -252,30 +266,29 @@
     <!-- PRZYSTANEK NA NIP -->
     <section class="ekran" id="e-nip">
       <h1>Sprawdzenie numerów NIP</h1>
-      <p class="podtytul" id="nipPodtytul">Zanim automat ruszy dalej, potwierdź, że trafił we właściwe spółki.</p>
-      <div class="pasmo">Program znalazł numery NIP i sprawdził je w Białej Liście Ministerstwa Finansów oraz w KRS. Po Twoim potwierdzeniu program pobierze za darmo dane z rejestrów (KRS, CRBR, giełda), a śledztwo zrobisz w czatach na prompcie zbiorczym. Żaden model nie jest wywoływany z panelu.</div>
+      <p class="podtytul" id="nipPodtytul">Krok 2. Potwierdź, że każdy numer wskazuje właściwą spółkę.</p>
+      <div class="pasmo dobrze">Każdy numer sprawdzono za darmo: <b>Biała Lista MF</b> (czy firma istnieje, czy nie jest wykreślona, czy nazwa spółki pasuje) i <b>KRS</b> (czy numery się zgadzają). Pobrano też odpis KRS i beneficjentów z CRBR. Na tym ekranie nic nie wywołuje modelu.</div>
       <div class="karta"><div id="nipTabela" class="pusto">Wczytuję…</div></div>
       <div class="karta">
         <details class="gemini-reczny" id="geminiNip">
-          <summary><b>Znajdź brakujące numery w Gemini</b> — za darmo, dla firm oznaczonych „Szukaj numeru ponownie”</summary>
+          <summary><b>Brakujące albo złe numery: zapytaj czat</b> (dla firm z wyborem „Numer do wymiany”)</summary>
           <div class="etap" style="margin-top:14px">
             <i class="nrb">1</i>
             <div class="tresc-etapu">
-              <p>Skopiuj polecenie z listą firm oznaczonych „Szukaj numeru ponownie”.</p>
-              <div class="rzad"><button class="glowny" data-gemini-kopiuj="nip">Kopiuj polecenie dla Gemini</button><span class="info-kopiuj" style="font-size:13px;color:var(--zielony)"></span></div>
+              <p>Skopiuj polecenie z listą firm oznaczonych „Numer do wymiany” i wklej je do Gemini albo ChatGPT. Możesz też po prostu wpisać numer w tabeli wyżej.</p>
+              <div class="rzad">
+                <button class="glowny" data-gemini-kopiuj="nip">Kopiuj polecenie o numery NIP</button>
+                <button data-model="https://gemini.google.com/app">Otwórz Gemini</button>
+                <button data-model="https://chatgpt.com/">Otwórz ChatGPT</button>
+                <span class="info-kopiuj" style="font-size:13px;color:var(--zielony)"></span>
+              </div>
             </div>
           </div>
           <div class="etap">
             <i class="nrb">2</i>
             <div class="tresc-etapu">
-              <p>Wklej je do Gemini w Antigravity albo na <a href="https://gemini.google.com/app" target="_blank" rel="noopener">gemini.google.com</a>.</p>
-            </div>
-          </div>
-          <div class="etap">
-            <i class="nrb">3</i>
-            <div class="tresc-etapu">
-              <p>Wklej odpowiedź. Numery trafią do tabeli wyżej; potem kliknij „Sprawdź ponownie” — sprawdzą je same rejestry, bez modelu.</p>
-              <textarea data-gemini-odpowiedz="nip" placeholder="Wklej tutaj odpowiedź Gemini (Ctrl+V)" style="min-height:90px"></textarea>
+              <p>Wklej odpowiedź czatu. Numery trafią do tabeli wyżej. Potem kliknij „Sprawdź w Białej Liście”.</p>
+              <textarea data-gemini-odpowiedz="nip" placeholder="Wklej tutaj odpowiedź czatu (Ctrl+V)" style="min-height:90px"></textarea>
               <div class="rzad" style="margin-top:10px"><button data-gemini-wczytaj="nip">Wczytaj numery</button></div>
               <div data-gemini-wynik="nip" style="margin-top:12px"></div>
             </div>
@@ -285,18 +298,14 @@
       <div class="karta rozdziel">
         <div id="nipPodsumowanie" class="pusto"></div>
         <div class="rzad">
-          <select id="nipModelPonow" style="width:auto" title="Kto szuka numeru przy ponownym sprawdzeniu">
-            <option value="gemini">szuka Gemini</option>
-            <option value="claude">szuka Claude</option>
-          </select>
-          <button class="duzy" id="btnSprawdzNip">Zapisz poprawki i sprawdź ponownie</button>
-          <button class="glowny duzy" id="btnDalej">Sprawdzaj dalej: rejestry i czaty</button>
+          <button class="duzy" id="btnSprawdzNip">Sprawdź w Białej Liście</button>
+          <button class="glowny duzy" id="btnDalej">Numery potwierdzone: dalej do czatów</button>
         </div>
       </div>
       <details class="gemini-reczny">
         <summary>Śledztwo automatem Claude (płatne, zużywa limit subskrypcji)</summary>
-        <p style="font-size:13.5px;color:var(--slaby)">Stary przebieg: Claude sam szuka w internecie, osobno dla każdej firmy (śledztwo, samokontrola, opisy). Na planie Pro to kilkaset tysięcy do ponad miliona tokenów na firmę i łatwo przekroczyć limit tygodniowy albo miesięczny. Używaj tylko dla pojedynczej trudnej firmy: pozostałe oznacz wtedy „Pomiń firmę”.</p>
-        <button id="btnAutomatClaude">Uruchom automat Claude dla firm „Idzie dalej”</button>
+        <p style="font-size:13.5px;color:var(--slaby)">Stary przebieg: Claude sam szuka w internecie, osobno dla każdej firmy (śledztwo, samokontrola, opisy). Na planie Pro to kilkaset tysięcy do ponad miliona tokenów na firmę i łatwo przekroczyć limit. Używaj tylko dla pojedynczej trudnej firmy: pozostałe oznacz wtedy „Pomiń firmę”.</p>
+        <button id="btnAutomatClaude">Uruchom automat Claude dla firm „Numer dobry”</button>
       </details>
     </section>
 
@@ -580,16 +589,12 @@ async function ekranGotowosc() {
   const g = await pobierz("/api/panel/gotowosc");
   if (g.blad) { $("#lampki").innerHTML = `<span class="pusto">Nie udało się sprawdzić: ${esc(g.blad)}</span>`; return; }
   const l = [];
-  l.push(lampka(g.claude.ok ? "ok" : "zle", "Claude " + (g.claude.ok ? "jest zalogowany" : "nie jest zalogowany"),
-    g.claude.ok ? `Tryb: ${esc(g.claude.metoda || "subskrypcja")}. Automat zużywa limity subskrypcji, bez osobnych kosztów.` : "Logowanie automatu wygasło. Kliknij „Zaloguj Claude”: otworzy się okno i przeglądarka, zatwierdź logowanie swoim kontem, potem zamknij okno i odśwież tę stronę (F5).",
-    g.claude.ok ? `<span class="plakietka p-ok">w porządku</span>` : `<button class="glowny" id="btnZalogujClaude">Zaloguj Claude</button>`));
-  l.push(lampka(g.gemini.ok ? "ok" : "uwaga", "Gemini do szukania NIP-ów " + (g.gemini.ok ? "jest gotowy" : g.gemini.maKlucz ? "nie działa" : "jest wyłączony"),
-    g.gemini.ok
-      ? `Model: ${esc(g.gemini.model)}. Szukanie NIP-ów może iść na Gemini zamiast Claude.`
-      : g.gemini.maKlucz
-        ? `${esc(g.gemini.powod || "Klucz jest wpisany, ale Google go nie przyjmuje.")}. NIP-y szuka Claude. Panel sprawdzi to ponownie za dobę.`
-        : "Opcjonalne. Potrzebny klucz API z Google AI Studio wpisany do pliku .env.local jako GEMINI_API_KEY. Do tego czasu NIP-y szuka Claude.",
-    `<span class="plakietka ${g.gemini.ok ? "p-ok" : g.gemini.maKlucz ? "p-uwaga" : ""}">${g.gemini.ok ? "w porządku" : g.gemini.maKlucz ? "bez wyszukiwania" : "nieaktywne"}</span>`));
+  l.push(lampka(g.claude.ok ? "ok" : "szary", "Claude " + (g.claude.ok ? "jest zalogowany" : "nie jest zalogowany"),
+    "Potrzebny tylko do płatnego automatu Claude. Ścieżka w czatach działa bez niego.",
+    g.claude.ok ? `<span class="plakietka p-ok">zalogowany</span>` : `<button id="btnZalogujClaude">Zaloguj Claude</button>`));
+  l.push(lampka(g.gemini.ok ? "ok" : "szary", "Gemini API " + (g.gemini.ok ? "jest gotowe" : "jest nieaktywne"),
+    "Nieużywane na ścieżce w czatach: numery NIP bierzesz z czatu, a panel sprawdza je w rejestrach.",
+    `<span class="plakietka">${g.gemini.ok ? "gotowe" : "nieużywane"}</span>`));
   l.push(lampka(g.baza.ok ? "ok" : "zle", "Połączenie z bazą",
     g.baza.ok ? `Supabase odpowiada. W bazie: ${g.baza.firm} firm, ${g.baza.kategorii} kategorii.` : esc(g.baza.blad || "brak połączenia"),
     `<span class="plakietka ${g.baza.ok ? "p-ok" : "p-zle"}">${g.baza.ok ? "w porządku" : "błąd"}</span>`));
@@ -614,7 +619,7 @@ async function ekranGotowosc() {
   };
   const wToku = g.partie.find((p) => p.gotowe < p.firm - p.pominiete);
   $("#startPodsumowanie").innerHTML = g.automatPracuje
-    ? `<b>Automat teraz pracuje</b><br><span style="font-size:13.5px">Partia ${esc(wToku?.nazwa || "")} — zobacz „Praca w toku”.</span>`
+    ? `<b>Program teraz pracuje</b><br><span style="font-size:13.5px">Partia ${esc(wToku?.nazwa || "")} — zobacz „Praca w toku”.</span>`
     : g.partie.length ? `<b>Wszystko gotowe</b><br><span style="font-size:13.5px">Ostatnia partia: ${esc(g.partie[0].nazwa)} (${g.partie[0].firm} firm, ${g.partie[0].zatwierdzone} zatwierdzonych).</span>` : `<b>Wszystko gotowe</b><br><span style="font-size:13.5px">Nie masz jeszcze żadnej partii.</span>`;
 }
 
@@ -632,12 +637,44 @@ async function ustawWyborNip(selektor) {
   el.onchange = () => (el.dataset.ruszony = "1");
 }
 
-// ---------- 2. nowa partia ----------
-let trybWejscia = "nazwy";
-$("#trybNazwy").onclick = () => { trybWejscia = "nazwy"; $("#trybNazwy").classList.add("glowny"); $("#trybKategoria").classList.remove("glowny"); $("#polaNazwy").style.display = ""; $("#polaKategoria").style.display = "none"; szacunek(); };
-$("#trybKategoria").onclick = () => { trybWejscia = "kategoria"; $("#trybKategoria").classList.add("glowny"); $("#trybNazwy").classList.remove("glowny"); $("#polaNazwy").style.display = "none"; $("#polaKategoria").style.display = ""; szacunek(); };
-
+// ---------- krok 1. lista firm i NIP-y ----------
 function dzisiajTekst() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+
+// Lista z pola: "Marka | NIP | Spółka", tabela Markdown z czatu, kolumny z arkusza (tabulatory)
+// albo "Marka: 123-456-78-90". Zwraca [{ nazwa, nip, spolka, poprawny }].
+function rozpoznajListe(tekst) {
+  const wynik = [];
+  const czysc = (s) => String(s || "").replace(/\*\*/g, "").replace(/^\s*\d+[.)]\s+/, "").trim();
+  const linie = String(tekst || "").split(/\r?\n/);
+  // Wklejona tabela z czatu: liczą się tylko jej wiersze, zdania wokół ("Oto numery:") pomijamy.
+  const jestTabela = linie.some((l) => (l.match(/\|/g) || []).length >= 2);
+  for (const surowa of linie) {
+    const l = surowa.trim();
+    if (!l || l.startsWith("#") || /:$/.test(l)) continue;
+    if (jestTabela && !l.includes("|")) continue;
+    let kom;
+    if (l.includes("|")) {
+      kom = l.split("|").map((x) => x.trim());
+      if (kom[0] === "") kom.shift();
+      if (kom[kom.length - 1] === "") kom.pop();
+      if (!kom.length || kom.every((k) => /^:?-{2,}:?$/.test(k) || k === "")) continue; // separator tabeli
+      if (/^(marka|firma|nazwa)$/i.test(kom[0]) && /nip/i.test(kom[1] || "")) continue; // nagłówek
+    } else if (l.includes("\t")) {
+      kom = l.split("\t").map((x) => x.trim());
+    } else {
+      const m = l.match(/^(.*?)[\s:;,–-]+((?:\d[\s-]?){9}\d|BRAK)\b\s*[,;|–-]?\s*(.*)$/i);
+      kom = m ? [m[1], m[2], m[3]] : [l];
+    }
+    const nazwa = czysc(kom[0]);
+    if (!nazwa) continue;
+    const cyfry = String(kom[1] || "").replace(/\D/g, "");
+    const nip = cyfry.length === 10 ? cyfry : null;
+    const spolka = czysc(kom[2] || "");
+    if (wynik.some((x) => x.nazwa.toLowerCase() === nazwa.toLowerCase())) continue;
+    wynik.push({ nazwa, nip, spolka: /^https?:\/\//i.test(spolka) ? "" : spolka, poprawny: nip ? czyNipPoprawny(nip) : false, zlyNumer: !!kom[1] && !/^brak$/i.test(String(kom[1]).trim()) && !nip });
+  }
+  return wynik;
+}
 
 async function ekranNowa() {
   if (!$("#nazwaPartii").value) $("#nazwaPartii").value = dzisiajTekst();
@@ -645,41 +682,75 @@ async function ekranNowa() {
   if (!STAN.kategorie.length) {
     const j = await pobierz("/api/panel/kategorie");
     STAN.kategorie = j.kategorie || [];
-    $("#kategoriaWybor").innerHTML = STAN.kategorie.map((k) => `<option value="${esc(k.slug)}">${esc(k.name)}</option>`).join("");
+    $("#kategoriaWybor").innerHTML = `<option value="">nie, użyj listy z pola wyżej</option>` + STAN.kategorie.map((k) => `<option value="${esc(k.slug)}">${esc(k.name)}</option>`).join("");
   }
   szacunek();
 }
 
 function szacunek() {
-  const ile = trybWejscia === "kategoria" ? Number($("#seedIle").value) || 40 : $("#firmyTekst").value.split(/\r?\n/).filter((s) => s.trim()).length;
-  const doPrzystanku = Math.ceil((ile * 1.5) / 2);
-  const calosc = Math.ceil((ile * 3.5) / 2);
-  const czas = $("#optPrzystanek").checked
-    ? `<b style="color:var(--tekst)">ok. ${doPrzystanku} min do przystanku na NIP</b>, potem ok. ${calosc - doPrzystanku} min`
-    : `szacowany czas <b style="color:var(--tekst)">ok. ${calosc} min</b>`;
-  $("#nowaSzacunek").innerHTML = ile ? `${ile} firm · ${czas} · zużyje ${ile} zapytań do MF` : "Wpisz nazwy firm albo wybierz kategorię.";
+  const lista = rozpoznajListe($("#firmyTekst").value);
+  const zNip = lista.filter((x) => x.poprawny).length;
+  const zlaSuma = lista.filter((x) => x.nip && !x.poprawny).length;
+  const bez = lista.length - zNip - zlaSuma;
+  $("#listaPodglad").innerHTML = lista.length
+    ? `<table><tr><th>Marka</th><th>NIP</th><th>Spółka (z czatu)</th><th></th></tr>${lista.map((x) => `<tr><td><b>${esc(x.nazwa)}</b></td><td>${esc(x.nip || "—")}</td><td style="font-size:13px">${esc(x.spolka || "")}</td><td>${x.poprawny ? '<span class="plakietka p-ok">numer poprawny</span>' : x.nip ? '<span class="plakietka p-zle">zła suma kontrolna</span>' : '<span class="plakietka p-uwaga">bez numeru</span>'}</td></tr>`).join("")}</table>`
+    : "";
+  $("#nowaSzacunek").className = lista.length ? "" : "pusto";
+  $("#nowaSzacunek").innerHTML = lista.length
+    ? `<b>${lista.length} firm</b> · ${zNip} z poprawnym NIP-em${bez ? ` · <span style="color:var(--bursztyn)">${bez} bez numeru</span>` : ""}${zlaSuma ? ` · <span class="err">${zlaSuma} z błędną sumą kontrolną</span>` : ""}<br><span style="font-size:13px;color:var(--slaby)">Sprawdzenie w rejestrach potrwa ok. ${Math.max(1, Math.ceil(lista.length * 6 / 60))} min i zużyje ${zNip} z dziennego limitu 100 zapytań do MF.${bez || zlaSuma ? " Firmy bez dobrego numeru trafią na przystanek, gdzie wkleisz numer z czatu albo je pominiesz." : ""}</span>`
+    : "Wklej listę firm z numerami NIP.";
+  $("#btnUtworz").disabled = !lista.length;
+  const ileAuto = $("#kategoriaWybor").value ? Number($("#seedIle").value) || 40 : lista.length;
+  $("#nowaSzacunekAuto").textContent = ileAuto ? `${ileAuto} firm przez automat Claude, ok. ${Math.ceil((ileAuto * 3.5) / 2)} min` : "";
 }
 $("#firmyTekst").addEventListener("input", szacunek);
 $("#seedIle").addEventListener("input", szacunek);
-$("#optPrzystanek").addEventListener("change", szacunek);
+$("#kategoriaWybor").addEventListener("change", szacunek);
 
-$("#btnUruchom").onclick = async () => {
-  $("#btnUruchom").disabled = true;
-  const dane = {
+function nowaBlad(tekst) { $("#nowaBlad").innerHTML = tekst ? `<div class="pasmo blad">${esc(tekst)}</div>` : ""; if (tekst) window.scrollTo(0, 0); }
+
+// Domyślna droga: partia z listy, numery sprawdzają tylko rejestry (MF, KRS, CRBR).
+$("#btnUtworz").onclick = async () => {
+  const lista = rozpoznajListe($("#firmyTekst").value);
+  if (!lista.length) return nowaBlad("Wklej listę firm.");
+  $("#btnUtworz").disabled = true;
+  const j = await wyslij("/api/panel/uruchom", {
     partia: $("#nazwaPartii").value.trim() || dzisiajTekst(),
-    firmy: trybWejscia === "nazwy" ? $("#firmyTekst").value : "",
-    kategoria: trybWejscia === "kategoria" ? $("#kategoriaWybor").value : null,
+    firmy: lista.map((x) => [x.nazwa, x.poprawny ? x.nip : "", x.poprawny ? x.spolka : ""].join(" | ").replace(/( \| )+$/, "")).join("\n"),
+    reweryfikacja: $("#optReweryfikacja").checked,
+    reczna: true,
+  });
+  $("#btnUtworz").disabled = false;
+  if (j.blad) return nowaBlad(j.blad);
+  nowaBlad("");
+  ustawPartie(j.partia);
+  STAN.zadanie = j.zadanie;
+  STAN.poZadaniu = "nip";
+  await wczytajListePartii();
+  pokaz("praca");
+};
+
+// Płatny automat Claude (stara droga).
+$("#btnUruchom").onclick = async () => {
+  const kategoria = $("#kategoriaWybor").value || null;
+  const lista = rozpoznajListe($("#firmyTekst").value);
+  if (!kategoria && !lista.length) return nowaBlad("Wklej listę firm albo wybierz kategorię w sekcji automatu.");
+  if (!confirm(`UWAGA, KOSZT: automat Claude zużywa limit subskrypcji (kilkaset tysięcy do ponad miliona tokenów na firmę).\n\nDarmowa droga: „Utwórz partię i sprawdź NIP-y”.\n\nNa pewno uruchomić automat?`)) return;
+  $("#btnUruchom").disabled = true;
+  const j = await wyslij("/api/panel/uruchom", {
+    partia: $("#nazwaPartii").value.trim() || dzisiajTekst(),
+    firmy: kategoria ? "" : lista.map((x) => (x.poprawny ? `${x.nazwa} | ${x.nip}` : x.nazwa)).join("\n"),
+    kategoria,
     seed: $("#seedIle").value,
     przystanekNip: $("#optPrzystanek").checked,
     dokladnaKontrola: $("#optKontrola").checked,
     crbr: $("#optCrbr").checked,
     reweryfikacja: $("#optReweryfikacja").checked,
     nipModel: $("#nipModel").value,
-  };
-  const j = await wyslij("/api/panel/uruchom", dane);
+  });
   $("#btnUruchom").disabled = false;
-  if (j.blad) { $("#nowaBlad").innerHTML = `<div class="pasmo blad">${esc(j.blad)}</div>`; return; }
-  $("#nowaBlad").innerHTML = "";
+  if (j.blad) return nowaBlad(j.blad);
+  nowaBlad("");
   ustawPartie(j.partia);
   STAN.zadanie = j.zadanie;
   await wczytajListePartii();
@@ -717,9 +788,18 @@ async function ekranPraca() {
   }
   const razem = p.firm - p.pominiete;
   const gotowe = p.gotowe;
-  $("#pracaLicznik").textContent = `${gotowe} z ${razem} gotowe` + (p.czekaNaNip ? ` · ${p.czekaNaNip} czeka na potwierdzenie NIP` : "");
-  $("#pracaPasek").style.width = razem ? Math.round((gotowe / razem) * 100) + "%" : "0%";
-  $("#pracaCzas").textContent = p.zadanie ? (p.minutyDoKonca ? `pozostało ok. ${p.minutyDoKonca} min` : "kończy…") : gotowe >= razem && razem ? "partia gotowa" : "automat nie pracuje";
+  if (p.sciezka === "reczna") {
+    // Ścieżka ręczna: tu widać tylko sprawdzanie w rejestrach (MF, KRS, CRBR).
+    const trwa = ["sprawdzanie NIP-u w Białej Liście", "pobieranie odpisu z KRS"];
+    const sprawdzone = p.firmy.filter((f) => f.etap !== "pominięta" && !trwa.includes(f.etap)).length;
+    $("#pracaLicznik").textContent = `Rejestry: sprawdzono ${sprawdzone} z ${razem} firm` + (p.czekaNaNip ? ` · ${p.czekaNaNip} czeka na potwierdzenie NIP` : "") + (p.czekaNaCzaty ? ` · ${p.czekaNaCzaty} czeka na śledztwo w czatach` : "");
+    $("#pracaPasek").style.width = razem ? Math.round((sprawdzone / razem) * 100) + "%" : "0%";
+    $("#pracaCzas").textContent = p.zadanie ? "sprawdzam w Białej Liście MF, KRS i CRBR…" : "sprawdzanie zakończone";
+  } else {
+    $("#pracaLicznik").textContent = `${gotowe} z ${razem} gotowe` + (p.czekaNaNip ? ` · ${p.czekaNaNip} czeka na potwierdzenie NIP` : "");
+    $("#pracaPasek").style.width = razem ? Math.round((gotowe / razem) * 100) + "%" : "0%";
+    $("#pracaCzas").textContent = p.zadanie ? (p.minutyDoKonca ? `pozostało ok. ${p.minutyDoKonca} min` : "kończy…") : gotowe >= razem && razem ? "partia gotowa" : "automat nie pracuje";
+  }
   $("#btnZatrzymaj").disabled = !p.zadanie;
   STAN.zadanie = p.zadanie || STAN.zadanie;
   const mln = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + " mln" : Math.round(n / 1000) + " tys.");
@@ -732,49 +812,56 @@ async function ekranPraca() {
       ? `<span class="plakietka ${f.status === "WYSOKA" ? "p-ok" : f.status === "KONFLIKT" ? "p-zle" : "p-uwaga"}">${f.status === "WYSOKA" ? "gotowe · pewność wysoka" : f.status === "KONFLIKT" ? "gotowe · konflikt" : "gotowe · do obejrzenia"}</span><span>${esc(f.kraj || "")} ${f.wlasciciel ? "· " + esc(f.wlasciciel) : ""}</span>`
       : f.etap === "pominięta" ? `<span class="plakietka">pominięta</span>`
       : f.etap === "śledztwo w czatach" ? `<span class="plakietka p-uwaga">czeka na śledztwo w czatach</span>${f.bledy.length ? `<span>${esc(f.bledy[0])}</span>` : ""}`
+      : f.etap === "brak numeru NIP" ? `<span class="plakietka p-zle">brak numeru NIP</span><span>uzupełnisz w kroku 2</span>`
       : f.etap === "czeka na potwierdzenie NIP" ? `<span class="plakietka p-uwaga">czeka na potwierdzenie NIP</span><span>${esc(f.nip || "")}</span>`
       : f.bledy.length ? `<span class="plakietka p-zle">błąd</span><span>${esc(f.bledy[0])}</span>`
       : `<span>${esc(OPIS_KROKU[f.krok] || f.etap)}</span>`;
     return `<div class="krok"><b>${esc(f.nazwa)}</b>${prawa}</div>`;
   }).join("");
   if (p.sciezka === "reczna" && p.czekaNaCzaty && !p.zadanie) $("#pracaCzas").innerHTML = `<a href="#" onclick="pokaz('czaty');return false">rejestry gotowe, przejdź do śledztwa w czatach</a>`;
-  if (p.czekaNaNip && !p.zadanie) $("#pracaCzas").innerHTML = `<a href="#" onclick="pokaz('nip');return false">przejdź do potwierdzenia NIP-ów</a>`;
+  if (p.czekaNaNip && !p.zadanie) $("#pracaCzas").innerHTML = `<a href="#" onclick="pokaz('nip');return false">sprawdzanie zakończone, przejdź do kroku 2: potwierdzenie NIP-ów</a>`;
+  // Po sprawdzeniu w rejestrach, które uruchomił panel, od razu następny krok ścieżki.
+  if (STAN.poZadaniu && !p.zadanie && STAN.ekran === "praca") {
+    const cel = p.czekaNaNip ? "nip" : STAN.poZadaniu;
+    STAN.poZadaniu = null;
+    return pokaz(cel);
+  }
   if (STAN.zadanie) {
     const z = await pobierz("/api/panel/zadanie?id=" + STAN.zadanie);
     if (z.log) { $("#pracaLog").textContent = z.log.join("\n"); $("#pracaLog").scrollTop = $("#pracaLog").scrollHeight; }
   }
 }
 
-// ---------- przystanek na NIP ----------
+// ---------- krok 2. sprawdzenie NIP-ów (tylko rejestry, bez modeli) ----------
 async function ekranNip() {
-  if (!STAN.partia) { $("#nipTabela").innerHTML = '<span class="pusto">Nie wybrano partii.</span>'; return; }
+  if (!STAN.partia) { $("#nipTabela").innerHTML = '<span class="pusto">Nie wybrano partii. Wejdź w „Moje partie”.</span>'; return; }
   const j = await pobierz("/api/panel/nip?partia=" + encodeURIComponent(STAN.partia));
   if (j.blad) { $("#nipTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
-  if (j.przygotowanie) { $("#nipTabela").innerHTML = '<span class="pusto">Automat dopiero szuka numerów NIP. Wróć tu za chwilę — albo zajrzyj do „Praca w toku”.</span>'; $("#nipPodsumowanie").textContent = ""; return; }
-  $("#nipPodtytul").textContent = `Partia ${j.nazwa} · przy każdej firmie wybierz, co dalej.`;
-  await ustawWyborNip("#nipModelPonow");
-  $("#nipModelPonow").querySelector('option[value="gemini"]').textContent = STAN.geminiOk ? "szuka Gemini" : "Gemini (niezalogowany)";
+  if (j.przygotowanie) { $("#nipTabela").innerHTML = '<span class="pusto">Program dopiero sprawdza numery w rejestrach. Wróć tu za chwilę albo zajrzyj do kroku 3 „Rejestry”.</span>'; $("#nipPodsumowanie").textContent = ""; return; }
+  $("#nipPodtytul").textContent = `Partia ${j.nazwa}. Krok 2: przy każdej firmie potwierdź numer, wymień go albo pomiń firmę.`;
   const wiersze = j.firmy.map((f, i) => {
-    const plakietka = f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
+    const plakietka = f.pomin ? `<span class="plakietka">pominięta</span>`
+      : f.wynik === "ok" ? `<span class="plakietka p-ok">zgadza się</span>`
       : f.wynik === "uwaga" ? `<span class="plakietka p-uwaga">do sprawdzenia</span>`
-      : f.wynik === "czeka" ? `<span class="plakietka p-uwaga">czeka na sprawdzenie w rejestrach</span>`
-      : f.wynik === "brak" ? (f.blad ? `<span class="plakietka p-zle">nie udało się</span>` : `<span class="plakietka p-zle">brak numeru</span>`)
+      : f.wynik === "czeka" ? `<span class="plakietka p-uwaga">nowy numer, kliknij „Sprawdź w Białej Liście”</span>`
+      : f.wynik === "brak" ? `<span class="plakietka p-zle">brak numeru</span>`
       : `<span class="plakietka p-zle">nie zgadza się</span>`;
-    // Domyślny wybór: dobre idą dalej, złe i puste do ponownego szukania.
+    // Domyślny wybór: dobre idą dalej, złe i puste czekają na numer z czatu.
     const domyslnie = f.pomin ? "pomin" : ["ok", "uwaga", "czeka"].includes(f.wynik) ? "dalej" : "szukaj";
     const opcja = (w, tekst) => `<option value="${w}" ${domyslnie === w ? "selected" : ""}>${tekst}</option>`;
-    return `<tr>
-      <td><b>${esc(f.nazwa)}</b>${f.wBazie ? `<br><span style="font-size:12.5px;color:var(--slaby)">jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}</span>` : ""}</td>
-      <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}" placeholder="wpisz NIP">${f.podanyPrzezCiebie ? `<br><span style="font-size:12.5px;color:var(--slaby)">podany przez Ciebie</span>` : ""}</td>
-      <td>${esc(f.spolka || "—")}${f.krs ? `<br><span style="font-size:12.5px;color:var(--slaby)">KRS ${esc(f.krs)}</span>` : ""}</td>
-      <td>${plakietka}${f.blad ? `<br><span style="font-size:13px;color:var(--czerwony)">${esc(f.blad)}</span>` : ""}${f.powod ? `<br><span style="font-size:13px;color:var(--slaby)">${esc(f.powod)}</span>` : ""}${f.tenSamNipCo?.length ? `<br><span style="font-size:13px;color:var(--slaby)">ta sama spółka co: ${esc(f.tenSamNipCo.join(", "))} — w bazie zostaną osobnymi markami</span>` : ""}</td>
+    const male = (t, kolor) => `<br><span style="font-size:12.5px;color:var(--${kolor || "slaby"})">${t}</span>`;
+    return `<tr style="${f.pomin ? "opacity:.55" : ""}">
+      <td><b>${esc(f.nazwa)}</b>${f.wBazie ? male(`jest już w bazie: ${esc(f.wBazie.kraj || "")} · ${esc(f.wBazie.wlasciciel || "")}`) : ""}</td>
+      <td><input type="text" class="nip" data-nip-pole="${i}" value="${esc(f.nip)}" placeholder="wpisz NIP"></td>
+      <td>${f.spolka ? `${esc(f.spolka)}${male(`Biała Lista${f.vat ? " · VAT: " + esc(f.vat) : ""}${f.krs ? " · KRS " + esc(f.krs) : ""}`)}` : '<span class="pusto">—</span>'}${f.spolkaPodana ? male(`czat podał: ${esc(f.spolkaPodana)}`) : ""}</td>
+      <td>${plakietka}${f.blad ? male(esc(f.blad), "czerwony") : ""}${f.powod && !f.pomin ? male(esc(f.powod)) : ""}${f.tenSamNipCo?.length && !f.pomin ? male(`ta sama spółka co: ${esc(f.tenSamNipCo.join(", "))}; w bazie będą osobnymi markami`) : ""}</td>
       <td><select class="decyzja-nip" data-nip-decyzja="${i}" data-wynik="${f.wynik}">
-        ${opcja("dalej", "Idzie dalej")}${opcja("szukaj", "Szukaj numeru ponownie")}${opcja("pomin", "Pomiń firmę")}
+        ${opcja("dalej", "Numer dobry, idzie dalej")}${opcja("szukaj", "Numer do wymiany")}${opcja("pomin", "Pomiń firmę")}
       </select></td>
     </tr>`;
   }).join("");
-  $("#nipTabela").innerHTML = `<table><tr><th>Marka</th><th>NIP</th><th>Spółka w rejestrze</th><th>Wynik sprawdzenia</th><th style="width:210px">Co dalej</th></tr>${wiersze}</table>
-    <p class="uwagi">„Idzie dalej” przy czerwonej firmie znaczy: akceptuję ten numer mimo ostrzeżenia. Wpisany ręcznie NIP sprawdzą same rejestry, bez modelu.</p>`;
+  $("#nipTabela").innerHTML = `<table><tr><th>Marka</th><th>NIP</th><th>Spółka wg rejestru</th><th>Wynik sprawdzenia</th><th style="width:200px">Co dalej</th></tr>${wiersze}</table>
+    <p class="uwagi">„Numer dobry” przy czerwonej firmie znaczy: akceptuję ten numer mimo ostrzeżenia. „Numer do wymiany”: wpisz nowy numer w tabeli albo weź go z czatu (niżej).</p>`;
   $("#nipTabela").dataset.firmy = JSON.stringify(j.firmy.map((f) => ({ nazwa: f.nazwa, nip: f.nip })));
   $("#nipTabela").querySelectorAll("select, input").forEach((el) => { el.addEventListener("input", podsumowanieNip); el.addEventListener("change", podsumowanieNip); });
   podsumowanieNip();
@@ -793,55 +880,57 @@ function zmianyNip() {
 function podsumowanieNip() {
   const bazowe = JSON.parse($("#nipTabela").dataset.firmy || "[]");
   const z = zmianyNip();
-  const wpisaneIdx = new Set(z.map((x, i) => (x.nip && x.nip.replace(/\D/g, "") !== String(bazowe[i]?.nip || "").replace(/\D/g, "") ? i : -1)).filter((i) => i >= 0));
-  // numery zapisane wcześniej (ręcznie albo z Gemini), które jeszcze nie przeszły przez rejestry
-  const czekaIdx = new Set(z.map((x, i) => (x.decyzja !== "pomin" && document.querySelector(`[data-nip-decyzja="${i}"]`)?.dataset.wynik === "czeka" ? i : -1)).filter((i) => i >= 0));
-  const wpisane = new Set([...wpisaneIdx, ...czekaIdx].filter((i) => z[i].decyzja !== "pomin")).size;
+  const cyfry = (s) => String(s || "").replace(/\D/g, "");
+  const wpisany = (x, i) => x.nip && cyfry(x.nip) !== cyfry(bazowe[i]?.nip);
+  const niesprawdzony = (i) => document.querySelector(`[data-nip-decyzja="${i}"]`)?.dataset.wynik === "czeka";
+  const doSprawdzenia = z.filter((x, i) => x.decyzja !== "pomin" && (wpisany(x, i) || niesprawdzony(i))).length;
+  const czekaNaNumer = z.filter((x, i) => x.decyzja === "szukaj" && !wpisany(x, i) && !niesprawdzony(i)).length;
   const dalej = z.filter((x) => x.decyzja === "dalej").length;
-  const szukaj = z.filter((x, i) => x.decyzja === "szukaj" && !wpisaneIdx.has(i)).length;
   const pomin = z.filter((x) => x.decyzja === "pomin").length;
   const czesci = [`<b style="color:var(--tekst)">${dalej} idzie dalej</b>`];
-  if (szukaj) czesci.push(`<span class="err">${szukaj} do ponownego szukania</span>`);
-  if (wpisane) czesci.push(`${wpisane} z numerem do sprawdzenia w rejestrach`);
+  if (doSprawdzenia) czesci.push(`<span style="color:var(--bursztyn)">${doSprawdzenia} nowych numerów do sprawdzenia</span>`);
+  if (czekaNaNumer) czesci.push(`<span class="err">${czekaNaNumer} czeka na numer z czatu</span>`);
   if (pomin) czesci.push(`${pomin} pominiętych`);
-  $("#nipPodsumowanie").innerHTML = czesci.join(" · ");
-  const trzebaSprawdzic = szukaj + wpisane;
-  $("#btnSprawdzNip").disabled = !trzebaSprawdzic;
-  $("#btnSprawdzNip").textContent = trzebaSprawdzic ? `Sprawdź ponownie (${trzebaSprawdzic})` : "Sprawdź ponownie";
-  $("#btnDalej").disabled = !!trzebaSprawdzic || !dalej;
-  $("#btnDalej").title = trzebaSprawdzic ? "Najpierw sprawdź ponownie firmy oznaczone na czerwono albo zmień im wybór" : "";
+  $("#nipPodsumowanie").className = "";
+  $("#nipPodsumowanie").innerHTML = czesci.join(" · ") + `<br><span style="font-size:13px;color:var(--slaby)">${
+    doSprawdzenia ? "Teraz: kliknij „Sprawdź w Białej Liście”."
+    : czekaNaNumer ? "Teraz: wpisz numery w tabeli albo weź je z czatu (sekcja niżej), albo wybierz „Pomiń firmę”."
+    : dalej ? "Wszystko sprawdzone. Teraz: „Numery potwierdzone: dalej do czatów”." : "Nie ma firm, które idą dalej."}</span>`;
+  $("#btnSprawdzNip").disabled = !doSprawdzenia;
+  $("#btnSprawdzNip").textContent = doSprawdzenia ? `Sprawdź w Białej Liście (${doSprawdzenia})` : "Sprawdź w Białej Liście";
+  $("#btnDalej").disabled = !!doSprawdzenia || !!czekaNaNumer || !dalej;
+  $("#btnDalej").title = doSprawdzenia ? "Najpierw sprawdź nowe numery w Białej Liście" : czekaNaNumer ? "Uzupełnij brakujące numery albo pomiń te firmy" : "";
+  if (czekaNaNumer) $("#geminiNip").open = true;
 }
 
 $("#btnSprawdzNip").onclick = async () => {
-  const j = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip(), ponow: true });
+  const j = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip(), ponow: true, reczna: true });
   if (j.blad) return alert(j.blad);
-  const ile = j.doSprawdzenia;
-  if (!ile) return alert("Nie ma nic do ponownego sprawdzenia.");
-  const u = await wyslij("/api/panel/dalej", { partia: STAN.partia, tylkoNip: true, nipModel: $("#nipModelPonow").value });
+  if (!j.doSprawdzenia) return alert("Nie ma nowych numerów do sprawdzenia.");
+  const u = await wyslij("/api/panel/dalej", { partia: STAN.partia, tylkoRejestry: true });
   if (u.blad) return alert(u.blad);
   STAN.zadanie = u.zadanie;
-  $("#nipPodsumowanie").innerHTML = `Sprawdzam ${ile} firm(y)… tabela odświeży się sama, gdy skończę.`;
+  $("#nipPodsumowanie").innerHTML = `Sprawdzam ${j.doSprawdzenia} numer(y) w Białej Liście MF i KRS… tabela odświeży się sama.`;
   $("#btnSprawdzNip").disabled = true;
   $("#btnDalej").disabled = true;
   const odswiez = setInterval(async () => {
     const z = await pobierz("/api/panel/zadanie?id=" + u.zadanie);
     if (z.status !== "pracuje") {
       clearInterval(odswiez);
-      if (STAN.ekran === "nip") await ekranNip();
-      // Gdy automat stanął (np. wygasło logowanie Claude), pokaż dlaczego, zamiast cichego odświeżenia.
-      const przyczyna = (z.log || []).filter((l) => /nie jest zalogowany|Failed to authenticate|spend limit|usage limit|brak limitu|WYJĄTEK|tożsamość błąd/i.test(l)).slice(-2).join("\n");
-      if (z.status === "blad" || przyczyna) alert(`Sprawdzanie nie powiodło się dla części firm.\n\n${przyczyna || (z.log || []).slice(-3).join("\n")}\n\nJeśli chodzi o logowanie: ekran „Gotowość” → „Zaloguj Claude”.`);
+      if (STAN.ekran === "nip") { await ekranNip(); rysujSciezke(); }
+      if (z.status === "blad") alert(`Sprawdzanie w rejestrach nie powiodło się:\n\n${(z.log || []).slice(-3).join("\n")}`);
     }
-  }, 4000);
+  }, 3000);
 };
 
 $("#btnDalej").onclick = async () => {
-  const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
+  const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip(), reczna: true });
   if (z.blad) return alert(z.blad);
-  if (z.doSprawdzenia) return alert("Część firm czeka na ponowne sprawdzenie. Kliknij najpierw „Sprawdź ponownie”.");
+  if (z.doSprawdzenia) return alert("Część numerów nie jest jeszcze sprawdzona. Kliknij najpierw „Sprawdź w Białej Liście”.");
+  if (z.czekaNaNumer?.length) return alert(`Te firmy nie mają numeru: ${z.czekaNaNumer.join(", ")}.\nWpisz numer albo wybierz „Pomiń firmę”.`);
   const j = await wyslij("/api/panel/reczna", { partia: STAN.partia });
   if (j.blad) return alert(j.blad);
-  if (j.zadanie) { STAN.zadanie = j.zadanie; pokaz("praca"); } else pokaz("czaty");
+  if (j.zadanie) { STAN.zadanie = j.zadanie; STAN.poZadaniu = "czaty"; pokaz("praca"); } else pokaz("czaty");
 };
 
 $("#btnAutomatClaude").onclick = async () => {
@@ -922,20 +1011,20 @@ function parsujGemini(tekst, nazwy) {
   return wynik;
 }
 
-// Skąd brać listę firm: "nowa" — linie z pola nazw bez NIP-u; "nip" — firmy z wyborem "Szukaj numeru ponownie".
+// Skąd brać listę firm: "nowa" — firmy z pola listy bez poprawnego NIP-u; "nip" — firmy z wyborem "Numer do wymiany".
 function nazwyDoGemini(gdzie) {
   if (gdzie === "nowa") {
-    return $("#firmyTekst").value.split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !/\|\s*\d{3}/.test(l)).map((l) => l.split("|")[0].trim());
+    return rozpoznajListe($("#firmyTekst").value).filter((x) => !x.poprawny).map((x) => x.nazwa);
   }
   return zmianyNip().filter((z) => z.decyzja === "szukaj").map((z) => z.nazwa);
 }
 
 document.querySelectorAll("[data-gemini-kopiuj]").forEach((b) => b.addEventListener("click", async () => {
   const nazwy = nazwyDoGemini(b.dataset.geminiKopiuj);
-  if (!nazwy.length) return alert(b.dataset.geminiKopiuj === "nowa" ? "Najpierw wpisz nazwy firm (te bez numeru NIP)." : "Żadna firma nie ma wyboru „Szukaj numeru ponownie”.");
+  if (!nazwy.length) return alert(b.dataset.geminiKopiuj === "nowa" ? "Najpierw wpisz nazwy firm w polu listy (te bez numeru NIP)." : "Żadna firma nie ma wyboru „Numer do wymiany”.");
   await navigator.clipboard.writeText(promptGemini(nazwy));
   const info = b.parentElement.querySelector(".info-kopiuj");
-  info.textContent = `skopiowane (${nazwy.length} firm) — wklej w Gemini`;
+  info.textContent = `skopiowane (${nazwy.length} firm), wklej w czacie`;
   setTimeout(() => (info.textContent = ""), 4000);
 }));
 
@@ -943,12 +1032,12 @@ document.querySelectorAll("[data-gemini-wczytaj]").forEach((b) => b.addEventList
   const gdzie = b.dataset.geminiWczytaj;
   const nazwy = nazwyDoGemini(gdzie);
   const tekst = document.querySelector(`[data-gemini-odpowiedz="${gdzie}"]`).value;
-  if (!tekst.trim()) return alert("Najpierw wklej odpowiedź Gemini.");
+  if (!tekst.trim()) return alert("Najpierw wklej odpowiedź czatu.");
   const w = parsujGemini(tekst, nazwy);
   const wiersze = nazwy.map((n) => {
     const x = w[n];
     const stan = !x ? `<span class="plakietka">brak w odpowiedzi</span>`
-      : !x.nip ? `<span class="plakietka p-uwaga">Gemini nie znalazł</span>`
+      : !x.nip ? `<span class="plakietka p-uwaga">czat nie znalazł</span>`
       : !x.poprawny ? `<span class="plakietka p-zle">zła suma kontrolna — pominięty</span>`
       : `<span class="plakietka p-ok">dopisany</span>`;
     return `<tr><td><b>${esc(n)}</b></td><td>${esc(x?.nip || "—")}</td><td style="font-size:13px">${esc(x?.spolka || "")}</td><td>${stan}</td></tr>`;
@@ -968,18 +1057,18 @@ document.querySelectorAll("[data-gemini-wczytaj]").forEach((b) => b.addEventList
   // Przystanek: numery od razu zapisujemy w partii (odświeżenie tabeli ich nie zgubi).
   let takieSame = [];
   if (gdzie === "nip") {
-    const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zapiszNumery: true, zmiany: dobre.map((n) => ({ nazwa: n, nip: w[n].nip })) });
+    const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zapiszNumery: true, zmiany: dobre.map((n) => ({ nazwa: n, nip: w[n].nip, spolka: w[n].spolka })) });
     if (z.blad) return alert(z.blad);
     takieSame = z.takieSame || [];
     await ekranNip();
   }
 
   const bez = nazwy.length - dobre.length;
-  const dopisek = gdzie === "nowa"
-    ? bez ? `${bez} firm bez numeru: przy uruchomieniu poszuka ich Claude (ok. 250 tys. tokenów na firmę) — albo usuń je z listy.` : "Wszystkie numery dopisane. Możesz uruchamiać automat."
-    : bez ? `${bez} firm bez numeru: zostaw „Szukaj numeru ponownie” (poszuka Claude) albo wybierz „Pomiń firmę”. Numery zapisane — kliknij „Sprawdź ponownie”, sprawdzą je same rejestry.` : "Numery zapisane w partii. Kliknij „Sprawdź ponownie” — sprawdzą je same rejestry, bez modelu.";
+  const dopisek = bez
+    ? `${bez} firm bez numeru: wpisz go w tabeli albo wybierz „Pomiń firmę”. Zapisane numery sprawdzi „Sprawdź w Białej Liście”.`
+    : "Numery zapisane w partii. Teraz kliknij „Sprawdź w Białej Liście”.";
   const ostrzezenie = takieSame.length
-    ? `<div class="pasmo blad" style="margin-top:10px">Gemini podał ten sam numer, który rejestry już odrzuciły: ${takieSame.map((x) => `<b>${esc(x.nazwa)}</b> (${esc(x.powod || "")})`).join(", ")}. Dla nich wybierz „Pomiń firmę” albo poszukaj numeru jeszcze raz — np. zapytaj Gemini o następcę wykreślonej spółki.</div>`
+    ? `<div class="pasmo blad" style="margin-top:10px">Czat podał ten sam numer, który rejestry już odrzuciły: ${takieSame.map((x) => `<b>${esc(x.nazwa)}</b> (${esc(x.powod || "")})`).join(", ")}. Dla nich wybierz „Pomiń firmę” albo zapytaj czat o następcę wykreślonej spółki.</div>`
     : "";
   document.querySelector(`[data-gemini-wynik="${gdzie}"]`).innerHTML =
     `<table><tr><th>Marka</th><th>NIP</th><th>Spółka wg Gemini</th><th></th></tr>${wiersze}</table><p class="uwagi">${esc(dopisek)}</p>${ostrzezenie}`;

@@ -138,7 +138,7 @@ function podsumowaniePartii(partia) {
     if (f.decyzja === "zatwierdzony") s.zatwierdzone++;
     if (f.decyzja === "zaimportowany") s.zaimportowane++;
     if (f.bledy?.length) s.bledy++;
-    if (f.etapy?.sledztwo === "czeka na potwierdzenie NIP") s.czekaNaNip++;
+    if (f.etapy?.sledztwo === "czeka na potwierdzenie NIP" || (partia.sciezka === "reczna" && !partia.nipPotwierdzone && !f.tozsamosc)) s.czekaNaNip++;
     if (partia.sciezka === "reczna" && czekaNaCzaty(f)) s.czekaNaCzaty++;
   }
   return { ...s, sciezka: partia.sciezka || "automat", tryb: partia.tryb || "nowe", utworzono: partia.utworzono || null, przystanekNip: !!partia.przystanekNip, konsylia: partia.konsylia || [] };
@@ -156,9 +156,10 @@ function postepPartii(nazwa) {
     return { blad: `Nie ma partii „${nazwa}".` };
   }
   const partia = wczytajPartie(plikPartii(nazwa));
+  const reczna = partia.sciezka === "reczna";
   const firmy = partia.firmy.map((f) => ({
     nazwa: f.nazwa,
-    ...krokFirmy(f),
+    ...(reczna && !f.pomin && !f.tozsamosc && !f.nipPodany ? { krok: 1, etap: "brak numeru NIP" } : reczna && !f.pomin && !f.tozsamosc ? { krok: 1, etap: "sprawdzanie NIP-u w Białej Liście" } : krokFirmy(f)),
     status: f.status || null,
     kraj: f.rekord?.country_code || null,
     wlasciciel: f.rekord?.owner_name || null,
@@ -166,9 +167,9 @@ function postepPartii(nazwa) {
     bledy: f.bledy || [],
   }));
   const pod = podsumowaniePartii(partia);
-  const zostalo = firmy.filter((f) => f.etap !== "gotowe" && f.etap !== "pominięta" && f.etap !== "czeka na potwierdzenie NIP" && f.etap !== "śledztwo w czatach").length;
+  const zostalo = firmy.filter((f) => f.etap !== "gotowe" && f.etap !== "pominięta" && f.etap !== "czeka na potwierdzenie NIP" && f.etap !== "śledztwo w czatach" && f.etap !== "brak numeru NIP").length;
   // Do przystanku na NIP idzie tylko krok 1 i 2 (ok. 1,5 min na firmę); pełny przebieg to ok. 3,5 min.
-  const minutNaFirme = partia.przystanekNip ? 1.5 : 3.5;
+  const minutNaFirme = reczna ? 0.2 : partia.przystanekNip ? 1.5 : 3.5;
   const s = partia.statystyki || {};
   const tokenow = (s.tokenyWe || 0) + (s.tokenyCache || 0) + (s.tokenyWy || 0);
   return {
@@ -189,8 +190,8 @@ function postepPartii(nazwa) {
 // ---------- ścieżka pracy nad partią (pasek kroków na górze panelu) ----------
 // Stan każdego kroku liczymy z samej partii: nic dodatkowego nie jest zapisywane.
 const KROKI = [
-  { id: "lista", nazwa: "Lista firm", ekran: "nowa" },
-  { id: "nip", nazwa: "NIP-y", ekran: "nip" },
+  { id: "lista", nazwa: "Lista firm i NIP-y", ekran: "nowa" },
+  { id: "nip", nazwa: "Sprawdzenie NIP-ów", ekran: "nip" },
   { id: "rejestry", nazwa: "Rejestry", ekran: "praca" },
   { id: "czaty", nazwa: "Śledztwo w czatach", ekran: "czaty" },
   { id: "porownanie", nazwa: "Porównanie", ekran: "porownanie" },
@@ -216,8 +217,8 @@ function sciezkaPartii(nazwa) {
   const zaimp = zRekordem.filter((f) => f.decyzja === "zaimportowany").length;
   const stany = {
     lista: { gotowe: partia.firmy.length > 0, info: `${partia.firmy.length} firm${partia.firmy.length - n ? `, ${partia.firmy.length - n} pominiętych` : ""}`, teraz: "Dodaj firmy do partii." },
-    nip: { gotowe: n > 0 && nipOk === n, info: `${nipOk} z ${n}`, teraz: "Potwierdź numery NIP przy każdej firmie, brakujące znajdź w Gemini, potem kliknij „Sprawdzaj dalej”." },
-    rejestry: { gotowe: n > 0 && rejOk === n && !trwa, info: trwa ? "trwa" : `${rejOk} z ${n}`, teraz: trwa ? "Program pobiera dane z KRS i CRBR. Poczekaj, aż skończy (bez modeli, za darmo)." : "Wróć do przystanku NIP i kliknij „Sprawdzaj dalej”: program pobierze dane z rejestrów." },
+    nip: { gotowe: n > 0 && nipOk === n, info: `${nipOk} z ${n}`, teraz: trwa ? "Program sprawdza numery w Białej Liście MF i KRS. Poczekaj chwilę." : "Przy każdej firmie potwierdź numer, wymień go albo pomiń firmę. Potem „Numery potwierdzone: dalej do czatów”." },
+    rejestry: { gotowe: n > 0 && rejOk === n && !trwa, info: trwa ? "trwa" : `${rejOk} z ${n}`, teraz: trwa ? "Program pobiera dane z KRS i CRBR. Poczekaj, aż skończy (bez modeli, za darmo)." : "Wróć do kroku 2 i kliknij „Numery potwierdzone: dalej do czatów”: program pobierze brakujące dane z rejestrów." },
     czaty: { gotowe: n > 0 && zOdp === n, info: `${zOdp} z ${n} z odpowiedzią`, teraz: "Skopiuj prompt zbiorczy, wklej do Gemini / ChatGPT / Claude.ai i wklej odpowiedź z powrotem. Najlepiej z 2 czatów." },
     porownanie: { gotowe: n > 0 && przyjete === n, info: `${przyjete} z ${n} przyjętych`, teraz: "Porównaj odpowiedzi modeli i przyjmij jedną wersję przy każdej firmie." },
     przeglad: { gotowe: zRekordem.length > 0 && bezDecyzji === 0, info: `${zRekordem.length - bezDecyzji} z ${zRekordem.length} z decyzją`, teraz: "Obejrzyj rekordy i zatwierdź albo odrzuć każdą firmę." },
@@ -235,6 +236,7 @@ function przejdzNaReczna(sciezka, partia) {
   const kopia = path.join(KATALOG_PARTII, `kopia-przed-czatami-${path.basename(sciezka)}`);
   if (!fs.existsSync(kopia)) fs.copyFileSync(sciezka, kopia);
   partia.sciezka = "reczna";
+  partia.nipPotwierdzone = true;
   partia.przystanekNip = false;
   let wyczyszczone = 0;
   for (const f of partia.firmy) {
@@ -284,12 +286,16 @@ function tabelaNip(nazwa) {
         spolka: t.mf?.nazwa || t.nazwa_spolki || null,
         adres: t.mf?.adres || null,
         podanyPrzezCiebie: !!f.nipPodany,
+        spolkaPodana: f.spolkaPodana || t.spolkaPodana || null,
+        vat: t.mf?.statusVat || null,
         // "czeka": numer wpisany ręcznie albo wczytany z Gemini, jeszcze niesprawdzony w rejestrach
         wynik: !f.tozsamosc && f.nipPodany ? "czeka" : !t.nip ? "brak" : problem ? "zle" : uwaga || f.uwagiTozsamosci ? "uwaga" : "ok",
         powod: problem || f.uwagiTozsamosci || null,
         wBazie: t.istniejeWBazie ? { slug: t.istniejeWBazie.slug, kraj: t.istniejeWBazie.country_code, wlasciciel: t.istniejeWBazie.owner_name } : null,
         tenSamNipCo: (wgNipu.get(t.nip || f.nipPodany) || []).filter((n) => n !== f.nazwa),
-        blad: !f.tozsamosc && f.bledy?.length ? opiszBlad(f.bledy[0]) : null,
+        blad: f.pomin || f.tozsamosc || !f.bledy?.length ? null
+          : /claude|gemini|authenticat|limit|model|OAuth|tożsamość:/i.test(f.bledy[0]) ? "wcześniejsze szukanie numeru automatem nie powiodło się; wklej numer z czatu"
+          : opiszBlad(f.bledy[0]),
         pomin: !!f.pomin,
         gotowa: !!f.rekord,
       };
@@ -455,6 +461,7 @@ const serwer = http.createServer(async (req, res) => {
       if (zadanieAutomatuTrwa()) return json(res, { blad: "Automat już pracuje. Poczekaj albo zatrzymaj poprzednią partię." }, 409);
       const nazwa = String(dane.partia || dzisiaj()).trim().replace(/[^\w\-.]/g, "-");
       const argumenty = [path.join(KATALOG, "automat.mjs"), "--partia", nazwa];
+      if (dane.reczna && dane.kategoria) return json(res, { blad: "Propozycje firm z kategorii robi model. W ścieżce bez modeli wpisz listę firm." }, 400);
       if (dane.kategoria) argumenty.push("--kategoria", String(dane.kategoria), "--seed", String(Number(dane.seed) || 40));
       const firmy = (dane.firmy || "").split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
       if (firmy.length) {
@@ -465,6 +472,12 @@ const serwer = http.createServer(async (req, res) => {
       }
       if (!firmy.length && !dane.kategoria && !fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Podaj nazwy firm albo wybierz kategorię." }, 400);
       if (dane.reweryfikacja) argumenty.push("--reweryfikacja");
+      // Ścieżka ręczna (domyślna): numery z czatu sprawdzają tylko rejestry (MF, KRS, CRBR), zero modeli.
+      if (dane.reczna) {
+        argumenty.push("--tylko-rejestry", "--crbr", "--sciezka", "reczna");
+        const z = zadanieProcesu({ typ: "automat", opis: `Sprawdzenie NIP-ów (${nazwa})`, plik: argumenty[0], argumenty: argumenty.slice(1), partia: nazwa });
+        return json(res, { ok: true, partia: nazwa, zadanie: z.id });
+      }
       if (dane.crbr) argumenty.push("--crbr");
       if (dane.bezGieldy) argumenty.push("--bez-gieldy");
       if (dane.dokladnaKontrola) argumenty.push("--model-kontrola", "opus");
@@ -481,6 +494,11 @@ const serwer = http.createServer(async (req, res) => {
       const nazwa = String(dane.partia || "");
       if (!fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Nie ma takiej partii." }, 404);
       const argumenty = ["--partia", nazwa];
+      if (dane.tylkoRejestry) {
+        // "Sprawdź ponownie" na przystanku: wpisane numery sprawdzają MF i KRS, bez modelu.
+        const z = zadanieProcesu({ typ: "automat", opis: `Sprawdzenie NIP-ów (${nazwa})`, plik: path.join(KATALOG, "automat.mjs"), argumenty: [...argumenty, "--tylko-rejestry", "--crbr"], partia: nazwa });
+        return json(res, { ok: true, partia: nazwa, zadanie: z.id });
+      }
       if (dane.tylkoNip) argumenty.push("--stop-po-nip");
       if (dane.nipModel === "gemini" || dane.nipModel === "claude") argumenty.push("--nip-model", dane.nipModel);
       if (dane.crbr) argumenty.push("--crbr");
@@ -499,10 +517,11 @@ const serwer = http.createServer(async (req, res) => {
     // "szukaj" (szukaj numeru jeszcze raz) albo "pomin". Wpisany ręcznie NIP ma pierwszeństwo
     // i sprawdzają go same rejestry. Bez `ponow` tylko liczymy, co wymaga sprawdzenia.
     if (req.method === "POST" && p === "/api/panel/nip") {
-      const { partia: nazwa, zmiany, ponow, zapiszNumery } = await cialo();
+      const { partia: nazwa, zmiany, ponow, zapiszNumery, reczna } = await cialo();
       const sciezka = plikPartii(nazwa);
       const partia = wczytajPartie(sciezka);
       const doSprawdzeniaNazwy = [];
+      const czekaNaNumer = [];
       const wyczyscTozsamosc = (f) => {
         delete f.tozsamosc;
         delete f.rejestr;
@@ -529,6 +548,7 @@ const serwer = http.createServer(async (req, res) => {
           }
           wyczyscTozsamosc(f);
           f.nipPodany = nowy;
+          if (zm.spolka) f.spolkaPodana = String(zm.spolka).trim(); else delete f.spolkaPodana;
           f.pomin = false;
           delete f.szukajDokladnie;
           zapisane.push(f.nazwa);
@@ -550,11 +570,16 @@ const serwer = http.createServer(async (req, res) => {
           if (ponow) {
             wyczyscTozsamosc(f);
             f.nipPodany = nowy;
+            delete f.spolkaPodana; // spółka z czatu dotyczyła poprzedniego numeru
             delete f.szukajDokladnie;
           }
         } else if (!f.tozsamosc && f.nipPodany && decyzja !== "szukaj") {
           // numer już zapisany (ręcznie albo z Gemini), czeka tylko na sprawdzenie w rejestrach
           doSprawdzeniaNazwy.push(f.nazwa);
+        } else if (reczna && (decyzja === "szukaj" || !f.tozsamosc)) {
+          // Ścieżka ręczna: numer do wymiany albo brak numeru. Nikt go nie szuka automatem,
+          // czeka na numer z czatu (blok Gemini) albo na "Pomiń firmę".
+          czekaNaNumer.push(f.nazwa);
         } else if (decyzja === "szukaj" || !f.tozsamosc) {
           doSprawdzeniaNazwy.push(f.nazwa);
           if (ponow) {
@@ -568,7 +593,7 @@ const serwer = http.createServer(async (req, res) => {
         }
       }
       zapiszPartie(sciezka, partia);
-      return json(res, { ok: true, doSprawdzenia: doSprawdzeniaNazwy.length, nazwy: doSprawdzeniaNazwy });
+      return json(res, { ok: true, doSprawdzenia: doSprawdzeniaNazwy.length, nazwy: doSprawdzeniaNazwy, czekaNaNumer });
     }
 
     // ---------- ścieżka ręczna: śledztwo w czatach ----------
