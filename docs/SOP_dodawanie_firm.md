@@ -11,7 +11,50 @@ Zasada nadrzędna: **automat proponuje, Ty zatwierdzasz.** Nic nie trafia do tab
 
 ---
 
-## 1. Co robi automat
+## 0. Domyślna ścieżka: śledztwo w czatach (od 21.09.2026)
+
+Na planie Claude Pro śledztwo automatem (osobne wywołania `claude -p` z wyszukiwaniem dla
+każdej firmy) przekraczało limity. Dlatego **domyślnie panel nie wywołuje żadnego modelu**.
+Kod robi to, co darmowe (Biała Lista MF, KRS, historia KRS, CRBR, bankier), a śledztwo
+i opisy robisz sam w czatach (Gemini, ChatGPT, Claude.ai) na prompcie zbiorczym z panelu.
+
+Nad ekranami partii jest pasek ścieżki. Pokazuje, na którym kroku jesteś i co zrobić teraz:
+
+1. **Lista firm** → 2. **NIP-y** (przystanek; brakujące numery z Gemini, kopiuj i wklej)
+→ 3. **Rejestry** („Sprawdzaj dalej: rejestry i czaty”, same rejestry, bez modelu)
+→ 4. **Śledztwo w czatach** → 5. **Porównanie** → 6. **Przegląd** → 7. **Import**
+→ 8. **Logotypy**.
+
+**Śledztwo w czatach:**
+
+- Wybierz czat, z którym pracujesz, i kliknij „Kopiuj prompt”. Liczba firm w prompcie nie jest
+  ograniczona (domyślnie wszystkie w jednej paczce). Na liście możesz też podzielić je po 10–40.
+  W prompcie są już fakty z rejestrów, metodologia (Ostateczny Właściciel, Efektywna Kontrola,
+  Złota Klatka, drzewo D1–D4 i reguły B1–B12) i wzór odpowiedzi w JSON.
+- Wklej prompt do czatu z włączonym wyszukiwaniem. Odpowiedź wklej z powrotem do panelu. Parser
+  toleruje tekst wokół, brak bloku ```json i drobne błędy składni. Ucięta odpowiedź:
+  napisz w czacie „kontynuuj” i wklej każdą część osobno. Zakres „bez odpowiedzi od wybranego
+  czatu” zbuduje prompt tylko dla brakujących firm.
+- Najlepiej zebrać odpowiedzi z 2 różnych czatów. Zapis trafia od razu do partii
+  (`sledztwaReczne`), odświeżenie strony niczego nie gubi.
+
+**Porównanie:** czaty obok siebie (kraj, właściciel, reguła, łańcuch ze źródłami). „Przyjmij tę
+wersję” albo „Przyjmij wszystkie zgodne” składa rekord i firma trafia do przeglądu. Pewność
+liczy kod ze źródeł:
+
+- zgoda czatów sama nie daje WYSOKIEJ, potrzebne jest źródło poziomu 1–2 dla pakietu kontrolnego,
+- jeden czat to najwyżej ŚREDNIA,
+- niezgoda czatów co do kraju albo właściciela to KONFLIKT.
+
+„Cofnij przyjęcie” wraca do porównania.
+
+**Automat Claude (opcja płatna):** na przystanku NIP, w zwiniętej sekcji „Śledztwo automatem
+Claude”. To kilkaset tysięcy do ponad miliona tokenów na firmę z limitu subskrypcji. Używaj
+tylko dla pojedynczej trudnej firmy (pozostałe oznacz „Pomiń”). Opis kroków automatu jest niżej.
+
+---
+
+## 1. Co robi automat (opcja płatna)
 
 Dla każdej firmy z listy (albo z kategorii) wykonuje pięć kroków i zapisuje wynik do pliku
 partii `data/robocze/automat/partia-<nazwa>.json`:
@@ -139,13 +182,16 @@ w nazwie spółki, co przy spółkach-matkach jest normalne), *nie zgadza się*.
 
 - poprawiasz numer → **Zapisz poprawki i sprawdź ponownie** (sprawdza tylko poprawione),
 - odznaczasz firmę, która ma nie iść dalej,
-- **Sprawdzaj dalej** uruchamia kroki 3–5.
+- **Sprawdzaj dalej: rejestry i czaty** pobiera dane z rejestrów (bez modelu) i prowadzi do
+  ekranu „Śledztwo w czatach”; stare błędy limitu z partii znikają (kopia pliku:
+  `kopia-przed-czatami-partia-<nazwa>.json`),
+- sekcja **Śledztwo automatem Claude** uruchamia kroki 3–5 automatem (płatne, patrz sekcja 0).
 
 ### Ekran 3: Moje partie
 
 Lista partii z licznikami (pewne / do obejrzenia / konflikty / zatwierdzone) i stanem.
 Kliknięcie „Otwórz" prowadzi tam, gdzie trzeba: do przystanku, do pracy w toku albo
-do przeglądu.
+do przeglądu. Partie na ścieżce ręcznej otwierają się na bieżącym kroku z paska ścieżki.
 
 ### Ekran 4: Przegląd
 
