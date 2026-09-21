@@ -18,6 +18,7 @@ import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
 import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje } from "./lib/supabase.mjs";
+import { czekaNaCzaty, cofnijWersje, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
 
 const KATALOG = path.dirname(fileURLToPath(import.meta.url));
@@ -118,14 +119,18 @@ function krokFirmy(f) {
   if (f.bledy?.length && !f.tozsamosc) return { krok: 1, etap: "błąd" };
   if (!f.tozsamosc) return { krok: 1, etap: "szukanie NIP-u" };
   if (!f.rejestr) return { krok: 2, etap: "pobieranie odpisu z KRS" };
-  if (!f.sledztwo) return { krok: 3, etap: f.etapy?.sledztwo === "czeka na potwierdzenie NIP" ? "czeka na potwierdzenie NIP" : "śledztwo właścicielskie" };
+  if (!f.sledztwo) {
+    if (f.etapy?.sledztwo === "czeka na potwierdzenie NIP") return { krok: 3, etap: "czeka na potwierdzenie NIP" };
+    if (/czeka na czaty|--tylko-rejestry/.test(f.etapy?.sledztwo || "")) return { krok: 3, etap: "śledztwo w czatach" };
+    return { krok: 3, etap: "śledztwo właścicielskie" };
+  }
   if (!f.kontrola) return { krok: 4, etap: "samokontrola" };
   if (!f.opisy) return { krok: 5, etap: "pisanie opisów" };
   return { krok: 5, etap: "kończenie" };
 }
 
 function podsumowaniePartii(partia) {
-  const s = { firm: partia.firmy.length, WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, gotowe: 0, zatwierdzone: 0, zaimportowane: 0, pominiete: 0, bledy: 0, czekaNaNip: 0 };
+  const s = { firm: partia.firmy.length, WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, gotowe: 0, zatwierdzone: 0, zaimportowane: 0, pominiete: 0, bledy: 0, czekaNaNip: 0, czekaNaCzaty: 0 };
   for (const f of partia.firmy) {
     if (f.pomin) { s.pominiete++; continue; }
     if (f.status) s[f.status]++;
@@ -134,11 +139,12 @@ function podsumowaniePartii(partia) {
     if (f.decyzja === "zaimportowany") s.zaimportowane++;
     if (f.bledy?.length) s.bledy++;
     if (f.etapy?.sledztwo === "czeka na potwierdzenie NIP") s.czekaNaNip++;
+    if (partia.sciezka === "reczna" && czekaNaCzaty(f)) s.czekaNaCzaty++;
   }
-  return { ...s, tryb: partia.tryb || "nowe", utworzono: partia.utworzono || null, przystanekNip: !!partia.przystanekNip, konsylia: partia.konsylia || [] };
+  return { ...s, sciezka: partia.sciezka || "automat", tryb: partia.tryb || "nowe", utworzono: partia.utworzono || null, przystanekNip: !!partia.przystanekNip, konsylia: partia.konsylia || [] };
 }
 
-const pustePodsumowanie = { firm: 0, WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, gotowe: 0, zatwierdzone: 0, zaimportowane: 0, pominiete: 0, bledy: 0, czekaNaNip: 0, tryb: "nowe", konsylia: [] };
+const pustePodsumowanie = { firm: 0, WYSOKA: 0, SREDNIA: 0, KONFLIKT: 0, gotowe: 0, zatwierdzone: 0, zaimportowane: 0, pominiete: 0, bledy: 0, czekaNaNip: 0, czekaNaCzaty: 0, tryb: "nowe", konsylia: [] };
 const zadanieDlaPartii = (nazwa) => [...zadania.values()].filter((z) => z.partia === nazwa && z.status === "pracuje").map((z) => z.id)[0] || null;
 
 function postepPartii(nazwa) {
@@ -160,7 +166,7 @@ function postepPartii(nazwa) {
     bledy: f.bledy || [],
   }));
   const pod = podsumowaniePartii(partia);
-  const zostalo = firmy.filter((f) => f.etap !== "gotowe" && f.etap !== "pominięta" && f.etap !== "czeka na potwierdzenie NIP").length;
+  const zostalo = firmy.filter((f) => f.etap !== "gotowe" && f.etap !== "pominięta" && f.etap !== "czeka na potwierdzenie NIP" && f.etap !== "śledztwo w czatach").length;
   // Do przystanku na NIP idzie tylko krok 1 i 2 (ok. 1,5 min na firmę); pełny przebieg to ok. 3,5 min.
   const minutNaFirme = partia.przystanekNip ? 1.5 : 3.5;
   const s = partia.statystyki || {};
@@ -178,6 +184,68 @@ function postepPartii(nazwa) {
       ? { wywolan: partia.statystykiGemini.wywolan, tokenow: partia.statystykiGemini.tokenyWe + partia.statystykiGemini.tokenyCache + partia.statystykiGemini.tokenyWy }
       : null,
   };
+}
+
+// ---------- ścieżka pracy nad partią (pasek kroków na górze panelu) ----------
+// Stan każdego kroku liczymy z samej partii: nic dodatkowego nie jest zapisywane.
+const KROKI = [
+  { id: "lista", nazwa: "Lista firm", ekran: "nowa" },
+  { id: "nip", nazwa: "NIP-y", ekran: "nip" },
+  { id: "rejestry", nazwa: "Rejestry", ekran: "praca" },
+  { id: "czaty", nazwa: "Śledztwo w czatach", ekran: "czaty" },
+  { id: "porownanie", nazwa: "Porównanie", ekran: "porownanie" },
+  { id: "przeglad", nazwa: "Przegląd", ekran: "przeglad" },
+  { id: "import", nazwa: "Import", ekran: "import" },
+  { id: "logo", nazwa: "Logotypy", ekran: "logo" },
+];
+
+function sciezkaPartii(nazwa) {
+  if (!nazwa || !fs.existsSync(plikPartii(nazwa))) return { blad: "Nie wybrano partii." };
+  const partia = wczytajPartie(plikPartii(nazwa));
+  const akt = partia.firmy.filter((f) => !f.pomin);
+  const n = akt.length;
+  const ile = (war) => akt.filter(war).length;
+  const trwa = !!zadanieDlaPartii(nazwa);
+  const nipOk = ile((f) => f.tozsamosc && f.etapy?.sledztwo !== "czeka na potwierdzenie NIP");
+  const rejOk = ile((f) => f.rejestr || f.sledztwo);
+  const zOdp = ile((f) => f.sledztwo || Object.keys(f.sledztwaReczne || {}).length);
+  const przyjete = ile((f) => f.sledztwo);
+  const zRekordem = akt.filter((f) => f.rekord);
+  const bezDecyzji = zRekordem.filter((f) => !f.decyzja).length;
+  const zatw = zRekordem.filter((f) => f.decyzja === "zatwierdzony").length;
+  const zaimp = zRekordem.filter((f) => f.decyzja === "zaimportowany").length;
+  const stany = {
+    lista: { gotowe: partia.firmy.length > 0, info: `${partia.firmy.length} firm${partia.firmy.length - n ? `, ${partia.firmy.length - n} pominiętych` : ""}`, teraz: "Dodaj firmy do partii." },
+    nip: { gotowe: n > 0 && nipOk === n, info: `${nipOk} z ${n}`, teraz: "Potwierdź numery NIP przy każdej firmie, brakujące znajdź w Gemini, potem kliknij „Sprawdzaj dalej”." },
+    rejestry: { gotowe: n > 0 && rejOk === n && !trwa, info: trwa ? "trwa" : `${rejOk} z ${n}`, teraz: trwa ? "Program pobiera dane z KRS i CRBR. Poczekaj, aż skończy (bez modeli, za darmo)." : "Wróć do przystanku NIP i kliknij „Sprawdzaj dalej”: program pobierze dane z rejestrów." },
+    czaty: { gotowe: n > 0 && zOdp === n, info: `${zOdp} z ${n} z odpowiedzią`, teraz: "Skopiuj prompt zbiorczy, wklej do Gemini / ChatGPT / Claude.ai i wklej odpowiedź z powrotem. Najlepiej z 2 czatów." },
+    porownanie: { gotowe: n > 0 && przyjete === n, info: `${przyjete} z ${n} przyjętych`, teraz: "Porównaj odpowiedzi modeli i przyjmij jedną wersję przy każdej firmie." },
+    przeglad: { gotowe: zRekordem.length > 0 && bezDecyzji === 0, info: `${zRekordem.length - bezDecyzji} z ${zRekordem.length} z decyzją`, teraz: "Obejrzyj rekordy i zatwierdź albo odrzuć każdą firmę." },
+    import: { gotowe: zaimp > 0 && zatw === 0, info: `${zaimp} w bazie${zatw ? `, ${zatw} czeka` : ""}`, teraz: "Pokaż plan importu, sprawdź go i zapisz zatwierdzone firmy do bazy." },
+    logo: { gotowe: false, info: "", teraz: "Pobierz logotypy nowych firm i wyślij je na stronę." },
+  };
+  const kroki = KROKI.map((k) => ({ ...k, ...stany[k.id] }));
+  const biezacy = kroki.find((k) => !k.gotowe) || kroki[kroki.length - 1];
+  return { nazwa, sciezka: partia.sciezka || "automat", kroki, biezacy: biezacy.id };
+}
+
+// Przejście na ścieżkę ręczną: stare błędy limitu i "czeka na potwierdzenie NIP" znikają,
+// firmy czekają na odpowiedzi z czatów. Kopia pliku przed pierwszą zmianą (poza listą partii).
+function przejdzNaReczna(sciezka, partia) {
+  const kopia = path.join(KATALOG_PARTII, `kopia-przed-czatami-${path.basename(sciezka)}`);
+  if (!fs.existsSync(kopia)) fs.copyFileSync(sciezka, kopia);
+  partia.sciezka = "reczna";
+  partia.przystanekNip = false;
+  let wyczyszczone = 0;
+  for (const f of partia.firmy) {
+    const przed = (f.bledy || []).length;
+    f.bledy = (f.bledy || []).filter((b) => !/spend limit|usage limit|monthly|hit your|^śledztwo:|^kontrola:|^opisy:/i.test(b));
+    wyczyszczone += przed - f.bledy.length;
+    if (f.pomin || f.sledztwo) continue;
+    f.etapy = f.etapy || {};
+    if (!f.etapy.sledztwo || /^błąd|czeka na potwierdzenie NIP|^czeka$/.test(f.etapy.sledztwo)) f.etapy.sledztwo = "czeka na czaty";
+  }
+  return wyczyszczone;
 }
 
 // Błędy z wywołań modelu po ludzku (surowy tekst zostaje w logu technicznym).
@@ -501,6 +569,117 @@ const serwer = http.createServer(async (req, res) => {
       }
       zapiszPartie(sciezka, partia);
       return json(res, { ok: true, doSprawdzenia: doSprawdzeniaNazwy.length, nazwy: doSprawdzeniaNazwy });
+    }
+
+    // ---------- ścieżka ręczna: śledztwo w czatach ----------
+    if (req.method === "GET" && p === "/api/panel/sciezka") return json(res, sciezkaPartii(url.searchParams.get("partia")));
+
+    // "Sprawdzaj dalej" z przystanku: porządki w partii i same rejestry (KRS, historia, CRBR, giełda).
+    // Żadnego modelu: automat z --tylko-rejestry nie wymaga logowania Claude.
+    if (req.method === "POST" && p === "/api/panel/reczna") {
+      const { partia: nazwa } = await cialo();
+      if (zadanieAutomatuTrwa()) return json(res, { blad: "Automat już pracuje." }, 409);
+      const sciezka = plikPartii(nazwa);
+      if (!fs.existsSync(sciezka)) return json(res, { blad: "Nie ma takiej partii." }, 404);
+      const partia = wczytajPartie(sciezka);
+      const wyczyszczone = przejdzNaReczna(sciezka, partia);
+      zapiszPartie(sciezka, partia);
+      const potrzebaRejestrow = partia.firmy.some((f) => !f.pomin && f.tozsamosc && !f.sledztwo && (!f.rejestr || !f.crbr));
+      if (!potrzebaRejestrow) return json(res, { ok: true, wyczyszczone, zadanie: null });
+      const z = zadanieProcesu({ typ: "automat", opis: `Rejestry (${nazwa})`, plik: path.join(KATALOG, "automat.mjs"), argumenty: ["--partia", nazwa, "--tylko-rejestry", "--crbr"], partia: nazwa });
+      return json(res, { ok: true, wyczyszczone, zadanie: z.id });
+    }
+
+    if (req.method === "GET" && p === "/api/panel/czaty") {
+      const nazwa = url.searchParams.get("partia");
+      if (!nazwa || !fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Nie wybrano partii." });
+      const partia = wczytajPartie(plikPartii(nazwa));
+      const firmy = partia.firmy.filter((f) => !f.pomin && f.tozsamosc).map((f) => {
+        const por = porownanie(f);
+        return {
+          nazwa: f.nazwa,
+          nip: f.tozsamosc?.nip || null,
+          spolka: (f.rejestr && !f.rejestr.blad && f.rejestr.nazwa) || f.tozsamosc?.mf?.nazwa || f.tozsamosc?.nazwa_spolki || null,
+          krs: f.tozsamosc?.krs || null,
+          maRejestr: !!(f.rejestr && !f.rejestr.blad),
+          uwagiTozsamosci: f.uwagiTozsamosci || null,
+          wBazie: f.tozsamosc?.istniejeWBazie ? { slug: f.tozsamosc.istniejeWBazie.slug, kraj: f.tozsamosc.istniejeWBazie.country_code, wlasciciel: f.tozsamosc.istniejeWBazie.owner_name } : null,
+          odpowiedzi: por.modele.map((m) => ({ model: m.model, kiedy: m.kiedy, sledztwo: m.sledztwo, opisy: m.opisy, zgodneZ: por.wiersze.find((w) => w.model === m.model)?.zgodneZ || [] })),
+          stan: por.stan,
+          przyjeta: f.przyjetaWersja?.model || (f.sledztwo ? "automat" : null),
+          status: f.status || null,
+          konflikty: f.konflikty || [],
+          decyzja: f.decyzja || null,
+        };
+      });
+      const bezNip = partia.firmy.filter((f) => !f.pomin && !f.tozsamosc).map((f) => f.nazwa);
+      return json(res, { nazwa, sciezka: partia.sciezka || "automat", firmy, bezNip });
+    }
+
+    // Prompt zbiorczy: wybrane firmy (lista nazw z panelu) w jednej paczce; bez limitu liczby.
+    if (req.method === "POST" && p === "/api/panel/prompt-zbiorczy") {
+      const { partia: nazwa, nazwy } = await cialo();
+      const partia = wczytajPartie(plikPartii(nazwa));
+      const firmy = (nazwy || []).map((n) => partia.firmy.find((f) => f.nazwa === n)).filter((f) => f && f.tozsamosc);
+      if (!firmy.length) return json(res, { blad: "Brak firm do promptu." }, 400);
+      return json(res, { tekst: promptZbiorczy(firmy, { kategorie, dzisiaj: dzisiaj() }), firm: firmy.length });
+    }
+
+    if (req.method === "POST" && p === "/api/panel/czaty-wklej") {
+      const { partia: nazwa, model, tekst } = await cialo();
+      const m = String(model || "").trim();
+      if (!m) return json(res, { blad: "Wybierz, który to model." }, 400);
+      if (!String(tekst || "").trim()) return json(res, { blad: "Najpierw wklej odpowiedź." }, 400);
+      const sciezka = plikPartii(nazwa);
+      const partia = wczytajPartie(sciezka);
+      const w = zapiszOdpowiedz(partia, m, tekst);
+      if (!w.obiektow) return json(res, { blad: "Nie znalazłem w odpowiedzi żadnego obiektu JSON. Poproś model: „Podaj wynik jako jeden blok ```json z tablicą”." }, 400);
+      zapiszPartie(sciezka, partia);
+      return json(res, { ok: true, ...w });
+    }
+
+    if (req.method === "POST" && p === "/api/panel/czaty-usun") {
+      const { partia: nazwa, model, firma } = await cialo();
+      const sciezka = plikPartii(nazwa);
+      const partia = wczytajPartie(sciezka);
+      let n = 0;
+      for (const f of partia.firmy) {
+        if (firma && f.nazwa !== firma) continue;
+        if (f.sledztwaReczne?.[model]) { delete f.sledztwaReczne[model]; n++; }
+      }
+      zapiszPartie(sciezka, partia);
+      return json(res, { ok: true, usuniete: n });
+    }
+
+    // Przyjęcie wersji: jedna firma ({firma, model}) albo wszystkie zgodne naraz ({zgodne: true, model}).
+    if (req.method === "POST" && p === "/api/panel/przyjmij") {
+      const { partia: nazwa, firma, model, zgodne } = await cialo();
+      const sciezka = plikPartii(nazwa);
+      const partia = wczytajPartie(sciezka);
+      const przyjete = [], bledy = [];
+      const cele = zgodne
+        ? partia.firmy.filter((f) => !f.pomin && !f.sledztwo && porownanie(f).stan === "zgodne")
+        : partia.firmy.filter((f) => f.nazwa === firma);
+      for (const f of cele) {
+        const wersje = Object.keys(f.sledztwaReczne || {});
+        const m = wersje.includes(model) ? model : zgodne ? wersje[0] : null;
+        if (!m) { bledy.push(`${f.nazwa}: brak odpowiedzi modelu ${model}`); continue; }
+        try { przyjmijWersje(f, m, { kategorie, dzisiaj: dzisiaj() }); przyjete.push(f.nazwa); } catch (e) { bledy.push(`${f.nazwa}: ${e.message}`); }
+      }
+      zapiszPartie(sciezka, partia);
+      return json(res, { ok: true, przyjete, bledy });
+    }
+
+    if (req.method === "POST" && p === "/api/panel/cofnij-wersje") {
+      const { partia: nazwa, firma } = await cialo();
+      const sciezka = plikPartii(nazwa);
+      const partia = wczytajPartie(sciezka);
+      const f = partia.firmy.find((x) => x.nazwa === firma);
+      if (!f) return json(res, { blad: "Nie ma takiej firmy." }, 404);
+      if (f.decyzja === "zaimportowany") return json(res, { blad: "Firma jest już w bazie. Popraw ją w przeglądzie." }, 400);
+      cofnijWersje(f);
+      zapiszPartie(sciezka, partia);
+      return json(res, { ok: true });
     }
 
     if (req.method === "GET" && p === "/api/panel/import-plan") {

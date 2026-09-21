@@ -93,6 +93,29 @@
   .gemini-reczny{border:1px dashed var(--linia);border-radius:6px;padding:12px 14px;margin:4px 0 14px;background:#fcfbf9}
   .gemini-reczny summary{cursor:pointer;font-size:14px}
   .gemini-reczny summary b{color:var(--akcent)}
+  .sciezka{margin:-8px 0 22px}
+  .sciezka .kroki{display:flex;gap:4px;flex-wrap:wrap}
+  .sciezka .kroki a{flex:1 1 104px;min-width:0;display:flex;gap:7px;align-items:flex-start;padding:7px 8px;border:1px solid var(--linia);border-radius:5px;background:#fff;cursor:pointer;font-size:12.5px;line-height:1.3;color:var(--tekst);text-decoration:none}
+  .sciezka .kroki a i{flex:none;width:19px;height:19px;border-radius:50%;background:#e9e6e0;color:var(--slaby);font-style:normal;display:flex;align-items:center;justify-content:center;font-size:11px}
+  .sciezka .kroki a small{display:block;color:var(--slaby);font-size:11.5px}
+  .sciezka .kroki a.zrob i{background:var(--zielony);color:#fff}
+  .sciezka .kroki a.teraz{border-color:var(--akcent);box-shadow:inset 0 -2px 0 var(--akcent)}
+  .sciezka .kroki a.teraz i{background:var(--akcent);color:#fff}
+  .sciezka .kroki a.tu{background:#f3efe8}
+  .sciezka .teraz-opis{margin-top:9px;font-size:13.5px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .paczka{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linia);font-size:13.5px}
+  .paczka:last-child{border-bottom:0}
+  .paczka .kto{color:var(--slaby);flex:1;min-width:0}
+  .modele{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .model{border:1px solid var(--linia);border-radius:5px;padding:10px 12px;font-size:13.5px;background:#fff}
+  .model.zgodny{border-top:3px solid var(--zielony)} .model.niezgodny{border-top:3px solid var(--czerwony)} .model.przyjety{background:#f1f8f3}
+  .model h3{margin:0 0 6px;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .model .kraj{font-size:19px;font-weight:600}
+  .model ol{padding-left:18px;margin:6px 0}
+  .model li{margin-bottom:3px}
+  .model .male{font-size:12.5px;color:var(--slaby)}
+  .rozne{color:var(--czerwony)}
+  .x{border:0;background:none;padding:0 2px;color:var(--slaby);cursor:pointer}
 </style>
 </head>
 <body>
@@ -104,6 +127,8 @@
       <a data-e="nowa"><i class="nr">2</i> Nowa partia</a>
       <a data-e="praca"><i class="nr">→</i> Praca w toku</a>
       <a data-e="nip"><i class="nr">→</i> Przystanek na NIP</a>
+      <a data-e="czaty"><i class="nr">→</i> Śledztwo w czatach</a>
+      <a data-e="porownanie"><i class="nr">→</i> Porównanie czatów</a>
       <a data-e="partie"><i class="nr">3</i> Moje partie</a>
       <a data-e="przeglad"><i class="nr">4</i> Przegląd</a>
       <a data-e="konsylium"><i class="nr">→</i> Konsylium modeli</a>
@@ -118,6 +143,7 @@
   </aside>
 
   <main>
+    <div id="sciezka" class="sciezka" hidden></div>
     <!-- 1. GOTOWOŚĆ -->
     <section class="ekran akt" id="e-start">
       <h1>Gotowość</h1>
@@ -227,7 +253,7 @@
     <section class="ekran" id="e-nip">
       <h1>Sprawdzenie numerów NIP</h1>
       <p class="podtytul" id="nipPodtytul">Zanim automat ruszy dalej, potwierdź, że trafił we właściwe spółki.</p>
-      <div class="pasmo">Program znalazł numery NIP i sprawdził je w Białej Liście Ministerstwa Finansów oraz w KRS. Dopiero po Twoim potwierdzeniu zacznie się dłuższa część, czyli śledztwo właścicielskie i opisy.</div>
+      <div class="pasmo">Program znalazł numery NIP i sprawdził je w Białej Liście Ministerstwa Finansów oraz w KRS. Po Twoim potwierdzeniu program pobierze za darmo dane z rejestrów (KRS, CRBR, giełda), a śledztwo zrobisz w czatach na prompcie zbiorczym. Żaden model nie jest wywoływany z panelu.</div>
       <div class="karta"><div id="nipTabela" class="pusto">Wczytuję…</div></div>
       <div class="karta">
         <details class="gemini-reczny" id="geminiNip">
@@ -264,10 +290,106 @@
             <option value="claude">szuka Claude</option>
           </select>
           <button class="duzy" id="btnSprawdzNip">Zapisz poprawki i sprawdź ponownie</button>
-          <button class="glowny duzy" id="btnDalej">Sprawdzaj dalej</button>
+          <button class="glowny duzy" id="btnDalej">Sprawdzaj dalej: rejestry i czaty</button>
         </div>
       </div>
+      <details class="gemini-reczny">
+        <summary>Śledztwo automatem Claude (płatne, zużywa limit subskrypcji)</summary>
+        <p style="font-size:13.5px;color:var(--slaby)">Stary przebieg: Claude sam szuka w internecie, osobno dla każdej firmy (śledztwo, samokontrola, opisy). Na planie Pro to kilkaset tysięcy do ponad miliona tokenów na firmę i łatwo przekroczyć limit tygodniowy albo miesięczny. Używaj tylko dla pojedynczej trudnej firmy: pozostałe oznacz wtedy „Pomiń firmę”.</p>
+        <button id="btnAutomatClaude">Uruchom automat Claude dla firm „Idzie dalej”</button>
+      </details>
     </section>
+
+    <!-- ŚLEDZTWO W CZATACH -->
+    <section class="ekran" id="e-czaty">
+      <h1>Śledztwo w czatach</h1>
+      <p class="podtytul" id="czatyPodtytul">Modele pracują w Twoich czatach, na subskrypcjach. Panel nie wywołuje żadnego modelu.</p>
+      <div class="karta rozdziel">
+        <label class="pole" style="max-width:320px;margin:0"><span>Czat, z którym teraz pracujesz</span>
+          <select id="czatyModel"><option>Gemini</option><option>ChatGPT</option><option>Claude</option><option>Grok</option><option>Perplexity</option><option>inny</option></select>
+        </label>
+        <div class="rzad">
+          <button data-model="https://gemini.google.com/app">Otwórz Gemini</button>
+          <button data-model="https://chatgpt.com/">Otwórz ChatGPT</button>
+          <button data-model="https://claude.ai/new">Otwórz Claude.ai</button>
+        </div>
+      </div>
+      <div id="czatyBezNip"></div>
+      <div class="karta">
+        <div class="etap">
+          <i class="nrb">1</i>
+          <div class="tresc-etapu">
+            <h2>Skopiuj prompt</h2>
+            <p>W prompcie są już fakty z rejestrów (NIP, KRS, wspólnicy, historia, CRBR, giełda), więc model szuka tylko tego, kto stoi wyżej, i pisze opisy. Liczba firm w paczce nie jest ograniczona.</p>
+            <div class="rzad" style="margin-bottom:10px">
+              <select id="czatyZakres" style="width:auto">
+                <option value="czekajace">Firmy bez przyjętej wersji</option>
+                <option value="bezModelu">Firmy bez odpowiedzi od wybranego czatu</option>
+                <option value="wszystkie">Wszystkie firmy z NIP-em</option>
+              </select>
+              <select id="czatyRozmiar" style="width:auto" title="Ile firm w jednej paczce">
+                <option value="0">wszystkie w jednej paczce</option>
+                <option value="10">po 10 firm</option>
+                <option value="20">po 20 firm</option>
+                <option value="30">po 30 firm</option>
+                <option value="40">po 40 firm</option>
+              </select>
+            </div>
+            <div id="czatyPaczki" class="pusto">Wczytuję…</div>
+            <pre class="prompt" id="czatyPodglad" style="display:none;margin-top:10px"></pre>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">2</i>
+          <div class="tresc-etapu">
+            <h2>Wklej do czatu</h2>
+            <p>Włącz wyszukiwanie w internecie (w Gemini i ChatGPT najlepiej tryb Deep Research, w Claude.ai wyszukiwanie). Przy długiej liście model może uciąć odpowiedź: napisz „kontynuuj” i wklej tutaj każdą część osobno. Panel dopisze je do tych samych firm.</p>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">3</i>
+          <div class="tresc-etapu">
+            <h2>Wklej odpowiedź tutaj</h2>
+            <p>Całą odpowiedź, razem z tekstem wokół. Program sam znajdzie JSON i dopasuje firmy. Zapis jest od razu w partii.</p>
+            <textarea id="czatyTekst" placeholder="Wklej tutaj odpowiedź czatu (Ctrl+V)"></textarea>
+            <div class="rzad" style="margin-top:10px"><button class="glowny" id="btnCzatyWczytaj">Wczytaj odpowiedź</button></div>
+            <div id="czatyWynik" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:12px"><h2 style="margin:0">Firmy i odpowiedzi</h2><span id="czatyLicznik" style="font-size:13.5px;color:var(--slaby)"></span></div>
+        <div id="czatyTabela" class="pusto">Wczytuję…</div>
+      </div>
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)">Najlepiej mieć odpowiedzi z 2 różnych czatów. Zgoda modeli nie podnosi pewności ponad źródła.</span>
+        <button class="glowny duzy" data-idz="porownanie">Przejdź do porównania</button>
+      </div>
+    </section>
+
+    <!-- PORÓWNANIE -->
+    <section class="ekran" id="e-porownanie">
+      <h1>Porównanie odpowiedzi</h1>
+      <p class="podtytul">Czaty obok siebie. Przy każdej firmie przyjmij jedną wersję: z niej powstanie rekord do przeglądu.</p>
+      <div class="karta rozdziel">
+        <div id="porPodsumowanie" class="pusto"></div>
+        <div class="rzad">
+          <select id="porFiltr" style="width:auto">
+            <option value="do">Do przyjęcia</option>
+            <option value="wszystkie">Wszystkie</option>
+          </select>
+          <select id="porModelZgodne" style="width:auto" title="Z którego czatu brać opisy, gdy modele się zgadzają"></select>
+          <button class="glowny" id="btnPrzyjmijZgodne">Przyjmij wszystkie zgodne</button>
+        </div>
+      </div>
+      <div id="porLista"></div>
+      <div class="karta rozdziel">
+        <span style="font-size:13.5px;color:var(--slaby)">Przyjęte firmy mają już rekord i czekają w przeglądzie.</span>
+        <button class="glowny duzy" data-idz="przeglad">Przejdź do przeglądu</button>
+      </div>
+    </section>
+
+
 
     <!-- 3. MOJE PARTIE -->
     <section class="ekran" id="e-partie">
@@ -438,12 +560,15 @@ function odswiezEkran() {
   if (STAN.ekran === "nowa") ekranNowa();
   if (STAN.ekran === "praca") ekranPraca();
   if (STAN.ekran === "nip") ekranNip();
+  if (STAN.ekran === "czaty") ekranCzaty();
+  if (STAN.ekran === "porownanie") ekranPorownanie();
   if (STAN.ekran === "partie") ekranPartie();
   if (STAN.ekran === "przeglad") ekranPrzeglad();
   if (STAN.ekran === "konsylium") ekranKonsylium();
   if (STAN.ekran === "import") ekranImport();
   if (STAN.ekran === "logo") ekranLogo();
   if (STAN.ekran === "backup") ekranBackup();
+  rysujSciezke();
 }
 
 // ---------- 1. gotowość ----------
@@ -606,11 +731,13 @@ async function ekranPraca() {
     const prawa = f.etap === "gotowe"
       ? `<span class="plakietka ${f.status === "WYSOKA" ? "p-ok" : f.status === "KONFLIKT" ? "p-zle" : "p-uwaga"}">${f.status === "WYSOKA" ? "gotowe · pewność wysoka" : f.status === "KONFLIKT" ? "gotowe · konflikt" : "gotowe · do obejrzenia"}</span><span>${esc(f.kraj || "")} ${f.wlasciciel ? "· " + esc(f.wlasciciel) : ""}</span>`
       : f.etap === "pominięta" ? `<span class="plakietka">pominięta</span>`
+      : f.etap === "śledztwo w czatach" ? `<span class="plakietka p-uwaga">czeka na śledztwo w czatach</span>${f.bledy.length ? `<span>${esc(f.bledy[0])}</span>` : ""}`
       : f.etap === "czeka na potwierdzenie NIP" ? `<span class="plakietka p-uwaga">czeka na potwierdzenie NIP</span><span>${esc(f.nip || "")}</span>`
       : f.bledy.length ? `<span class="plakietka p-zle">błąd</span><span>${esc(f.bledy[0])}</span>`
       : `<span>${esc(OPIS_KROKU[f.krok] || f.etap)}</span>`;
     return `<div class="krok"><b>${esc(f.nazwa)}</b>${prawa}</div>`;
   }).join("");
+  if (p.sciezka === "reczna" && p.czekaNaCzaty && !p.zadanie) $("#pracaCzas").innerHTML = `<a href="#" onclick="pokaz('czaty');return false">rejestry gotowe, przejdź do śledztwa w czatach</a>`;
   if (p.czekaNaNip && !p.zadanie) $("#pracaCzas").innerHTML = `<a href="#" onclick="pokaz('nip');return false">przejdź do potwierdzenia NIP-ów</a>`;
   if (STAN.zadanie) {
     const z = await pobierz("/api/panel/zadanie?id=" + STAN.zadanie);
@@ -712,8 +839,21 @@ $("#btnDalej").onclick = async () => {
   const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
   if (z.blad) return alert(z.blad);
   if (z.doSprawdzenia) return alert("Część firm czeka na ponowne sprawdzenie. Kliknij najpierw „Sprawdź ponownie”.");
+  const j = await wyslij("/api/panel/reczna", { partia: STAN.partia });
+  if (j.blad) return alert(j.blad);
+  if (j.zadanie) { STAN.zadanie = j.zadanie; pokaz("praca"); } else pokaz("czaty");
+};
+
+$("#btnAutomatClaude").onclick = async () => {
+  const z = await wyslij("/api/panel/nip", { partia: STAN.partia, zmiany: zmianyNip() });
+  if (z.blad) return alert(z.blad);
+  if (z.doSprawdzenia) return alert("Część firm czeka na ponowne sprawdzenie. Kliknij najpierw „Sprawdź ponownie”.");
   const ile = zmianyNip().filter((x) => x.decyzja === "dalej").length;
-  if (!confirm(`Ruszyć ze śledztwem właścicielskim dla ${ile} firm? To najcięższa część pracy modelu (kilka minut na firmę).`)) return;
+  if (!confirm(`UWAGA, KOSZT: automat Claude zrobi śledztwo dla ${ile} firm, każda osobno z wyszukiwaniem w internecie. To kilkaset tysięcy do ponad miliona tokenów na firmę z limitu subskrypcji Claude.
+
+Tańsza droga: „Sprawdzaj dalej: rejestry i czaty”.
+
+Na pewno uruchomić automat?`)) return;
   const j = await wyslij("/api/panel/dalej", { partia: STAN.partia });
   if (j.blad) return alert(j.blad);
   STAN.zadanie = j.zadanie;
@@ -853,6 +993,7 @@ async function ekranPartie() {
     const stan = p.blad ? `<span class="plakietka p-zle">uszkodzony plik</span>`
       : p.zaimportowane === p.zatwierdzone + p.zaimportowane && p.zaimportowane ? `<span class="plakietka p-ok">zaimportowana</span>`
       : p.czekaNaNip ? `<span class="plakietka p-uwaga">czeka na potwierdzenie NIP</span>`
+      : p.czekaNaCzaty ? `<span class="plakietka p-uwaga">${p.czekaNaCzaty} czeka na śledztwo w czatach</span>`
       : p.gotowe < p.firm - p.pominiete ? `<span class="plakietka p-uwaga">niedokończona</span>`
       : `<span class="plakietka">${p.zatwierdzone} zatwierdzonych${p.zaimportowane ? `, ${p.zaimportowane} w bazie` : ""}</span>`;
     return `<tr>
@@ -865,6 +1006,11 @@ async function ekranPartie() {
   $("#partieTabela").querySelectorAll("[data-partia]").forEach((b) => b.addEventListener("click", async () => {
     ustawPartie(b.dataset.partia);
     const p = STAN.partie.find((x) => x.nazwa === b.dataset.partia);
+    if (p && p.sciezka === "reczna") {
+      const s = await pobierz("/api/panel/sciezka?partia=" + encodeURIComponent(b.dataset.partia));
+      const k = (s.kroki || []).find((x) => x.id === s.biezacy);
+      return pokaz(k ? k.ekran : "czaty");
+    }
     pokaz(p && p.czekaNaNip ? "nip" : p && p.gotowe < p.firm - p.pominiete ? "praca" : "przeglad");
   }));
 }
@@ -928,6 +1074,178 @@ $("#btnPorownaj").onclick = async () => {
   $("#konsyliumTekst").value = "";
   alert(`Dopasowano ${j.dopasowane} z ${j.wierszy} wierszy. Niezgód: ${j.niezgody}.`);
   ekranKonsylium();
+};
+
+// ---------- ścieżka: pasek kroków nad ekranami partii ----------
+const EKRANY_SCIEZKI = ["nip", "praca", "czaty", "porownanie", "przeglad", "konsylium", "import", "logo"];
+async function rysujSciezke() {
+  const el = $("#sciezka");
+  if (!STAN.partia || !EKRANY_SCIEZKI.includes(STAN.ekran)) { el.hidden = true; return; }
+  const s = await pobierz("/api/panel/sciezka?partia=" + encodeURIComponent(STAN.partia));
+  if (s.blad) { el.hidden = true; return; }
+  const nr = s.kroki.findIndex((k) => k.id === s.biezacy);
+  const b = s.kroki[nr];
+  el.innerHTML = `<div class="kroki">${s.kroki.map((k, i) => `<a data-sc="${k.ekran}" class="${k.gotowe ? "zrob" : ""} ${k.id === s.biezacy ? "teraz" : ""} ${k.ekran === STAN.ekran ? "tu" : ""}"><i>${k.gotowe ? "✓" : i + 1}</i><span>${esc(k.nazwa)}<small>${esc(k.info)}</small></span></a>`).join("")}</div>
+    <div class="teraz-opis"><span>Partia <b>${esc(s.nazwa)}</b> · <b>Teraz, krok ${nr + 1}:</b> ${esc(b.teraz)}</span>${b.ekran !== STAN.ekran ? `<button class="glowny" data-sc="${b.ekran}">Przejdź do kroku ${nr + 1}</button>` : ""}</div>`;
+  el.hidden = false;
+  el.querySelectorAll("[data-sc]").forEach((a) => a.addEventListener("click", () => pokaz(a.dataset.sc)));
+}
+
+// ---------- śledztwo w czatach ----------
+let CZATY = { firmy: [], bezNip: [] };
+try { const m = localStorage.getItem("panel.czatModel"); if (m) $("#czatyModel").value = m; } catch {}
+$("#czatyModel").onchange = () => { try { localStorage.setItem("panel.czatModel", $("#czatyModel").value); } catch {} rysujPaczki(); };
+$("#czatyZakres").onchange = () => rysujPaczki();
+$("#czatyRozmiar").onchange = () => rysujPaczki();
+
+async function ekranCzaty() {
+  if (!STAN.partia) { $("#czatyTabela").innerHTML = '<span class="pusto">Nie wybrano partii. Wejdź w „Moje partie”.</span>'; return; }
+  const j = await pobierz("/api/panel/czaty?partia=" + encodeURIComponent(STAN.partia));
+  if (j.blad) { $("#czatyTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  CZATY = j;
+  $("#czatyPodtytul").textContent = `Partia ${j.nazwa}. Modele pracują w Twoich czatach, na subskrypcjach. Panel nie wywołuje żadnego modelu.`;
+  $("#czatyBezNip").innerHTML = j.bezNip.length ? `<div class="pasmo">${j.bezNip.length} firm bez potwierdzonego NIP-u nie wchodzi do promptu: ${esc(j.bezNip.join(", "))}. Wróć do <a href="#" onclick="pokaz('nip');return false">przystanku NIP</a>, jeśli mają wejść.</div>` : "";
+  rysujPaczki();
+  const zOdp = j.firmy.filter((f) => f.odpowiedzi.length).length;
+  $("#czatyLicznik").textContent = `${zOdp} z ${j.firmy.length} firm ma odpowiedź · ${j.firmy.filter((f) => f.przyjeta).length} przyjętych`;
+  $("#czatyTabela").innerHTML = j.firmy.length ? `<table><tr><th>Marka</th><th>Spółka</th><th>Odpowiedzi czatów</th><th>Stan</th></tr>${j.firmy.map((f) => `<tr>
+      <td><b>${esc(f.nazwa)}</b>${f.uwagiTozsamosci ? `<br><span style="font-size:12.5px;color:var(--bursztyn)">${esc(f.uwagiTozsamosci)}</span>` : ""}</td>
+      <td>${esc(f.spolka || "—")}<br><span style="font-size:12.5px;color:var(--slaby)">NIP ${esc(f.nip || "?")}${f.krs ? " · KRS " + esc(f.krs) : ""}${f.maRejestr ? "" : " · bez odpisu KRS"}</span></td>
+      <td>${f.odpowiedzi.map((o) => `<span class="plakietka">${esc(o.model)}: ${esc(o.sledztwo.country_code || "?")}<button class="x" title="Usuń tę odpowiedź" data-usun-firma="${esc(f.nazwa)}" data-usun-model="${esc(o.model)}">×</button></span>`).join(" ") || '<span class="pusto">brak</span>'}</td>
+      <td>${stanFirmy(f)}</td></tr>`).join("")}</table>
+      <div class="rzad" style="margin-top:12px">${[...new Set(j.firmy.flatMap((f) => f.odpowiedzi.map((o) => o.model)))].map((m) => `<button data-usun-model="${esc(m)}">Usuń wszystkie odpowiedzi: ${esc(m)}</button>`).join("")}</div>`
+    : '<span class="pusto">W tej partii nie ma firm z potwierdzonym NIP-em.</span>';
+  $("#czatyTabela").querySelectorAll("[data-usun-model]").forEach((b) => b.addEventListener("click", async () => {
+    const firma = b.dataset.usunFirma || null;
+    if (!confirm(firma ? `Usunąć odpowiedź ${b.dataset.usunModel} dla ${firma}?` : `Usunąć wszystkie odpowiedzi ${b.dataset.usunModel} w tej partii?`)) return;
+    const r = await wyslij("/api/panel/czaty-usun", { partia: STAN.partia, model: b.dataset.usunModel, firma });
+    if (r.blad) return alert(r.blad);
+    ekranCzaty();
+  }));
+}
+
+function stanFirmy(f) {
+  if (f.przyjeta) return `<span class="plakietka ${f.status === "WYSOKA" ? "p-ok" : f.status === "KONFLIKT" ? "p-zle" : "p-uwaga"}">przyjęto ${esc(f.przyjeta)}${f.status ? " · " + esc(f.status) : ""}</span>`;
+  if (f.stan === "zgodne") return `<span class="plakietka p-ok">czaty zgodne</span>`;
+  if (f.stan === "jeden") return `<span class="plakietka p-uwaga">jeden czat</span>`;
+  if (f.stan === "rozne_kraje") return `<span class="plakietka p-zle">różne kraje</span>`;
+  if (f.stan === "rozni_wlasciciele") return `<span class="plakietka p-zle">różni właściciele</span>`;
+  return `<span class="plakietka">czeka</span>`;
+}
+
+function firmyDoPromptu() {
+  const zakres = $("#czatyZakres").value, model = $("#czatyModel").value;
+  return CZATY.firmy.filter((f) => zakres === "wszystkie" ? true : zakres === "bezModelu" ? !f.odpowiedzi.some((o) => o.model === model) : !f.przyjeta);
+}
+
+function rysujPaczki() {
+  const firmy = firmyDoPromptu();
+  const rozmiar = Number($("#czatyRozmiar").value) || firmy.length || 1;
+  const paczki = [];
+  for (let i = 0; i < firmy.length; i += rozmiar) paczki.push(firmy.slice(i, i + rozmiar));
+  $("#czatyPaczki").className = "";
+  $("#czatyPaczki").innerHTML = paczki.length ? paczki.map((p, i) => `<div class="paczka">
+      <button class="glowny" data-paczka="${i}">Kopiuj ${paczki.length > 1 ? `paczkę ${i + 1}/${paczki.length}` : "prompt"} (${p.length} firm)</button>
+      <span class="kto">${esc(p.map((f) => f.nazwa).join(", "))}</span>
+      <span data-paczka-info="${i}" style="font-size:13px;color:var(--zielony)"></span></div>`).join("")
+    : '<span class="pusto">Brak firm w tym zakresie. Zmień zakres albo przejdź do porównania.</span>';
+  $("#czatyPaczki").querySelectorAll("[data-paczka]").forEach((b) => b.addEventListener("click", async () => {
+    const i = Number(b.dataset.paczka);
+    const r = await wyslij("/api/panel/prompt-zbiorczy", { partia: STAN.partia, nazwy: paczki[i].map((f) => f.nazwa) });
+    if (r.blad) return alert(r.blad);
+    await navigator.clipboard.writeText(r.tekst);
+    document.querySelector(`[data-paczka-info="${i}"]`).textContent = `skopiowane · ${Math.round(r.tekst.length / 1000)} tys. znaków`;
+    $("#czatyPodglad").style.display = "block";
+    $("#czatyPodglad").textContent = r.tekst;
+  }));
+}
+
+$("#btnCzatyWczytaj").onclick = async () => {
+  const tekst = $("#czatyTekst").value;
+  const model = $("#czatyModel").value;
+  const r = await wyslij("/api/panel/czaty-wklej", { partia: STAN.partia, model, tekst });
+  if (r.blad) { $("#czatyWynik").innerHTML = `<div class="pasmo blad">${esc(r.blad)}</div>`; return; }
+  $("#czatyTekst").value = "";
+  $("#czatyWynik").innerHTML = `<div class="pasmo ${r.niedopasowane.length ? "" : "dobrze"}">Zapisano odpowiedź <b>${esc(model)}</b> dla ${r.dopasowane.length} firm (w odpowiedzi było ${r.obiektow}).${r.niedopasowane.length ? ` Nie dopasowano: <b>${esc(r.niedopasowane.join(", "))}</b>. Sprawdź, czy model nie zmienił nazwy marki.` : ""}</div>`;
+  ekranCzaty();
+  rysujSciezke();
+};
+
+// ---------- porównanie ----------
+$("#porFiltr").onchange = () => ekranPorownanie();
+
+function kolumnaModelu(f, o, n) {
+  const s = o.sledztwo, op = o.opisy;
+  const kraje = new Set(f.odpowiedzi.map((x) => x.sledztwo.country_code || "?"));
+  const klasa = n < 2 ? "" : o.zgodneZ.length === n - 1 ? "zgodny" : "niezgodny";
+  const lanc = (s.lancuch || []).map((x) => `<li>${esc(x.podmiot)} <span class="male">(${esc(x.kraj || "?")}${x.proc_glosow != null ? ", " + esc(x.proc_glosow) + "%" : ""}${x.stan_na ? ", " + esc(x.stan_na) : ""})</span> ${x.zrodlo_url ? `<a href="${esc(x.zrodlo_url)}" target="_blank" rel="noopener" title="${esc(x.zrodlo_tytul || x.zrodlo_url)}">źródło</a>` : `<span class="rozne male">bez źródła</span>`}</li>`).join("");
+  return `<div class="model ${klasa} ${f.przyjeta === o.model ? "przyjety" : ""}">
+    <h3><span>${esc(o.model)}</span>${f.przyjeta === o.model ? '<span class="plakietka p-ok">przyjęta</span>' : `<button data-przyjmij="${esc(f.nazwa)}" data-model-w="${esc(o.model)}">Przyjmij tę wersję</button>`}</h3>
+    <div class="kraj ${kraje.size > 1 ? "rozne" : ""}">${esc(s.country_code || "?")}</div>
+    <div><b>${esc(s.ostateczny_wlasciciel || "?")}</b> <span class="male">· ${esc(s.regula || "bez reguły")} · ${esc(s.typ_wlasciciela || "")}</span></div>
+    <p class="male" style="margin:6px 0">${esc(s.uzasadnienie || "")}</p>
+    <ol>${lanc || '<li class="rozne">brak łańcucha</li>'}</ol>
+    ${(s.luki || []).length ? `<div class="male"><b>Luki:</b> ${esc(s.luki.join("; "))}</div>` : ""}
+    ${s.transakcja_w_toku ? `<div class="male rozne"><b>Transakcja w toku:</b> ${esc(s.transakcja_w_toku)}</div>` : ""}
+    <details style="margin-top:6px"><summary class="male">Opisy i marki</summary>
+      <p class="male"><b>${esc(op.display_name || "")}</b> · ${esc(op.category_slug || "bez kategorii")}${op.website_url ? ` · ${esc(op.website_url)}` : ""}</p>
+      <p style="font-size:13px">${esc(op.ownership_description || "")}</p>
+      <p style="font-size:13px">${esc(op.business_description || "")}</p>
+      <p class="male">Marki: ${esc((op.brands || []).map((b) => b.name).join(", ") || "brak")}</p>
+    </details>
+  </div>`;
+}
+
+async function ekranPorownanie() {
+  if (!STAN.partia) { $("#porLista").innerHTML = '<div class="karta pusto">Nie wybrano partii.</div>'; return; }
+  const j = await pobierz("/api/panel/czaty?partia=" + encodeURIComponent(STAN.partia));
+  if (j.blad) { $("#porLista").innerHTML = `<div class="karta pusto">${esc(j.blad)}</div>`; return; }
+  const zOdp = j.firmy.filter((f) => f.odpowiedzi.length);
+  const ile = (st) => zOdp.filter((f) => !f.przyjeta && f.stan === st).length;
+  const zgodne = ile("zgodne"), przyjete = j.firmy.filter((f) => f.przyjeta).length;
+  const bez = j.firmy.length - zOdp.length;
+  $("#porPodsumowanie").className = "";
+  $("#porPodsumowanie").innerHTML = `<b>${zgodne} zgodnych</b> · <span class="err">${ile("rozne_kraje") + ile("rozni_wlasciciele")} rozbieżnych</span> · ${ile("jeden")} z jednym czatem · ${przyjete} przyjętych${bez ? ` · ${bez} bez odpowiedzi (<a href="#" onclick="pokaz('czaty');return false">wróć do czatów</a>)` : ""}`;
+  const modele = [...new Set(zOdp.flatMap((f) => f.odpowiedzi.map((o) => o.model)))];
+  const poprzedni = $("#porModelZgodne").value;
+  $("#porModelZgodne").innerHTML = modele.map((m) => `<option value="${esc(m)}">opisy z: ${esc(m)}</option>`).join("");
+  if (modele.includes(poprzedni)) $("#porModelZgodne").value = poprzedni;
+  $("#btnPrzyjmijZgodne").disabled = !zgodne;
+  $("#btnPrzyjmijZgodne").textContent = `Przyjmij wszystkie zgodne (${zgodne})`;
+  const kolejnosc = { rozne_kraje: 0, rozni_wlasciciele: 1, jeden: 2, zgodne: 3 };
+  const lista = zOdp.filter((f) => $("#porFiltr").value === "wszystkie" || !f.przyjeta).sort((a, b) => (!!a.przyjeta - !!b.przyjeta) || (kolejnosc[a.stan] - kolejnosc[b.stan]));
+  $("#porLista").innerHTML = lista.length ? lista.map((f) => {
+    const rozbiezne = f.stan === "rozne_kraje" || f.stan === "rozni_wlasciciele";
+    const kolumny = `<div class="modele">${f.odpowiedzi.map((o) => kolumnaModelu(f, o, f.odpowiedzi.length)).join("")}</div>`;
+    return `<div class="firma ${rozbiezne && !f.przyjeta ? "konflikt" : ""}">
+      <header><div><b>${esc(f.nazwa)}</b> <span style="font-size:13px;color:var(--slaby)">${esc(f.spolka || "")} · NIP ${esc(f.nip || "?")}</span></div>
+        <div class="rzad">${stanFirmy(f)}${f.przyjeta ? `<button data-cofnij="${esc(f.nazwa)}">Cofnij przyjęcie</button>` : ""}</div></header>
+      <div class="tresc">
+        ${f.wBazie ? `<div class="pasmo" style="margin-bottom:10px">Już w bazie: <b>${esc(f.wBazie.kraj || "?")}</b> · ${esc(f.wBazie.wlasciciel || "?")} (${esc(f.wBazie.slug)})</div>` : ""}
+        ${f.uwagiTozsamosci ? `<div class="pasmo" style="margin-bottom:10px">${esc(f.uwagiTozsamosci)}</div>` : ""}
+        ${f.przyjeta && f.konflikty.length ? `<div class="pasmo blad" style="margin-bottom:10px">${f.konflikty.map(esc).join("<br>")}</div>` : ""}
+        ${f.przyjeta ? `<details><summary style="font-size:13px;color:var(--slaby)">Pokaż odpowiedzi czatów</summary><div style="margin-top:10px">${kolumny}</div></details>` : kolumny}
+      </div></div>`;
+  }).join("") : `<div class="karta pusto">${zOdp.length ? "Wszystkie firmy z odpowiedziami są już przyjęte. Zmień filtr na „Wszystkie”, żeby je zobaczyć." : "Jeszcze żadnej odpowiedzi. Zacznij od kroku „Śledztwo w czatach”."}</div>`;
+  $("#porLista").querySelectorAll("[data-przyjmij]").forEach((b) => b.addEventListener("click", async () => {
+    const r = await wyslij("/api/panel/przyjmij", { partia: STAN.partia, firma: b.dataset.przyjmij, model: b.dataset.modelW });
+    if (r.blad || r.bledy?.length) alert(r.blad || r.bledy.join("\n"));
+    ekranPorownanie(); rysujSciezke();
+  }));
+  $("#porLista").querySelectorAll("[data-cofnij]").forEach((b) => b.addEventListener("click", async () => {
+    const r = await wyslij("/api/panel/cofnij-wersje", { partia: STAN.partia, firma: b.dataset.cofnij });
+    if (r.blad) alert(r.blad);
+    ekranPorownanie(); rysujSciezke();
+  }));
+}
+
+$("#btnPrzyjmijZgodne").onclick = async () => {
+  const model = $("#porModelZgodne").value;
+  if (!confirm(`Przyjąć wszystkie firmy, w których czaty są zgodne? Opisy zostaną wzięte z: ${model} (gdy firma nie ma odpowiedzi ${model}, z pierwszego czatu).`)) return;
+  const r = await wyslij("/api/panel/przyjmij", { partia: STAN.partia, zgodne: true, model });
+  if (r.blad) return alert(r.blad);
+  if (r.bledy?.length) alert(r.bledy.join("\n"));
+  ekranPorownanie(); rysujSciezke();
 };
 
 // ---------- import ----------

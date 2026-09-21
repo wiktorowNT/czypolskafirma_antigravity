@@ -138,7 +138,9 @@ export const SCHEMAT_SLEDZTWO = {
   required: ["lancuch", "ostateczny_wlasciciel", "typ_wlasciciela", "country_code", "regula", "uzasadnienie", "luki", "zrodla"],
 };
 
-export function promptSledztwo({ nazwa, tozsamosc, rejestr, historiaKrs, gielda, crbr, dzisiaj }) {
+// Fakty, które program ma za darmo z rejestrów (KRS, historia KRS, CRBR, bankier).
+// Wspólne dla śledztwa automatem i promptu zbiorczego do czatów.
+export function faktyRejestrowe({ rejestr, historiaKrs, gielda, crbr }) {
   const fakty = [];
   if (rejestr && !rejestr.blad) {
     fakty.push(`KRS ${rejestr.krs} (stan z dnia ${rejestr.stanZDnia}): ${rejestr.nazwa}, ${rejestr.formaPrawna}, NIP ${rejestr.nip}, kapitał ${rejestr.kapitalZakladowy || "?"}.`);
@@ -158,6 +160,11 @@ export function promptSledztwo({ nazwa, tozsamosc, rejestr, historiaKrs, gielda,
   if (gielda?.akcjonariusze?.length) {
     fakty.push(`Akcjonariat wg bankier.pl (${gielda.url}, pobrano ${gielda.pobrano}): ${gielda.akcjonariusze.map((a) => `${a.nazwa} ${a.procGlosow ?? a.procKapitalu}% głosów${a.dataZmiany ? ` (zmiana ${a.dataZmiany})` : ""}`).join("; ")}. To jest trop; potwierdź w raporcie spółki lub na stronie IR.`);
   }
+  return fakty;
+}
+
+export function promptSledztwo({ nazwa, tozsamosc, rejestr, historiaKrs, gielda, crbr, dzisiaj }) {
+  const fakty = faktyRejestrowe({ rejestr, historiaKrs, gielda, crbr });
   return `Jesteś analitykiem struktur właścicielskich. Data dzisiejsza: ${dzisiaj}.
 Zbadaj, kto ostatecznie kontroluje markę "${nazwa}" (spółka: ${tozsamosc?.nazwa_spolki || "?"}, NIP ${tozsamosc?.nip || "?"}) i ustal kraj pochodzenia kapitału.
 
