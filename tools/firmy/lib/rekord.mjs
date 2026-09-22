@@ -3,6 +3,15 @@
 import { normalizujKrs, normalizujNip, podobienstwoNazw, slugify, usunMyslniki } from "./tekst.mjs";
 import { ocenPewnosc, walidujRekord } from "./walidacja.mjs";
 
+// Data wpisu do KRS (DD.MM.RRRR) jako founded_at (RRRR-MM-DD). Wpisy sprzed 2004 roku to
+// zwykle masowe przerejestrowania z rejestru handlowego do KRS (2001–2003), nie data
+// założenia firmy; wtedy zostawiamy puste do ręcznego uzupełnienia w przeglądzie.
+export function dataZalozeniaZKrs(data) {
+  const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(String(data || "").trim());
+  if (!m || Number(m[3]) < 2004) return null;
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+
 export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const t = f.tozsamosc || {}, s = f.sledztwo || {}, o = f.opisy || {};
   // Ogniwa potwierdzone w KRS (wspólnik / jedyny akcjonariusz / sama spółka) dostają KRS jako źródło,
@@ -42,7 +51,7 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
     adres: t.mf?.adres || null,
     siedziba_pl: true,
     vat_czynny: t.mf?.statusVat ? t.mf.statusVat === "Czynny" : null,
-    founded_at: null,
+    founded_at: dataZalozeniaZKrs(rej?.dataRejestracji),
     ownership_type: s.typ_wlasciciela || null,
     parent_company_name: (s.lancuch || []).find((x) => x.rola === "posrednik" || x.rola === "kontrolujacy")?.podmiot || null,
     brand_aliases: brands.map((b) => b.name).join(", ") || null,
@@ -64,7 +73,10 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const spolkaCelowa = /E-?COM|ONLINE|E-?SKLEP|LOGISTY|NIERUCHOMO|SERWIS|FINANC|LEASING|DYSTRYBUC|INVESTMENT|HOLDING|SHARED SERVICES|CENTRUM USŁUG/i.test(nazwaKrs)
     ? [`nazwa spółki z rejestru ("${nazwaKrs}") wygląda na spółkę celową, nie operatora marki; sprawdź, czy NIP wskazuje właściwą spółkę`]
     : [];
-  f.uwagi = [...ocena.uwagi, ...(f.walidacja.ostrzezenia || []), ...(f.uwagiTozsamosci ? [f.uwagiTozsamosci] : []), ...spolkaCelowa, ...uwagiModelu];
+  const dataZKrs = f.rekord.founded_at
+    ? [`data założenia ${f.rekord.founded_at} to data wpisu spółki do KRS; przy przekształceniu lub nowej spółce operatora marka może być starsza, sprawdź przed importem`]
+    : [];
+  f.uwagi = [...ocena.uwagi, ...(f.walidacja.ostrzezenia || []), ...(f.uwagiTozsamosci ? [f.uwagiTozsamosci] : []), ...spolkaCelowa, ...dataZKrs, ...uwagiModelu];
   f.rekord.confidence = f.status;
   // reweryfikacja: porównanie z obecnym rekordem
   if (t.istniejeWBazie) {

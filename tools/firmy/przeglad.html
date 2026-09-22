@@ -130,6 +130,7 @@ function karta(f) {
       <div><label>Nazwa wyświetlana</label><input name="display_name" value="${esc(r.display_name || "")}"></div>
       <div><label>Kategoria</label><select name="category_slug"><option value="">(brak)</option>${kat}</select></div>
       <div><label>Strona www</label><input name="website_url" value="${esc(r.website_url || "")}"></div>
+      <div><label>Data założenia (RRRR-MM-DD, puste = brak)</label><input name="founded_at" value="${esc(r.founded_at || "")}" placeholder="np. 1991-05-01" pattern="\\d{4}-\\d{2}-\\d{2}"></div>
       <div><label>Marki (brand_aliases, po przecinku)</label><input name="brand_aliases" value="${esc(r.brand_aliases || "")}"></div>
       <div class="szeroki"><label>Opis właścicielski (${(r.ownership_description || "").length} zn.)</label><textarea name="ownership_description">${esc(r.ownership_description || "")}</textarea></div>
       <div class="szeroki"><label>Opis działalności (${(r.business_description || "").length} zn.)</label><textarea name="business_description">${esc(r.business_description || "")}</textarea></div>
@@ -159,6 +160,8 @@ async function decyzja(nazwa, akcja, el) {
   const rekord = {};
   for (const inp of el.querySelectorAll("[name]")) if (inp.name !== "notatka") rekord[inp.name] = inp.value.trim();
   rekord.country_code = rekord.country_code.toUpperCase();
+  if (rekord.founded_at && !/^\d{4}-\d{2}-\d{2}$/.test(rekord.founded_at)) { el.querySelector("[data-info]").textContent = "Data założenia: format RRRR-MM-DD"; return; }
+  rekord.founded_at = rekord.founded_at || null;
   rekord.brands = rekord.brand_aliases ? rekord.brand_aliases.split(",").map((s) => s.trim()).filter(Boolean).map((name) => { const stare = (DANE.partia.firmy.find((f) => f.nazwa === nazwa)?.rekord?.brands || []).find((b) => b.name === name); return stare || { name }; }) : [];
   const body = { nazwa, rekord, notatka: el.querySelector('[name="notatka"]').value };
   if (akcja !== "zapisz") body.decyzja = akcja;

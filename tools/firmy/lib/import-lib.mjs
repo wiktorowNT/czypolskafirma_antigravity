@@ -7,7 +7,7 @@ import { normalizujNip, podobienstwoNazw, slugify } from "./tekst.mjs";
 import { walidujRekord } from "./walidacja.mjs";
 
 // Pola, które automat może ustawić przy INSERT i które nadpisuje przy UPDATE.
-export const POLA_INSERT = ["name", "slug", "display_name", "nip", "krs", "country_code", "owner_name", "ownership_description", "business_description", "website_url", "registry_url", "category_id", "adres", "siedziba_pl", "vat_czynny", "ownership_type", "parent_company_name", "brand_aliases", "brands", "verified_at"];
+export const POLA_INSERT = ["name", "slug", "display_name", "nip", "krs", "country_code", "owner_name", "ownership_description", "business_description", "website_url", "registry_url", "category_id", "adres", "founded_at", "siedziba_pl", "vat_czynny", "ownership_type", "parent_company_name", "brand_aliases", "brands", "verified_at"];
 export const POLA_UPDATE = ["country_code", "owner_name", "ownership_description", "business_description", "verified_at", "krs", "registry_url", "ownership_type", "parent_company_name"];
 
 export async function kontekstImportu() {
