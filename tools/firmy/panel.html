@@ -647,7 +647,8 @@ function rozpoznajListe(tekst) {
   const czysc = (s) => String(s || "").replace(/\*\*/g, "").replace(/^\s*\d+[.)]\s+/, "").trim();
   const linie = String(tekst || "").split(/\r?\n/);
   // Wklejona tabela z czatu: liczą się tylko jej wiersze, zdania wokół ("Oto numery:") pomijamy.
-  const jestTabela = linie.some((l) => (l.match(/\|/g) || []).length >= 2);
+  // (tabelę poznajemy po wierszu separatora |---|---|; zwykła lista "Marka | NIP" może mieszać się z samymi nazwami)
+  const jestTabela = linie.some((l) => /^\s*\|?\s*:?-{2,}:?\s*\|/.test(l));
   for (const surowa of linie) {
     const l = surowa.trim();
     if (!l || l.startsWith("#") || /:$/.test(l)) continue;
