@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const ADMIN_KEY = process.env.ADMIN_SECRET_KEY;
+// Narzędzie lokalne (Logo Fixer): zapisuje pliki do public/logos, więc na produkcji
+// endpoint nie istnieje (działa tylko pod npm run dev).
+const MAX_BYTES = 5 * 1024 * 1024;
+const SVG_DANGER = /<script|\bon[a-z]+\s*=|javascript:|<foreignObject|<iframe|<embed|<object/i;
 
 export async function POST(req: NextRequest) {
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
@@ -33,6 +40,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid domain name' }, { status: 400 });
     }
 
+    if (file.size > MAX_BYTES) {
+      return NextResponse.json({ error: 'Plik większy niż 5 MB' }, { status: 413 });
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
     
     // Determine extension
@@ -40,6 +51,10 @@ export async function POST(req: NextRequest) {
     if (file.type.includes('svg') || file.name.endsWith('.svg')) ext = '.svg';
     else if (file.type.includes('jpeg') || file.name.endsWith('.jpg')) ext = '.jpg';
     else if (file.type.includes('webp') || file.name.endsWith('.webp')) ext = '.webp';
+
+    if (ext === '.svg' && SVG_DANGER.test(buffer.toString('utf8'))) {
+      return NextResponse.json({ error: 'SVG zawiera skrypty lub aktywne elementy' }, { status: 400 });
+    }
 
     const logosDir = path.join(process.cwd(), 'public', 'logos');
     
