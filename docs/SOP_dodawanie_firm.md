@@ -48,7 +48,8 @@ Menu boczne ma te same numery kroków:
 wersję” albo „Przyjmij wszystkie zgodne” składa rekord i firma trafia do przeglądu. Pewność
 liczy kod ze źródeł:
 
-- zgoda czatów sama nie daje WYSOKIEJ, potrzebne jest źródło poziomu 1–2 dla pakietu kontrolnego,
+- zgoda czatów sama nie daje WYSOKIEJ, potrzebne jest źródło poziomu 1–2 dla każdego ogniwa
+  kontrolnego (pakiet kontrolny i ostateczny właściciel); samo źródło medialne = ŚREDNIA,
 - jeden czat to najwyżej ŚREDNIA,
 - niezgoda czatów co do kraju albo właściciela to KONFLIKT.
 
@@ -80,8 +81,10 @@ ze złym numerem. Przystanek można wyłączyć przy zakładaniu partii.
 Potem kod waliduje rekord (kody krajów ze słownika, długości, em-dashe, slug, duplikaty)
 i wylicza pewność:
 
-- **WYSOKA**: pakiet kontrolny potwierdzony źródłem poziomu 1–2 (KRS, raport spółki,
-  strona IR) i samokontrola zgodna, bez reguł B5/B10/B11/B12.
+- **WYSOKA**: każde ogniwo kontrolne (pakiet kontrolny i ostateczny właściciel) ma źródło
+  poziomu 1–2 (KRS, CRBR, raport spółki, strona IR), samokontrola albo porównanie czatów
+  zgodne, bez reguł B5/B10/B11/B12. Odpis KRS samej polskiej spółki nie wystarcza, gdy nad
+  jej wspólnikiem stoi ktoś potwierdzony tylko w mediach.
 - **ŚREDNIA**: kontrola udokumentowana tylko w mediach albo drobne luki.
 - **KONFLIKT**: brak źródła kontroli, niezgoda między śledztwem a kontrolą, KRS przeczy
   modelowi, tożsamość niejednoznaczna, trwająca transakcja, kraj spoza słownika, firma

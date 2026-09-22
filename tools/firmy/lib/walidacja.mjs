@@ -71,7 +71,12 @@ export function ocenPewnosc(firma) {
   if (!lancuch.length) konflikty.push("brak łańcucha własności");
   const bezZrodla = lancuch.filter((o) => !o.zrodlo_url);
   if (kontrolne.some((o) => !o.zrodlo_url) || (!kontrolne.length && bezZrodla.length)) konflikty.push("pakiet kontrolny bez źródła");
-  const najlepszyPoziom = Math.min(5, ...lancuch.filter((o) => o.zrodlo_url).map((o) => poziomZrodla(o.zrodlo_url)));
+  // Poziom źródeł liczy się po najsłabszym ogniwie kontrolnym (pakiet kontrolny i ostateczny
+  // właściciel), nie po najlepszym w łańcuchu: odpis KRS polskiej spółki nie potwierdza tego,
+  // kto stoi nad jej wspólnikami. Samo źródło medialne dla któregoś ogniwa = najwyżej ŚREDNIA.
+  const ogniwaKontrolne = lancuch.filter((o) => !["spolka_polska", "mniejszosciowy", "free_float"].includes(o.rola) && (kontrolne.includes(o) || o.rola === "ostateczny"));
+  const poziomKontroli = ogniwaKontrolne.length ? Math.max(...ogniwaKontrolne.map((o) => poziomZrodla(o.zrodlo_url))) : 5;
+  const najslabsze = ogniwaKontrolne.filter((o) => poziomZrodla(o.zrodlo_url) > 2).map((o) => o.podmiot);
   const wRegulach = String(sl.regula || "").toUpperCase();
   for (const b of REGULY_ZAWSZE_KONFLIKT) if (wRegulach.includes(b)) konflikty.push(`reguła ${b} wymaga decyzji właściciela`);
   if (sl.transakcja_w_toku) konflikty.push(`trwająca transakcja: ${sl.transakcja_w_toku}`);
@@ -102,12 +107,13 @@ export function ocenPewnosc(firma) {
   if (k.pewnosc_proponowana === "KONFLIKT") konflikty.push(`kontrola proponuje KONFLIKT: ${(k.zastrzezenia || [])[0] || "bez uzasadnienia"}`);
   let status;
   if (konflikty.length) status = "KONFLIKT";
-  else if (najlepszyPoziom <= 2 && k.zgadza_sie === true && k.pewnosc_proponowana !== "SREDNIA") status = "WYSOKA";
+  else if (poziomKontroli <= 2 && k.zgadza_sie === true && k.pewnosc_proponowana !== "SREDNIA") status = "WYSOKA";
   else status = "SREDNIA";
   if (status === "SREDNIA" && k.pewnosc_proponowana === "SREDNIA" && (k.zastrzezenia || []).length) uwagi.push(`kontrola: ${k.zastrzezenia[0].slice(0, 220)}`);
   const zgodneKonsylium = (firma.konsylium || []).filter((x) => x.zgoda === true).length;
   if (zgodneKonsylium) uwagi.push(`konsylium: ${zgodneKonsylium} model(e) zgodne`);
-  return { status, konflikty: [...new Set(konflikty)], uwagi, poziomZrodel: najlepszyPoziom };
+  if (status === "SREDNIA" && najslabsze.length) uwagi.push(`tylko źródło medialne albo pośrednie dla: ${najslabsze.join(", ")} (WYSOKA wymaga rejestru albo strony IR)`);
+  return { status, konflikty: [...new Set(konflikty)], uwagi, poziomZrodel: poziomKontroli };
 }
 
 export function normalizujKrajOdModelu(kod) {
