@@ -134,7 +134,8 @@
       <a data-e="nip"><i class="nr">2</i> Sprawdzenie NIP-ów</a>
       <a data-e="praca"><i class="nr">3</i> Rejestry (postęp)</a>
       <a data-e="czaty"><i class="nr">4</i> Śledztwo w czatach</a>
-      <a data-e="porownanie"><i class="nr">5</i> Porównanie</a>
+      <a data-e="rozstrzygniecie"><i class="nr">5</i> Rozstrzygnięcie</a>
+      <a data-e="porownanie" style="padding-left:40px;font-size:13px"><i class="nr">·</i> porównanie wersji</a>
       <a data-e="przeglad"><i class="nr">6</i> Przegląd</a>
       <a data-e="import"><i class="nr">7</i> Import do bazy</a>
       <a data-e="logo"><i class="nr">8</i> Logotypy</a>
@@ -371,15 +372,75 @@
         <div id="czatyTabela" class="pusto">Wczytuję…</div>
       </div>
       <div class="karta rozdziel">
-        <span style="font-size:13.5px;color:var(--slaby)">Najlepiej mieć odpowiedzi z 2 różnych czatów. Zgoda modeli nie podnosi pewności ponad źródła.</span>
-        <button class="glowny duzy" data-idz="porownanie">Przejdź do porównania</button>
+        <span style="font-size:13.5px;color:var(--slaby)">Im więcej czatów, tym lepsze rozstrzygnięcie (np. 4). Zgoda czatów nie podnosi pewności ponad źródła.</span>
+        <button class="glowny duzy" data-idz="rozstrzygniecie">Przejdź do rozstrzygnięcia (krok 5)</button>
+      </div>
+    </section>
+
+    <!-- KROK 5. ROZSTRZYGNIĘCIE W CLAUDE -->
+    <section class="ekran" id="e-rozstrzygniecie">
+      <h1>Rozstrzygnięcie w Claude</h1>
+      <p class="podtytul">Krok 5. Claude dostaje fakty z rejestrów i pełne odpowiedzi wszystkich czatów, sprawdza sporne rzeczy w internecie, ustala ostateczną wersję i pisze opisy od nowa. Panel sam niczego nie wywołuje: pliki dajesz Claude'owi Ty.</p>
+      <div class="karta"><div id="rozPodsumowanie" class="pusto">Wczytuję…</div></div>
+      <div class="karta">
+        <div class="etap">
+          <i class="nrb">1</i>
+          <div class="tresc-etapu">
+            <h2>Utwórz pliki</h2>
+            <p>Panel zapisze folder z instrukcją (00-instrukcja.md) i częściami po kilkanaście firm (czesc-01.md, czesc-02.md…). W każdej części: fakty z rejestrów i pełne odpowiedzi wszystkich czatów.</p>
+            <div class="rzad" style="margin-bottom:10px">
+              <select id="rozZakres" style="width:auto">
+                <option value="nierozstrzygniete">Firmy jeszcze nierozstrzygnięte</option>
+                <option value="nieprzyjete">Firmy bez przyjętej wersji</option>
+                <option value="wszystkie">Wszystkie firmy z odpowiedziami</option>
+              </select>
+              <select id="rozRozmiar" style="width:auto" title="Ile firm w jednej części">
+                <option value="10">po 10 firm w części</option>
+                <option value="20" selected>po 20 firm w części</option>
+                <option value="30">po 30 firm w części</option>
+                <option value="50">po 50 firm w części</option>
+              </select>
+              <button class="glowny" id="btnRozPliki">Utwórz pliki do rozstrzygnięcia</button>
+            </div>
+            <div id="rozPliki"></div>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">2</i>
+          <div class="tresc-etapu">
+            <h2>Daj pliki Claude'owi</h2>
+            <p><b>Claude Code</b> (sam przerobi wszystkie części): otwórz nową rozmowę w Claude Code w folderze projektu i wklej polecenie. Każdą część zleci osobnemu podagentowi i zapisze wyniki w tym samym folderze.</p>
+            <div class="rzad" style="margin-bottom:12px"><button class="glowny" id="btnRozPolecenie">Kopiuj polecenie dla Claude Code</button><span id="rozPolecenieInfo" style="font-size:13px;color:var(--zielony)"></span></div>
+            <p><b>Claude.ai</b> (część po części): dla każdej części nowa rozmowa. Załącz 00-instrukcja.md i jedną część, włącz wyszukiwanie w internecie i napisz „Rozstrzygnij tę część”. Wynik wklej niżej albo zapisz w folderze jako wynik-NN.json.</p>
+            <div class="rzad"><button id="btnRozFolder">Otwórz folder z plikami</button><button data-model="https://claude.ai/new">Otwórz Claude.ai</button></div>
+          </div>
+        </div>
+        <div class="etap">
+          <i class="nrb">3</i>
+          <div class="tresc-etapu">
+            <h2>Wczytaj wyniki</h2>
+            <p>Panel zbiera wszystkie pliki wynik-NN.json z folderu, zapisuje je jako wersję „Rozstrzygnięcie” i od razu przyjmuje: firmy trafiają do przeglądu. Można wczytywać wiele razy, np. po każdej części.</p>
+            <div class="rzad" style="margin-bottom:10px"><button class="glowny" id="btnRozWczytaj">Wczytaj wyniki z folderu</button></div>
+            <textarea id="rozTekst" placeholder="Albo wklej tutaj wynik z Claude.ai (Ctrl+V)" style="min-height:90px"></textarea>
+            <div class="rzad" style="margin-top:10px"><button id="btnRozWklej">Wczytaj wklejony wynik</button></div>
+            <div id="rozWynik" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="karta">
+        <h2>Firmy</h2>
+        <div id="rozTabela" class="pusto">Wczytuję…</div>
+      </div>
+      <div class="karta rozdziel">
+        <button data-idz="porownanie">Porównanie wersji (podgląd, ręczny wybór)</button>
+        <button class="glowny duzy" data-idz="przeglad">Przejdź do przeglądu</button>
       </div>
     </section>
 
     <!-- PORÓWNANIE -->
     <section class="ekran" id="e-porownanie">
-      <h1>Porównanie odpowiedzi</h1>
-      <p class="podtytul">Czaty obok siebie. Przy każdej firmie przyjmij jedną wersję: z niej powstanie rekord do przeglądu.</p>
+      <h1>Porównanie wersji</h1>
+      <p class="podtytul">Podgląd: czaty i rozstrzygnięcie Claude'a obok siebie. Zwykle wystarczy krok 5 (rozstrzygnięcie przyjmuje się samo); tutaj możesz przy dowolnej firmie ręcznie przyjąć inną wersję.</p>
       <div class="karta rozdziel">
         <div id="porPodsumowanie" class="pusto"></div>
         <div class="rzad">
@@ -571,6 +632,7 @@ function odswiezEkran() {
   if (STAN.ekran === "nip") ekranNip();
   if (STAN.ekran === "czaty") ekranCzaty();
   if (STAN.ekran === "porownanie") ekranPorownanie();
+  if (STAN.ekran === "rozstrzygniecie") ekranRozstrzygniecie();
   if (STAN.ekran === "partie") ekranPartie();
   if (STAN.ekran === "przeglad") ekranPrzeglad();
   if (STAN.ekran === "konsylium") ekranKonsylium();
@@ -1167,7 +1229,7 @@ $("#btnPorownaj").onclick = async () => {
 };
 
 // ---------- ścieżka: pasek kroków nad ekranami partii ----------
-const EKRANY_SCIEZKI = ["nip", "praca", "czaty", "porownanie", "przeglad", "konsylium", "import", "logo"];
+const EKRANY_SCIEZKI = ["nip", "praca", "czaty", "rozstrzygniecie", "porownanie", "przeglad", "konsylium", "import", "logo"];
 async function rysujSciezke() {
   const el = $("#sciezka");
   if (!STAN.partia || !EKRANY_SCIEZKI.includes(STAN.ekran)) { el.hidden = true; return; }
@@ -1261,19 +1323,102 @@ $("#btnCzatyWczytaj").onclick = async () => {
   rysujSciezke();
 };
 
+// ---------- krok 5. rozstrzygnięcie w Claude (pliki na dysku) ----------
+const ROZ = "Rozstrzygnięcie";
+let ROZ_STAN = null;
+
+async function ekranRozstrzygniecie() {
+  if (!STAN.partia) { $("#rozTabela").innerHTML = '<span class="pusto">Nie wybrano partii. Wejdź w „Moje partie”.</span>'; return; }
+  const [s, c] = await Promise.all([
+    pobierz("/api/panel/rozstrzygniecie?partia=" + encodeURIComponent(STAN.partia)),
+    pobierz("/api/panel/czaty?partia=" + encodeURIComponent(STAN.partia)),
+  ]);
+  if (s.blad || c.blad) { $("#rozTabela").innerHTML = `<span class="pusto">${esc(s.blad || c.blad)}</span>`; return; }
+  ROZ_STAN = s;
+  const modele = Object.entries(s.modele);
+  $("#rozPodsumowanie").className = "";
+  $("#rozPodsumowanie").innerHTML = `Partia <b>${esc(s.nazwa)}</b>: ${s.firm} firm z NIP-em · odpowiedzi czatów: ${modele.length ? modele.map(([m, n]) => `<b>${esc(m)}</b> ${n}`).join(", ") : "<span class='err'>brak, wróć do kroku 4</span>"}
+    <br><span style="font-size:13.5px;color:var(--slaby)">${s.rozstrzygniete} rozstrzygniętych przez Claude · ${s.przyjete} przyjętych (w przeglądzie) · ${s.doRozstrzygniecia} czeka na rozstrzygnięcie</span>`;
+  rysujPlikiRoz();
+  const pewnosc = (f) => f.status ? `<span class="plakietka ${f.status === "WYSOKA" ? "p-ok" : f.status === "KONFLIKT" ? "p-zle" : "p-uwaga"}">${esc(f.status)}</span>` : "";
+  const wiersze = c.firmy.filter((f) => f.odpowiedzi.length).map((f) => {
+    const wej = f.odpowiedzi.filter((o) => o.model !== ROZ);
+    const r = f.odpowiedzi.find((o) => o.model === ROZ);
+    return `<tr>
+      <td><b>${esc(f.nazwa)}</b></td>
+      <td style="font-size:13px">${wej.map((o) => `${esc(o.model)}: <b>${esc(o.sledztwo.country_code || "?")}</b>`).join(" · ")}</td>
+      <td>${r ? `<b>${esc(r.sledztwo.country_code || "?")}</b> · ${esc(r.sledztwo.ostateczny_wlasciciel || "?")}<br><span style="font-size:12.5px;color:var(--slaby)">zgodne czaty: ${r.zgodneZ.length} z ${wej.length}${r.sledztwo.konflikt ? ` · <span class="err">konflikt: ${esc(r.sledztwo.konflikt)}</span>` : ""}</span>` : '<span class="pusto">jeszcze nie</span>'}</td>
+      <td>${f.przyjeta ? `${pewnosc(f)}<br><span style="font-size:12.5px;color:var(--slaby)">przyjęto: ${esc(f.przyjeta)}</span>` : '<span class="plakietka">czeka</span>'}</td>
+    </tr>`;
+  });
+  $("#rozTabela").className = "";
+  $("#rozTabela").innerHTML = wiersze.length ? `<table><tr><th>Marka</th><th>Czaty</th><th>Rozstrzygnięcie Claude</th><th>Pewność</th></tr>${wiersze.join("")}</table>` : '<span class="pusto">Brak firm z odpowiedziami czatów. Wróć do kroku 4.</span>';
+}
+
+function rysujPlikiRoz() {
+  const s = ROZ_STAN;
+  if (!s || !s.czesci.length) { $("#rozPliki").innerHTML = s?.folderIstnieje ? '<span class="pusto">Folder jest pusty.</span>' : ""; return; }
+  const tys = (n) => Math.round(n / 1000);
+  $("#rozPliki").innerHTML = `<p style="font-size:13px;color:var(--slaby);margin:0 0 6px">Folder: <code>${esc(s.folder)}</code></p>
+    <table><tr><th>Plik</th><th>Firm</th><th>Rozmiar</th><th>Wynik</th></tr>${s.czesci.map((c) => `<tr><td>${esc(c.plik)}</td><td>${c.firm}</td><td>${tys(c.znakow)} tys. znaków (ok. ${Math.round(c.znakow / 3500)} tys. tokenów)</td><td>${c.wynik ? `<span class="plakietka p-ok">${esc(c.wynik)}</span>` : '<span class="plakietka">brak</span>'}</td></tr>`).join("")}</table>`;
+}
+
+$("#btnRozPliki").onclick = async () => {
+  const r = await wyslij("/api/panel/rozstrzygniecie-pliki", { partia: STAN.partia, zakres: $("#rozZakres").value, rozmiar: $("#rozRozmiar").value });
+  if (r.blad) { $("#rozWynik").innerHTML = `<div class="pasmo blad">${esc(r.blad)}</div>`; return; }
+  $("#rozWynik").innerHTML = `<div class="pasmo dobrze">Utworzono ${r.czesci.length} część(i). Teraz punkt 2: daj pliki Claude'owi.</div>`;
+  ekranRozstrzygniecie();
+};
+
+$("#btnRozFolder").onclick = async () => {
+  const r = await wyslij("/api/panel/otworz-folder", { partia: STAN.partia });
+  if (r.blad) alert(r.blad);
+};
+
+$("#btnRozPolecenie").onclick = async () => {
+  if (!ROZ_STAN?.czesci.length) return alert("Najpierw utwórz pliki (punkt 1).");
+  const f = ROZ_STAN.folder;
+  const tekst = `Przeczytaj instrukcję ${f}\\00-instrukcja.md i wykonaj rozstrzygnięcie dla wszystkich części czesc-NN.md w tym folderze (${ROZ_STAN.czesci.map((c) => c.plik).join(", ")}).
+Pracuj część po części: każdą część zleć osobnemu podagentowi (dostaje instrukcję i jedną część), żeby nie zapełniać kontekstu. Pomiń części, dla których istnieje już wynik-NN.json.
+Wynik każdej części zapisz w tym samym folderze jako wynik-NN.json (tablica JSON wg instrukcji). Sprawdzaj sporne rzeczy w internecie, tak jak mówi instrukcja.
+Nie zmieniaj żadnych innych plików. Na koniec napisz krótko, ile firm rozstrzygnięto i które mają konflikt.`;
+  await navigator.clipboard.writeText(tekst);
+  $("#rozPolecenieInfo").textContent = "skopiowane, wklej w Claude Code";
+  setTimeout(() => ($("#rozPolecenieInfo").textContent = ""), 4000);
+};
+
+async function wczytajRoz(tekst) {
+  const r = await wyslij("/api/panel/rozstrzygniecie-wczytaj", { partia: STAN.partia, tekst });
+  if (r.blad) { $("#rozWynik").innerHTML = `<div class="pasmo blad">${esc(r.blad)}</div>`; return; }
+  const nie = r.pliki.flatMap((p) => p.niedopasowane);
+  $("#rozWynik").innerHTML = `<div class="pasmo ${nie.length || r.bledy.length ? "" : "dobrze"}">
+    ${r.pliki.map((p) => `${esc(p.plik)}: ${p.dopasowane} z ${p.obiektow} firm`).join("<br>")}
+    <br><b>Przyjęto ${r.przyjete.length} firm</b>, są już w przeglądzie.
+    ${nie.length ? `<br>Nie dopasowano: <b>${esc(nie.join(", "))}</b> (Claude zmienił nazwę marki?).` : ""}
+    ${r.bledy.length ? `<br><span class="err">${r.bledy.map(esc).join("<br>")}</span>` : ""}</div>`;
+  if (tekst) $("#rozTekst").value = "";
+  ekranRozstrzygniecie();
+  rysujSciezke();
+}
+$("#btnRozWczytaj").onclick = () => wczytajRoz("");
+$("#btnRozWklej").onclick = () => { const t = $("#rozTekst").value; if (!t.trim()) return alert("Najpierw wklej wynik."); wczytajRoz(t); };
+
 // ---------- porównanie ----------
 $("#porFiltr").onchange = () => ekranPorownanie();
 
-function kolumnaModelu(f, o, n) {
+function kolumnaModelu(f, o) {
   const s = o.sledztwo, op = o.opisy;
+  const wej = f.odpowiedzi.filter((x) => x.model !== ROZ).length;
   const kraje = new Set(f.odpowiedzi.map((x) => x.sledztwo.country_code || "?"));
-  const klasa = n < 2 ? "" : o.zgodneZ.length === n - 1 ? "zgodny" : "niezgodny";
+  const klasa = o.model === ROZ ? (o.zgodneZ.length >= 2 ? "zgodny" : "niezgodny") : wej < 2 ? "" : o.zgodneZ.length === wej - 1 ? "zgodny" : "niezgodny";
   const lanc = (s.lancuch || []).map((x) => `<li>${esc(x.podmiot)} <span class="male">(${esc(x.kraj || "?")}${x.proc_glosow != null ? ", " + esc(x.proc_glosow) + "%" : ""}${x.stan_na ? ", " + esc(x.stan_na) : ""})</span> ${x.zrodlo_url ? `<a href="${esc(x.zrodlo_url)}" target="_blank" rel="noopener" title="${esc(x.zrodlo_tytul || x.zrodlo_url)}">źródło</a>` : `<span class="rozne male">bez źródła</span>`}</li>`).join("");
   return `<div class="model ${klasa} ${f.przyjeta === o.model ? "przyjety" : ""}">
     <h3><span>${esc(o.model)}</span>${f.przyjeta === o.model ? '<span class="plakietka p-ok">przyjęta</span>' : `<button data-przyjmij="${esc(f.nazwa)}" data-model-w="${esc(o.model)}">Przyjmij tę wersję</button>`}</h3>
     <div class="kraj ${kraje.size > 1 ? "rozne" : ""}">${esc(s.country_code || "?")}</div>
     <div><b>${esc(s.ostateczny_wlasciciel || "?")}</b> <span class="male">· ${esc(s.regula || "bez reguły")} · ${esc(s.typ_wlasciciela || "")}</span></div>
     <p class="male" style="margin:6px 0">${esc(s.uzasadnienie || "")}</p>
+    ${s.rozstrzygniecie ? `<p style="font-size:13px;margin:6px 0"><b>Rozstrzygnięcie:</b> ${esc(s.rozstrzygniecie)} <span class="male">(zgodne czaty: ${o.zgodneZ.length} z ${wej})</span></p>` : ""}
+    ${s.konflikt ? `<p class="rozne" style="font-size:13px;margin:6px 0"><b>Konflikt:</b> ${esc(s.konflikt)}</p>` : ""}
     <ol>${lanc || '<li class="rozne">brak łańcucha</li>'}</ol>
     ${(s.luki || []).length ? `<div class="male"><b>Luki:</b> ${esc(s.luki.join("; "))}</div>` : ""}
     ${s.transakcja_w_toku ? `<div class="male rozne"><b>Transakcja w toku:</b> ${esc(s.transakcja_w_toku)}</div>` : ""}
@@ -1306,13 +1451,14 @@ async function ekranPorownanie() {
   const lista = zOdp.filter((f) => $("#porFiltr").value === "wszystkie" || !f.przyjeta).sort((a, b) => (!!a.przyjeta - !!b.przyjeta) || (kolejnosc[a.stan] - kolejnosc[b.stan]));
   $("#porLista").innerHTML = lista.length ? lista.map((f) => {
     const rozbiezne = f.stan === "rozne_kraje" || f.stan === "rozni_wlasciciele";
-    const kolumny = `<div class="modele">${f.odpowiedzi.map((o) => kolumnaModelu(f, o, f.odpowiedzi.length)).join("")}</div>`;
+    const kolumny = `<div class="modele">${f.odpowiedzi.map((o) => kolumnaModelu(f, o)).join("")}</div>`;
     return `<div class="firma ${rozbiezne && !f.przyjeta ? "konflikt" : ""}">
       <header><div><b>${esc(f.nazwa)}</b> <span style="font-size:13px;color:var(--slaby)">${esc(f.spolka || "")} · NIP ${esc(f.nip || "?")}</span></div>
         <div class="rzad">${stanFirmy(f)}${f.przyjeta ? `<button data-cofnij="${esc(f.nazwa)}">Cofnij przyjęcie</button>` : ""}</div></header>
       <div class="tresc">
         ${f.wBazie ? `<div class="pasmo" style="margin-bottom:10px">Już w bazie: <b>${esc(f.wBazie.kraj || "?")}</b> · ${esc(f.wBazie.wlasciciel || "?")} (${esc(f.wBazie.slug)})</div>` : ""}
         ${f.uwagiTozsamosci ? `<div class="pasmo" style="margin-bottom:10px">${esc(f.uwagiTozsamosci)}</div>` : ""}
+        ${(() => { const r = f.odpowiedzi.find((o) => o.model === ROZ); return r?.sledztwo.rozstrzygniecie ? `<p style="font-size:13.5px;margin:0 0 10px"><b>Rozstrzygnięcie Claude'a:</b> ${esc(r.sledztwo.rozstrzygniecie)} <span style="color:var(--slaby)">(zgodne czaty: ${r.zgodneZ.length} z ${f.odpowiedzi.length - 1})</span></p>` : ""; })()}
         ${f.przyjeta && f.konflikty.length ? `<div class="pasmo blad" style="margin-bottom:10px">${f.konflikty.map(esc).join("<br>")}</div>` : ""}
         ${f.przyjeta ? `<details><summary style="font-size:13px;color:var(--slaby)">Pokaż odpowiedzi czatów</summary><div style="margin-top:10px">${kolumny}</div></details>` : kolumny}
       </div></div>`;

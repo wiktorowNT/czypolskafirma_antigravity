@@ -18,7 +18,7 @@ import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
 import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje } from "./lib/supabase.mjs";
-import { czekaNaCzaty, cofnijWersje, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
+import { ROZSTRZYGNIECIE, czekaNaCzaty, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
 
 const KATALOG = path.dirname(fileURLToPath(import.meta.url));
@@ -194,7 +194,7 @@ const KROKI = [
   { id: "nip", nazwa: "Sprawdzenie NIP-ów", ekran: "nip" },
   { id: "rejestry", nazwa: "Rejestry", ekran: "praca" },
   { id: "czaty", nazwa: "Śledztwo w czatach", ekran: "czaty" },
-  { id: "porownanie", nazwa: "Porównanie", ekran: "porownanie" },
+  { id: "porownanie", nazwa: "Rozstrzygnięcie", ekran: "rozstrzygniecie" },
   { id: "przeglad", nazwa: "Przegląd", ekran: "przeglad" },
   { id: "import", nazwa: "Import", ekran: "import" },
   { id: "logo", nazwa: "Logotypy", ekran: "logo" },
@@ -219,8 +219,8 @@ function sciezkaPartii(nazwa) {
     lista: { gotowe: partia.firmy.length > 0, info: `${partia.firmy.length} firm${partia.firmy.length - n ? `, ${partia.firmy.length - n} pominiętych` : ""}`, teraz: "Dodaj firmy do partii." },
     nip: { gotowe: n > 0 && nipOk === n, info: `${nipOk} z ${n}`, teraz: trwa ? "Program sprawdza numery w Białej Liście MF i KRS. Poczekaj chwilę." : "Przy każdej firmie potwierdź numer, wymień go albo pomiń firmę. Potem „Numery potwierdzone: dalej do czatów”." },
     rejestry: { gotowe: n > 0 && rejOk === n && !trwa, info: trwa ? "trwa" : `${rejOk} z ${n}`, teraz: trwa ? "Program pobiera dane z KRS i CRBR. Poczekaj, aż skończy (bez modeli, za darmo)." : "Wróć do kroku 2 i kliknij „Numery potwierdzone: dalej do czatów”: program pobierze brakujące dane z rejestrów." },
-    czaty: { gotowe: n > 0 && zOdp === n, info: `${zOdp} z ${n} z odpowiedzią`, teraz: "Skopiuj prompt zbiorczy, wklej do Gemini / ChatGPT / Claude.ai i wklej odpowiedź z powrotem. Najlepiej z 2 czatów." },
-    porownanie: { gotowe: n > 0 && przyjete === n, info: `${przyjete} z ${n} przyjętych`, teraz: "Porównaj odpowiedzi modeli i przyjmij jedną wersję przy każdej firmie." },
+    czaty: { gotowe: n > 0 && zOdp === n, info: `${zOdp} z ${n} z odpowiedzią`, teraz: "Skopiuj prompt zbiorczy, wklej go do kilku czatów (np. Gemini, ChatGPT, Grok, Perplexity) i wklej każdą odpowiedź z powrotem." },
+    porownanie: { gotowe: n > 0 && przyjete === n, info: `${przyjete} z ${n} przyjętych`, teraz: "Utwórz pliki do rozstrzygnięcia, daj je Claude'owi (Claude Code albo Claude.ai) i wczytaj jego wyniki." },
     przeglad: { gotowe: zRekordem.length > 0 && bezDecyzji === 0, info: `${zRekordem.length - bezDecyzji} z ${zRekordem.length} z decyzją`, teraz: "Obejrzyj rekordy i zatwierdź albo odrzuć każdą firmę." },
     import: { gotowe: zaimp > 0 && zatw === 0, info: `${zaimp} w bazie${zatw ? `, ${zatw} czeka` : ""}`, teraz: "Pokaż plan importu, sprawdź go i zapisz zatwierdzone firmy do bazy." },
     logo: { gotowe: false, info: "", teraz: "Pobierz logotypy nowych firm i wyślij je na stronę." },
@@ -248,6 +248,35 @@ function przejdzNaReczna(sciezka, partia) {
     if (!f.etapy.sledztwo || /^błąd|czeka na potwierdzenie NIP|^czeka$/.test(f.etapy.sledztwo)) f.etapy.sledztwo = "czeka na czaty";
   }
   return wyczyszczone;
+}
+
+// ---------- rozstrzygnięcie w Claude: folder z plikami ----------
+const folderRozstrzygniecia = (nazwa) => path.join(KATALOG_REPO, "data", "robocze", "rozstrzygniecie", String(nazwa).replace(/[^\w\-.]/g, "-"));
+
+function stanRozstrzygniecia(nazwa, partia) {
+  const folder = folderRozstrzygniecia(nazwa);
+  const pliki = fs.existsSync(folder) ? fs.readdirSync(folder) : [];
+  const czesci = pliki.filter((x) => /^czesc-\d+\.md$/i.test(x)).sort().map((x) => {
+    const nr = x.match(/\d+/)[0];
+    const wynik = pliki.find((y) => new RegExp(`^wynik-${nr}\\.(json|md|txt)$`, "i").test(y));
+    const tekst = fs.readFileSync(path.join(folder, x), "utf8");
+    return { plik: x, nr, znakow: tekst.length, firm: (tekst.match(/^## \d+\. /gm) || []).length, wynik: wynik || null };
+  });
+  const aktywne = partia.firmy.filter((f) => !f.pomin && f.tozsamosc);
+  const modele = {};
+  for (const f of aktywne) for (const m of Object.keys(f.sledztwaReczne || {})) if (m !== ROZSTRZYGNIECIE) modele[m] = (modele[m] || 0) + 1;
+  return {
+    nazwa,
+    folder,
+    folderIstnieje: fs.existsSync(folder),
+    czesci,
+    modele,
+    firm: aktywne.length,
+    zOdpowiedzia: firmyDoRozstrzygniecia(partia, "wszystkie").length,
+    doRozstrzygniecia: firmyDoRozstrzygniecia(partia, "nierozstrzygniete").length,
+    rozstrzygniete: aktywne.filter((f) => f.sledztwaReczne?.[ROZSTRZYGNIECIE]).length,
+    przyjete: aktywne.filter((f) => f.sledztwo).length,
+  };
 }
 
 // Błędy z wywołań modelu po ludzku (surowy tekst zostaje w logu technicznym).
@@ -705,6 +734,69 @@ const serwer = http.createServer(async (req, res) => {
       cofnijWersje(f);
       zapiszPartie(sciezka, partia);
       return json(res, { ok: true });
+    }
+
+    // ---------- rozstrzygnięcie w Claude: pliki na dysku ----------
+    if (req.method === "GET" && p === "/api/panel/rozstrzygniecie") {
+      const nazwa = url.searchParams.get("partia");
+      if (!nazwa || !fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Nie wybrano partii." });
+      return json(res, stanRozstrzygniecia(nazwa, wczytajPartie(plikPartii(nazwa))));
+    }
+
+    if (req.method === "POST" && p === "/api/panel/rozstrzygniecie-pliki") {
+      const { partia: nazwa, rozmiar, zakres } = await cialo();
+      const partia = wczytajPartie(plikPartii(nazwa));
+      const czesci = czesciRozstrzygniecia(partia, { rozmiar, zakres });
+      if (!czesci.length) return json(res, { blad: "Brak firm do rozstrzygnięcia w tym zakresie. Najpierw wklej odpowiedzi czatów w kroku 4." }, 400);
+      const folder = folderRozstrzygniecia(nazwa);
+      fs.mkdirSync(folder, { recursive: true });
+      // Stare części usuwamy (numeracja mogła się zmienić). Wyniki zostają w podfolderze "stare",
+      // żeby nie wczytać ich omyłkowo do nowego podziału.
+      const stare = fs.readdirSync(folder).filter((x) => /^(czesc|wynik)-\d+\.(md|json|txt)$/i.test(x));
+      if (stare.some((x) => x.startsWith("wynik"))) fs.mkdirSync(path.join(folder, "stare"), { recursive: true });
+      for (const x of stare) {
+        if (x.startsWith("wynik")) fs.renameSync(path.join(folder, x), path.join(folder, "stare", `${Date.now()}-${x}`));
+        else fs.unlinkSync(path.join(folder, x));
+      }
+      fs.writeFileSync(path.join(folder, "00-instrukcja.md"), instrukcjaRozstrzygniecia({ kategorie, dzisiaj: dzisiaj(), nazwaPartii: nazwa, czesci, folder }), "utf8");
+      for (const c of czesci) fs.writeFileSync(path.join(folder, c.plik), c.tekst, "utf8");
+      return json(res, { ok: true, ...stanRozstrzygniecia(nazwa, partia) });
+    }
+
+    if (req.method === "POST" && p === "/api/panel/otworz-folder") {
+      const { partia: nazwa } = await cialo();
+      const folder = folderRozstrzygniecia(nazwa);
+      if (!fs.existsSync(folder)) return json(res, { blad: "Folder jeszcze nie istnieje. Najpierw utwórz pliki." }, 404);
+      if (process.platform === "win32") spawn("explorer.exe", [folder], { detached: true, stdio: "ignore" }).unref();
+      return json(res, { ok: true, folder });
+    }
+
+    // Wyniki: z plików wynik-*.json w folderze albo z wklejonego tekstu. Każdy dopasowany wynik
+    // jest zapisywany jako wersja "Rozstrzygnięcie" i od razu przyjmowany (rekord do przeglądu).
+    if (req.method === "POST" && p === "/api/panel/rozstrzygniecie-wczytaj") {
+      const { partia: nazwa, tekst } = await cialo();
+      const sciezka = plikPartii(nazwa);
+      const partia = wczytajPartie(sciezka);
+      const zrodla = [];
+      if (String(tekst || "").trim()) zrodla.push({ plik: "wklejony tekst", tekst });
+      else {
+        const folder = folderRozstrzygniecia(nazwa);
+        const pliki = fs.existsSync(folder) ? fs.readdirSync(folder).filter((x) => /^wynik-\d+\.(json|md|txt)$/i.test(x)).sort() : [];
+        for (const x of pliki) zrodla.push({ plik: x, tekst: fs.readFileSync(path.join(folder, x), "utf8") });
+      }
+      if (!zrodla.length) return json(res, { blad: "Nie ma jeszcze żadnego pliku wynik-NN.json w folderze." }, 400);
+      const pliki = [], przyjete = new Set(), bledy = [];
+      for (const z of zrodla) {
+        const w = zapiszOdpowiedz(partia, ROZSTRZYGNIECIE, z.tekst);
+        pliki.push({ plik: z.plik, obiektow: w.obiektow, dopasowane: w.dopasowane.length, niedopasowane: w.niedopasowane });
+        for (const n of w.dopasowane) {
+          const f = partia.firmy.find((x) => x.nazwa === n);
+          if (f.decyzja === "zaimportowany") { bledy.push(`${n}: już w bazie, rozstrzygnięcie zapisane, ale nie przyjęte (popraw w przeglądzie)`); continue; }
+          try { przyjmijWersje(f, ROZSTRZYGNIECIE, { kategorie, dzisiaj: dzisiaj() }); przyjete.add(n); } catch (e) { bledy.push(`${n}: ${e.message}`); }
+        }
+      }
+      zapiszPartie(sciezka, partia);
+      return json(res, { ok: true, pliki, przyjete: [...przyjete], bledy });
     }
 
     if (req.method === "GET" && p === "/api/panel/import-plan") {

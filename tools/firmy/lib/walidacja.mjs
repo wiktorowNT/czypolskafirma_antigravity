@@ -7,15 +7,19 @@ export const STATUSY = ["WYSOKA", "SREDNIA", "KONFLIKT"];
 const REGULY_ZAWSZE_KONFLIKT = ["B5", "B10", "B11", "B12"];
 // Poziom 1: rejestry i dokumenty spółek. Agregatory giełdowe (bankier, stooq, biznesradar) to poziom 3:
 // przepisują zawiadomienia, ale nie są źródłem pierwotnym.
-const POZIOM_REJESTR = /krs|crbr|espi|ebi|raport[-_ ](biez|rocz|okres)|prospekt|gpw\.pl|api-krs|relacje[-_ ]inwestorskie|investor[-_ ]relations|\/\/ir\.|\/ir\/|annual[-_ ]report|sec\.gov|companieshouse|handelsregister|kvk\.nl|lbr\.lu/i;
+const POZIOM_REJESTR = /krs|crbr|ceidg|company-information\.service\.gov\.uk|ariregister|espi|ebi|raport[-_ ](biez|rocz|okres)|prospekt|gpw\.pl|api-krs|relacje[-_ ]inwestorskie|investor[-_ ]relations|\/\/ir\.|\/ir\/|annual[-_ ]report|sec\.gov|companieshouse|handelsregister|kvk\.nl|lbr\.lu/i;
 const POZIOM_IR = /\.(com|pl|de|fr|nl|lu|ch|es|it|se|dk|fi|no|uk|co\.uk|us)\/(?:.*)(investor|inwestor|akcjonariat|shareholder|ownership|struktura|about|o-nas|o-firmie|company|grupa|group)/i;
+
+// Agregatory i serwisy pośrednie: tylko trop, nigdy źródło ogniwa. Sprawdzane PRZED rejestrami,
+// bo ich adresy często zawierają "/krs/" (rejestr.io/krs/..., bizraport.pl/krs/...).
+const AGREGATOR = /wikipedia|wikidata|crunchbase|linkedin|aleo\.com|rejestr\.io|krs-pobierz|mojepanstwo|owler|zoominfo|bizraport|compabase|gowork|reddit|stockwatch|inforegister|infoveriti|krsonline|imsig|firmy\.net|panoramafirm|pkt\.pl|dnb\.com|opencorporates|northdata|forum|facebook|instagram|x\.com\/|twitter/i;
 
 export function poziomZrodla(url) {
   const u = String(url || "");
   if (!u) return 5;
+  if (AGREGATOR.test(u)) return 4;
   if (POZIOM_REJESTR.test(u)) return 1;
   if (POZIOM_IR.test(u)) return 2;
-  if (/wikipedia|wikidata|crunchbase|linkedin|aleo|rejestr\.io|krs-pobierz|mojepanstwo|owler|zoominfo/i.test(u)) return 4;
   if (/^https?:\/\//.test(u)) return 3;
   return 5;
 }

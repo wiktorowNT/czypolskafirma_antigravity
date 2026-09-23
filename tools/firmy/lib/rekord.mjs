@@ -1,7 +1,7 @@
 // Składa finalny rekord z etapów (tożsamość, rejestr, śledztwo, kontrola, opisy),
 // waliduje go i wylicza pewność. Używane przez automat.mjs i przeglad.mjs (po edycji/konsylium).
 import { normalizujKrs, normalizujNip, podobienstwoNazw, slugify, usunMyslniki } from "./tekst.mjs";
-import { ocenPewnosc, walidujRekord } from "./walidacja.mjs";
+import { ocenPewnosc, poziomZrodla, walidujRekord } from "./walidacja.mjs";
 
 // Data wpisu do KRS (DD.MM.RRRR) jako founded_at (RRRR-MM-DD). Wpisy sprzed 2004 roku to
 // zwykle masowe przerejestrowania z rejestru handlowego do KRS (2001–2003), nie data
@@ -15,15 +15,17 @@ export function dataZalozeniaZKrs(data) {
 export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const t = f.tozsamosc || {}, s = f.sledztwo || {}, o = f.opisy || {};
   // Ogniwa potwierdzone w KRS (wspólnik / jedyny akcjonariusz / sama spółka) dostają KRS jako źródło,
-  // jeśli model go nie podał: fakt z rejestru jest źródłem poziomu 1.
+  // jeśli model go nie podał albo podał słabsze (agregator, media): fakt z rejestru to poziom 1.
+  // Podmieniony link zostaje na liście źródeł.
   const rej = f.rejestr && !f.rejestr.blad ? f.rejestr : null;
   if (rej && Array.isArray(s.lancuch)) {
     const wKrs = [...(rej.wspolnicy || []), ...(rej.jedynyAkcjonariusz || [])];
     for (const og of s.lancuch) {
-      if (og.zrodlo_url) continue;
+      if (og.zrodlo_url && poziomZrodla(og.zrodlo_url) <= 1) continue;
       const toSpolka = og.rola === "spolka_polska" || podobienstwoNazw(og.podmiot, rej.nazwa) >= 0.7;
       const wspolnik = wKrs.find((w) => w.nazwa && podobienstwoNazw(og.podmiot, w.nazwa) >= 0.6);
       if (toSpolka || wspolnik) {
+        if (og.zrodlo_url) s.zrodla = [...(s.zrodla || []), { url: og.zrodlo_url, tytul: og.zrodlo_tytul || null, data: og.stan_na || null, czego_dotyczy: `${og.podmiot} (trop, zastąpiony odpisem KRS)` }];
         og.zrodlo_url = rej.zrodloUrl;
         og.zrodlo_tytul = `KRS ${rej.krs}, odpis aktualny (stan ${rej.stanZDnia})`;
         og.stan_na = og.stan_na || rej.stanZDnia;

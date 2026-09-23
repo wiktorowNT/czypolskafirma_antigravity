@@ -29,7 +29,7 @@ Menu boczne ma te same numery kroków:
    Wybierasz „Numer dobry”, „Numer do wymiany” (wpisujesz nowy albo bierzesz z czatu, potem
    „Sprawdź w Białej Liście”) albo „Pomiń firmę”. Nic tu nie szuka numerów automatem.
 3. **Rejestry**: odpis KRS, historia wspólników, CRBR, giełda (pobierane razem ze sprawdzeniem NIP).
-4. **Śledztwo w czatach** → 5. **Porównanie** → 6. **Przegląd** → 7. **Import** → 8. **Logotypy**.
+4. **Śledztwo w czatach** → 5. **Rozstrzygnięcie w Claude** → 6. **Przegląd** → 7. **Import** → 8. **Logotypy**.
 
 **Śledztwo w czatach:**
 
@@ -41,19 +41,38 @@ Menu boczne ma te same numery kroków:
   toleruje tekst wokół, brak bloku ```json i drobne błędy składni. Ucięta odpowiedź:
   napisz w czacie „kontynuuj” i wklej każdą część osobno. Zakres „bez odpowiedzi od wybranego
   czatu” zbuduje prompt tylko dla brakujących firm.
-- Najlepiej zebrać odpowiedzi z 2 różnych czatów. Zapis trafia od razu do partii
-  (`sledztwaReczne`), odświeżenie strony niczego nie gubi.
+- Im więcej czatów, tym lepsze rozstrzygnięcie (np. Gemini, ChatGPT, Grok, Perplexity). Zapis
+  trafia od razu do partii (`sledztwaReczne`, razem z surową odpowiedzią), odświeżenie strony
+  niczego nie gubi.
 
-**Porównanie:** czaty obok siebie (kraj, właściciel, reguła, łańcuch ze źródłami). „Przyjmij tę
-wersję” albo „Przyjmij wszystkie zgodne” składa rekord i firma trafia do przeglądu. Pewność
-liczy kod ze źródeł:
+**Rozstrzygnięcie w Claude (krok 5):** panel zapisuje folder `data/robocze/rozstrzygniecie/<partia>/`
+(poza gitem): `00-instrukcja.md` oraz `czesc-01.md`, `czesc-02.md`… po 10–50 firm. W części przy
+każdej firmie są fakty z rejestrów (procenty policzone z udziałów, historia KRS jako lista wpisów,
+uwaga o wspólnikach poniżej 10%, spółki osobowe i cywilne opisane wprost) oraz pełne odpowiedzi
+wszystkich czatów. Instrukcja każe Claude'owi rozstrzygać wg hierarchii źródeł (nie większością),
+sprawdzać sporne rzeczy w internecie, traktować agregatory tylko jako trop i pisać opisy od nowa
+według twardych zasad stylu.
 
-- zgoda czatów sama nie daje WYSOKIEJ, potrzebne jest źródło poziomu 1–2 dla każdego ogniwa
-  kontrolnego (pakiet kontrolny i ostateczny właściciel); samo źródło medialne = ŚREDNIA,
-- jeden czat to najwyżej ŚREDNIA,
-- niezgoda czatów co do kraju albo właściciela to KONFLIKT.
+- **Claude Code:** przycisk „Kopiuj polecenie dla Claude Code”, wklejasz w nowej rozmowie. Claude
+  zleca każdą część osobnemu podagentowi i zapisuje `wynik-NN.json` w tym samym folderze.
+- **Claude.ai:** do każdej części nowa rozmowa z załączoną instrukcją i jedną częścią; wynik
+  wklejasz do panelu albo zapisujesz jako `wynik-NN.json`.
+- Koszt: ok. 15 tys. tokenów na 10 firm przy 4 czatach, plus wyszukiwania w internecie.
+- „Wczytaj wyniki” zapisuje wersję „Rozstrzygnięcie” i od razu ją przyjmuje: firma trafia do
+  przeglądu z wyjaśnieniem Claude'a w uwagach.
 
-„Cofnij przyjęcie” wraca do porównania.
+Pewność po rozstrzygnięciu liczy kod:
+
+- WYSOKA tylko, gdy każde ogniwo kontrolne (pakiet kontrolny i ostateczny właściciel) ma źródło
+  poziomu 1–2; agregatory (rejestr.io, aleo, bizraport, compabase, gowork, reddit…) to poziom 4,
+  a przy wspólnikach potwierdzonych w KRS panel sam podmienia ich link na odpis KRS,
+- rozstrzygnięcie zgodne z co najmniej 2 czatami = kontrola zgodna; pojedynczy odmienny czat
+  trafia do uwag, nie do konfliktu,
+- mniej niż 2 zgodne czaty albo konflikt wskazany przez Claude'a = KONFLIKT,
+- jeden czat na wejściu = najwyżej ŚREDNIA.
+
+**Porównanie wersji** (podgląd pod krokiem 5): czaty i rozstrzygnięcie obok siebie. Tu można przy
+dowolnej firmie ręcznie przyjąć inną wersję albo „Cofnij przyjęcie”.
 
 **Automat Claude (opcja płatna):** na przystanku NIP, w zwiniętej sekcji „Śledztwo automatem
 Claude”. To kilkaset tysięcy do ponad miliona tokenów na firmę z limitu subskrypcji. Używaj
