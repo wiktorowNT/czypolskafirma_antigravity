@@ -30,6 +30,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 |------|-----------|-------|
 | 2026-07-23 | strona główna, /companies, zabka, lidl, orlen, rossmann, kaufland, pepco, inpost, allegro, reserved (11) | Biedronka już była w indeksie. Orlen miał stary „błąd przekierowania" — teraz zwraca 200 OK. Limit dzienny wyczerpany (mBank odbił się o limit). |
 | 2026-09-12 | netto, aldi, auchan, carrefour, stokrotka, polomarket, lewiatan, hebe, super-pharm, bp, shell (11) | Wznowienie po 7 tygodniach przerwy. Limit wyczerpany na 12. URL-u (circle-k odbił się o limit — pierwszy na jutro). Przy okazji: ponownie przesłana sitemapa (ostatni odczyt Google był 23.07) i uruchomiona walidacja poprawki dla `/firma/zara`. |
+| 2026-09-24 | circle-k, moya, amic-energy, pko-bp, mbank, ing, pekao, alior-bank, millennium, bnp-paribas, credit-agricole (11) | Limit wyczerpany na 12. URL-u (velobank odbił się o limit — pierwszy na jutro). Wszystkie 11 miały „Adres URL nie znajduje się w Google" i „Nie wykryto odsyłających map witryn" — to normalne przed pierwszym skanem; sitemapa OK (odczyt 23.09, 792 strony). Stan indeksu: 91 zindeksowanych, 695 „wykryta – niezindeksowana". `/firma/zara` zwraca już 200, walidacja wciąż „Rozpoczęto" (Google nie skanował od 2.07) — zgłosić jutro razem z velobankiem. Dodano `www` w Vercelu (308 → wersja bez www). |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -51,17 +52,17 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `orlen`  — zgłoszone 2026-07-23
 - [x] `bp`  — zgłoszone 2026-09-12
 - [x] `shell`  — zgłoszone 2026-09-12
-- [ ] `circle-k`
-- [ ] `moya`
-- [ ] `amic-energy`
-- [ ] `pko-bp`
-- [ ] `mbank`
-- [ ] `ing`
-- [ ] `pekao`
-- [ ] `alior-bank`
-- [ ] `millennium`
-- [ ] `bnp-paribas`
-- [ ] `credit-agricole`
+- [x] `circle-k`  — zgłoszone 2026-09-24
+- [x] `moya`  — zgłoszone 2026-09-24
+- [x] `amic-energy`  — zgłoszone 2026-09-24
+- [x] `pko-bp`  — zgłoszone 2026-09-24
+- [x] `mbank`  — zgłoszone 2026-09-24
+- [x] `ing`  — zgłoszone 2026-09-24
+- [x] `pekao`  — zgłoszone 2026-09-24
+- [x] `alior-bank`  — zgłoszone 2026-09-24
+- [x] `millennium`  — zgłoszone 2026-09-24
+- [x] `bnp-paribas`  — zgłoszone 2026-09-24
+- [x] `credit-agricole`  — zgłoszone 2026-09-24
 - [ ] `velobank`
 - [ ] `nest-bank`
 - [x] `allegro`  — zgłoszone 2026-07-23
