@@ -18,7 +18,7 @@ import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
 import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje } from "./lib/supabase.mjs";
-import { ROZSTRZYGNIECIE, czekaNaCzaty, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
+import { ROZSTRZYGNIECIE, czekaNaCzaty, dopasuj, parsujOdpowiedz, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
 
 const KATALOG = path.dirname(fileURLToPath(import.meta.url));
@@ -680,12 +680,19 @@ const serwer = http.createServer(async (req, res) => {
     }
 
     if (req.method === "POST" && p === "/api/panel/czaty-wklej") {
-      const { partia: nazwa, model, tekst } = await cialo();
+      const { partia: nazwa, model, tekst, nadpisz } = await cialo();
       const m = String(model || "").trim();
       if (!m) return json(res, { blad: "Wybierz, który to model." }, 400);
       if (!String(tekst || "").trim()) return json(res, { blad: "Najpierw wklej odpowiedź." }, 400);
       const sciezka = plikPartii(nazwa);
       const partia = wczytajPartie(sciezka);
+      // Ochrona przed wklejeniem pod złą nazwą czatu: gdy ten czat ma już odpowiedź dla którejś
+      // z tych firm, najpierw pytamy (kontynuacja uciętej odpowiedzi dotyczy innych firm, więc nie pyta).
+      if (!nadpisz) {
+        const { wynik } = dopasuj(parsujOdpowiedz(tekst), partia.firmy.filter((f) => !f.pomin && f.tozsamosc));
+        const juzSa = wynik.filter(({ firma }) => firma.sledztwaReczne?.[m]).map(({ firma }) => firma.nazwa);
+        if (juzSa.length) return json(res, { potwierdz: true, juzSa });
+      }
       const w = zapiszOdpowiedz(partia, m, tekst);
       if (!w.obiektow) return json(res, { blad: "Nie znalazłem w odpowiedzi żadnego obiektu JSON. Poproś model: „Podaj wynik jako jeden blok ```json z tablicą”." }, 400);
       zapiszPartie(sciezka, partia);

@@ -120,6 +120,10 @@
   .model .male{font-size:12.5px;color:var(--slaby)}
   .rozne{color:var(--czerwony)}
   .x{border:0;background:none;padding:0 2px;color:var(--slaby);cursor:pointer}
+  .pomoc{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid var(--linia);background:#fff;color:var(--slaby);font-size:11.5px;font-style:normal;font-weight:600;cursor:pointer;margin-left:6px;vertical-align:middle;user-select:none}
+  .pomoc:hover,.pomoc.akt{border-color:var(--akcent);color:var(--akcent)}
+  .pomoc-tresc{background:#fbf9f5;border-left:3px solid var(--akcent);padding:9px 12px;margin:6px 0 10px;font-size:13.5px;line-height:1.5;border-radius:0 5px 5px 0}
+  .pomoc-tresc p{margin:0 0 6px} .pomoc-tresc p:last-child{margin:0} .pomoc-tresc ul{margin:4px 0;padding-left:18px}
 </style>
 </head>
 <body>
@@ -315,7 +319,7 @@
       <h1>Śledztwo w czatach</h1>
       <p class="podtytul" id="czatyPodtytul">Modele pracują w Twoich czatach, na subskrypcjach. Panel nie wywołuje żadnego modelu.</p>
       <div class="karta rozdziel">
-        <label class="pole" style="max-width:320px;margin:0"><span>Czat, z którym teraz pracujesz</span>
+        <label class="pole" style="max-width:320px;margin:0"><span>Czat, z którym teraz pracujesz <i class="pomoc" data-pomoc="czat" title="Wyjaśnienie">?</i></span>
           <select id="czatyModel"><option>Gemini</option><option>ChatGPT</option><option>Claude</option><option>Grok</option><option>Perplexity</option><option>inny</option></select>
         </label>
         <div class="rzad">
@@ -324,12 +328,13 @@
           <button data-model="https://claude.ai/new">Otwórz Claude.ai</button>
         </div>
       </div>
+<div class="pomoc-tresc" id="pomoc-czat" hidden><p>Pod tą nazwą panel zapisze odpowiedź, którą wkleisz w punkcie 3. <b>Przełącz ją przed wklejeniem odpowiedzi z kolejnego czatu</b>, inaczej nadpiszesz poprzednią (panel o to zapyta).</p><p>Przyciski obok tylko otwierają stronę czatu w nowej karcie. Typowa kolejka: Gemini → ChatGPT → Grok → Perplexity, za każdym razem ten sam prompt.</p></div>
       <div id="czatyBezNip"></div>
       <div class="karta">
         <div class="etap">
           <i class="nrb">1</i>
           <div class="tresc-etapu">
-            <h2>Skopiuj prompt</h2>
+            <h2>Skopiuj prompt <i class="pomoc" data-pomoc="prompt" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-prompt" hidden><p>Prompt to gotowy tekst dla czatu: metodologia, fakty z rejestrów przy każdej firmie i wzór odpowiedzi w JSON. Kopiujesz go raz i wklejasz do każdego czatu.</p><p>Pierwsza lista wybiera, które firmy wejdą do promptu:</p><ul><li><b>Firmy bez przyjętej wersji</b>: zwykły wybór. Za pierwszym razem to wszystkie firmy z partii.</li><li><b>Firmy bez odpowiedzi od wybranego czatu</b>: gdy czat uciął odpowiedź albo pominął firmy. Prompt obejmie tylko brakujące dla czatu wybranego na górze.</li><li><b>Wszystkie firmy z NIP-em</b>: gdy chcesz przepytać czat jeszcze raz o wszystko.</li></ul><p>Druga lista dzieli firmy na paczki. Zostaw „wszystkie w jednej paczce”, chyba że któryś czat ucina długie odpowiedzi: wtedy po 10–20 i każda paczka osobno.</p></div>
             <p>W prompcie są już fakty z rejestrów (NIP, KRS, wspólnicy, historia, CRBR, giełda), więc model szuka tylko tego, kto stoi wyżej, i pisze opisy. Liczba firm w paczce nie jest ograniczona.</p>
             <div class="rzad" style="margin-bottom:10px">
               <select id="czatyZakres" style="width:auto">
@@ -352,14 +357,14 @@
         <div class="etap">
           <i class="nrb">2</i>
           <div class="tresc-etapu">
-            <h2>Wklej do czatu</h2>
+            <h2>Wklej do czatu <i class="pomoc" data-pomoc="wklej" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-wklej" hidden><p>Otwórz nową rozmowę w czacie, włącz wyszukiwanie w internecie (Gemini i ChatGPT: najlepiej Deep Research) i wklej prompt (Ctrl+V).</p><p>Gdy odpowiedź się urwie w połowie, napisz w czacie „kontynuuj”. Każdą część wklejasz w punkcie 3 osobno, pod tą samą nazwą czatu: panel dopisze je do właściwych firm.</p></div>
             <p>Włącz wyszukiwanie w internecie (w Gemini i ChatGPT najlepiej tryb Deep Research, w Claude.ai wyszukiwanie). Przy długiej liście model może uciąć odpowiedź: napisz „kontynuuj” i wklej tutaj każdą część osobno. Panel dopisze je do tych samych firm.</p>
           </div>
         </div>
         <div class="etap">
           <i class="nrb">3</i>
           <div class="tresc-etapu">
-            <h2>Wklej odpowiedź tutaj</h2>
+            <h2>Wklej odpowiedź tutaj <i class="pomoc" data-pomoc="odpowiedz" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-odpowiedz" hidden><p>Skopiuj z czatu całą odpowiedź (razem z tekstem przed i po JSON-ie) i kliknij „Wczytaj odpowiedź”. Panel sam znajdzie dane i dopasuje je do firm po nazwie marki albo NIP-ie.</p><p>Pod polem zobaczysz, ile firm się dopasowało. Firmy wymienione jako „nie dopasowano” to zwykle marki, których nazwę czat zmienił: możesz je zignorować albo poprosić czat o poprawienie nazwy.</p><p>Odpowiedź jest zapisywana od razu w partii, odświeżenie strony nic nie gubi.</p></div>
             <p>Całą odpowiedź, razem z tekstem wokół. Program sam znajdzie JSON i dopasuje firmy. Zapis jest od razu w partii.</p>
             <textarea id="czatyTekst" placeholder="Wklej tutaj odpowiedź czatu (Ctrl+V)"></textarea>
             <div class="rzad" style="margin-top:10px"><button class="glowny" id="btnCzatyWczytaj">Wczytaj odpowiedź</button></div>
@@ -368,7 +373,8 @@
         </div>
       </div>
       <div class="karta">
-        <div class="rozdziel" style="margin-bottom:12px"><h2 style="margin:0">Firmy i odpowiedzi</h2><span id="czatyLicznik" style="font-size:13.5px;color:var(--slaby)"></span></div>
+        <div class="rozdziel" style="margin-bottom:12px"><h2 style="margin:0">Firmy i odpowiedzi <i class="pomoc" data-pomoc="tabela" title="Wyjaśnienie">?</i></h2><span id="czatyLicznik" style="font-size:13.5px;color:var(--slaby)"></span></div>
+<div class="pomoc-tresc" id="pomoc-tabela" hidden><p>Przy każdej firmie widać, które czaty już odpowiedziały i jaki kraj podały, np. „Gemini: PL”.</p><ul><li><b>×</b> przy odpowiedzi usuwa ją tylko dla tej jednej firmy.</li><li><b>Usuń wszystkie odpowiedzi: X</b> (pod tabelą) kasuje wszystkie odpowiedzi danego czatu w partii, np. gdy wkleiłeś je pod złą nazwą.</li><li>Kolumna „Stan”: czy czaty są zgodne, różnią się krajem albo właścicielem, czy odpowiedział tylko jeden.</li></ul><p>Gdy masz odpowiedzi ze wszystkich czatów, przejdź do kroku 5: tam Claude rozstrzyga ostateczną wersję.</p></div>
         <div id="czatyTabela" class="pusto">Wczytuję…</div>
       </div>
       <div class="karta rozdziel">
@@ -386,7 +392,7 @@
         <div class="etap">
           <i class="nrb">1</i>
           <div class="tresc-etapu">
-            <h2>Utwórz pliki</h2>
+            <h2>Utwórz pliki <i class="pomoc" data-pomoc="rozpliki" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozpliki" hidden><p>Panel zapisuje na dysku folder z instrukcją dla Claude'a i częściami po kilka lub kilkanaście firm. W każdej części są fakty z rejestrów i pełne odpowiedzi wszystkich czatów.</p><ul><li><b>Firmy jeszcze nierozstrzygnięte</b>: zwykły wybór, tylko te bez wyniku od Claude'a.</li><li><b>Firmy bez przyjętej wersji</b>: też te, które Claude rozstrzygnął, ale cofnąłeś przyjęcie.</li><li><b>Wszystkie firmy z odpowiedziami</b>: gdy chcesz rozstrzygnąć wszystko od nowa (np. po dodaniu kolejnego czatu).</li></ul><p>Rozmiar części: 20 firm to dobry kompromis. Mniejsze części to mniej pracy naraz dla Claude'a, większe to mniej plików. Ponowne utworzenie plików odkłada stare wyniki do podfolderu „stare”.</p></div>
             <p>Panel zapisze folder z instrukcją (00-instrukcja.md) i częściami po kilkanaście firm (czesc-01.md, czesc-02.md…). W każdej części: fakty z rejestrów i pełne odpowiedzi wszystkich czatów.</p>
             <div class="rzad" style="margin-bottom:10px">
               <select id="rozZakres" style="width:auto">
@@ -408,7 +414,7 @@
         <div class="etap">
           <i class="nrb">2</i>
           <div class="tresc-etapu">
-            <h2>Daj pliki Claude'owi</h2>
+            <h2>Daj pliki Claude'owi <i class="pomoc" data-pomoc="rozclaude" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozclaude" hidden><p><b>Claude Code</b> (wygodniej przy wielu częściach): kliknij „Kopiuj polecenie”, otwórz nową rozmowę w Claude Code w folderze projektu i wklej. Claude sam przerobi wszystkie części i zapisze pliki wynik-01.json, wynik-02.json… Potem wróć tutaj do punktu 3.</p><p><b>Claude.ai</b>: dla każdej części osobna, nowa rozmowa. Załącz 00-instrukcja.md i jedną część (przycisk „Otwórz folder” pokaże pliki), włącz wyszukiwanie i napisz „Rozstrzygnij tę część”. Odpowiedź wklej w punkcie 3.</p><p>Koszt: ok. 15 tys. tokenów na 10 firm przy 4 czatach, plus wyszukiwania w internecie.</p></div>
             <p><b>Claude Code</b> (sam przerobi wszystkie części): otwórz nową rozmowę w Claude Code w folderze projektu i wklej polecenie. Każdą część zleci osobnemu podagentowi i zapisze wyniki w tym samym folderze.</p>
             <div class="rzad" style="margin-bottom:12px"><button class="glowny" id="btnRozPolecenie">Kopiuj polecenie dla Claude Code</button><span id="rozPolecenieInfo" style="font-size:13px;color:var(--zielony)"></span></div>
             <p><b>Claude.ai</b> (część po części): dla każdej części nowa rozmowa. Załącz 00-instrukcja.md i jedną część, włącz wyszukiwanie w internecie i napisz „Rozstrzygnij tę część”. Wynik wklej niżej albo zapisz w folderze jako wynik-NN.json.</p>
@@ -418,7 +424,7 @@
         <div class="etap">
           <i class="nrb">3</i>
           <div class="tresc-etapu">
-            <h2>Wczytaj wyniki</h2>
+            <h2>Wczytaj wyniki <i class="pomoc" data-pomoc="rozwyniki" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozwyniki" hidden><p><b>Wczytaj wyniki z folderu</b> zbiera wszystkie pliki wynik-NN.json zapisane przez Claude Code. Można klikać wiele razy, np. po każdej skończonej części.</p><p>Pole niżej służy do wklejenia odpowiedzi z Claude.ai (część po części).</p><p>Każda wczytana firma jest od razu przyjęta i trafia do przeglądu (krok 6), z wyjaśnieniem Claude'a w uwagach. Nie pasuje Ci jego wybór? W „porównaniu wersji” przyjmiesz ręcznie odpowiedź innego czatu.</p></div>
             <p>Panel zbiera wszystkie pliki wynik-NN.json z folderu, zapisuje je jako wersję „Rozstrzygnięcie” i od razu przyjmuje: firmy trafiają do przeglądu. Można wczytywać wiele razy, np. po każdej części.</p>
             <div class="rzad" style="margin-bottom:10px"><button class="glowny" id="btnRozWczytaj">Wczytaj wyniki z folderu</button></div>
             <textarea id="rozTekst" placeholder="Albo wklej tutaj wynik z Claude.ai (Ctrl+V)" style="min-height:90px"></textarea>
@@ -594,6 +600,17 @@ const wyslij = (u, dane) => pobierz(u, { method: "POST", headers: { "Content-Typ
 const kiedy = (ms) => { const d = new Date(ms); const dzis = new Date(); const ten = d.toDateString() === dzis.toDateString(); return (ten ? "dzisiaj" : d.toLocaleDateString("pl-PL")) + ", " + d.toTimeString().slice(0, 5); };
 
 let STAN = { ekran: "start", partia: localStorage.getItem("panel.partia") || null, zadanie: null, partie: [], kategorie: [], odliczanie: null };
+
+// ---------- wyjaśnienia "?" ----------
+document.addEventListener("click", (e) => {
+  const ikona = e.target.closest(".pomoc");
+  if (!ikona) return;
+  e.preventDefault();
+  const t = document.getElementById("pomoc-" + ikona.dataset.pomoc);
+  if (!t) return;
+  t.hidden = !t.hidden;
+  ikona.classList.toggle("akt", !t.hidden);
+});
 
 // ---------- nawigacja ----------
 function pokaz(id) {
@@ -1315,7 +1332,11 @@ function rysujPaczki() {
 $("#btnCzatyWczytaj").onclick = async () => {
   const tekst = $("#czatyTekst").value;
   const model = $("#czatyModel").value;
-  const r = await wyslij("/api/panel/czaty-wklej", { partia: STAN.partia, model, tekst });
+  let r = await wyslij("/api/panel/czaty-wklej", { partia: STAN.partia, model, tekst });
+  if (r.potwierdz) {
+    if (!confirm(`${model} ma już zapisane odpowiedzi dla ${r.juzSa.length} z tych firm (${r.juzSa.slice(0, 5).join(", ")}${r.juzSa.length > 5 ? "…" : ""}).\n\nCzy to na pewno odpowiedź z czatu ${model}? „OK” zastąpi poprzednie odpowiedzi. „Anuluj”, jeśli zapomniałeś przełączyć czat na górze.`)) return;
+    r = await wyslij("/api/panel/czaty-wklej", { partia: STAN.partia, model, tekst, nadpisz: true });
+  }
   if (r.blad) { $("#czatyWynik").innerHTML = `<div class="pasmo blad">${esc(r.blad)}</div>`; return; }
   $("#czatyTekst").value = "";
   $("#czatyWynik").innerHTML = `<div class="pasmo ${r.niedopasowane.length ? "" : "dobrze"}">Zapisano odpowiedź <b>${esc(model)}</b> dla ${r.dopasowane.length} firm (w odpowiedzi było ${r.obiektow}).${r.niedopasowane.length ? ` Nie dopasowano: <b>${esc(r.niedopasowane.join(", "))}</b>. Sprawdź, czy model nie zmienił nazwy marki.` : ""}</div>`;
