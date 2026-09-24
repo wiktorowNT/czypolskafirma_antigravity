@@ -20,11 +20,11 @@ w Search Console tysiące wyświetleń przy CTR poniżej 1% (dane za 90 dni, 202
 Popyt jest udowodniony, brakuje treści, która na to zapytanie odpowiada w tytule.
 Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż profil firmy.
 
-- [ ] Kto jest właścicielem Żabki (6 863 wyświetlenia profilu, CTR 0,29%)
-- [ ] Kto jest właścicielem Lidla (6 276 wyświetleń, CTR 0,13% — najgorszy wynik w serwisie)
-- [ ] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu)
-- [ ] Kto jest właścicielem Pepco (5 037 wyświetleń, CTR 0,32%)
-- [ ] Kto jest właścicielem Kauflandu (3 782 wyświetlenia; „kaufland właściciel" w top 5 zapytań)
+- [ ] Kto jest właścicielem Żabki (6 863 wyświetlenia profilu, CTR 0,29%) — WSTRZYMANE: marka była bohaterem dziewięciu paczek o wezwaniu Couche-Tard (sierpień 2026), więc blokada „tematów zużytych" obejmuje też to ujęcie. Do decyzji właściciela, czy evergreen o Żabce wolno napisać mimo tego
+- [x] Kto jest właścicielem Lidla (6 276 wyświetleń, CTR 0,13% — najgorszy wynik w serwisie) (2026-09-18)
+- [x] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu) (2026-09-19)
+- [x] Kto jest właścicielem Pepco (5 037 wyświetleń, CTR 0,32%) (2026-09-20)
+- [x] Kto jest właścicielem Kauflandu (3 782 wyświetlenia; „kaufland właściciel" w top 5 zapytań) (2026-09-23)
 
 ## Analizy pojedynczych marek
 
@@ -48,14 +48,14 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 ## Mechanizmy wyjaśnione na konkretach
 
 - [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
-- [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
-- [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
+- [x] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna (2026-09-17)
+- [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron — WSTRZYMANE: temat zderza się z zasadą nadrzędną „Konsument, nie inwestor" (cały wpis musiałby tłumaczyć, czym jest notowanie), a limity lint-tresci.mjs to 8 odwołań giełdowych na wpis i 3 na post. Do decyzji właściciela: przepisać na ujęcie markowe („Czy Wawel jest polski, skoro jest na giełdzie") albo skreślić
 - [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
 - [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
 
 ## Dopisane 2026-09-10
 
-- [ ] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma
+- [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [ ] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem
 - [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
