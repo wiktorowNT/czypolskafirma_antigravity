@@ -2,7 +2,7 @@
 // porównanie modeli i przyjęcie wybranej wersji do rekordu. Kod nie wywołuje tu żadnego modelu:
 // Wiktor wkleja prompt do Gemini / ChatGPT / Claude.ai i wkleja odpowiedź z powrotem do panelu.
 import { METODOLOGIA, faktyRejestrowe } from "./prompty.mjs";
-import { zlozRekord } from "./rekord.mjs";
+import { procentUdzialow, zlozRekord } from "./rekord.mjs";
 import { kodyKrajow, normalizujNazwe, normalizujNip, podobienstwoNazw } from "./tekst.mjs";
 import { normalizujKrajOdModelu } from "./walidacja.mjs";
 
@@ -233,7 +233,10 @@ export function zapiszOdpowiedz(partia, model, tekst) {
 // Rozstrzygnięcie (Claude na plikach) jest zapisywane jak kolejny model, ale nie bierze udziału
 // w liczeniu zgodności czatów: to ono jest oceniane względem nich.
 export const ROZSTRZYGNIECIE = "Rozstrzygnięcie";
-const zgodneDwa = (a, b) => !!a.country_code && a.country_code === b.country_code && podobienstwoNazw(a.ostateczny_wlasciciel, b.ostateczny_wlasciciel) >= 0.5;
+// Zgodność czatów = ten sam kraj kapitału (to jest klasyfikacja). Różnie nazwany właściciel
+// ("Rodzina Sowa" / "Rodzina Sowów") trafia do uwag, nie do konfliktu.
+const zgodneDwa = (a, b) => !!a.country_code && a.country_code === b.country_code;
+const tenSamWlasciciel = (a, b) => podobienstwoNazw(a.ostateczny_wlasciciel, b.ostateczny_wlasciciel) >= 0.5;
 
 export function porownanie(f) {
   const modele = Object.entries(f.sledztwaReczne || {}).map(([model, w]) => ({ model, ...w }));
@@ -256,13 +259,14 @@ export function kontrolaZPorownania(f, wybrany) {
   const w = f.sledztwaReczne[wybrany].sledztwo;
   const baza = { country_code: w.country_code, ostateczny_wlasciciel: w.ostateczny_wlasciciel, regula: w.regula, zrodla_zweryfikowane: [], brakujace_zrodla: [], zrodlo: "porównanie czatów" };
   const opisNiezgody = (m) => `${m.model}: kraj ${m.sledztwo.country_code || "?"}, właściciel "${m.sledztwo.ostateczny_wlasciciel || "?"}" (przyjęto ${wybrany}: ${w.country_code || "?"}, "${w.ostateczny_wlasciciel || "?"}")`;
+  const inaczejNazwany = wejsciowe.filter((m) => m.model !== wybrany && zgodneDwa(w, m.sledztwo) && !tenSamWlasciciel(w, m.sledztwo)).map((m) => `${m.model} nazywa właściciela inaczej: "${m.sledztwo.ostateczny_wlasciciel || "?"}" (ten sam kraj ${w.country_code})`);
 
   // Rozstrzygnięcie: zgodne, gdy co najmniej 2 czaty wskazały ten sam kraj i właściciela.
   // Pojedynczy odmienny czat to uwaga, nie konflikt. Konflikt wskazany przez Claude'a zostaje konfliktem.
   if (wybrany === ROZSTRZYGNIECIE) {
     const zgodne = wejsciowe.filter((m) => zgodneDwa(w, m.sledztwo));
     const niezgodne = wejsciowe.filter((m) => !zgodneDwa(w, m.sledztwo));
-    const r = { ...baza, zrodlo: "rozstrzygnięcie Claude", modele_zgodne: zgodne.map((m) => m.model), uwagi_modele: niezgodne.map(opisNiezgody) };
+    const r = { ...baza, zrodlo: "rozstrzygnięcie Claude", modele_zgodne: zgodne.map((m) => m.model), uwagi_modele: [...niezgodne.map(opisNiezgody), ...inaczejNazwany] };
     if (w.konflikt || w.pewnosc_proponowana === "KONFLIKT") return { ...r, zgadza_sie: false, zastrzezenia: [`rozstrzygnięcie: ${w.konflikt || w.rozstrzygniecie || "konflikt bez opisu"}`], pewnosc_proponowana: null };
     if (wejsciowe.length < 2) return { ...r, zgadza_sie: null, zastrzezenia: [`rozstrzygnięcie oparte na ${wejsciowe.length} czacie, brak porównania`], pewnosc_proponowana: "SREDNIA" };
     if (zgodne.length < 2) return { ...r, zgadza_sie: false, zastrzezenia: [`rozstrzygnięcie potwierdza tylko ${zgodne.length} z ${wejsciowe.length} czatów`, ...niezgodne.map(opisNiezgody)], pewnosc_proponowana: null };
@@ -275,7 +279,7 @@ export function kontrolaZPorownania(f, wybrany) {
   }
   const niezgodne = inne.filter((m) => !zgodneDwa(w, m.sledztwo));
   if (!niezgodne.length) {
-    return { ...baza, zgadza_sie: true, zastrzezenia: [], pewnosc_proponowana: "WYSOKA", modele_zgodne: [wybrany, ...inne.map((m) => m.model)] };
+    return { ...baza, zgadza_sie: true, zastrzezenia: [], pewnosc_proponowana: "WYSOKA", modele_zgodne: [wybrany, ...inne.map((m) => m.model)], uwagi_modele: inaczejNazwany };
   }
   // zgadza_sie: false wystarcza, żeby ocenPewnosc dał KONFLIKT (bez drugiego, identycznego wpisu)
   return { ...baza, zgadza_sie: false, zastrzezenia: niezgodne.map(opisNiezgody), pewnosc_proponowana: null };
@@ -292,12 +296,10 @@ export function przyjmijWersje(f, model, { kategorie, dzisiaj }) {
   f.bledy = (f.bledy || []).filter((b) => !/^(śledztwo|kontrola|opisy):/.test(b));
   f.decyzja = null;
   zlozRekord(f, { kategorie, dzisiaj });
-  if (model === ROZSTRZYGNIECIE) {
-    const u = [];
-    if (w.sledztwo.rozstrzygniecie) u.push(`rozstrzygnięcie: ${w.sledztwo.rozstrzygniecie}`);
-    if (f.kontrola.zgadza_sie === true) for (const x of f.kontrola.uwagi_modele || []) u.push(`inny czat: ${x}`);
-    f.uwagi = [...u, ...(f.uwagi || [])];
-  }
+  const u = [];
+  if (w.sledztwo.rozstrzygniecie) u.push(`rozstrzygnięcie: ${w.sledztwo.rozstrzygniecie}`);
+  if (f.kontrola.zgadza_sie === true) for (const x of f.kontrola.uwagi_modele || []) u.push(`inny czat: ${x}`);
+  f.uwagi = [...u, ...(f.uwagi || [])];
   return f;
 }
 
@@ -311,28 +313,6 @@ export function cofnijWersje(f) {
 // ---------- rozstrzygnięcie w Claude: pliki na dysku ----------
 // Folder z instrukcją i częściami (po N firm). Claude (Claude Code albo Claude.ai) czyta część,
 // może sprawdzać w internecie i zapisuje wynik-NN.json; panel wczytuje wyniki i przyjmuje je.
-
-// "46 150,00", "4.500,00", "50.000", "3750000" → liczba
-function liczbaPl(t) {
-  let s = String(t || "").replace(/\s/g, "");
-  if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
-  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "");
-  const n = Number(s);
-  return Number.isFinite(n) ? n : null;
-}
-
-// Procent udziałów wspólnika z opisu KRS ("923 UDZIAŁY O ŁĄCZNEJ WARTOŚCI 46 150,00 ZŁ") i kapitału.
-function procentUdzialow(w, rej) {
-  if (w.calosc) return 100;
-  const kapital = liczbaPl(String(rej.kapitalZakladowy || "").split(" ")[0]);
-  const m = String(w.udzialy || "").match(/WARTO[ŚS]CI(?:\s+NOMINALNEJ)?\s+([\d\s.,]+)/i);
-  const wartosc = m ? liczbaPl(m[1].trim().replace(/[.,]$/, "")) : null;
-  if (kapital && wartosc && wartosc <= kapital) return Math.round((wartosc / kapital) * 1000) / 10;
-  const szt = String(w.udzialy || "").match(/^(\d[\d\s.]*)\s+UDZIA/i);
-  const ile = szt ? liczbaPl(szt[1]) : null;
-  if (ile && rej.liczbaAkcjiUdzialow && ile <= rej.liczbaAkcjiUdzialow) return Math.round((ile / rej.liczbaAkcjiUdzialow) * 1000) / 10;
-  return null;
-}
 
 function formaZNazwy(nazwa) {
   const n = String(nazwa || "").toUpperCase();

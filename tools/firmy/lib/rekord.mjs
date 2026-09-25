@@ -12,6 +12,30 @@ export function dataZalozeniaZKrs(data) {
   return `${m[3]}-${m[2]}-${m[1]}`;
 }
 
+// "46 150,00", "4.500,00", "50.000", "3750000" → liczba
+function liczbaPl(t) {
+  let s = String(t || "").replace(/\s/g, "");
+  if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "");
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+// Procent kapitału wspólnika z opisu KRS ("923 UDZIAŁY O ŁĄCZNEJ WARTOŚCI 46 150,00 ZŁ") i kapitału.
+export function procentUdzialow(w, rej) {
+  if (w.calosc) return 100;
+  const kapital = liczbaPl(String(rej.kapitalZakladowy || "").split(" ")[0]);
+  const m = String(w.udzialy || "").match(/WARTO[ŚS]CI(?:\s+NOMINALNEJ)?\s+([\d\s.,]+)/i);
+  const wartosc = m ? liczbaPl(m[1].trim().replace(/[.,]$/, "")) : null;
+  if (kapital && wartosc && wartosc <= kapital) return Math.round((wartosc / kapital) * 1000) / 10;
+  const szt = String(w.udzialy || "").match(/^(\d[\d\s.]*)\s+UDZIA/i);
+  const ile = szt ? liczbaPl(szt[1]) : null;
+  if (ile && rej.liczbaAkcjiUdzialow && ile <= rej.liczbaAkcjiUdzialow) return Math.round((ile / rej.liczbaAkcjiUdzialow) * 1000) / 10;
+  return null;
+}
+
+const ZAMASKOWANA = /nazwisko zamaskowane/i;
+
 export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const t = f.tozsamosc || {}, s = f.sledztwo || {}, o = f.opisy || {};
   // Ogniwa potwierdzone w KRS (wspólnik / jedyny akcjonariusz / sama spółka) dostają KRS jako źródło,
@@ -20,11 +44,24 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const rej = f.rejestr && !f.rejestr.blad ? f.rejestr : null;
   if (rej && Array.isArray(s.lancuch)) {
     const wKrs = [...(rej.wspolnicy || []), ...(rej.jedynyAkcjonariusz || [])];
+    // Wspólnicy-osoby mają w API KRS ukryte nazwiska, a model podaje prawdziwe, więc po nazwie
+    // się nie połączą. Łączymy po procencie (pojedynczo albo łącznie), gdy kraj ogniwa zgadza się
+    // z obywatelstwem w CRBR. Ostateczny właściciel ze źródłem (np. media o tożsamości) zostaje.
+    const osoby = wKrs.filter((w) => ZAMASKOWANA.test(w.nazwa || "")).map((w) => procentUdzialow(w, rej)).filter((x) => x != null);
+    const sumaOsob = osoby.reduce((a, b) => a + b, 0);
+    const obywatelstwa = (String(f.crbr?.podsumowanie || "").match(/obywatelstwa:\s*([A-Z, ]+)/) || [, ""])[1].split(",").map((x) => x.trim()).filter(Boolean);
+    const osobaZKrs = (og) => {
+      if (!osoby.length || !["kontrolujacy", "mniejszosciowy", "ostateczny"].includes(og.rola)) return false;
+      if (og.rola === "ostateczny" && og.zrodlo_url) return false;
+      if (obywatelstwa.length ? !obywatelstwa.includes(og.kraj) : og.kraj !== "PL") return false;
+      const proc = og.proc_glosow ?? og.proc_kapitalu;
+      return proc != null && (osoby.some((x) => Math.abs(x - proc) <= 1.5) || Math.abs(sumaOsob - proc) <= 1.5);
+    };
     for (const og of s.lancuch) {
       if (og.zrodlo_url && poziomZrodla(og.zrodlo_url) <= 1) continue;
       const toSpolka = og.rola === "spolka_polska" || podobienstwoNazw(og.podmiot, rej.nazwa) >= 0.7;
       const wspolnik = wKrs.find((w) => w.nazwa && podobienstwoNazw(og.podmiot, w.nazwa) >= 0.6);
-      if (toSpolka || wspolnik) {
+      if (toSpolka || wspolnik || osobaZKrs(og)) {
         if (og.zrodlo_url) s.zrodla = [...(s.zrodla || []), { url: og.zrodlo_url, tytul: og.zrodlo_tytul || null, data: og.stan_na || null, czego_dotyczy: `${og.podmiot} (trop, zastąpiony odpisem KRS)` }];
         og.zrodlo_url = rej.zrodloUrl;
         og.zrodlo_tytul = `KRS ${rej.krs}, odpis aktualny (stan ${rej.stanZDnia})`;
@@ -81,7 +118,14 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   f.uwagi = [...ocena.uwagi, ...(f.walidacja.ostrzezenia || []), ...(f.uwagiTozsamosci ? [f.uwagiTozsamosci] : []), ...spolkaCelowa, ...dataZKrs, ...uwagiModelu];
   f.rekord.confidence = f.status;
   // reweryfikacja: porównanie z obecnym rekordem
-  if (t.istniejeWBazie) {
+  // Rekord w bazie, znaleziony po NIP-ie albo po marce wymienionej przy innej firmie (np. Maczfit
+  // przy Żabce): porównujemy go tylko, gdy to ta sama marka. Inna marka to uwaga, nie konflikt.
+  // Ta sama marka = ten sam adres (slug); "Bolt" i "Bolt Food" to różne marki.
+  const tenSamRekord = (b) => f.tryb === "reweryfikacja" || slugify(b.slug) === f.rekord.slug;
+  if (t.istniejeWBazie && !tenSamRekord(t.istniejeWBazie)) {
+    const b = t.istniejeWBazie;
+    f.uwagi.push(`marka występuje w bazie przy innym rekordzie: "${b.slug}" (${b.country_code || "?"}, ${b.owner_name || "?"}); import doda ją jako osobną firmę, rekord "${b.slug}" zostanie bez zmian`);
+  } else if (t.istniejeWBazie) {
     const b = t.istniejeWBazie;
     f.porownanie = {
       slug: b.slug,

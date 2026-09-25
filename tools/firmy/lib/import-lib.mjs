@@ -24,17 +24,22 @@ export async function kontekstImportu() {
 // Kołacz na Okrągło). Każda marka jest w bazie osobnym wierszem, więc sam zgodny NIP nie
 // wystarczy, żeby uznać rekord za "ten sam" — inaczej druga marka nadpisałaby pierwszą.
 function znajdzWBazie(r, f, indeks) {
+  // Rekord znaleziony przy weryfikacji NIP-u bywa inną marką tej samej grupy (Maczfit → Żabka,
+  // Uber Eats → Uber). Nadpisujemy go tylko, gdy to ta sama marka albo tryb re-weryfikacji.
   const poId = f.tozsamosc?.istniejeWBazie?.id ? indeks.find((x) => x.id === f.tozsamosc.istniejeWBazie.id) : null;
-  if (poId) return { rekord: poId, jak: "id" };
+  // Ta sama marka = ten sam slug albo identyczna nazwa marki ("Bolt" i "Bolt Food" to różne marki).
+  const tenSam = (x) => f.tryb === "reweryfikacja" || slugify(x.slug) === r.slug || (x.display_name && slugify(x.display_name) === slugify(r.display_name || r.name));
+  if (poId && tenSam(poId)) return { rekord: poId, jak: "id" };
   const poSlugu = indeks.find((x) => slugify(x.slug) === r.slug);
   if (poSlugu) return { rekord: poSlugu, jak: "slug" };
   const poNip = r.nip ? indeks.filter((x) => normalizujNip(x.nip) === normalizujNip(r.nip)) : [];
   for (const kandydat of poNip) {
-    const nazwy = [kandydat.name, kandydat.display_name, ...String(kandydat.brand_aliases || "").split(",")].filter(Boolean);
-    if (nazwy.some((n) => podobienstwoNazw(n, r.display_name || r.name) >= 0.6)) return { rekord: kandydat, jak: "nip" };
+    // Ten sam NIP to często ta sama spółka z inną marką (Bolt / Bolt Food). Nadpisujemy tylko,
+    // gdy marka jest ta sama; marka wymieniona jako alias innego rekordu idzie jako nowa firma.
+    if (tenSam(kandydat)) return { rekord: kandydat, jak: "nip" };
   }
   // NIP już jest w bazie, ale pod inną marką: nowa firma, z ostrzeżeniem do przejrzenia.
-  return { rekord: null, innaMarkaTejSpolki: poNip.map((x) => x.slug) };
+  return { rekord: null, innaMarkaTejSpolki: [...new Set([...poNip.map((x) => x.slug), ...(poId ? [poId.slug] : [])])] };
 }
 
 export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence }) {
