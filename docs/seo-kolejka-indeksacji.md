@@ -31,6 +31,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | 2026-07-23 | strona główna, /companies, zabka, lidl, orlen, rossmann, kaufland, pepco, inpost, allegro, reserved (11) | Biedronka już była w indeksie. Orlen miał stary „błąd przekierowania" — teraz zwraca 200 OK. Limit dzienny wyczerpany (mBank odbił się o limit). |
 | 2026-09-12 | netto, aldi, auchan, carrefour, stokrotka, polomarket, lewiatan, hebe, super-pharm, bp, shell (11) | Wznowienie po 7 tygodniach przerwy. Limit wyczerpany na 12. URL-u (circle-k odbił się o limit — pierwszy na jutro). Przy okazji: ponownie przesłana sitemapa (ostatni odczyt Google był 23.07) i uruchomiona walidacja poprawki dla `/firma/zara`. |
 | 2026-09-24 | circle-k, moya, amic-energy, pko-bp, mbank, ing, pekao, alior-bank, millennium, bnp-paribas, credit-agricole (11) | Limit wyczerpany na 12. URL-u (velobank odbił się o limit — pierwszy na jutro). Wszystkie 11 miały „Adres URL nie znajduje się w Google" i „Nie wykryto odsyłających map witryn" — to normalne przed pierwszym skanem; sitemapa OK (odczyt 23.09, 792 strony). Stan indeksu: 91 zindeksowanych, 695 „wykryta – niezindeksowana". `/firma/zara` zwraca już 200, walidacja wciąż „Rozpoczęto" (Google nie skanował od 2.07) — zgłosić jutro razem z velobankiem. Dodano `www` w Vercelu (308 → wersja bez www). |
+| 2026-09-25 | velobank, zara, nest-bank, empik, media-expert, rtv-euro-agd, x-kom, morele, komputronik, ccc, deichmann (11) | Limit liczony ok. 24 h od zgłoszeń — próba o 14:20 odbiła się od razu, wieczorem przeszło. Limit wyczerpany na 12. URL-u (cropp odbił się o limit — pierwszy na jutro). `zara` ponownie zgłoszona: test wersji opublikowanej przeszedł, czekamy na zamknięcie walidacji „Błąd przekierowania". |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -63,17 +64,17 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `millennium`  — zgłoszone 2026-09-24
 - [x] `bnp-paribas`  — zgłoszone 2026-09-24
 - [x] `credit-agricole`  — zgłoszone 2026-09-24
-- [ ] `velobank`
-- [ ] `nest-bank`
+- [x] `velobank`  — zgłoszone 2026-09-25
+- [x] `nest-bank`  — zgłoszone 2026-09-25
 - [x] `allegro`  — zgłoszone 2026-07-23
-- [ ] `empik`
-- [ ] `media-expert`
-- [ ] `rtv-euro-agd`
-- [ ] `x-kom`
-- [ ] `morele`
-- [ ] `komputronik`
-- [ ] `ccc`
-- [ ] `deichmann`
+- [x] `empik`  — zgłoszone 2026-09-25
+- [x] `media-expert`  — zgłoszone 2026-09-25
+- [x] `rtv-euro-agd`  — zgłoszone 2026-09-25
+- [x] `x-kom`  — zgłoszone 2026-09-25
+- [x] `morele`  — zgłoszone 2026-09-25
+- [x] `komputronik`  — zgłoszone 2026-09-25
+- [x] `ccc`  — zgłoszone 2026-09-25
+- [x] `deichmann`  — zgłoszone 2026-09-25
 - [x] `reserved`  — zgłoszone 2026-07-23
 - [ ] `cropp`
 - [ ] `house`
@@ -139,4 +140,4 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [ ] `diverse`
 - [ ] `big-star`
 - [ ] `wrangler`
-- [ ] `zara`
+- [x] `zara`  — zgłoszone 2026-09-25
