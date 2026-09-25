@@ -124,6 +124,23 @@
   .pomoc:hover,.pomoc.akt{border-color:var(--akcent);color:var(--akcent)}
   .pomoc-tresc{background:#fbf9f5;border-left:3px solid var(--akcent);padding:9px 12px;margin:6px 0 10px;font-size:13.5px;line-height:1.5;border-radius:0 5px 5px 0}
   .pomoc-tresc p{margin:0 0 6px} .pomoc-tresc p:last-child{margin:0} .pomoc-tresc ul{margin:4px 0;padding-left:18px}
+  .zakladki{display:flex;gap:4px;margin-bottom:14px}
+  .zakladki button{border-radius:5px 5px 0 0;border-bottom:2px solid transparent}
+  .zakladki button.akt{border-color:var(--linia);border-bottom:2px solid var(--akcent);font-weight:600}
+  .skoki{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .skoki a{font-size:12.5px;padding:3px 9px;border:1px solid var(--linia);border-radius:99px;background:#fff;cursor:pointer;color:var(--tekst);text-decoration:none}
+  .skoki a i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  table.wersje{table-layout:fixed;width:100%;border-collapse:collapse}
+  table.wersje th,table.wersje td{vertical-align:top;padding:9px 10px 9px 0;border-bottom:1px solid var(--linia);font-size:13.5px}
+  table.wersje tr.roz td{background:#f6f1e7}
+  table.wersje tr.roz td:first-child{box-shadow:inset 3px 0 0 var(--akcent)}
+  table.wersje td.kraj{font-weight:700;font-size:15px}
+  table.wersje td.kraj.tak{color:var(--zielony)} table.wersje td.kraj.nie{color:var(--czerwony)}
+  table.wersje .opis{white-space:pre-wrap;line-height:1.5}
+  table.wersje details summary{font-size:12.5px;color:var(--slaby);cursor:pointer;margin-top:6px}
+  table.wersje ol{padding-left:18px;margin:6px 0;font-size:12.5px}
+  .male{font-size:12.5px;color:var(--slaby)}
+  table.wersje th:first-child,table.wersje td:first-child{padding-left:10px}
 </style>
 </head>
 <body>
@@ -139,7 +156,7 @@
       <a data-e="praca"><i class="nr">3</i> Rejestry (postęp)</a>
       <a data-e="czaty"><i class="nr">4</i> Śledztwo w czatach</a>
       <a data-e="rozstrzygniecie"><i class="nr">5</i> Rozstrzygnięcie</a>
-      <a data-e="porownanie" style="padding-left:40px;font-size:13px"><i class="nr">·</i> porównanie wersji</a>
+      <a data-e="porownanie" style="padding-left:40px;font-size:13px"><i class="nr">·</i> porównanie czatów</a>
       <a data-e="przeglad"><i class="nr">6</i> Przegląd</a>
       <a data-e="import"><i class="nr">7</i> Import do bazy</a>
       <a data-e="logo"><i class="nr">8</i> Logotypy</a>
@@ -445,20 +462,35 @@
 
     <!-- PORÓWNANIE -->
     <section class="ekran" id="e-porownanie">
-      <h1>Porównanie wersji</h1>
-      <p class="podtytul">Podgląd: czaty i rozstrzygnięcie Claude'a obok siebie. Zwykle wystarczy krok 5 (rozstrzygnięcie przyjmuje się samo); tutaj możesz przy dowolnej firmie ręcznie przyjąć inną wersję.</p>
-      <div class="karta rozdziel">
-        <div id="porPodsumowanie" class="pusto"></div>
-        <div class="rzad">
-          <select id="porFiltr" style="width:auto">
-            <option value="do">Do przyjęcia</option>
-            <option value="wszystkie">Wszystkie</option>
-          </select>
-          <select id="porModelZgodne" style="width:auto" title="Z którego czatu brać opisy, gdy modele się zgadzają"></select>
-          <button class="glowny" id="btnPrzyjmijZgodne">Przyjmij wszystkie zgodne</button>
+      <h1>Porównanie czatów</h1>
+      <p class="podtytul">Przy każdej firmie wszystkie czaty obok siebie, a na górze wyróżnione rozstrzygnięcie Claude'a. Sprawdzasz, czy się z nim zgadzasz, zanim zatwierdzisz firmę w przeglądzie.</p>
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:12px">
+          <div id="porPodsumowanie" class="pusto"></div>
+          <div class="rzad">
+            <select id="porFiltr" style="width:auto">
+              <option value="wszystkie">Wszystkie firmy</option>
+              <option value="konflikty">Tylko konflikty i rozbieżne kraje</option>
+              <option value="do">Tylko bez przyjętej wersji</option>
+            </select>
+          </div>
         </div>
+        <div class="zakladki">
+          <button data-zakladka="wlasciciel" class="akt">Właściciel i opis właścicielski</button>
+          <button data-zakladka="dzialalnosc">Opis działalności</button>
+          <i class="pomoc" data-pomoc="porownanie" title="Wyjaśnienie">?</i>
+        </div>
+        <div class="pomoc-tresc" id="pomoc-porownanie" hidden><p>Pierwszy wiersz (wyróżniony) to rozstrzygnięcie Claude'a, czyli wersja, która trafia do przeglądu i do bazy. Niżej odpowiedzi poszczególnych czatów.</p><ul><li>Kraj na <b style="color:var(--zielony)">zielono</b>: zgodny z rozstrzygnięciem; na <b style="color:var(--czerwony)">czerwono</b>: inny.</li><li>„Łańcuch i źródła” pod właścicielem rozwija całe uzasadnienie danego czatu z linkami.</li><li>Nie zgadzasz się z rozstrzygnięciem? „Przyjmij tę wersję” przy innym czacie zamienia rekord w przeglądzie na jego wersję. Możesz też zostawić rozstrzygnięcie i poprawić tekst ręcznie w przeglądzie.</li><li>Zakładka „Opis działalności” pokazuje ostateczny opis działalności i propozycje czatów.</li></ul></div>
+        <div id="porSkoki" class="skoki"></div>
       </div>
       <div id="porLista"></div>
+      <details class="gemini-reczny">
+        <summary>Przyjmij hurtem wersje zgodnych czatów (bez rozstrzygnięcia Claude'a)</summary>
+        <div class="rzad" style="margin-top:10px">
+          <select id="porModelZgodne" style="width:auto" title="Z którego czatu brać opisy, gdy czaty się zgadzają"></select>
+          <button id="btnPrzyjmijZgodne">Przyjmij wszystkie zgodne</button>
+        </div>
+      </details>
       <div class="karta rozdziel">
         <span style="font-size:13.5px;color:var(--slaby)">Przyjęte firmy mają już rekord i czekają w przeglądzie.</span>
         <button class="glowny duzy" data-idz="przeglad">Przejdź do przeglądu</button>
@@ -1366,13 +1398,14 @@ async function ekranRozstrzygniecie() {
     const wej = f.odpowiedzi.filter((o) => o.model !== ROZ);
     const r = f.odpowiedzi.find((o) => o.model === ROZ);
     return `<tr>
-      <td><b>${esc(f.nazwa)}</b></td>
+      <td><b>${esc(f.nazwa)}</b><br><a href="#" data-porownaj="${esc(f.nazwa)}" style="font-size:12.5px">porównaj czaty →</a></td>
       <td style="font-size:13px">${wej.map((o) => `${esc(o.model)}: <b>${esc(o.sledztwo.country_code || "?")}</b>`).join(" · ")}</td>
       <td>${r ? `<b>${esc(r.sledztwo.country_code || "?")}</b> · ${esc(r.sledztwo.ostateczny_wlasciciel || "?")}<br><span style="font-size:12.5px;color:var(--slaby)">zgodne czaty: ${r.zgodneZ.length} z ${wej.length}${r.sledztwo.konflikt ? ` · <span class="err">konflikt: ${esc(r.sledztwo.konflikt)}</span>` : ""}</span>` : '<span class="pusto">jeszcze nie</span>'}</td>
       <td>${f.przyjeta ? `${pewnosc(f)}<br><span style="font-size:12.5px;color:var(--slaby)">przyjęto: ${esc(f.przyjeta)}</span>` : '<span class="plakietka">czeka</span>'}</td>
     </tr>`;
   });
   $("#rozTabela").className = "";
+  $("#rozTabela").onclick = (e) => { const a = e.target.closest("[data-porownaj]"); if (!a) return; e.preventDefault(); STAN.porownajFirme = a.dataset.porownaj; pokaz("porownanie"); };
   $("#rozTabela").innerHTML = wiersze.length ? `<table><tr><th>Marka</th><th>Czaty</th><th>Rozstrzygnięcie Claude</th><th>Pewność</th></tr>${wiersze.join("")}</table>` : '<span class="pusto">Brak firm z odpowiedziami czatów. Wróć do kroku 4.</span>';
 }
 
@@ -1426,65 +1459,91 @@ $("#btnRozWklej").onclick = () => { const t = $("#rozTekst").value; if (!t.trim(
 
 // ---------- porównanie ----------
 $("#porFiltr").onchange = () => ekranPorownanie();
+let POR_ZAKLADKA = "wlasciciel";
+document.querySelectorAll("[data-zakladka]").forEach((b) => b.addEventListener("click", () => {
+  POR_ZAKLADKA = b.dataset.zakladka;
+  document.querySelectorAll("[data-zakladka]").forEach((x) => x.classList.toggle("akt", x === b));
+  ekranPorownanie();
+}));
 
-function kolumnaModelu(f, o) {
-  const s = o.sledztwo, op = o.opisy;
-  const wej = f.odpowiedzi.filter((x) => x.model !== ROZ).length;
-  const kraje = new Set(f.odpowiedzi.map((x) => x.sledztwo.country_code || "?"));
-  const klasa = o.model === ROZ ? (o.zgodneZ.length >= 2 ? "zgodny" : "niezgodny") : wej < 2 ? "" : o.zgodneZ.length === wej - 1 ? "zgodny" : "niezgodny";
-  const lanc = (s.lancuch || []).map((x) => `<li>${esc(x.podmiot)} <span class="male">(${esc(x.kraj || "?")}${x.proc_glosow != null ? ", " + esc(x.proc_glosow) + "%" : ""}${x.stan_na ? ", " + esc(x.stan_na) : ""})</span> ${x.zrodlo_url ? `<a href="${esc(x.zrodlo_url)}" target="_blank" rel="noopener" title="${esc(x.zrodlo_tytul || x.zrodlo_url)}">źródło</a>` : `<span class="rozne male">bez źródła</span>`}</li>`).join("");
-  return `<div class="model ${klasa} ${f.przyjeta === o.model ? "przyjety" : ""}">
-    <h3><span>${esc(o.model)}</span>${f.przyjeta === o.model ? '<span class="plakietka p-ok">przyjęta</span>' : `<button data-przyjmij="${esc(f.nazwa)}" data-model-w="${esc(o.model)}">Przyjmij tę wersję</button>`}</h3>
-    <div class="kraj ${kraje.size > 1 ? "rozne" : ""}">${esc(s.country_code || "?")}</div>
-    <div><b>${esc(s.ostateczny_wlasciciel || "?")}</b> <span class="male">· ${esc(s.regula || "bez reguły")} · ${esc(s.typ_wlasciciela || "")}</span></div>
-    <p class="male" style="margin:6px 0">${esc(s.uzasadnienie || "")}</p>
-    ${s.rozstrzygniecie ? `<p style="font-size:13px;margin:6px 0"><b>Rozstrzygnięcie:</b> ${esc(s.rozstrzygniecie)} <span class="male">(zgodne czaty: ${o.zgodneZ.length} z ${wej})</span></p>` : ""}
-    ${s.konflikt ? `<p class="rozne" style="font-size:13px;margin:6px 0"><b>Konflikt:</b> ${esc(s.konflikt)}</p>` : ""}
-    <ol>${lanc || '<li class="rozne">brak łańcucha</li>'}</ol>
+const kolorStatusu = (st) => st === "WYSOKA" ? "var(--zielony)" : st === "KONFLIKT" ? "var(--czerwony)" : st === "SREDNIA" ? "var(--bursztyn)" : "#bbb";
+
+function lancuchHtml(s) {
+  const l = (s.lancuch || []).map((x) => `<li>${esc(x.podmiot)} <span class="male">(${esc(x.kraj || "?")}${x.proc_glosow != null ? ", " + esc(x.proc_glosow) + "%" : ""}${x.stan_na ? ", " + esc(x.stan_na) : ""})</span> ${x.zrodlo_url ? `<a href="${esc(x.zrodlo_url)}" target="_blank" rel="noopener" title="${esc(x.zrodlo_tytul || x.zrodlo_url)}">źródło</a>` : `<span class="rozne male">bez źródła</span>`}</li>`).join("");
+  return `<details><summary>Łańcuch i źródła${s.regula ? " · " + esc(s.regula) : ""}</summary>
+    ${s.uzasadnienie ? `<p class="male" style="margin:6px 0">${esc(s.uzasadnienie)}</p>` : ""}
+    <ol>${l || '<li class="rozne">brak łańcucha</li>'}</ol>
     ${(s.luki || []).length ? `<div class="male"><b>Luki:</b> ${esc(s.luki.join("; "))}</div>` : ""}
     ${s.transakcja_w_toku ? `<div class="male rozne"><b>Transakcja w toku:</b> ${esc(s.transakcja_w_toku)}</div>` : ""}
-    <details style="margin-top:6px"><summary class="male">Opisy i marki</summary>
-      <p class="male"><b>${esc(op.display_name || "")}</b> · ${esc(op.category_slug || "bez kategorii")}${op.website_url ? ` · ${esc(op.website_url)}` : ""}</p>
-      <p style="font-size:13px">${esc(op.ownership_description || "")}</p>
-      <p style="font-size:13px">${esc(op.business_description || "")}</p>
-      <p class="male">Marki: ${esc((op.brands || []).map((b) => b.name).join(", ") || "brak")}</p>
-    </details>
-  </div>`;
+  </details>`;
 }
+
+function kartaPorownania(f) {
+  const r = f.odpowiedzi.find((o) => o.model === ROZ);
+  const czaty = f.odpowiedzi.filter((o) => o.model !== ROZ).sort((a, b) => a.model.localeCompare(b.model));
+  const wiersze = [...(r ? [r] : []), ...czaty];
+  // kraj porównujemy z rozstrzygnięciem; bez niego z najczęstszym krajem czatów
+  const licznik = {};
+  for (const o of czaty) if (o.sledztwo.country_code) licznik[o.sledztwo.country_code] = (licznik[o.sledztwo.country_code] || 0) + 1;
+  const wzorzec = r?.sledztwo.country_code || Object.entries(licznik).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+  const akcja = (o) => f.przyjeta === o.model ? '<span class="plakietka p-ok">przyjęta</span>' : `<button data-przyjmij="${esc(f.nazwa)}" data-model-w="${esc(o.model)}" style="font-size:12.5px;padding:5px 9px">Przyjmij tę wersję</button>`;
+  const nazwaWiersza = (o) => `<b>${o.model === ROZ ? "Rozstrzygnięcie Claude'a" : esc(o.model)}</b>${o.model === ROZ ? `<br><span class="male">zgodne czaty: ${o.zgodneZ.length} z ${czaty.length}</span>` : ""}`;
+  let tabela;
+  if (POR_ZAKLADKA === "dzialalnosc") {
+    tabela = `<table class="wersje"><colgroup><col style="width:130px"><col><col style="width:190px"><col style="width:120px"></colgroup>
+      <tr><th>Wersja</th><th>Opis działalności</th><th>Marki · kategoria · strona</th><th></th></tr>
+      ${wiersze.map((o) => `<tr class="${o.model === ROZ ? "roz" : ""}"><td>${nazwaWiersza(o)}</td>
+        <td class="opis">${esc(o.opisy.business_description || "—")}</td>
+        <td class="male">${esc((o.opisy.brands || []).map((b) => b.name).join(", ") || "brak marek")}<br>${esc(o.opisy.category_slug || "bez kategorii")}${o.opisy.website_url ? `<br><a href="${esc(o.opisy.website_url)}" target="_blank" rel="noopener">${esc(o.opisy.website_url.replace(/^https?:\/\//, ""))}</a>` : ""}</td>
+        <td>${akcja(o)}</td></tr>`).join("")}</table>`;
+  } else {
+    tabela = `<table class="wersje"><colgroup><col style="width:130px"><col style="width:52px"><col style="width:200px"><col><col style="width:120px"></colgroup>
+      <tr><th>Wersja</th><th>Kraj</th><th>Właściciel</th><th>Opis właścicielski</th><th></th></tr>
+      ${wiersze.map((o) => { const k = o.sledztwo.country_code || ""; return `<tr class="${o.model === ROZ ? "roz" : ""}"><td>${nazwaWiersza(o)}</td>
+        <td class="kraj ${o.model === ROZ || !wzorzec ? "" : k === wzorzec ? "tak" : "nie"}">${esc(k || "?")}</td>
+        <td>${esc(o.sledztwo.ostateczny_wlasciciel || "?")}<br><span class="male">${esc(o.sledztwo.typ_wlasciciela || "")}</span>${lancuchHtml(o.sledztwo)}</td>
+        <td class="opis">${esc(o.opisy.ownership_description || "—")}</td>
+        <td>${akcja(o)}</td></tr>`; }).join("")}</table>`;
+  }
+  return `<div class="firma ${f.status === "KONFLIKT" ? "konflikt" : ""}" id="por-${esc(slugPor(f.nazwa))}">
+    <header><div><b>${esc(f.nazwa)}</b> <span style="font-size:13px;color:var(--slaby)">${esc(f.spolka || "")} · NIP ${esc(f.nip || "?")}</span></div>
+      <div class="rzad">${stanFirmy(f)}${f.przyjeta ? `<button data-cofnij="${esc(f.nazwa)}">Cofnij przyjęcie</button>` : ""}</div></header>
+    <div class="tresc">
+      ${r?.sledztwo.rozstrzygniecie ? `<p style="font-size:13.5px;margin:0 0 10px"><b>Rozstrzygnięcie Claude'a:</b> ${esc(r.sledztwo.rozstrzygniecie)}</p>` : ""}
+      ${r?.sledztwo.konflikt ? `<div class="pasmo blad" style="margin-bottom:10px"><b>Konflikt wg Claude'a:</b> ${esc(r.sledztwo.konflikt)}</div>` : ""}
+      ${f.wBazie ? `<div class="pasmo" style="margin-bottom:10px">W bazie jest już rekord „${esc(f.wBazie.slug)}”: ${esc(f.wBazie.kraj || "?")} · ${esc(f.wBazie.wlasciciel || "?")}</div>` : ""}
+      ${f.przyjeta && f.konflikty.length ? `<div class="pasmo blad" style="margin-bottom:10px">${f.konflikty.map(esc).join("<br>")}</div>` : ""}
+      ${tabela}
+    </div></div>`;
+}
+const slugPor = (n) => String(n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ł/g, "l").replace(/[^a-z0-9]+/g, "-");
 
 async function ekranPorownanie() {
   if (!STAN.partia) { $("#porLista").innerHTML = '<div class="karta pusto">Nie wybrano partii.</div>'; return; }
   const j = await pobierz("/api/panel/czaty?partia=" + encodeURIComponent(STAN.partia));
   if (j.blad) { $("#porLista").innerHTML = `<div class="karta pusto">${esc(j.blad)}</div>`; return; }
   const zOdp = j.firmy.filter((f) => f.odpowiedzi.length);
-  const ile = (st) => zOdp.filter((f) => !f.przyjeta && f.stan === st).length;
-  const zgodne = ile("zgodne"), przyjete = j.firmy.filter((f) => f.przyjeta).length;
-  const bez = j.firmy.length - zOdp.length;
+  const ile = (st) => zOdp.filter((f) => f.status === st).length;
   $("#porPodsumowanie").className = "";
-  $("#porPodsumowanie").innerHTML = `<b>${zgodne} zgodnych</b> · <span class="err">${ile("rozne_kraje") + ile("rozni_wlasciciele")} rozbieżnych</span> · ${ile("jeden")} z jednym czatem · ${przyjete} przyjętych${bez ? ` · ${bez} bez odpowiedzi (<a href="#" onclick="pokaz('czaty');return false">wróć do czatów</a>)` : ""}`;
-  const modele = [...new Set(zOdp.flatMap((f) => f.odpowiedzi.map((o) => o.model)))];
+  $("#porPodsumowanie").innerHTML = `${zOdp.length} firm: <b style="color:var(--czerwony)">${ile("KONFLIKT")} konflikt</b> · <b style="color:var(--bursztyn)">${ile("SREDNIA")} średnia</b> · <b style="color:var(--zielony)">${ile("WYSOKA")} wysoka</b>${zOdp.filter((f) => !f.przyjeta).length ? ` · ${zOdp.filter((f) => !f.przyjeta).length} bez przyjętej wersji` : ""}`;
+  const modele = [...new Set(zOdp.flatMap((f) => f.odpowiedzi.map((o) => o.model)).filter((m) => m !== ROZ))];
   const poprzedni = $("#porModelZgodne").value;
   $("#porModelZgodne").innerHTML = modele.map((m) => `<option value="${esc(m)}">opisy z: ${esc(m)}</option>`).join("");
   if (modele.includes(poprzedni)) $("#porModelZgodne").value = poprzedni;
+  const zgodne = zOdp.filter((f) => !f.przyjeta && f.stan === "zgodne").length;
   $("#btnPrzyjmijZgodne").disabled = !zgodne;
   $("#btnPrzyjmijZgodne").textContent = `Przyjmij wszystkie zgodne (${zgodne})`;
-  const kolejnosc = { rozne_kraje: 0, rozni_wlasciciele: 1, jeden: 2, zgodne: 3 };
-  const lista = zOdp.filter((f) => $("#porFiltr").value === "wszystkie" || !f.przyjeta).sort((a, b) => (!!a.przyjeta - !!b.przyjeta) || (kolejnosc[a.stan] - kolejnosc[b.stan]));
-  $("#porLista").innerHTML = lista.length ? lista.map((f) => {
-    const rozbiezne = f.stan === "rozne_kraje" || f.stan === "rozni_wlasciciele";
-    const kolumny = `<div class="modele">${f.odpowiedzi.map((o) => kolumnaModelu(f, o)).join("")}</div>`;
-    return `<div class="firma ${rozbiezne && !f.przyjeta ? "konflikt" : ""}">
-      <header><div><b>${esc(f.nazwa)}</b> <span style="font-size:13px;color:var(--slaby)">${esc(f.spolka || "")} · NIP ${esc(f.nip || "?")}</span></div>
-        <div class="rzad">${stanFirmy(f)}${f.przyjeta ? `<button data-cofnij="${esc(f.nazwa)}">Cofnij przyjęcie</button>` : ""}</div></header>
-      <div class="tresc">
-        ${f.wBazie ? `<div class="pasmo" style="margin-bottom:10px">Już w bazie: <b>${esc(f.wBazie.kraj || "?")}</b> · ${esc(f.wBazie.wlasciciel || "?")} (${esc(f.wBazie.slug)})</div>` : ""}
-        ${f.uwagiTozsamosci ? `<div class="pasmo" style="margin-bottom:10px">${esc(f.uwagiTozsamosci)}</div>` : ""}
-        ${(() => { const r = f.odpowiedzi.find((o) => o.model === ROZ); return r?.sledztwo.rozstrzygniecie ? `<p style="font-size:13.5px;margin:0 0 10px"><b>Rozstrzygnięcie Claude'a:</b> ${esc(r.sledztwo.rozstrzygniecie)} <span style="color:var(--slaby)">(zgodne czaty: ${r.zgodneZ.length} z ${f.odpowiedzi.length - 1})</span></p>` : ""; })()}
-        ${f.przyjeta && f.konflikty.length ? `<div class="pasmo blad" style="margin-bottom:10px">${f.konflikty.map(esc).join("<br>")}</div>` : ""}
-        ${f.przyjeta ? `<details><summary style="font-size:13px;color:var(--slaby)">Pokaż odpowiedzi czatów</summary><div style="margin-top:10px">${kolumny}</div></details>` : kolumny}
-      </div></div>`;
-  }).join("") : `<div class="karta pusto">${zOdp.length ? "Wszystkie firmy z odpowiedziami są już przyjęte. Zmień filtr na „Wszystkie”, żeby je zobaczyć." : "Jeszcze żadnej odpowiedzi. Zacznij od kroku „Śledztwo w czatach”."}</div>`;
+  const waga = { KONFLIKT: 0, SREDNIA: 1, WYSOKA: 2 };
+  const filtr = $("#porFiltr").value;
+  const lista = zOdp
+    // rozbieżne = czaty podały różne kraje (czat bez kraju to brak odpowiedzi, nie rozbieżność)
+    .filter((f) => filtr === "wszystkie" || (filtr === "do" ? !f.przyjeta : f.status === "KONFLIKT" || new Set(f.odpowiedzi.map((o) => o.sledztwo.country_code).filter(Boolean)).size > 1))
+    .sort((a, b) => (waga[a.status] ?? -1) - (waga[b.status] ?? -1));
+  $("#porSkoki").innerHTML = lista.map((f) => `<a data-skok="${esc(slugPor(f.nazwa))}"><i style="background:${kolorStatusu(f.status)}"></i>${esc(f.nazwa)}</a>`).join("");
+  $("#porSkoki").querySelectorAll("[data-skok]").forEach((a) => a.addEventListener("click", () => document.getElementById("por-" + a.dataset.skok)?.scrollIntoView({ behavior: "smooth", block: "start" })));
+  $("#porLista").innerHTML = lista.length ? lista.map(kartaPorownania).join("") : `<div class="karta pusto">${zOdp.length ? "Brak firm w tym filtrze." : "Jeszcze żadnej odpowiedzi. Zacznij od kroku 4 „Śledztwo w czatach”."}</div>`;
   $("#porLista").querySelectorAll("[data-przyjmij]").forEach((b) => b.addEventListener("click", async () => {
+    if (!confirm(`Przyjąć dla ${b.dataset.przyjmij} wersję: ${b.dataset.modelW}? Rekord w przeglądzie zostanie zastąpiony tą wersją (opisy też).`)) return;
     const r = await wyslij("/api/panel/przyjmij", { partia: STAN.partia, firma: b.dataset.przyjmij, model: b.dataset.modelW });
     if (r.blad || r.bledy?.length) alert(r.blad || r.bledy.join("\n"));
     ekranPorownanie(); rysujSciezke();
@@ -1494,6 +1553,11 @@ async function ekranPorownanie() {
     if (r.blad) alert(r.blad);
     ekranPorownanie(); rysujSciezke();
   }));
+  if (STAN.porownajFirme) {
+    const cel = document.getElementById("por-" + slugPor(STAN.porownajFirme));
+    STAN.porownajFirme = null;
+    if (cel) setTimeout(() => cel.scrollIntoView({ block: "start" }), 50);
+  }
 }
 
 $("#btnPrzyjmijZgodne").onclick = async () => {
