@@ -145,6 +145,7 @@
   .male{font-size:12.5px;color:var(--slaby)}
   table.wersje th:first-child,table.wersje td:first-child{padding-left:10px}
   .pasek-wersji{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#fff4cc;border:1px solid #e4c96a;border-radius:6px;padding:10px 14px;margin:-8px 0 16px;font-size:14px}
+  .pasek-wersji[hidden]{display:none}
   .pasek-wersji.lagodny{background:#f3f7fb;border-color:#c9d8e8}
   .pasek-wersji span{flex:1;min-width:260px}
 </style>
@@ -1629,7 +1630,14 @@ async function ekranLogo() {
   $("#logoLampki").innerHTML =
     lampka(j.brakujacych ? "uwaga" : "ok", `${j.brakujacych} firm bez logotypu`, j.brakujacych ? `Na dysku: ${j.plikow} plików. Pobranie dotyczy tylko brakujących.` : `Wszystkie firmy z adresem strony mają logotyp (${j.plikow} plików).`, `<button class="glowny" id="btnPobierzLogo" ${j.brakujacych ? "" : "disabled"}>Pobierz logotypy</button>`) +
     lampka("ok", "Obrazki do udostępniania", "Używane, gdy ktoś wrzuca link do firmy na Facebooka albo X.", `<button id="btnOg">Przygotuj obrazki</button>`) +
-    lampka(j.bezUrl ? "uwaga" : "ok", `${j.bezUrl} firm bez adresu strony`, "Dla nich logotypu nie da się pobrać automatycznie. Uzupełnij adres w bazie albo wstaw plik ręcznie.", "");
+    lampka(j.bezUrl ? "uwaga" : "ok", `${j.bezUrl} firm bez adresu strony`, "Dla nich logotypu nie da się pobrać automatycznie. Uzupełnij adres w bazie albo wstaw plik ręcznie.", "") +
+    (() => {
+      const grupa = (r) => (j.podejrzane || []).filter((x) => x.rodzaj === r).map((x) => x.plik);
+      const ikonki = [...grupa("ikonka"), ...grupa("nie-obrazek")], nazwy = grupa("rozszerzenie");
+      return lampka(ikonki.length ? "zle" : "ok", `${ikonki.length} logotypów to ikonki strony zamiast logo`,
+        ikonki.length ? `Wyglądają na stronie słabo (zwykle 16 do 128 px). Do wymiany w Logo Fixerze albo przez Claude'a: ${ikonki.map(esc).join(", ")}.` : "Żaden plik nie jest ikonką strony zapisaną jako logo.", "")
+        + (nazwy.length ? lampka("uwaga", `${nazwy.length} plików ma złą końcówkę nazwy`, `To prawdziwe obrazki (JPG albo WebP zapisane jako .png), na stronie wyświetlają się dobrze. Przy WebP podgląd linku na Facebooku i X może pokazać monogram zamiast logo: ${nazwy.map(esc).join(", ")}.`, "") : "");
+    })();
   $("#btnPobierzLogo").onclick = async () => { const z = await wyslij("/api/panel/logo-pobierz"); $("#logoLog").style.display = ""; sledzZadanie(z.zadanie, "#logoLog", ekranLogo); };
   $("#btnOg").onclick = async () => { const z = await wyslij("/api/panel/logo-og"); $("#logoLog").style.display = ""; sledzZadanie(z.zadanie, "#logoLog", ekranLogo); };
   const g = j.git;

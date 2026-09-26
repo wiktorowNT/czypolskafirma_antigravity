@@ -155,31 +155,42 @@ function fetchJSON(url, headers = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
 }
 
 /**
- * Check if a downloaded logo is valid (not a default globe, not too small, etc.)
+ * Prawdziwy format pliku po pierwszych bajtach (serwery często podają zły content-type).
+ * Zwraca 'png' | 'jpg' | 'webp' | 'svg' | 'gif' | 'ico' | null.
+ */
+function formatZBajtow(buffer) {
+  if (!buffer || buffer.length < 12) return null
+  if (buffer[0] === 0x89 && buffer.toString('ascii', 1, 4) === 'PNG') return 'png'
+  if (buffer[0] === 0xff && buffer[1] === 0xd8) return 'jpg'
+  if (buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP') return 'webp'
+  if (buffer.toString('ascii', 0, 3) === 'GIF') return 'gif'
+  if (buffer[0] === 0 && buffer[1] === 0 && buffer[2] === 1 && buffer[3] === 0) return 'ico'
+  // SVG z Illustratora ma długi nagłówek (XML, DOCTYPE, encje), więc czytamy do 8 KB
+  const poczatek = buffer.toString('utf8', 0, Math.min(buffer.length, 8192)).trimStart().toLowerCase()
+  if (poczatek.includes('<svg') && !poczatek.startsWith('<!doctype html') && !poczatek.startsWith('<html')) return 'svg'
+  return null
+}
+
+// Formaty, które zapisujemy jako logo. ICO to ikonka strony (favicon), a nie logo: odrzucamy,
+// zamiast zapisywać ją jako .png (tak powstało słabe logo Zapiecka we wrześniu 2026).
+const DOZWOLONE_FORMATY = new Set(['png', 'jpg', 'webp', 'svg'])
+
+/**
+ * Check if a downloaded logo is valid (not a default globe, not too small, not a favicon or error page)
  */
 function isValidLogo(result) {
   if (!result || !result.buffer) return false
   if (result.size < MIN_VALID_SIZE) return false
   if (KNOWN_BAD_SIZES.has(result.size)) return false
-  
-  // Check content type - must be an image
-  const ct = result.contentType.toLowerCase()
-  if (!ct.includes('image') && !ct.includes('icon') && !ct.includes('svg')) return false
-  
-  return true
+  return DOZWOLONE_FORMATY.has(formatZBajtow(result.buffer))
 }
 
 /**
- * Get file extension from content type
+ * Rozszerzenie pliku z prawdziwego formatu (bajty), nie z nagłówka serwera
  */
-function getExtension(contentType) {
-  const ct = contentType.toLowerCase()
-  if (ct.includes('svg')) return '.svg'
-  if (ct.includes('png')) return '.png'
-  if (ct.includes('jpeg') || ct.includes('jpg')) return '.jpg'
-  if (ct.includes('webp')) return '.webp'
-  if (ct.includes('icon') || ct.includes('x-icon')) return '.png' // We'll treat ico as png
-  return '.png' // Default
+function getExtension(result) {
+  const f = formatZBajtow(result.buffer)
+  return f ? '.' + f : '.png'
 }
 
 // ── Brandfetch API ──────────────────────────────────────────────────────
@@ -243,7 +254,7 @@ async function fetchFromBrandfetch(domain, apiKey) {
 
     // Pobierz wybrany obrazek
     const result = await fetchBuffer(best.src)
-    if (!result || result.size < MIN_VALID_SIZE) return null
+    if (!result || result.size < MIN_VALID_SIZE || !DOZWOLONE_FORMATY.has(formatZBajtow(result.buffer))) return null
 
     // Napraw content-type jeśli Brandfetch nie podał poprawnego
     if (best.format === 'svg' && !result.contentType.includes('svg')) {
@@ -401,7 +412,7 @@ async function runUpgradeMode(brandfetchKey, dryRun) {
     const result = await fetchFromBrandfetch(domain, brandfetchKey)
 
     if (result && result.size > fileStat.size) {
-      const newExt = getExtension(result.contentType)
+      const newExt = getExtension(result)
       const newSizeKb = (result.size / 1024).toFixed(1)
 
       if (dryRun) {
@@ -536,7 +547,7 @@ async function main() {
       const result = await fetchBestLogo(domain, brandfetchKey)
 
       if (result) {
-        const ext = getExtension(result.contentType)
+        const ext = getExtension(result)
         const filename = `${domain}${ext}`
         const filepath = path.join(LOGOS_DIR, filename)
         

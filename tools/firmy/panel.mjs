@@ -350,7 +350,23 @@ function stanLogotypow() {
     if (!d) continue;
     if (!pliki.some((p) => p.startsWith(d + "."))) brakujace.push({ slug: f.slug, nazwa: f.name, domena: d });
   }
-  return { plikow: pliki.length, brakujacych: brakujace.length, brakujace: brakujace.slice(0, 40), bezUrl: indeks.filter((f) => !domenaZUrl(f.website_url)).length };
+  // Podejrzane: plik nie jest tym, na co wskazuje rozszerzenie (np. ikonka .ico zapisana jako .png
+  // albo strona błędu HTML). Takie "logo" wygląda na stronie źle i trzeba je podmienić.
+  const podejrzane = [];
+  for (const p of pliki) {
+    const roz = path.extname(p).slice(1).toLowerCase().replace("jpeg", "jpg");
+    let naglowek;
+    try { const fd = fs.openSync(path.join(katalog, p), "r"); naglowek = Buffer.alloc(8192); const n = fs.readSync(fd, naglowek, 0, 8192, 0); naglowek = naglowek.subarray(0, n); fs.closeSync(fd); } catch { continue; }
+    const format = naglowek[0] === 0x89 && naglowek.toString("ascii", 1, 4) === "PNG" ? "png"
+      : naglowek[0] === 0xff && naglowek[1] === 0xd8 ? "jpg"
+      : naglowek.toString("ascii", 0, 4) === "RIFF" && naglowek.toString("ascii", 8, 12) === "WEBP" ? "webp"
+      : naglowek[0] === 0 && naglowek[1] === 0 && naglowek[2] === 1 && naglowek[3] === 0 ? "ico"
+      : /<svg/i.test(naglowek.toString("utf8")) && !/<html|<!doctype html/i.test(naglowek.toString("utf8")) ? "svg" : "inny";
+    // ico = ikonka strony zamiast logo (słaba jakość, do wymiany); inny = nie obrazek;
+    // jpg/webp z końcówką .png wyświetla się dobrze, tylko nazwa pliku się nie zgadza
+    if (format !== roz) podejrzane.push({ plik: p, format, rodzaj: format === "ico" ? "ikonka" : format === "inny" ? "nie-obrazek" : "rozszerzenie" });
+  }
+  return { plikow: pliki.length, brakujacych: brakujace.length, brakujace: brakujace.slice(0, 40), bezUrl: indeks.filter((f) => !domenaZUrl(f.website_url)).length, podejrzane };
 }
 
 function git(...argumenty) {
