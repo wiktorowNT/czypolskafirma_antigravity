@@ -1584,7 +1584,8 @@ async function planImportu() {
   const j = await pobierz("/api/panel/import-plan?partia=" + encodeURIComponent(STAN.partia));
   if (j.blad) { $("#importTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
   PLAN = j.plan;
-  $("#importOstrzezenie").innerHTML = j.brakKolumn.length ? `<div class="pasmo">W bazie brakuje kolumn ${esc(j.brakKolumn.join(", "))}. Import zadziała, ale źródła i pewność zostaną tylko w pliku partii.</div>` : "";
+  $("#importOstrzezenie").innerHTML = (j.brakKolumn.length ? `<div class="pasmo">W bazie brakuje kolumn ${esc(j.brakKolumn.join(", "))}. Import zadziała, ale źródła i pewność zostaną tylko w pliku partii.</div>` : "")
+    + ((j.czekaWPrzegladzie || []).length ? `<div class="pasmo">Import bierze tylko firmy zatwierdzone w przeglądzie. <b>${j.czekaWPrzegladzie.length} firm czeka jeszcze na Twoją decyzję</b>: ${esc(j.czekaWPrzegladzie.join(", "))}. <a href="#" onclick="pokaz('przeglad');return false">Przejdź do przeglądu</a> i kliknij „Zatwierdź wszystkie gotowe”, potem wróć tutaj.</div>` : "");
   if (!PLAN.length) {
     $("#importTabela").innerHTML = '<span class="pusto">W tej partii nie ma zatwierdzonych firm. Wróć do przeglądu i zatwierdź, co ma trafić do bazy.</span>';
     $("#importPodsumowanie").textContent = "";

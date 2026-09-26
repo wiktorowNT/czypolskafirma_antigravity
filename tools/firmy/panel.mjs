@@ -814,6 +814,8 @@ const serwer = http.createServer(async (req, res) => {
       return json(res, {
         partia: nazwa,
         brakKolumn: [!ctx.maSources && "sources", !ctx.maConfidence && "confidence"].filter(Boolean),
+        // firmy z rekordem bez decyzji w przeglądzie: import ich nie weźmie, dopóki nie zatwierdzisz
+        czekaWPrzegladzie: partia.firmy.filter((f) => !f.pomin && f.rekord && !f.decyzja).map((f) => f.nazwa),
         plan: plan.map((x) => ({
           nazwa: x.nazwa,
           akcja: x.akcja,
