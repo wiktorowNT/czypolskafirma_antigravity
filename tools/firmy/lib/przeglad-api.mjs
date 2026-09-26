@@ -5,7 +5,7 @@ import fs from "node:fs";
 import { dzisiaj } from "./env.mjs";
 import { promptKonsylium } from "./prompty.mjs";
 import { zlozRekord } from "./rekord.mjs";
-import { normalizujKrajOdModelu } from "./walidacja.mjs";
+import { normalizujKrajOdModelu, walidujRekord } from "./walidacja.mjs";
 import { podobienstwoNazw } from "./tekst.mjs";
 
 export const wczytajPartie = (plik) => JSON.parse(fs.readFileSync(plik, "utf8"));
@@ -65,6 +65,16 @@ function json(res, dane, kod = 200) {
  * Obsługa ścieżek /api/* przeglądu. Zwraca true, gdy żądanie zostało obsłużone.
  * ctx: { plik(url) -> ścieżka pliku partii, kategorie }
  */
+// Braki, przez które firmy nie da się zaimportować (liczone na bieżąco z rekordu, także po edycji).
+export function brakiRekordu(f, kategorie) {
+  if (!f.rekord || f.pomin) return [];
+  const b = [...walidujRekord(f.rekord, kategorie).bledy];
+  if (!f.rekord.category_slug) b.push("brak kategorii");
+  return [...new Set(b)];
+}
+// Gotowa do zatwierdzenia hurtem: bez konfliktu, bez braków, jeszcze bez decyzji.
+export const gotowaDoZatwierdzenia = (f, kategorie) => !!f.rekord && !f.pomin && !f.decyzja && f.status !== "KONFLIKT" && !brakiRekordu(f, kategorie).length;
+
 export async function obsluzApiPrzegladu(req, res, url, ctx) {
   // Ciało zbieramy w buforach i dopiero na końcu dekodujemy jako UTF-8 (polskie znaki
   // potrafią wypaść na granicy pakietów).
@@ -74,7 +84,9 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
 
   if (req.method === "GET" && url.pathname === "/api/partia") {
     const p = plik();
-    json(res, { partia: wczytajPartie(p), kategorie, plik: p });
+    const partia = wczytajPartie(p);
+    for (const f of partia.firmy) f.braki = brakiRekordu(f, kategorie); // tylko w odpowiedzi, nie w pliku
+    json(res, { partia, kategorie, plik: p });
     return true;
   }
   if (req.method === "GET" && url.pathname === "/api/prompt-konsylium") {
@@ -96,11 +108,21 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
       const kat = kategorie.find((k) => k.slug === f.rekord.category_slug);
       f.rekord.category_id = kat?.id || null;
       f.edytowano = new Date().toISOString();
+      f.walidacja = walidujRekord(f.rekord, kategorie);
     }
     if (decyzja !== undefined) f.decyzja = decyzja;
     if (notatka !== undefined) f.notatka = notatka;
     zapiszPartie(sciezka, p);
     json(res, { ok: true, firma: f });
+    return true;
+  }
+  if (req.method === "POST" && url.pathname === "/api/zatwierdz-gotowe") {
+    const sciezka = plik();
+    const p = wczytajPartie(sciezka);
+    const zatwierdzone = [];
+    for (const f of p.firmy) if (gotowaDoZatwierdzenia(f, kategorie)) { f.decyzja = "zatwierdzony"; zatwierdzone.push(f.nazwa); }
+    zapiszPartie(sciezka, p);
+    json(res, { ok: true, zatwierdzono: zatwierdzone.length, firmy: zatwierdzone });
     return true;
   }
   if (req.method === "POST" && url.pathname === "/api/zatwierdz-pewne") {

@@ -40,6 +40,7 @@
 <header>
   <h1>Przegląd partii <span id="nazwaPartii"></span></h1>
   <span class="stat" id="staty"></span>
+  <button class="ok" id="btnGotowe" title="Zatwierdza wszystkie firmy bez konfliktu i bez braków, o których jeszcze nie zdecydowałeś">Zatwierdź wszystkie gotowe</button>
   <button class="ok" id="btnHurt" title="Zatwierdza wszystkie pozycje o pewności WYSOKA bez decyzji">Zatwierdź wszystkie WYSOKA</button>
   <button class="ok" id="btnHurtZgodne" title="Re-weryfikacja: ŚREDNIA bez konfliktów, kraj i właściciel zgodne z obecnym rekordem w bazie">Zatwierdź ŚREDNIA zgodne z bazą</button>
   <button id="btnKonsylium">Konsylium innych modeli</button>
@@ -63,7 +64,8 @@
     <div id="konsyliaLista" class="stat" style="margin-top:6px"></div>
   </section>
   <div class="filtry">
-    <button data-f="wszystkie" class="aktywny">Wszystkie</button>
+    <button data-f="uwaga" class="aktywny">Wymaga uwagi</button>
+    <button data-f="wszystkie">Wszystkie</button>
     <button data-f="KONFLIKT">Konflikty</button>
     <button data-f="SREDNIA">Średnia pewność</button>
     <button data-f="WYSOKA">Wysoka pewność</button>
@@ -73,7 +75,7 @@
   <div id="lista"></div>
 </main>
 <script>
-let DANE = null, FILTR = "wszystkie";
+let DANE = null, FILTR = "uwaga"; // domyślnie: firmy wymagające uwagi
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const KOLEJNOSC = { KONFLIKT: 0, SREDNIA: 1, WYSOKA: 2 };
@@ -93,7 +95,12 @@ function staty() {
   $("#konsyliaLista").textContent = k.length ? "Wczytane konsylia: " + k.map((x) => `${x.model} (${x.data}, ${x.dopasowane}/${x.wierszy} firm)`).join(", ") : "";
 }
 
+// Wymaga uwagi: konflikt albo braki, przez które import by firmę zablokował (bez już odrzuconych).
+const wymagaUwagi = (f) => !!f.rekord && !f.pomin && f.decyzja !== "odrzucony" && f.decyzja !== "zatwierdzony" && (f.status === "KONFLIKT" || (f.braki || []).length > 0);
+const gotowa = (f) => !!f.rekord && !f.pomin && !f.decyzja && f.status !== "KONFLIKT" && !(f.braki || []).length;
+
 function pasuje(f) {
+  if (FILTR === "uwaga") return wymagaUwagi(f);
   if (FILTR === "wszystkie") return true;
   if (FILTR === "bezdecyzji") return !f.decyzja;
   if (FILTR === "zatwierdzone") return f.decyzja === "zatwierdzony";
@@ -102,6 +109,11 @@ function pasuje(f) {
 
 function renderuj() {
   staty();
+  const g = DANE.partia.firmy.filter(gotowa).length;
+  $("#btnGotowe").textContent = `Zatwierdź wszystkie gotowe (${g})`;
+  $("#btnGotowe").disabled = !g;
+  const u = DANE.partia.firmy.filter(wymagaUwagi).length;
+  document.querySelector('[data-f="uwaga"]').textContent = `Wymaga uwagi (${u})`;
   const firmy = [...DANE.partia.firmy].sort((a, b) => (KOLEJNOSC[a.status] ?? 3) - (KOLEJNOSC[b.status] ?? 3) || a.nazwa.localeCompare(b.nazwa, "pl"));
   $("#lista").innerHTML = firmy.filter(pasuje).map(karta).join("") || `<p class="stat">Nic do pokazania w tym filtrze.</p>`;
 }
@@ -121,6 +133,7 @@ function karta(f) {
   if (!f.rekord) return `<article class="karta"><div class="naglowek"><h2>${esc(f.nazwa)}</h2><span class="badge odrz">bez rekordu</span></div><div class="uwagi">${esc(Object.entries(f.etapy || {}).map(([k, v]) => k + ": " + v).join(" · "))} ${esc((f.bledy || []).join(" · "))} ${f.czeka ? "Czeka na plik: " + esc(f.czeka) : ""}</div></article>`;
   return `<article class="karta ${f.status}" data-nazwa="${esc(f.nazwa)}">
     <div class="naglowek"><h2>${esc(r.display_name || f.nazwa)}</h2><span class="badge ${f.status}">${f.status}</span>${dec}<span class="stat">${esc(r.country_code || "??")} · ${esc(r.owner_name || "?")} · reguła ${esc(f.sledztwo?.regula || "?")} · NIP ${esc(r.nip || "?")} · KRS ${esc(r.krs || "?")}</span></div>
+    ${(f.braki || []).length ? `<ul class="konflikty"><li><b>Do uzupełnienia przed importem:</b> ${f.braki.map(esc).join("; ")}</li></ul>` : ""}
     ${f.konflikty?.length ? `<ul class="konflikty">${f.konflikty.map((k) => `<li>${esc(k)}</li>`).join("")}</ul>` : ""}
     ${f.uwagi?.length ? `<div class="uwagi">${f.uwagi.map(esc).join(" · ")}</div>` : ""}
     ${por}
@@ -178,6 +191,14 @@ document.addEventListener("click", async (e) => {
   if (b.dataset.f) { FILTR = b.dataset.f; document.querySelectorAll(".filtry button").forEach((x) => x.classList.toggle("aktywny", x === b)); renderuj(); }
 });
 $("#btnOdswiez").onclick = wczytaj;
+$("#btnGotowe").onclick = async () => {
+  const g = DANE.partia.firmy.filter(gotowa);
+  if (!confirm(`Zatwierdzić ${g.length} firm bez konfliktu i bez braków?\n\n${g.map((f) => f.nazwa).join(", ")}\n\nFirmy z konfliktem, z brakami, odrzucone i „do poprawy” zostają bez zmian.`)) return;
+  const r = await fetch("/api/zatwierdz-gotowe", { method: "POST" }); const j = await r.json();
+  alert(`Zatwierdzono ${j.zatwierdzono} firm. Zostały te, które wymagają uwagi.`);
+  FILTR = "uwaga"; document.querySelectorAll("[data-f]").forEach((x) => x.classList.toggle("aktywny", x.dataset.f === "uwaga"));
+  wczytaj();
+};
 $("#btnHurt").onclick = async () => { const r = await fetch("/api/zatwierdz-pewne", { method: "POST" }); const j = await r.json(); alert(`Zatwierdzono ${j.zatwierdzono} pozycji o pewności WYSOKA.`); wczytaj(); };
 $("#btnHurtZgodne").onclick = async () => { const r = await fetch("/api/zatwierdz-zgodne", { method: "POST" }); const j = await r.json(); alert(`Zatwierdzono ${j.zatwierdzono} pozycji ŚREDNIA zgodnych z bazą.`); wczytaj(); };
 $("#btnKonsylium").onclick = () => { $("#panelKonsylium").hidden = !$("#panelKonsylium").hidden; };
