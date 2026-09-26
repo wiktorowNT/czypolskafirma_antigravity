@@ -28,7 +28,10 @@
   .jak li{margin-bottom:3px}
   .stopka-boczna{margin-top:auto;padding:14px 18px 0;border-top:1px solid #3a3733;font-size:12px;color:#8a847b}
   .stopka-boczna button{background:none;border:0;color:#8a847b;padding:0;font-size:12px;text-decoration:underline;cursor:pointer}
-  main{padding:26px 34px 60px;max-width:1000px}
+  /* Panel wykorzystuje szerokość ekranu (do ~1650 px, wyśrodkowany); długie akapity mają
+     ograniczoną szerokość, żeby dało się je wygodnie czytać, tabele i porównania biorą całość. */
+  main{padding:26px 40px 60px;max-width:1650px;width:100%;box-sizing:border-box;margin:0 auto;min-width:0}
+  .podtytul,.etap p,.pomoc-tresc p,.pomoc-tresc ul,.uwagi{max-width:120ch}
   h1{font-size:23px;margin:0 0 4px;font-weight:600}
   .podtytul{color:var(--slaby);margin:0 0 22px}
   h2{font-size:15px;margin:0 0 12px;font-weight:600}
@@ -1490,14 +1493,14 @@ function kartaPorownania(f) {
   const nazwaWiersza = (o) => `<b>${o.model === ROZ ? "Rozstrzygnięcie Claude'a" : esc(o.model)}</b>${o.model === ROZ ? `<br><span class="male">zgodne czaty: ${o.zgodneZ.length} z ${czaty.length}</span>` : ""}`;
   let tabela;
   if (POR_ZAKLADKA === "dzialalnosc") {
-    tabela = `<table class="wersje"><colgroup><col style="width:130px"><col><col style="width:190px"><col style="width:120px"></colgroup>
+    tabela = `<table class="wersje"><colgroup><col style="width:140px"><col><col style="width:260px"><col style="width:130px"></colgroup>
       <tr><th>Wersja</th><th>Opis działalności</th><th>Marki · kategoria · strona</th><th></th></tr>
       ${wiersze.map((o) => `<tr class="${o.model === ROZ ? "roz" : ""}"><td>${nazwaWiersza(o)}</td>
         <td class="opis">${esc(o.opisy.business_description || "—")}</td>
         <td class="male">${esc((o.opisy.brands || []).map((b) => b.name).join(", ") || "brak marek")}<br>${esc(o.opisy.category_slug || "bez kategorii")}${o.opisy.website_url ? `<br><a href="${esc(o.opisy.website_url)}" target="_blank" rel="noopener">${esc(o.opisy.website_url.replace(/^https?:\/\//, ""))}</a>` : ""}</td>
         <td>${akcja(o)}</td></tr>`).join("")}</table>`;
   } else {
-    tabela = `<table class="wersje"><colgroup><col style="width:130px"><col style="width:52px"><col style="width:200px"><col><col style="width:120px"></colgroup>
+    tabela = `<table class="wersje"><colgroup><col style="width:140px"><col style="width:56px"><col style="width:260px"><col><col style="width:130px"></colgroup>
       <tr><th>Wersja</th><th>Kraj</th><th>Właściciel</th><th>Opis właścicielski</th><th></th></tr>
       ${wiersze.map((o) => { const k = o.sledztwo.country_code || ""; return `<tr class="${o.model === ROZ ? "roz" : ""}"><td>${nazwaWiersza(o)}</td>
         <td class="kraj ${o.model === ROZ || !wzorzec ? "" : k === wzorzec ? "tak" : "nie"}">${esc(k || "?")}</td>

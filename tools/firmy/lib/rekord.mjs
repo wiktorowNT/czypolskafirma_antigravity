@@ -124,6 +124,7 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const tenSamRekord = (b) => f.tryb === "reweryfikacja" || slugify(b.slug) === f.rekord.slug;
   if (t.istniejeWBazie && !tenSamRekord(t.istniejeWBazie)) {
     const b = t.istniejeWBazie;
+    delete f.porownanie; // nie ma czego porównywać: w bazie jest inna marka
     f.uwagi.push(`marka występuje w bazie przy innym rekordzie: "${b.slug}" (${b.country_code || "?"}, ${b.owner_name || "?"}); import doda ją jako osobną firmę, rekord "${b.slug}" zostanie bez zmian`);
   } else if (t.istniejeWBazie) {
     const b = t.istniejeWBazie;
