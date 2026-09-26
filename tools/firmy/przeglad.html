@@ -194,7 +194,8 @@ $("#btnOdswiez").onclick = wczytaj;
 $("#btnGotowe").onclick = async () => {
   const g = DANE.partia.firmy.filter(gotowa);
   if (!confirm(`Zatwierdzić ${g.length} firm bez konfliktu i bez braków?\n\n${g.map((f) => f.nazwa).join(", ")}\n\nFirmy z konfliktem, z brakami, odrzucone i „do poprawy” zostają bez zmian.`)) return;
-  const r = await fetch("/api/zatwierdz-gotowe", { method: "POST" }); const j = await r.json();
+  const r = await fetch("/api/zatwierdz-gotowe", { method: "POST" }); const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.ok) return alert("Nic nie zostało zatwierdzone: panel działa na starszej wersji.\n\nKliknij „Zamknij panel” (lewy dolny róg) i otwórz panel ponownie ze skrótu na pulpicie, potem spróbuj jeszcze raz.");
   alert(`Zatwierdzono ${j.zatwierdzono} firm. Zostały te, które wymagają uwagi.`);
   FILTR = "uwaga"; document.querySelectorAll("[data-f]").forEach((x) => x.classList.toggle("aktywny", x.dataset.f === "uwaga"));
   wczytaj();
