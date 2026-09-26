@@ -148,6 +148,16 @@
   .pasek-wersji[hidden]{display:none}
   .pasek-wersji.lagodny{background:#f3f7fb;border-color:#c9d8e8}
   .pasek-wersji span{flex:1;min-width:260px}
+  .logo-siatka{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .logo-karta{border:1px solid var(--linia);border-radius:6px;background:#fff;padding:10px;display:flex;flex-direction:column;gap:6px}
+  .logo-karta.zle{border-color:#e6c2c2;box-shadow:inset 0 3px 0 var(--czerwony)}
+  .logo-karta.uwaga{box-shadow:inset 0 3px 0 var(--bursztyn)}
+  .logo-karta.nad{outline:2px dashed var(--akcent);outline-offset:2px}
+  .logo-okno{height:96px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #eee;border-radius:4px;padding:8px}
+  .logo-okno img{max-width:100%;max-height:100%;object-fit:contain}
+  .logo-okno.brak{background:#faf8f5;color:var(--slaby);font-size:12.5px}
+  .logo-karta b{font-size:13.5px}
+  .logo-karta .male{line-height:1.35}
 </style>
 </head>
 <body>
@@ -607,6 +617,22 @@
       <h1>Logotypy</h1>
       <p class="podtytul">Po imporcie nowe firmy nie mają jeszcze znaków graficznych.</p>
       <div class="karta" id="logoLampki"><span class="pusto">Wczytuję…</span></div>
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:12px">
+          <h2 style="margin:0">Podgląd logotypów <i class="pomoc" data-pomoc="logopodglad" title="Wyjaśnienie">?</i></h2>
+          <div class="rzad">
+            <select id="logoZakres" style="width:auto">
+              <option value="partia">Firmy z bieżącej partii</option>
+              <option value="podejrzane">Podejrzane logotypy w całej bazie</option>
+            </select>
+            <button id="btnLogoOdswiez">Odśwież podgląd</button>
+          </div>
+        </div>
+        <div class="pomoc-tresc" id="pomoc-logopodglad" hidden><p>Tak logo będzie wyglądać na stronie (na białym tle). Pod obrazkiem: format, rozmiar w pikselach i ocena:</p><ul><li><b>✓ w porządku</b>: prawdziwe logo.</li><li><b>ikonka zamiast logo</b>: pobrała się ikonka strony (favicon), wygląda słabo. Do podmiany.</li><li><b>małe</b>: obrazek mniejszy niż 100 px, może być nieostry.</li><li><b>zła końcówka nazwy</b>: obrazek jest dobry, tylko plik ma inną końcówkę niż format.</li><li><b>brak logo</b>: automat nic nie znalazł.</li></ul><p>Żeby podmienić: kliknij „Podmień” i wybierz plik albo przeciągnij plik na kartę (PNG, JPG, WebP, SVG, najlepiej z przezroczystym albo białym tłem). „Strona firmy” otwiera stronę, z której zwykle da się pobrać logo. Po sprawdzeniu wyślij zmiany przyciskiem „Wyślij” niżej.</p></div>
+        <div id="logoPodsumowanie" class="uwagi" style="margin:0 0 10px"></div>
+        <div id="logoSiatka" class="logo-siatka"><span class="pusto">Wczytuję…</span></div>
+        <input type="file" id="logoPlik" accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+      </div>
       <div class="karta">
         <div class="rozdziel">
           <div><h2 style="margin-bottom:2px">Wyślij logotypy na podgląd</h2>
@@ -1625,6 +1651,10 @@ $("#btnZapisz").onclick = async () => {
 
 // ---------- logotypy ----------
 async function ekranLogo() {
+  await ekranLogoStan();
+  podgladLogo();
+}
+async function ekranLogoStan() {
   const j = await pobierz("/api/panel/logo-stan");
   if (j.blad) { $("#logoLampki").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
   $("#logoLampki").innerHTML =
@@ -1639,6 +1669,7 @@ async function ekranLogo() {
         + (nazwy.length ? lampka("uwaga", `${nazwy.length} plików ma złą końcówkę nazwy`, `To prawdziwe obrazki (JPG albo WebP zapisane jako .png), na stronie wyświetlają się dobrze. Przy WebP podgląd linku na Facebooku i X może pokazać monogram zamiast logo: ${nazwy.map(esc).join(", ")}.`, "") : "");
     })();
   $("#btnPobierzLogo").onclick = async () => { const z = await wyslij("/api/panel/logo-pobierz"); $("#logoLog").style.display = ""; sledzZadanie(z.zadanie, "#logoLog", ekranLogo); };
+  // podgląd pokazuje wynik automatu od razu po pobraniu (sledzZadanie woła ekranLogo po zakończeniu)
   $("#btnOg").onclick = async () => { const z = await wyslij("/api/panel/logo-og"); $("#logoLog").style.display = ""; sledzZadanie(z.zadanie, "#logoLog", ekranLogo); };
   const g = j.git;
   $("#logoGitOpis").innerHTML = !g.naDevelop
@@ -1647,6 +1678,53 @@ async function ekranLogo() {
   $("#btnWyslijLogo").disabled = !g.naDevelop || !g.plikow;
   $("#logoGitStopka").innerHTML = (g.ostatniCommit ? `Ostatnia zmiana logotypów: ${esc(g.ostatniCommit)}. ` : "") + `<a href="https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app/" target="_blank" rel="noopener">Otwórz stronę podglądu</a>`;
 }
+
+// ---------- podgląd logotypów ----------
+const OPIS_RODZAJU = {
+  ok: ['<span class="plakietka p-ok">✓ w porządku</span>', ""],
+  ikonka: ['<span class="plakietka p-zle">ikonka zamiast logo</span>', "zle"],
+  brak: ['<span class="plakietka p-zle">brak logo</span>', "zle"],
+  "bez-strony": ['<span class="plakietka p-zle">brak adresu strony</span>', "zle"],
+  male: ['<span class="plakietka p-uwaga">małe, może być nieostre</span>', "uwaga"],
+  rozszerzenie: ['<span class="plakietka p-uwaga">zła końcówka nazwy</span>', "uwaga"],
+};
+let LOGO_CEL = null;
+async function podgladLogo() {
+  const zakres = $("#logoZakres").value;
+  if (zakres === "partia" && !STAN.partia) { $("#logoSiatka").innerHTML = '<span class="pusto">Nie wybrano partii.</span>'; return; }
+  $("#logoSiatka").innerHTML = '<span class="pusto">Wczytuję…</span>';
+  const j = await pobierz(`/api/panel/logo-podglad?zakres=${zakres}&partia=${encodeURIComponent(STAN.partia || "")}`);
+  if (j.blad) { $("#logoSiatka").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  const zle = j.pozycje.filter((x) => OPIS_RODZAJU[x.rodzaj]?.[1] === "zle").length, uwaga = j.pozycje.filter((x) => OPIS_RODZAJU[x.rodzaj]?.[1] === "uwaga").length;
+  $("#logoPodsumowanie").innerHTML = `${j.pozycje.length} firm · <b style="color:var(--czerwony)">${zle} do podmiany</b> · <b style="color:var(--bursztyn)">${uwaga} do sprawdzenia</b> · ${j.pozycje.length - zle - uwaga} w porządku. Najpierw pokazane te z problemem.`;
+  const waga = (x) => ({ zle: 0, uwaga: 1 }[OPIS_RODZAJU[x.rodzaj]?.[1]] ?? 2);
+  j.pozycje.sort((a, b) => waga(a) - waga(b) || a.nazwa.localeCompare(b.nazwa, "pl"));
+  $("#logoSiatka").innerHTML = j.pozycje.map((x) => `<div class="logo-karta ${OPIS_RODZAJU[x.rodzaj]?.[1] || ""}" data-domena="${esc(x.domena || "")}">
+      <div class="logo-okno ${x.plik ? "" : "brak"}">${x.plik ? `<img src="/logo-plik/${encodeURIComponent(x.plik)}?t=${Math.round(x.zmieniono || 0)}" alt="${esc(x.nazwa)}">` : "brak pliku"}</div>
+      <b>${esc(x.nazwa)}</b>
+      <span class="male">${esc(x.domena || "brak adresu strony")}${x.plik ? `<br>${esc(x.format)} · ${x.szer && x.wys ? `${x.szer}×${x.wys} px` : "rozmiar ?"} · ${Math.round((x.bajtow || 0) / 1024)} KB` : ""}</span>
+      <div>${OPIS_RODZAJU[x.rodzaj]?.[0] || ""}</div>
+      <div class="rzad" style="gap:6px">${x.domena ? `<button data-podmien="${esc(x.domena)}" style="font-size:12.5px;padding:5px 9px">Podmień</button><a href="${esc(x.www && /^https?:/.test(x.www) ? x.www : "https://" + x.domena)}" target="_blank" rel="noopener" style="font-size:12.5px">strona firmy ↗</a>` : ""}</div>
+    </div>`).join("") || '<span class="pusto">Brak firm do pokazania.</span>';
+  $("#logoSiatka").querySelectorAll("[data-podmien]").forEach((b) => b.addEventListener("click", () => { LOGO_CEL = b.dataset.podmien; $("#logoPlik").value = ""; $("#logoPlik").click(); }));
+  $("#logoSiatka").querySelectorAll(".logo-karta[data-domena]").forEach((k) => {
+    if (!k.dataset.domena) return;
+    k.addEventListener("dragover", (e) => { e.preventDefault(); k.classList.add("nad"); });
+    k.addEventListener("dragleave", () => k.classList.remove("nad"));
+    k.addEventListener("drop", (e) => { e.preventDefault(); k.classList.remove("nad"); const f = e.dataTransfer.files[0]; if (f) podmienLogo(k.dataset.domena, f); });
+  });
+}
+async function podmienLogo(domena, plik) {
+  if (plik.size > 5 * 1024 * 1024) return alert("Plik większy niż 5 MB.");
+  const dane = await new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.readAsDataURL(plik); });
+  const j = await wyslij("/api/panel/logo-podmien", { domena, dane });
+  if (j.blad) return alert(`Nie podmieniono logo ${domena}: ${j.blad}`);
+  await podgladLogo();
+  ekranLogoStan();
+}
+$("#logoPlik").onchange = (e) => { const f = e.target.files[0]; if (f && LOGO_CEL) podmienLogo(LOGO_CEL, f); };
+$("#logoZakres").onchange = () => podgladLogo();
+$("#btnLogoOdswiez").onclick = () => podgladLogo();
 
 $("#btnWyslijLogo").onclick = async () => {
   if (!confirm("Wysłać logotypy na gałąź develop? Zobaczysz je na stronie podglądu, nie na czypolskafirma.pl.")) return;

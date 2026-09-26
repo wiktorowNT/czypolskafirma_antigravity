@@ -7,6 +7,7 @@
 //   node tools/firmy/panel.mjs            (otworzy przeglądarkę na http://localhost:3010)
 //   node tools/firmy/panel.mjs --port 3011 --bez-przegladarki
 import { spawn, spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
@@ -341,6 +342,40 @@ function domenaZUrl(url) {
   }
 }
 
+// ---------- logotypy: format po bajtach, podgląd, podmiana ----------
+const KATALOG_LOGO = path.join(KATALOG_REPO, "public", "logos");
+function formatPliku(b) {
+  if (!b || b.length < 12) return "inny";
+  if (b[0] === 0x89 && b.toString("ascii", 1, 4) === "PNG") return "png";
+  if (b[0] === 0xff && b[1] === 0xd8) return "jpg";
+  if (b.toString("ascii", 0, 4) === "RIFF" && b.toString("ascii", 8, 12) === "WEBP") return "webp";
+  if (b[0] === 0 && b[1] === 0 && b[2] === 1 && b[3] === 0) return "ico";
+  const t = b.toString("utf8", 0, Math.min(b.length, 8192));
+  return /<svg/i.test(t) && !/^\s*(<!doctype html|<html)/i.test(t) ? "svg" : "inny";
+}
+function naglowekPliku(sciezka, ile = 8192) {
+  const fd = fs.openSync(sciezka, "r");
+  try { const b = Buffer.alloc(ile); return b.subarray(0, fs.readSync(fd, b, 0, ile, 0)); } finally { fs.closeSync(fd); }
+}
+let sharpModul;
+async function wymiary(sciezka, format, bufor) {
+  if (format === "ico") return { szer: bufor[6] || 256, wys: bufor[7] || 256 };
+  try {
+    sharpModul = sharpModul || createRequire(path.join(KATALOG_REPO, "package.json"))("sharp");
+    const m = await sharpModul(sciezka).metadata();
+    return { szer: m.width || null, wys: m.height || null };
+  } catch { return { szer: null, wys: null }; }
+}
+async function opisLogo(domena) {
+  const pliki = fs.existsSync(KATALOG_LOGO) ? fs.readdirSync(KATALOG_LOGO).filter((x) => x.toLowerCase().startsWith(domena + ".") && /\.(png|jpe?g|webp|svg|ico)$/i.test(x) && x.slice(domena.length + 1).split(".").length === 1) : [];
+  if (!pliki.length) return { plik: null, rodzaj: "brak" };
+  const plik = pliki[0], sciezka = path.join(KATALOG_LOGO, plik);
+  const b = naglowekPliku(sciezka), format = formatPliku(b), roz = path.extname(plik).slice(1).toLowerCase().replace("jpeg", "jpg");
+  const { szer, wys } = await wymiary(sciezka, format, b);
+  const rodzaj = format === "ico" || format === "inny" ? "ikonka" : format !== roz ? "rozszerzenie" : szer && Math.max(szer, wys || 0) < 100 && format !== "svg" ? "male" : "ok";
+  return { plik, format, szer, wys, bajtow: fs.statSync(sciezka).size, rodzaj, zmieniono: fs.statSync(sciezka).mtimeMs };
+}
+
 function stanLogotypow() {
   const katalog = path.join(KATALOG_REPO, "public", "logos");
   const pliki = fs.existsSync(katalog) ? fs.readdirSync(katalog) : [];
@@ -355,13 +390,8 @@ function stanLogotypow() {
   const podejrzane = [];
   for (const p of pliki) {
     const roz = path.extname(p).slice(1).toLowerCase().replace("jpeg", "jpg");
-    let naglowek;
-    try { const fd = fs.openSync(path.join(katalog, p), "r"); naglowek = Buffer.alloc(8192); const n = fs.readSync(fd, naglowek, 0, 8192, 0); naglowek = naglowek.subarray(0, n); fs.closeSync(fd); } catch { continue; }
-    const format = naglowek[0] === 0x89 && naglowek.toString("ascii", 1, 4) === "PNG" ? "png"
-      : naglowek[0] === 0xff && naglowek[1] === 0xd8 ? "jpg"
-      : naglowek.toString("ascii", 0, 4) === "RIFF" && naglowek.toString("ascii", 8, 12) === "WEBP" ? "webp"
-      : naglowek[0] === 0 && naglowek[1] === 0 && naglowek[2] === 1 && naglowek[3] === 0 ? "ico"
-      : /<svg/i.test(naglowek.toString("utf8")) && !/<html|<!doctype html/i.test(naglowek.toString("utf8")) ? "svg" : "inny";
+    let format;
+    try { format = formatPliku(naglowekPliku(path.join(katalog, p))); } catch { continue; }
     // ico = ikonka strony zamiast logo (słaba jakość, do wymiany); inny = nie obrazek;
     // jpg/webp z końcówką .png wyświetla się dobrze, tylko nazwa pliku się nie zgadza
     if (format !== roz) podejrzane.push({ plik: p, format, rodzaj: format === "ico" ? "ikonka" : format === "inny" ? "nie-obrazek" : "rozszerzenie" });
@@ -893,6 +923,56 @@ const serwer = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && p === "/api/panel/logo-stan") return json(res, { ...stanLogotypow(), git: stanGitLogotypow() });
+    // Podgląd logotypów: firmy z partii (albo podejrzane pliki z całej bazy) z opisem pliku.
+    if (req.method === "GET" && p === "/api/panel/logo-podglad") {
+      const zakres = url.searchParams.get("zakres") || "partia";
+      let pozycje = [];
+      if (zakres === "podejrzane") {
+        for (const x of stanLogotypow().podejrzane) {
+          const domena = x.plik.replace(/\.[a-z]+$/i, "");
+          const f = indeks.find((r) => domenaZUrl(r.website_url) === domena);
+          pozycje.push({ nazwa: f?.display_name || f?.name || domena, slug: f?.slug || null, domena, www: f?.website_url || `https://${domena}` });
+        }
+      } else {
+        const nazwa = url.searchParams.get("partia");
+        if (!nazwa || !fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Nie wybrano partii." });
+        const partia = wczytajPartie(plikPartii(nazwa));
+        for (const f of partia.firmy.filter((x) => !x.pomin && x.rekord)) {
+          const domena = domenaZUrl(f.rekord.website_url);
+          pozycje.push({ nazwa: f.rekord.display_name || f.nazwa, slug: f.rekord.slug, domena, www: f.rekord.website_url, wBazie: f.decyzja === "zaimportowany" });
+        }
+      }
+      for (const x of pozycje) Object.assign(x, x.domena ? await opisLogo(x.domena) : { plik: null, rodzaj: "bez-strony" });
+      return json(res, { pozycje });
+    }
+
+    // Plik logo do podglądu (tylko z public/logos, bez wychodzenia poza folder).
+    if (req.method === "GET" && p.startsWith("/logo-plik/")) {
+      const nazwaPliku = decodeURIComponent(p.slice("/logo-plik/".length));
+      if (!/^[\w.-]+$/.test(nazwaPliku)) { res.writeHead(400); return res.end(); }
+      const sciezka = path.join(KATALOG_LOGO, nazwaPliku);
+      if (!fs.existsSync(sciezka)) { res.writeHead(404); return res.end(); }
+      const typ = { png: "image/png", jpg: "image/jpeg", webp: "image/webp", svg: "image/svg+xml", ico: "image/x-icon" }[formatPliku(naglowekPliku(sciezka))] || "application/octet-stream";
+      res.writeHead(200, { "Content-Type": typ, "Cache-Control": "no-store" });
+      return res.end(fs.readFileSync(sciezka));
+    }
+
+    // Podmiana logo z podglądu: plik z komputera (base64). Format sprawdzany po bajtach,
+    // ikonki .ico i SVG ze skryptami odrzucane, stare pliki tej domeny usuwane.
+    if (req.method === "POST" && p === "/api/panel/logo-podmien") {
+      const { domena, dane } = await cialo();
+      if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(String(domena || ""))) return json(res, { blad: "Zła domena." }, 400);
+      const bufor = Buffer.from(String(dane || ""), "base64");
+      if (bufor.length > 5 * 1024 * 1024) return json(res, { blad: "Plik większy niż 5 MB." }, 400);
+      const format = formatPliku(bufor);
+      if (format === "ico") return json(res, { blad: "To ikonka strony (.ico), a nie logo. Wybierz plik PNG, JPG, WebP albo SVG." }, 400);
+      if (!["png", "jpg", "webp", "svg"].includes(format)) return json(res, { blad: "To nie jest obrazek PNG, JPG, WebP ani SVG." }, 400);
+      if (format === "svg" && /<script|\bon[a-z]+\s*=|javascript:|<foreignObject|<iframe|<embed|<object/i.test(bufor.toString("utf8"))) return json(res, { blad: "SVG zawiera skrypty lub aktywne elementy." }, 400);
+      for (const x of fs.readdirSync(KATALOG_LOGO)) if (x.toLowerCase().startsWith(domena.toLowerCase() + ".") && x.slice(domena.length + 1).split(".").length === 1) fs.unlinkSync(path.join(KATALOG_LOGO, x));
+      fs.writeFileSync(path.join(KATALOG_LOGO, `${domena.toLowerCase()}.${format}`), bufor);
+      return json(res, { ok: true, ...(await opisLogo(domena.toLowerCase())) });
+    }
+
     if (req.method === "POST" && p === "/api/panel/logo-pobierz") {
       const z = zadanieProcesu({ typ: "logo", opis: "Pobieranie logotypów", plik: path.join(KATALOG_REPO, "tools", "fetch-logos.mjs") });
       return json(res, { ok: true, zadanie: z.id });
