@@ -20,11 +20,11 @@ w Search Console tysiące wyświetleń przy CTR poniżej 1% (dane za 90 dni, 202
 Popyt jest udowodniony, brakuje treści, która na to zapytanie odpowiada w tytule.
 Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż profil firmy.
 
-- [ ] Kto jest właścicielem Żabki (6 863 wyświetlenia profilu, CTR 0,29%)
-- [ ] Kto jest właścicielem Lidla (6 276 wyświetleń, CTR 0,13% — najgorszy wynik w serwisie)
-- [ ] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu)
-- [ ] Kto jest właścicielem Pepco (5 037 wyświetleń, CTR 0,32%)
-- [ ] Kto jest właścicielem Kauflandu (3 782 wyświetlenia; „kaufland właściciel" w top 5 zapytań)
+- [x] Kto jest właścicielem Żabki (6 863 wyświetlenia profilu, CTR 0,29%) (2026-08-09, temat zużyty przez paczki o przejęciu Grupy Żabka przez Couche-Tard)
+- [x] Kto jest właścicielem Lidla (6 276 wyświetleń, CTR 0,13% — najgorszy wynik w serwisie) (2026-09-18)
+- [x] Kto jest właścicielem Allegro (5 599 wyświetleń; „kto jest właścicielem allegro" to zapytanie nr 1 całego serwisu) (2026-09-19)
+- [x] Kto jest właścicielem Pepco (5 037 wyświetleń, CTR 0,32%) (2026-09-20)
+- [x] Kto jest właścicielem Kauflandu (3 782 wyświetlenia; „kaufland właściciel" w top 5 zapytań) (2026-09-23)
 
 ## Analizy pojedynczych marek
 
@@ -48,15 +48,18 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 ## Mechanizmy wyjaśnione na konkretach
 
 - [x] Marka polska, spółka polska, właściciel zagraniczny: dlaczego to nie to samo (2026-08-29)
-- [ ] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna
+- [x] Spółka na Cyprze albo w Luksemburgu nie znaczy, że firma jest zagraniczna (2026-09-17)
 - [ ] Notowanie na GPW nie mówi nic o narodowości kapitału: przykłady z obu stron
+  - pominięty 2026-09-26: temat trzeba by opowiedzieć słownikiem rynku kapitałowego, co
+    zderza się z zasadą „Konsument, nie inwestor". Do decyzji właściciela, czy zostaje
+    w kolejce, czy zmienia ujęcie na „czyje są marki spółek z warszawskiej giełdy"
 - [x] Co się dzieje z marką po przejęciu: produkcja, podatki, decyzje i miejsca pracy (2026-09-09)
-- [ ] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów
+- [x] Jak samodzielnie sprawdzić właściciela firmy w KRS i w rejestrze beneficjentów (2026-09-26)
 
 ## Dopisane 2026-09-10
 
-- [ ] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma
-- [ ] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem
+- [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
+- [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
 - [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
 - [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
