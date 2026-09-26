@@ -389,6 +389,18 @@ function stanBackupu() {
 }
 
 // ---------- gotowość ----------
+// ---------- wersja kodu (pasek "jest nowsza wersja panelu") ----------
+// Serwer wczytuje panel.mjs i lib/*.mjs tylko przy starcie: po ich zmianie trzeba go uruchomić
+// ponownie. Strony (panel.html, przeglad.html) czytane są z dysku przy każdym wejściu: wystarczy F5.
+function podpisPlikow(pliki) {
+  let max = 0;
+  for (const x of pliki) { try { max = Math.max(max, fs.statSync(x).mtimeMs); } catch { /* brak pliku */ } }
+  return Math.round(max);
+}
+const plikiSerwera = () => [path.join(KATALOG, "panel.mjs"), ...fs.readdirSync(path.join(KATALOG, "lib")).filter((x) => x.endsWith(".mjs")).map((x) => path.join(KATALOG, "lib", x))];
+const plikiStron = () => [path.join(KATALOG, "panel.html"), path.join(KATALOG, "przeglad.html")];
+const SERWER_START = podpisPlikow(plikiSerwera());
+
 async function gotowosc() {
   const env = wczytajEnv();
   const lg = await sprawdzLogowanie().catch((e) => ({ zalogowany: false, powod: e.message }));
@@ -915,6 +927,10 @@ const serwer = http.createServer(async (req, res) => {
     if (req.method === "POST" && p === "/api/panel/odswiez-baze") {
       await odswiezBaze();
       return json(res, { ok: !bazaBlad, firm: indeks.length, blad: bazaBlad });
+    }
+
+    if (req.method === "GET" && p === "/api/panel/wersja") {
+      return json(res, { serwerStart: SERWER_START, serwerTeraz: podpisPlikow(plikiSerwera()), strony: podpisPlikow(plikiStron()) });
     }
 
     if (req.method === "POST" && p === "/api/panel/zamknij") {

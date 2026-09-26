@@ -144,6 +144,9 @@
   table.wersje ol{padding-left:18px;margin:6px 0;font-size:12.5px}
   .male{font-size:12.5px;color:var(--slaby)}
   table.wersje th:first-child,table.wersje td:first-child{padding-left:10px}
+  .pasek-wersji{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#fff4cc;border:1px solid #e4c96a;border-radius:6px;padding:10px 14px;margin:-8px 0 16px;font-size:14px}
+  .pasek-wersji.lagodny{background:#f3f7fb;border-color:#c9d8e8}
+  .pasek-wersji span{flex:1;min-width:260px}
 </style>
 </head>
 <body>
@@ -174,6 +177,7 @@
   </aside>
 
   <main>
+    <div id="pasekWersji" class="pasek-wersji" hidden></div>
     <div id="sciezka" class="sciezka" hidden></div>
     <!-- 1. GOTOWOŚĆ -->
     <section class="ekran akt" id="e-start">
@@ -654,6 +658,7 @@ function pokaz(id) {
   document.querySelectorAll("nav a").forEach((a) => a.classList.toggle("akt", a.dataset.e === id));
   window.scrollTo(0, 0);
   odswiezEkran();
+  sprawdzWersje();
 }
 document.querySelectorAll("nav a").forEach((a) => a.addEventListener("click", () => pokaz(a.dataset.e)));
 document.querySelectorAll("[data-idz]").forEach((b) => b.addEventListener("click", () => pokaz(b.dataset.idz)));
@@ -1677,8 +1682,30 @@ $("#btnZamknij").onclick = async () => {
   document.body.innerHTML = '<div style="padding:60px;font:16px system-ui">Panel zamknięty. Możesz zamknąć tę kartę.</div>';
 };
 
+// ---------- pasek "jest nowsza wersja panelu" ----------
+let STRONA_WERSJA = null;
+async function sprawdzWersje() {
+  const w = await pobierz("/api/panel/wersja").catch(() => null);
+  if (!w || w.blad || w.serwerStart === undefined) return;
+  if (STRONA_WERSJA === null) STRONA_WERSJA = w.strony;
+  const el = $("#pasekWersji");
+  if (w.serwerTeraz > w.serwerStart) {
+    el.className = "pasek-wersji";
+    el.innerHTML = `<span><b>Jest nowsza wersja panelu.</b> Część przycisków może nie działać, dopóki go nie uruchomisz ponownie. Zamknij panel i otwórz go znowu ze skrótu na pulpicie.</span><button class="glowny" id="btnZamknijWersja">Zamknij panel teraz</button>`;
+    el.hidden = false;
+    $("#btnZamknijWersja").onclick = () => $("#btnZamknij").click();
+  } else if (w.strony > STRONA_WERSJA) {
+    el.className = "pasek-wersji lagodny";
+    el.innerHTML = `<span><b>Wygląd panelu został zaktualizowany.</b> Odśwież stronę, żeby zobaczyć zmiany.</span><button id="btnOdswiezWersja">Odśwież (F5)</button>`;
+    el.hidden = false;
+    $("#btnOdswiezWersja").onclick = () => location.reload();
+  } else el.hidden = true;
+}
+
 // ---------- start ----------
 (async () => {
+  sprawdzWersje();
+  setInterval(sprawdzWersje, 30000);
   await wczytajListePartii();
   ustawPartie(STAN.partia);
   pokaz("start");
