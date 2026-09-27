@@ -1,7 +1,7 @@
 ---
 title: "Kto jest właścicielem Allegro: serwis sprzedany za 75 tysięcy dolarów"
 slug: "kto-jest-wlascicielem-allegro"
-date: 2026-09-27
+date: 2026-09-28
 description: "Allegro ruszyło w piwnicy poznańskiej hurtowni i po kilku miesiącach zostało sprzedane za 75 tysięcy dolarów. Dziś nikt nie ma w nim pakietu kontrolnego."
 image: "/images/blog/kto-jest-wlascicielem-allegro.png"
 imageAlt: "Grafika z pytaniem o właściciela Allegro i trzema liczbami: 75 tys. USD, 3,25 mld USD i 69,2 mld zł"

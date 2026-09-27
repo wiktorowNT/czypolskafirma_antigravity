@@ -109,11 +109,25 @@ function listPostFiles(): string[] {
   }
 }
 
+// Wpis z datą w przyszłości jest zaplanowany: nie ma go na liście, w sitemapie
+// ani pod swoim adresem (404), dopóki w Polsce nie nastanie jego dzień. Strony
+// bloga mają revalidate = 3600, więc wpis pojawia się najpóźniej godzinę po północy.
+// Podgląd Vercel (develop) pokazuje wszystko, żeby dało się przejrzeć wpisy przed czasem.
+function todayInPoland(): string {
+  // sv-SE formatuje datę jako RRRR-MM-DD.
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Warsaw" }).format(new Date())
+}
+
+function isPublished(meta: BlogPostMeta): boolean {
+  if (process.env.VERCEL_ENV === "preview") return true
+  return meta.date <= todayInPoland()
+}
+
 /** Wszystkie opublikowane wpisy, posortowane od najnowszego. */
 export function getAllPosts(): BlogPostMeta[] {
   const posts = listPostFiles()
     .map((file) => parsePostFile(file)?.meta)
-    .filter((meta): meta is BlogPostMeta => Boolean(meta))
+    .filter((meta): meta is BlogPostMeta => Boolean(meta) && isPublished(meta!))
 
   return posts.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
 }
@@ -125,7 +139,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
 
   for (const file of listPostFiles()) {
     const parsed = parsePostFile(file)
-    if (parsed && parsed.meta.slug === wanted) {
+    if (parsed && parsed.meta.slug === wanted && isPublished(parsed.meta)) {
       return { ...parsed.meta, html: renderMarkdown(parsed.content) }
     }
   }

@@ -1,7 +1,7 @@
 ---
 title: "Kto jest właścicielem Pepco i skąd wzięła się ta nazwa"
 slug: "kto-jest-wlascicielem-pepco"
-date: 2026-09-27
+date: 2026-10-02
 description: "Sieć zaczynała w 1999 roku jako brytyjski Poundstretcher z Bydgoszczy, nazwę dostała od grupy z RPA, a dziś kontroluje ją spółka powołana do spłaty długów."
 image: "/images/blog/kto-jest-wlascicielem-pepco.png"
 imageAlt: "Ciemna grafika z pytaniem o właściciela Pepco i trzema liczbami: 66,1 procent udziału Ibexu w grupie, 1403 sklepy w Polsce, złotówka za Dealz Poland"

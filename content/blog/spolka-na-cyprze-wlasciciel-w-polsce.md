@@ -1,7 +1,7 @@
 ---
 title: "Spółka na Cyprze, właściciel w Polsce. Jak czytać piętra własności"
 slug: "spolka-na-cyprze-wlasciciel-w-polsce"
-date: 2026-09-27
+date: 2026-10-03
 description: "Plus kontroluje fundacja z Liechtensteinu przez spółkę z Cypru, a kapitał i tak jest polski. Hortex ma wehikuł w Luksemburgu i brytyjskiego właściciela."
 image: "/images/blog/spolka-na-cyprze-wlasciciel-w-polsce.png"
 imageAlt: "Ciemna grafika z hasłem: spółka na Cyprze, właściciel w Polsce, i trzema liczbami: 69,13 proc. głosów fundacji w Cyfrowym Polsacie, strzałka z Cypru do Polski jako droga kontroli nad siecią Plus, 200 mln euro ceny Hortexu w 2018 roku"

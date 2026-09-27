@@ -105,6 +105,18 @@ Model czyta cudze strony internetowe, więc obowiązuje zasada ograniczonego zau
 ma dostęp tylko do plików treści i do jednego polecenia w Bashu (lint). Nie ma dostępu
 do gita ani do sekretów.
 
+## Wpisy zaplanowane
+
+Wpis z datą w przyszłości (`date` we frontmatterze) nie pokazuje się na produkcji:
+nie ma go na `/blog`, na stronie głównej ani w `sitemap-blog.xml`, a jego adres zwraca
+404. Pojawia się sam w dniu z `date` (czas polski), najpóźniej godzinę po północy,
+bo strony bloga odświeżają się co godzinę. Podgląd Vercel (`develop`) pokazuje
+wszystkie wpisy, także zaplanowane, żeby dało się je przejrzeć przed czasem.
+
+W praktyce: kilka zaległych paczek scalasz naraz, rozkładasz im daty na kolejne dni
+i robisz jeden merge `develop` → `main`. Blog publikuje się dalej sam, dzień po dniu.
+Logika siedzi w `lib/blog.ts` (`isPublished`).
+
 ## Grafiki
 
 Są dwa różne rodzaje grafiki i tylko jeden robi się sam.

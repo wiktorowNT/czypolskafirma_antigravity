@@ -1,7 +1,7 @@
 ---
 title: "Kto jest właścicielem Solarisa, czyli autobusów z zielonym jamnikiem"
 slug: "kto-jest-wlascicielem-solarisa"
-date: 2026-09-27
+date: 2026-10-01
 description: "Solarisa zbudowali Solange i Krzysztof Olszewscy w Bolechowie pod Poznaniem. W 2018 roku sprzedali firmę hiszpańskiej grupie CAF za około 300 mln euro."
 image: "/images/blog/kto-jest-wlascicielem-solarisa.png"
 imageAlt: "Grafika z tytułem Kto jest właścicielem Solarisa, ceną sprzedaży 300 mln euro, liczbą dostarczonych pojazdów i liczbą krajów, w których jeżdżą"

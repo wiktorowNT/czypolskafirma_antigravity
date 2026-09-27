@@ -1,7 +1,7 @@
 ---
 title: "Kto jest właścicielem Lidla. Nazwa kupiona za 1000 marek, dziś 1000 sklepów"
 slug: "kto-jest-wlascicielem-lidla"
-date: 2026-09-27
+date: 2026-09-30
 description: "Lidl należy do niemieckiej grupy Schwarz z Neckarsulm. Nazwę marki Dieter Schwarz kupił w 1973 roku od emerytowanego nauczyciela za 1000 marek."
 image: "/images/blog/kto-jest-wlascicielem-lidla.png"
 imageAlt: "Grafika z pytaniem o właściciela Lidla: niemiecka grupa Schwarz, polska spółka z Jankowic oraz trzy liczby, czyli 1000 marek za nazwę, 1000 sklepów w Polsce i 7,2 mld zł eksportu polskich dostawców"

@@ -1,7 +1,7 @@
 ---
 title: "Kto jest właścicielem Kauflandu i dlaczego trudno go znaleźć w papierach"
 slug: "kto-jest-wlascicielem-kauflandu"
-date: 2026-09-27
+date: 2026-10-05
 description: "Kaufland zaczynał w Polsce od jednego sklepu w Stargardzie. Właściciel sieci rozdzielił kapitał i prawa głosu między fundacje a spółkę powierniczą."
 image: "/images/blog/kto-jest-wlascicielem-kauflandu.png"
 imageAlt: "Okładka wpisu z napisem Kto jest właścicielem Kauflandu oraz liczbami: 2001 rok pierwszego sklepu w Stargardzie, 261 marketów w Polsce, 185,6 mld euro sprzedaży grupy w 2025"

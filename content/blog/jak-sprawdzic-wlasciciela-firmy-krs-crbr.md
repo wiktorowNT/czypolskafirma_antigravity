@@ -1,7 +1,7 @@
 ---
 title: "Jak sprawdzić, kto jest właścicielem firmy: KRS, CRBR i sprawozdania"
 slug: "jak-sprawdzic-wlasciciela-firmy-krs-crbr"
-date: 2026-09-27
+date: 2026-10-06
 description: "Numer NIP, odpis z KRS i wpis w rejestrze beneficjentów wystarczą, żeby dojść do właściciela firmy. Cała droga jest jawna i nic nie kosztuje."
 image: "/images/blog/jak-sprawdzic-wlasciciela-firmy-krs-crbr.png"
 imageAlt: "Grafika z tytułem „Jak sprawdzić właściciela firmy" i trzema liczbami: 10 proc. kapitału to próg ujawnienia wspólnika w KRS, 25 proc. to próg w rejestrze beneficjentów, 0 zł to koszt sprawdzenia"

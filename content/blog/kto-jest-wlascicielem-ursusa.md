@@ -1,7 +1,7 @@
 ---
 title: "Kto jest właścicielem Ursusa: marka, która przetrwała własną fabrykę"
 slug: "kto-jest-wlascicielem-ursusa"
-date: 2026-09-27
+date: 2026-10-04
 description: "Ciągniki Ursus jeździły po polskich polach przez sto lat. Znak towarowy sprzedano w 2011 roku za 8,1 mln zł, a cały majątek w 2024 roku za 74 mln zł."
 image: "/images/blog/kto-jest-wlascicielem-ursusa.png"
 imageAlt: "Ciemna grafika z tytułem „Kto jest właścicielem Ursusa” i trzema liczbami z historii marki: 433 182 sprzedane ciągniki C-330, 8,1 mln zł za znak towarowy w 2011 roku i 74 mln zł za majątek w 2024 roku"

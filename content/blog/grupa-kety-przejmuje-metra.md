@@ -1,7 +1,7 @@
 ---
 title: "Grupa Kęty przejmuje włoską Metrę. Kto jest właścicielem firmy z Kęt"
 slug: "grupa-kety-przejmuje-metra"
-date: 2026-09-27
+date: 2026-09-29
 description: "Firma z Kęt kupuje dziewięć fabryk profili aluminiowych we Włoszech, USA i Kanadzie za maksymalnie 450 mln euro. Sprzedaje amerykański fundusz."
 image: "/images/blog/grupa-kety-przejmuje-metra.png"
 imageAlt: "Grafika z napisem „Firma z Kęt kupuje dziewięć fabryk” i trzema liczbami z transakcji: 450 mln euro ceny, 9 zakładów we Włoszech, USA i Kanadzie oraz 1400 pracowników Metry"
