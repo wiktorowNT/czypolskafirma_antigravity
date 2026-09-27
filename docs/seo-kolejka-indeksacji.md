@@ -32,6 +32,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | 2026-09-12 | netto, aldi, auchan, carrefour, stokrotka, polomarket, lewiatan, hebe, super-pharm, bp, shell (11) | Wznowienie po 7 tygodniach przerwy. Limit wyczerpany na 12. URL-u (circle-k odbił się o limit — pierwszy na jutro). Przy okazji: ponownie przesłana sitemapa (ostatni odczyt Google był 23.07) i uruchomiona walidacja poprawki dla `/firma/zara`. |
 | 2026-09-24 | circle-k, moya, amic-energy, pko-bp, mbank, ing, pekao, alior-bank, millennium, bnp-paribas, credit-agricole (11) | Limit wyczerpany na 12. URL-u (velobank odbił się o limit — pierwszy na jutro). Wszystkie 11 miały „Adres URL nie znajduje się w Google" i „Nie wykryto odsyłających map witryn" — to normalne przed pierwszym skanem; sitemapa OK (odczyt 23.09, 792 strony). Stan indeksu: 91 zindeksowanych, 695 „wykryta – niezindeksowana". `/firma/zara` zwraca już 200, walidacja wciąż „Rozpoczęto" (Google nie skanował od 2.07) — zgłosić jutro razem z velobankiem. Dodano `www` w Vercelu (308 → wersja bez www). |
 | 2026-09-25 | velobank, zara, nest-bank, empik, media-expert, rtv-euro-agd, x-kom, morele, komputronik, ccc, deichmann (11) | Limit liczony ok. 24 h od zgłoszeń — próba o 14:20 odbiła się od razu, wieczorem przeszło. Limit wyczerpany na 12. URL-u (cropp odbił się o limit — pierwszy na jutro). `zara` ponownie zgłoszona: test wersji opublikowanej przeszedł, czekamy na zamknięcie walidacji „Błąd przekierowania". |
+| 2026-09-27 | cropp, house, mohito, sinsay, 4f, martes-sport, decathlon, tk-maxx, black-red-white, leroy-merlin, castorama (11) | `jysk` i `agata-meble` były już w indeksie — pominięte bez zużywania limitu. Limit wyczerpany na 12. URL-u (obi odbił się o limit — pierwszy na jutro). |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -76,19 +77,19 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `ccc`  — zgłoszone 2026-09-25
 - [x] `deichmann`  — zgłoszone 2026-09-25
 - [x] `reserved`  — zgłoszone 2026-07-23
-- [ ] `cropp`
-- [ ] `house`
-- [ ] `mohito`
-- [ ] `sinsay`
-- [ ] `4f`
-- [ ] `martes-sport`
-- [ ] `decathlon`
-- [ ] `tk-maxx`
-- [ ] `jysk`
-- [ ] `agata-meble`
-- [ ] `black-red-white`
-- [ ] `leroy-merlin`
-- [ ] `castorama`
+- [x] `cropp`  — zgłoszone 2026-09-27
+- [x] `house`  — zgłoszone 2026-09-27
+- [x] `mohito`  — zgłoszone 2026-09-27
+- [x] `sinsay`  — zgłoszone 2026-09-27
+- [x] `4f`  — zgłoszone 2026-09-27
+- [x] `martes-sport`  — zgłoszone 2026-09-27
+- [x] `decathlon`  — zgłoszone 2026-09-27
+- [x] `tk-maxx`  — zgłoszone 2026-09-27
+- [x] `jysk`  — już w indeksie 2026-09-27 (bez zgłoszenia)
+- [x] `agata-meble`  — już w indeksie 2026-09-27 (bez zgłoszenia)
+- [x] `black-red-white`  — zgłoszone 2026-09-27
+- [x] `leroy-merlin`  — zgłoszone 2026-09-27
+- [x] `castorama`  — zgłoszone 2026-09-27
 - [ ] `obi`
 - [ ] `bricomarche`
 - [ ] `selgros`
