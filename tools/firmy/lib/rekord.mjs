@@ -1,7 +1,7 @@
 // Składa finalny rekord z etapów (tożsamość, rejestr, śledztwo, kontrola, opisy),
 // waliduje go i wylicza pewność. Używane przez automat.mjs i przeglad.mjs (po edycji/konsylium).
 import { normalizujKrs, normalizujNip, podobienstwoNazw, slugify, usunMyslniki } from "./tekst.mjs";
-import { ocenPewnosc, poziomZrodla, walidujRekord } from "./walidacja.mjs";
+import { obywatelstwaCrbr, ocenPewnosc, poziomZrodla, walidujRekord } from "./walidacja.mjs";
 
 // Data wpisu do KRS (DD.MM.RRRR) jako founded_at (RRRR-MM-DD). Wpisy sprzed 2004 roku to
 // zwykle masowe przerejestrowania z rejestru handlowego do KRS (2001–2003), nie data
@@ -25,12 +25,16 @@ function liczbaPl(t) {
 export function procentUdzialow(w, rej) {
   if (w.calosc) return 100;
   const kapital = liczbaPl(String(rej.kapitalZakladowy || "").split(" ")[0]);
-  const m = String(w.udzialy || "").match(/WARTO[ŚS]CI(?:\s+NOMINALNEJ)?\s+([\d\s.,]+)/i);
+  // Najpierw "łączna wartość": w opisach typu "16269 UDZIAŁÓW O WARTOŚCI NOMINALNEJ 500 ZŁOTYCH
+  // KAŻDY - TJ. O ŁĄCZNEJ WARTOŚCI NOMINALNEJ 8134500,00" pierwsza kwota to wartość jednego udziału.
+  const opis = String(w.udzialy || "");
+  const m = opis.match(/Ł[ĄA]CZNEJ\s+WARTO[ŚS]CI(?:\s+NOMINALNEJ)?\s+([\d\s.,]+)/i) || opis.match(/WARTO[ŚS]CI(?:\s+NOMINALNEJ)?\s+([\d\s.,]+)/i);
   const wartosc = m ? liczbaPl(m[1].trim().replace(/[.,]$/, "")) : null;
-  if (kapital && wartosc && wartosc <= kapital) return Math.round((wartosc / kapital) * 1000) / 10;
+  const proc = kapital && wartosc && wartosc <= kapital ? Math.round((wartosc / kapital) * 1000) / 10 : null;
+  if (proc) return proc;
   const szt = String(w.udzialy || "").match(/^(\d[\d\s.]*)\s+UDZIA/i);
   const ile = szt ? liczbaPl(szt[1]) : null;
-  if (ile && rej.liczbaAkcjiUdzialow && ile <= rej.liczbaAkcjiUdzialow) return Math.round((ile / rej.liczbaAkcjiUdzialow) * 1000) / 10;
+  if (ile && rej.liczbaAkcjiUdzialow && ile <= rej.liczbaAkcjiUdzialow) return Math.round((ile / rej.liczbaAkcjiUdzialow) * 1000) / 10 || null;
   return null;
 }
 
@@ -49,7 +53,10 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
     // z obywatelstwem w CRBR. Ostateczny właściciel ze źródłem (np. media o tożsamości) zostaje.
     const osoby = wKrs.filter((w) => ZAMASKOWANA.test(w.nazwa || "")).map((w) => procentUdzialow(w, rej)).filter((x) => x != null);
     const sumaOsob = osoby.reduce((a, b) => a + b, 0);
-    const obywatelstwa = (String(f.crbr?.podsumowanie || "").match(/obywatelstwa:\s*([A-Z, ]+)/) || [, ""])[1].split(",").map((x) => x.trim()).filter(Boolean);
+    const obywatelstwa = obywatelstwaCrbr(f);
+    // Spółdzielnia: członków nie ma w KRS, ale sama forma prawna w odpisie potwierdza ogniwo.
+    const spoldzielnia = /SPÓŁDZIELNIA/i.test(rej.formaPrawna || "");
+    const czlonkowie = (og) => spoldzielnia && og.rola === "ostateczny" && /członk|spółdziel/i.test(og.podmiot || "");
     const osobaZKrs = (og) => {
       if (!osoby.length || !["kontrolujacy", "mniejszosciowy", "ostateczny"].includes(og.rola)) return false;
       if (og.rola === "ostateczny" && og.zrodlo_url) return false;
@@ -61,7 +68,7 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
       if (og.zrodlo_url && poziomZrodla(og.zrodlo_url) <= 1) continue;
       const toSpolka = og.rola === "spolka_polska" || podobienstwoNazw(og.podmiot, rej.nazwa) >= 0.7;
       const wspolnik = wKrs.find((w) => w.nazwa && podobienstwoNazw(og.podmiot, w.nazwa) >= 0.6);
-      if (toSpolka || wspolnik || osobaZKrs(og)) {
+      if (toSpolka || wspolnik || osobaZKrs(og) || czlonkowie(og)) {
         if (og.zrodlo_url) s.zrodla = [...(s.zrodla || []), { url: og.zrodlo_url, tytul: og.zrodlo_tytul || null, data: og.stan_na || null, czego_dotyczy: `${og.podmiot} (trop, zastąpiony odpisem KRS)` }];
         og.zrodlo_url = rej.zrodloUrl;
         og.zrodlo_tytul = `KRS ${rej.krs}, odpis aktualny (stan ${rej.stanZDnia})`;

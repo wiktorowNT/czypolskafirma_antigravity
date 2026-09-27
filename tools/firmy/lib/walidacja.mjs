@@ -24,6 +24,12 @@ export function poziomZrodla(url) {
   return 5;
 }
 
+// Obywatelstwa beneficjentów z podsumowania CRBR ("... obywatelstwa: PL, DE.") jako lista kodów.
+export function obywatelstwaCrbr(firma) {
+  const m = String(firma?.crbr?.podsumowanie || "").match(/obywatelstwa:\s*([A-Z, ]+)/);
+  return m ? m[1].split(",").map((x) => x.trim()).filter(Boolean) : [];
+}
+
 export function walidujRekord(rekord, kategorie) {
   const bledy = [], ostrzezenia = [];
   const kody = kodyKrajow();
@@ -71,7 +77,8 @@ export function ocenPewnosc(firma) {
 
   // 3. Łańcuch własności: pakiet kontrolny musi mieć źródło
   const lancuch = sl.lancuch || [];
-  const kontrolne = lancuch.filter((o) => (o.proc_glosow ?? o.proc_kapitalu ?? 0) >= 25 || o.rola === "kontrolujacy");
+  // Pakiety mniejszościowe i free float nie kontrolują, nawet gdy razem przekraczają 25%.
+  const kontrolne = lancuch.filter((o) => !["mniejszosciowy", "free_float"].includes(o.rola) && ((o.proc_glosow ?? o.proc_kapitalu ?? 0) >= 25 || o.rola === "kontrolujacy"));
   if (!lancuch.length) konflikty.push("brak łańcucha własności");
   const bezZrodla = lancuch.filter((o) => !o.zrodlo_url);
   if (kontrolne.some((o) => !o.zrodlo_url) || (!kontrolne.length && bezZrodla.length)) konflikty.push("pakiet kontrolny bez źródła");
@@ -90,7 +97,12 @@ export function ocenPewnosc(firma) {
   const wsp = [...(rej.wspolnicy || []), ...(rej.jedynyAkcjonariusz || [])].filter((w) => w.calosc);
   if (wsp.length === 1) {
     const w = wsp[0];
-    const jest = lancuch.some((o) => podobienstwoNazw(o.podmiot, w.nazwa) >= 0.5);
+    // Osoba z ukrytym w API KRS nazwiskiem: po nazwie się nie połączy, więc wystarczy ogniwo
+    // kontrolne ze 100% i krajem zgodnym z obywatelstwem w CRBR (bez CRBR: PL).
+    const obyw = obywatelstwaCrbr(firma);
+    const osoba100 = /nazwisko zamaskowane/i.test(w.nazwa || "") && lancuch.some((o) => ["ostateczny", "kontrolujacy"].includes(o.rola)
+      && (o.proc_glosow ?? o.proc_kapitalu) === 100 && (obyw.length ? obyw.includes(o.kraj) : o.kraj === "PL"));
+    const jest = osoba100 || lancuch.some((o) => podobienstwoNazw(o.podmiot, w.nazwa) >= 0.5);
     if (!jest) konflikty.push(`KRS: 100% ma "${w.nazwa}", a łańcuch go nie zawiera`);
   }
   if (rej.blad) uwagi.push(`KRS: ${rej.blad}`);

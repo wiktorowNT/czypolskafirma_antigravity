@@ -399,6 +399,7 @@ Jesteś głównym analitykiem serwisu CzyPolskaFirma.pl, który pokazuje konsume
 3. Agregatory i serwisy pośrednie są tylko tropem, nigdy źródłem ogniwa: rejestr.io, aleo.com, bizraport.pl, compabase, krs-pobierz, mojepanstwo, owler, gowork, fora, reddit, czaty inwestorów, Wikipedia. Znajdź źródło pierwotne (KRS/CRBR/rejestr zagraniczny, raport spółki, strona IR, komunikat transakcji, renomowane media z datą) albo zostaw zrodlo_url: null i wpisz lukę.
 4. Ogniwa potwierdzone w faktach z rejestrów (polska spółka, jej wspólnicy z KRS): zrodlo_url zostaw null, program sam wstawi odpis KRS.
 5. Nie da się rozstrzygnąć (źródła poziomu 1–2 sobie przeczą, brak źródła pakietu kontrolnego, transakcja w toku): ustaw "konflikt" z krótkim opisem. Właściciel serwisu rozstrzygnie ręcznie.
+   "transakcja_w_toku" (i reguła B12) tylko dla niezamkniętej transakcji, która może zmienić kontrolującego albo kraj (np. ogłoszone przejęcie pakietu kontrolnego). Zdarzenia bez zmiany kontroli (przymusowy wykup mniejszości, wycofanie akcji z giełdy, reorganizacja holdingów w tej samej grupie, dokupienie udziałów przez obecnego właściciela) wpisz do "historia", a "transakcja_w_toku" zostaw null.
 6. Dane osobowe: imię i nazwisko osoby prywatnej tylko, gdy potwierdza je źródło poziomu 1–3; bez drugich imion. Bez adresów, majątków, wieku.
 ${METODOLOGIA}
 
