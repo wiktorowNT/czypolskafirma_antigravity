@@ -113,7 +113,7 @@ export async function krsOdpisAktualny(krs) {
   const o = r.dane?.odpis;
   if (!o?.dane?.dzial1) return { blad: "nieoczekiwana struktura odpisu" };
   const d1 = o.dane.dzial1, d2 = o.dane.dzial2 || {}, d3 = o.dane.dzial3 || {};
-  const pod = d1.danePodmiotu || {};
+  const pod = d1.danePodmiotu || d1.danePodmiotuZagranicznego || {}; // oddział zagranicznego przedsiębiorcy ma inną sekcję
   // Osoby fizyczne w odpisie mają zamaskowane nazwiska (np. "P******"); nie przechowujemy danych osobowych.
   const nazwaWspolnika = (w) => w.nazwa || (w.nazwisko || w.imiona ? "osoba fizyczna (nazwisko zamaskowane w API KRS)" : null);
   const wspolnicy = (d1.wspolnicySpzoo || []).map((w) => ({

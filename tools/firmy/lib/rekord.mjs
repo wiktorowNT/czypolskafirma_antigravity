@@ -116,7 +116,7 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   f.konflikty = ocena.konflikty;
   const uwagiModelu = [s.uwagi, f.tozsamosc?.uwagi].filter((u) => u && String(u).trim()).map((u) => `model: ${String(u).slice(0, 300)}`);
   const nazwaKrs = String(rej?.nazwa || t.mf?.nazwa || "");
-  const spolkaCelowa = /E-?COM|ONLINE|E-?SKLEP|LOGISTY|NIERUCHOMO|SERWIS|FINANC|LEASING|DYSTRYBUC|INVESTMENT|HOLDING|SHARED SERVICES|CENTRUM USŁUG/i.test(nazwaKrs)
+  const spolkaCelowa = /E-?COM|ONLINE|E-?SKLEP|LOGISTY|NIERUCHOMO|SERWIS|SERVICE|FINANC|LEASING|DYSTRYBUC|INVESTMENT|HOLDING|SHARED SERVICES|CENTRUM USŁUG/i.test(nazwaKrs)
     ? [`nazwa spółki z rejestru ("${nazwaKrs}") wygląda na spółkę celową, nie operatora marki; sprawdź, czy NIP wskazuje właściwą spółkę`]
     : [];
   const dataZKrs = f.rekord.founded_at
