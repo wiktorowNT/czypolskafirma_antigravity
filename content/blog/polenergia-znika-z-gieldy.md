@@ -2,7 +2,7 @@
 title: "Polenergia znika z giełdy. Czyj kapitał kontroluje największą prywatną grupę energetyczną w Polsce?"
 slug: "polenergia-znika-z-gieldy"
 date: 2026-07-17
-description: "Dominika Kulczyk i kanadyjski Brookfield wzywają na akcje Polenergii za ok. 1 mld zł i chcą zdjąć spółkę z GPW. Wyjaśniamy, kto po tym ruchu będzie miał kontrolę."
+description: "Dominika Kulczyk i kanadyjski Brookfield wzywają na akcje Polenergii za ok. 1 mld zł i chcą zdjąć spółkę z GPW. Kto po tym ruchu przejmie kontrolę?"
 image: "/images/blog/polenergia-znika-z-gieldy.png"
 imageAlt: "Grafika CzyPolskaFirma: Polenergia znika z giełdy, Kulczyk i Brookfield idą po 100 procent akcji"
 relatedCompanies: []
