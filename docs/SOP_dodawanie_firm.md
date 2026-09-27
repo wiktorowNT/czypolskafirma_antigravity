@@ -46,7 +46,10 @@ Menu boczne ma te same numery kroków:
   niczego nie gubi.
 
 **Rozstrzygnięcie w Claude (krok 5):** panel zapisuje folder `data/robocze/rozstrzygniecie/<partia>/`
-(poza gitem): `00-instrukcja.md` oraz `czesc-01.md`, `czesc-02.md`… po 10–50 firm. W części przy
+(poza gitem): `00-instrukcja.md` oraz `czesc-01.md`, `czesc-02.md`… Domyślnie części są składane
+według rozmiaru, do ok. 150 tys. znaków (ok. 40 tys. tokenów, zwykle ok. 10 firm), bez skracania
+czegokolwiek. Firmy, przy których czaty wskazują różne kraje, idą na początek. Przy każdej firmie jest
+linia „zgodność czatów”. Można też wybrać stały podział po 10–50 firm. W części przy
 każdej firmie są fakty z rejestrów (procenty policzone z udziałów, historia KRS jako lista wpisów,
 uwaga o wspólnikach poniżej 10%, spółki osobowe i cywilne opisane wprost) oraz pełne odpowiedzi
 wszystkich czatów. Instrukcja każe Claude'owi rozstrzygać wg hierarchii źródeł (nie większością),
@@ -59,7 +62,9 @@ według twardych zasad stylu.
   wklejasz do panelu albo zapisujesz jako `wynik-NN.json`.
 - Koszt: ok. 15 tys. tokenów na 10 firm przy 4 czatach, plus wyszukiwania w internecie.
 - „Wczytaj wyniki” zapisuje wersję „Rozstrzygnięcie” i od razu ją przyjmuje: firma trafia do
-  przeglądu z wyjaśnieniem Claude'a w uwagach.
+  przeglądu z wyjaśnieniem Claude'a w uwagach. Gdy ekran kroku 5 jest otwarty, panel co 8 s sam
+  wczytuje nowe i zmienione pliki `wynik-NN.json` (pole „wczytuj automatycznie”). Wynik identyczny
+  z już przyjętym nie jest przyjmowany ponownie, więc decyzje i poprawki z przeglądu zostają.
 
 Pewność po rozstrzygnięciu liczy kod:
 
@@ -223,7 +228,12 @@ do przeglądu. Partie na ścieżce ręcznej otwierają się na bieżącym kroku 
 
 ### Ekran 4: Przegląd
 
-Konflikty na górze, z listą powodów. Przy każdej firmie: pola do edycji (kraj, właściciel,
+Konflikty na górze, z listą powodów. Pod nazwą firmy jest ściągawka: kraj i właściciel z każdego
+czatu (zielone zgodne z rekordem, czerwone niezgodne) i z rozstrzygnięcia, a przy ŚREDNIEJ ramka
+„Dlaczego nie WYSOKA” z ogniwami, które mają tylko źródło medialne, agregator albo brak linku.
+Skróty klawiszowe (poza polami tekstowymi): Z zatwierdź, O odrzuć, P do poprawy, J/→ następna,
+K/← poprzednia, Esc wyjście z pola. Po decyzji aktywna staje się następna firma. Przycisk
+„Jedna firma naraz” pokazuje tylko bieżącą kartę. Przy każdej firmie: pola do edycji (kraj, właściciel,
 opisy, kategoria, marki), łańcuch własności ze źródłami, dane z KRS, wynik samokontroli
 z oceną każdego źródła, porównanie z obecnym rekordem (jeśli firma jest w bazie).
 

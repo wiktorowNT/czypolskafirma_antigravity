@@ -33,6 +33,14 @@
   .filtry { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px } .filtry button.aktywny { background:var(--tekst); color:#fff }
   .porownanie { font-size:13px; background:#eff6ff; border-radius:8px; padding:8px 10px; margin-top:8px }
   .zmiana { color:var(--kon); font-weight:600 }
+  .sciagawka { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:8px 0 2px; font-size:13px }
+  .chip { border-radius:999px; padding:2px 9px; background:#f3f4f6; border:1px solid var(--linia) } .chip.tak { background:var(--okTlo); border-color:#86efac } .chip.nie { background:var(--konTlo); border-color:#fca5a5; font-weight:600 }
+  .chip.roz { background:#e0e7ff; border-color:#a5b4fc } .strzalka { color:var(--szary) }
+  .powod { font-size:13px; background:var(--srTlo); color:#713f12; border-radius:8px; padding:6px 10px; margin:6px 0 }
+  .karta.aktywna { outline:3px solid #6366f1; outline-offset:2px }
+  .skroty { font-size:12.5px; color:var(--szary); margin:0 0 10px; display:flex; gap:12px; flex-wrap:wrap; align-items:center }
+  kbd { font:12px ui-monospace, Consolas, monospace; border:1px solid var(--linia); border-bottom-width:2px; border-radius:4px; padding:0 5px; background:#fff; color:var(--tekst) }
+  .nawigacja { display:flex; gap:8px; align-items:center; margin-bottom:10px; font-size:14px }
   @media (max-width:700px) { .pola { grid-template-columns:1fr } }
 </style>
 </head>
@@ -71,11 +79,18 @@
     <button data-f="WYSOKA">Wysoka pewność</button>
     <button data-f="bezdecyzji">Bez decyzji</button>
     <button data-f="zatwierdzone">Zatwierdzone</button>
+    <button id="btnJedna" style="margin-left:auto" title="Pokazuje jedną firmę; po decyzji przechodzi do następnej">Jedna firma naraz</button>
   </div>
+  <div class="skroty">Skróty (poza polami tekstowymi): <span><kbd>Z</kbd> zatwierdź</span><span><kbd>O</kbd> odrzuć</span><span><kbd>P</kbd> do poprawy</span><span><kbd>J</kbd>/<kbd>→</kbd> następna</span><span><kbd>K</kbd>/<kbd>←</kbd> poprzednia</span><span><kbd>Esc</kbd> wyjście z pola</span></div>
+  <div id="nawigacja"></div>
   <div id="lista"></div>
 </main>
 <script>
 let DANE = null, FILTR = "uwaga"; // domyślnie: firmy wymagające uwagi
+let AKTYWNA = null; // firma, której dotyczą skróty klawiszowe
+let JEDNA = false; // tryb "jedna firma naraz"
+let ZAPISUJE = false;
+try { JEDNA = localStorage.getItem("przegladJedna") === "1"; } catch {}
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const KOLEJNOSC = { KONFLIKT: 0, SREDNIA: 1, WYSOKA: 2 };
@@ -114,8 +129,40 @@ function renderuj() {
   $("#btnGotowe").disabled = !g;
   const u = DANE.partia.firmy.filter(wymagaUwagi).length;
   document.querySelector('[data-f="uwaga"]').textContent = `Wymaga uwagi (${u})`;
-  const firmy = [...DANE.partia.firmy].sort((a, b) => (KOLEJNOSC[a.status] ?? 3) - (KOLEJNOSC[b.status] ?? 3) || a.nazwa.localeCompare(b.nazwa, "pl"));
-  $("#lista").innerHTML = firmy.filter(pasuje).map(karta).join("") || `<p class="stat">Nic do pokazania w tym filtrze.</p>`;
+  const firmy = widoczne();
+  if (!firmy.some((f) => f.nazwa === AKTYWNA)) AKTYWNA = firmy[0]?.nazwa || null;
+  const nr = firmy.findIndex((f) => f.nazwa === AKTYWNA);
+  $("#btnJedna").classList.toggle("aktywny", JEDNA);
+  $("#nawigacja").innerHTML = JEDNA && firmy.length ? `<div class="nawigacja"><button data-nav="-1">← Poprzednia</button><span>Firma <b>${nr + 1}</b> z ${firmy.length} w tym filtrze</span><button data-nav="1">Następna →</button></div>` : "";
+  const doPokazania = JEDNA ? firmy.filter((f) => f.nazwa === AKTYWNA) : firmy;
+  $("#lista").innerHTML = doPokazania.map(karta).join("") || `<p class="stat">Nic do pokazania w tym filtrze.</p>`;
+}
+
+// Firmy w bieżącym filtrze, w kolejności wyświetlania.
+const widoczne = () => [...DANE.partia.firmy].filter(pasuje).sort((a, b) => (KOLEJNOSC[a.status] ?? 3) - (KOLEJNOSC[b.status] ?? 3) || a.nazwa.localeCompare(b.nazwa, "pl"));
+
+function ustawAktywna(nazwa, przewin = true) {
+  AKTYWNA = nazwa;
+  if (JEDNA) { renderuj(); window.scrollTo({ top: 0 }); return; }
+  document.querySelectorAll("article.karta").forEach((a) => a.classList.toggle("aktywna", a.dataset.nazwa === nazwa));
+  const el = [...document.querySelectorAll("article.karta")].find((a) => a.dataset.nazwa === nazwa);
+  if (el && przewin) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function przesun(o) {
+  const firmy = widoczne();
+  if (!firmy.length) return;
+  const i = firmy.findIndex((f) => f.nazwa === AKTYWNA);
+  ustawAktywna(firmy[Math.min(firmy.length - 1, Math.max(0, i + o))].nazwa);
+}
+
+function rysujSciagawke(f) {
+  const s = f.sciagawka;
+  if (!s) return "";
+  const chip = (w, klasa) => `<span class="chip ${klasa}" title="${esc(w.wlasciciel || "właściciel nieustalony")}">${esc(w.model)}: <b>${esc(w.kraj || "?")}</b> · ${esc((w.wlasciciel || "?").slice(0, 38))}</span>`;
+  const zgodnych = s.czaty.filter((w) => w.zgodny).length;
+  const przyjeta = s.przyjeta && s.przyjeta !== "Rozstrzygnięcie" ? ` <span class="stat">przyjęto wersję: ${esc(s.przyjeta)}</span>` : "";
+  return `<div class="sciagawka"><span class="stat">Czaty ${zgodnych}/${s.czaty.length} zgodne z rekordem:</span>${s.czaty.map((w) => chip(w, w.zgodny ? "tak" : "nie")).join("")}${s.rozstrzygniecie ? `<span class="strzalka">→</span>${chip(s.rozstrzygniecie, "roz")}` : ""}${przyjeta}</div>`;
 }
 
 function karta(f) {
@@ -131,8 +178,10 @@ function karta(f) {
   const por = f.porownanie ? `<div class="porownanie"><b>Reweryfikacja rekordu ${esc(f.porownanie.slug)}:</b> kraj ${esc(f.porownanie.country_code.bylo)} → <span class="${f.porownanie.country_code.zmiana ? "zmiana" : ""}">${esc(f.porownanie.country_code.jest)}</span>; właściciel „${esc(f.porownanie.owner_name.bylo)}" → <span class="${f.porownanie.owner_name.zmiana ? "zmiana" : ""}">„${esc(f.porownanie.owner_name.jest)}"</span>; NIP ${esc(f.porownanie.nip.bylo)} → <span class="${f.porownanie.nip.zmiana ? "zmiana" : ""}">${esc(f.porownanie.nip.jest)}</span></div>` : "";
   const dec = f.decyzja ? `<span class="badge ${f.decyzja === "odrzucony" ? "odrz" : "dec"}">${esc(f.decyzja)}</span>` : "";
   if (!f.rekord) return `<article class="karta"><div class="naglowek"><h2>${esc(f.nazwa)}</h2><span class="badge odrz">bez rekordu</span></div><div class="uwagi">${esc(Object.entries(f.etapy || {}).map(([k, v]) => k + ": " + v).join(" · "))} ${esc((f.bledy || []).join(" · "))} ${f.czeka ? "Czeka na plik: " + esc(f.czeka) : ""}</div></article>`;
-  return `<article class="karta ${f.status}" data-nazwa="${esc(f.nazwa)}">
+  return `<article class="karta ${f.status}${f.nazwa === AKTYWNA && !JEDNA ? " aktywna" : ""}" data-nazwa="${esc(f.nazwa)}">
     <div class="naglowek"><h2>${esc(r.display_name || f.nazwa)}</h2><span class="badge ${f.status}">${f.status}</span>${dec}<span class="stat">${esc(r.country_code || "??")} · ${esc(r.owner_name || "?")} · reguła ${esc(f.sledztwo?.regula || "?")} · NIP ${esc(r.nip || "?")} · KRS ${esc(r.krs || "?")}</span></div>
+    ${rysujSciagawke(f)}
+    ${(f.powodyPewnosci || []).length ? `<div class="powod"><b>Dlaczego nie WYSOKA:</b> ${f.powodyPewnosci.map(esc).join(" · ")}</div>` : ""}
     ${(f.braki || []).length ? `<ul class="konflikty"><li><b>Do uzupełnienia przed importem:</b> ${f.braki.map(esc).join("; ")}</li></ul>` : ""}
     ${f.konflikty?.length ? `<ul class="konflikty">${f.konflikty.map((k) => `<li>${esc(k)}</li>`).join("")}</ul>` : ""}
     ${f.uwagi?.length ? `<div class="uwagi">${f.uwagi.map(esc).join(" · ")}</div>` : ""}
@@ -181,14 +230,47 @@ async function decyzja(nazwa, akcja, el) {
   const r = await fetch("/api/decyzja", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const j = await r.json();
   el.querySelector("[data-info]").textContent = j.ok ? "zapisano" : "błąd: " + j.blad;
+  // Po decyzji dalej idzie następna firma z listy (sama zapisana zmiana pól zostaje na miejscu).
+  const przed = widoczne().map((f) => f.nazwa);
+  const i = przed.indexOf(nazwa);
+  const nastepna = j.ok && akcja !== "zapisz" ? przed[i + 1] || przed[i - 1] || null : nazwa;
+  AKTYWNA = nastepna;
   await wczytaj();
+  if (j.ok && akcja !== "zapisz" && AKTYWNA) ustawAktywna(AKTYWNA);
 }
 
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("button");
   if (!b) return;
   if (b.dataset.akcja) return decyzja(b.closest("article").dataset.nazwa, b.dataset.akcja, b.closest("article"));
-  if (b.dataset.f) { FILTR = b.dataset.f; document.querySelectorAll(".filtry button").forEach((x) => x.classList.toggle("aktywny", x === b)); renderuj(); }
+  if (b.dataset.nav) return przesun(Number(b.dataset.nav));
+  if (b.dataset.f) { FILTR = b.dataset.f; document.querySelectorAll("[data-f]").forEach((x) => x.classList.toggle("aktywny", x === b)); AKTYWNA = null; renderuj(); }
+});
+// Kliknięcie w kartę (poza przyciskiem) ustawia ją jako aktywną dla skrótów.
+document.addEventListener("mousedown", (e) => {
+  const a = e.target.closest("article.karta[data-nazwa]");
+  if (a && !e.target.closest("button, a") && a.dataset.nazwa !== AKTYWNA) ustawAktywna(a.dataset.nazwa, false);
+});
+$("#btnJedna").onclick = () => {
+  JEDNA = !JEDNA;
+  try { localStorage.setItem("przegladJedna", JEDNA ? "1" : "0"); } catch {}
+  renderuj();
+  if (!JEDNA && AKTYWNA) ustawAktywna(AKTYWNA);
+};
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey || e.altKey || e.metaKey || !DANE) return;
+  const pole = e.target.closest?.("input, textarea, select");
+  if (pole) { if (e.key === "Escape") pole.blur(); return; }
+  const k = e.key.toLowerCase();
+  if (k === "j" || e.key === "ArrowRight") { e.preventDefault(); return przesun(1); }
+  if (k === "k" || e.key === "ArrowLeft") { e.preventDefault(); return przesun(-1); }
+  const akcja = { z: "zatwierdzony", o: "odrzucony", p: "do_poprawy" }[k];
+  if (!akcja || !AKTYWNA || ZAPISUJE) return; // w trakcie zapisu kolejny klawisz trafiłby w tę samą firmę
+  const el = [...document.querySelectorAll("article.karta[data-nazwa]")].find((a) => a.dataset.nazwa === AKTYWNA);
+  if (!el) return;
+  e.preventDefault();
+  ZAPISUJE = true;
+  decyzja(AKTYWNA, akcja, el).finally(() => { ZAPISUJE = false; });
 });
 $("#btnOdswiez").onclick = wczytaj;
 $("#btnGotowe").onclick = async () => {

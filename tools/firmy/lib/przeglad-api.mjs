@@ -5,7 +5,8 @@ import fs from "node:fs";
 import { dzisiaj } from "./env.mjs";
 import { promptKonsylium } from "./prompty.mjs";
 import { zlozRekord } from "./rekord.mjs";
-import { normalizujKrajOdModelu, walidujRekord } from "./walidacja.mjs";
+import { ROZSTRZYGNIECIE } from "./sledztwo-reczne.mjs";
+import { normalizujKrajOdModelu, ogniwaKontrolne, poziomZrodla, walidujRekord } from "./walidacja.mjs";
 import { podobienstwoNazw } from "./tekst.mjs";
 
 export const wczytajPartie = (plik) => JSON.parse(fs.readFileSync(plik, "utf8"));
@@ -72,6 +73,36 @@ export function brakiRekordu(f, kategorie) {
   if (!f.rekord.category_slug) b.push("brak kategorii");
   return [...new Set(b)];
 }
+// Ściągawka na kartę przeglądu: kraj i właściciel z każdego czatu i z rozstrzygnięcia obok siebie,
+// żeby nie trzeba było przechodzić do porównania wersji.
+export function sciagawka(f) {
+  const wersje = Object.entries(f.sledztwaReczne || {});
+  if (!wersje.length || !f.rekord) return null;
+  const kraj = f.rekord.country_code || "";
+  const wiersz = ([model, w]) => ({ model, kraj: w.sledztwo?.country_code || "", wlasciciel: w.sledztwo?.ostateczny_wlasciciel || "", zgodny: !!kraj && w.sledztwo?.country_code === kraj });
+  const roz = wersje.find(([m]) => m === ROZSTRZYGNIECIE);
+  return { czaty: wersje.filter(([m]) => m !== ROZSTRZYGNIECIE).map(wiersz), rozstrzygniecie: roz ? wiersz(roz) : null, przyjeta: f.przyjetaWersja?.model || null };
+}
+
+const OPIS_POZIOMU = { 3: "tylko media", 4: "agregator (tylko trop)", 5: "bez linku" };
+const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+
+// Dlaczego firma ma ŚREDNIĄ, a nie WYSOKĄ: konkretne ogniwa i ich źródła (te same reguły co ocenPewnosc).
+// Konflikty karta pokazuje osobno, więc tu tylko ŚREDNIA.
+export function powodyPewnosci(f) {
+  if (f.status !== "SREDNIA") return [];
+  const p = [];
+  for (const o of ogniwaKontrolne(f.sledztwo?.lancuch || [])) {
+    const poz = poziomZrodla(o.zrodlo_url);
+    if (poz > 2) p.push(`${o.podmiot}: ${OPIS_POZIOMU[poz] || "słabe źródło"}${o.zrodlo_url ? ` (${host(o.zrodlo_url)})` : ""}`);
+  }
+  const k = f.kontrola || {};
+  if (k.zgadza_sie !== true) p.push((k.zastrzezenia || [])[0] || "kontrola nie potwierdziła klasyfikacji");
+  else if (k.pewnosc_proponowana === "SREDNIA") p.push(k.zrodlo === "rozstrzygnięcie Claude" ? "Claude sam ocenił pewność jako ŚREDNIA" : "kontrola proponuje ŚREDNIA");
+  if (!p.length) p.push("brak ogniwa kontrolnego ze źródłem z rejestru albo strony IR");
+  return p;
+}
+
 // Gotowa do zatwierdzenia hurtem: bez konfliktu, bez braków, jeszcze bez decyzji.
 export const gotowaDoZatwierdzenia = (f, kategorie) => !!f.rekord && !f.pomin && !f.decyzja && f.status !== "KONFLIKT" && !brakiRekordu(f, kategorie).length;
 
@@ -85,7 +116,14 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
   if (req.method === "GET" && url.pathname === "/api/partia") {
     const p = plik();
     const partia = wczytajPartie(p);
-    for (const f of partia.firmy) f.braki = brakiRekordu(f, kategorie); // tylko w odpowiedzi, nie w pliku
+    // Pola tylko w odpowiedzi, nie w pliku. Surowe odpowiedzi czatów (kilka MB) strona nie potrzebuje:
+    // wystarcza ściągawka.
+    for (const f of partia.firmy) {
+      f.braki = brakiRekordu(f, kategorie);
+      f.sciagawka = sciagawka(f);
+      f.powodyPewnosci = powodyPewnosci(f);
+      delete f.sledztwaReczne;
+    }
     json(res, { partia, kategorie, plik: p });
     return true;
   }

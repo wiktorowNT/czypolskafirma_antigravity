@@ -5,9 +5,9 @@ export const STATUSY = ["WYSOKA", "SREDNIA", "KONFLIKT"];
 
 // Reguły brzegowe z METODOLOGIA_V2, które zawsze idą do decyzji właściciela.
 const REGULY_ZAWSZE_KONFLIKT = ["B5", "B10", "B11", "B12"];
-// Poziom 1: rejestry i dokumenty spółek. Agregatory giełdowe (bankier, stooq, biznesradar) to poziom 3:
+// Poziom 1: rejestry, dokumenty spółek i decyzje UOKiK (zgody na koncentrację wskazują przejmującego). Agregatory giełdowe (bankier, stooq, biznesradar) to poziom 3:
 // przepisują zawiadomienia, ale nie są źródłem pierwotnym.
-const POZIOM_REJESTR = /krs|crbr|ceidg|company-information\.service\.gov\.uk|ariregister|espi|ebi|raport[-_ ](biez|rocz|okres)|prospekt|gpw\.pl|api-krs|relacje[-_ ]inwestorskie|investor[-_ ]relations|\/\/ir\.|\/ir\/|annual[-_ ]report|sec\.gov|companieshouse|handelsregister|kvk\.nl|lbr\.lu/i;
+const POZIOM_REJESTR = /krs|crbr|uokik\.gov\.pl|ceidg|company-information\.service\.gov\.uk|ariregister|espi|ebi|raport[-_ ](biez|rocz|okres)|prospekt|gpw\.pl|api-krs|relacje[-_ ]inwestorskie|investor[-_ ]relations|\/\/ir\.|\/ir\/|annual[-_ ]report|sec\.gov|companieshouse|handelsregister|kvk\.nl|lbr\.lu/i;
 const POZIOM_IR = /\.(com|pl|de|fr|nl|lu|ch|es|it|se|dk|fi|no|uk|co\.uk|us)\/(?:.*)(investor|inwestor|akcjonariat|shareholder|ownership|struktura|about|o-nas|o-firmie|company|grupa|group)/i;
 
 // Agregatory i serwisy pośrednie: tylko trop, nigdy źródło ogniwa. Sprawdzane PRZED rejestrami,
@@ -57,6 +57,15 @@ export function walidujRekord(rekord, kategorie) {
   return { bledy, ostrzezenia };
 }
 
+// Pakiety mniejszościowe i free float nie kontrolują, nawet gdy razem przekraczają 25%.
+const pakietyKontrolne = (lancuch) => lancuch.filter((o) => !["mniejszosciowy", "free_float"].includes(o.rola) && ((o.proc_glosow ?? o.proc_kapitalu ?? 0) >= 25 || o.rola === "kontrolujacy"));
+
+// Ogniwa, po których liczy się poziom źródeł: pakiet kontrolny i ostateczny właściciel (bez polskiej spółki).
+export function ogniwaKontrolne(lancuch = []) {
+  const kontrolne = pakietyKontrolne(lancuch);
+  return lancuch.filter((o) => !["spolka_polska", "mniejszosciowy", "free_float"].includes(o.rola) && (kontrolne.includes(o) || o.rola === "ostateczny"));
+}
+
 // Łączy ustalenia z kroków: tożsamość, rejestr, śledztwo, kontrola. Zwraca status i listę konfliktów.
 export function ocenPewnosc(firma) {
   const konflikty = [], uwagi = [];
@@ -77,17 +86,16 @@ export function ocenPewnosc(firma) {
 
   // 3. Łańcuch własności: pakiet kontrolny musi mieć źródło
   const lancuch = sl.lancuch || [];
-  // Pakiety mniejszościowe i free float nie kontrolują, nawet gdy razem przekraczają 25%.
-  const kontrolne = lancuch.filter((o) => !["mniejszosciowy", "free_float"].includes(o.rola) && ((o.proc_glosow ?? o.proc_kapitalu ?? 0) >= 25 || o.rola === "kontrolujacy"));
+  const kontrolne = pakietyKontrolne(lancuch);
   if (!lancuch.length) konflikty.push("brak łańcucha własności");
   const bezZrodla = lancuch.filter((o) => !o.zrodlo_url);
   if (kontrolne.some((o) => !o.zrodlo_url) || (!kontrolne.length && bezZrodla.length)) konflikty.push("pakiet kontrolny bez źródła");
   // Poziom źródeł liczy się po najsłabszym ogniwie kontrolnym (pakiet kontrolny i ostateczny
   // właściciel), nie po najlepszym w łańcuchu: odpis KRS polskiej spółki nie potwierdza tego,
   // kto stoi nad jej wspólnikami. Samo źródło medialne dla któregoś ogniwa = najwyżej ŚREDNIA.
-  const ogniwaKontrolne = lancuch.filter((o) => !["spolka_polska", "mniejszosciowy", "free_float"].includes(o.rola) && (kontrolne.includes(o) || o.rola === "ostateczny"));
-  const poziomKontroli = ogniwaKontrolne.length ? Math.max(...ogniwaKontrolne.map((o) => poziomZrodla(o.zrodlo_url))) : 5;
-  const najslabsze = ogniwaKontrolne.filter((o) => poziomZrodla(o.zrodlo_url) > 2).map((o) => o.podmiot);
+  const ogniwa = ogniwaKontrolne(lancuch);
+  const poziomKontroli = ogniwa.length ? Math.max(...ogniwa.map((o) => poziomZrodla(o.zrodlo_url))) : 5;
+  const najslabsze = ogniwa.filter((o) => poziomZrodla(o.zrodlo_url) > 2).map((o) => o.podmiot);
   const wRegulach = String(sl.regula || "").toUpperCase();
   for (const b of REGULY_ZAWSZE_KONFLIKT) if (wRegulach.includes(b)) konflikty.push(`reguła ${b} wymaga decyzji właściciela`);
   if (sl.transakcja_w_toku) konflikty.push(`trwająca transakcja: ${sl.transakcja_w_toku}`);

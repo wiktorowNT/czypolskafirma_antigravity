@@ -427,8 +427,8 @@
         <div class="etap">
           <i class="nrb">1</i>
           <div class="tresc-etapu">
-            <h2>Utwórz pliki <i class="pomoc" data-pomoc="rozpliki" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozpliki" hidden><p>Panel zapisuje na dysku folder z instrukcją dla Claude'a i częściami po kilka lub kilkanaście firm. W każdej części są fakty z rejestrów i pełne odpowiedzi wszystkich czatów.</p><ul><li><b>Firmy jeszcze nierozstrzygnięte</b>: zwykły wybór, tylko te bez wyniku od Claude'a.</li><li><b>Firmy bez przyjętej wersji</b>: też te, które Claude rozstrzygnął, ale cofnąłeś przyjęcie.</li><li><b>Wszystkie firmy z odpowiedziami</b>: gdy chcesz rozstrzygnąć wszystko od nowa (np. po dodaniu kolejnego czatu).</li></ul><p>Rozmiar części: 20 firm to dobry kompromis. Mniejsze części to mniej pracy naraz dla Claude'a, większe to mniej plików. Ponowne utworzenie plików odkłada stare wyniki do podfolderu „stare”.</p></div>
-            <p>Panel zapisze folder z instrukcją (00-instrukcja.md) i częściami po kilkanaście firm (czesc-01.md, czesc-02.md…). W każdej części: fakty z rejestrów i pełne odpowiedzi wszystkich czatów.</p>
+            <h2>Utwórz pliki <i class="pomoc" data-pomoc="rozpliki" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozpliki" hidden><p>Panel zapisuje na dysku folder z instrukcją dla Claude'a i częściami po kilka lub kilkanaście firm. W każdej części są fakty z rejestrów i pełne odpowiedzi wszystkich czatów.</p><ul><li><b>Firmy jeszcze nierozstrzygnięte</b>: zwykły wybór, tylko te bez wyniku od Claude'a.</li><li><b>Firmy bez przyjętej wersji</b>: też te, które Claude rozstrzygnął, ale cofnąłeś przyjęcie.</li><li><b>Wszystkie firmy z odpowiedziami</b>: gdy chcesz rozstrzygnąć wszystko od nowa (np. po dodaniu kolejnego czatu).</li></ul><p>Rozmiar części: „według rozmiaru” składa części do ok. 150 tys. znaków (ok. 40 tys. tokenów), bez skracania czegokolwiek. Firma z pięcioma czatami to ok. 14 tys. znaków, więc wychodzi ok. 10 firm na część. Dzięki temu każdy podagent ma miejsce na wyszukiwanie w internecie. Firmy, przy których czaty się różnią, idą na początek (do pierwszych części).</p><p>Ponowne utworzenie plików odkłada stare wyniki do podfolderu „stare”.</p></div>
+            <p>Panel zapisze folder z instrukcją (00-instrukcja.md) i częściami (czesc-01.md, czesc-02.md…) do ok. 40 tys. tokenów każda. W każdej części: fakty z rejestrów i pełne odpowiedzi wszystkich czatów, firmy sporne na początku.</p>
             <div class="rzad" style="margin-bottom:10px">
               <select id="rozZakres" style="width:auto">
                 <option value="nierozstrzygniete">Firmy jeszcze nierozstrzygnięte</option>
@@ -436,8 +436,9 @@
                 <option value="wszystkie">Wszystkie firmy z odpowiedziami</option>
               </select>
               <select id="rozRozmiar" style="width:auto" title="Ile firm w jednej części">
+                <option value="auto" selected>części według rozmiaru (zalecane)</option>
                 <option value="10">po 10 firm w części</option>
-                <option value="20" selected>po 20 firm w części</option>
+                <option value="20">po 20 firm w części</option>
                 <option value="30">po 30 firm w części</option>
                 <option value="50">po 50 firm w części</option>
               </select>
@@ -459,9 +460,9 @@
         <div class="etap">
           <i class="nrb">3</i>
           <div class="tresc-etapu">
-            <h2>Wczytaj wyniki <i class="pomoc" data-pomoc="rozwyniki" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozwyniki" hidden><p><b>Wczytaj wyniki z folderu</b> zbiera wszystkie pliki wynik-NN.json zapisane przez Claude Code. Można klikać wiele razy, np. po każdej skończonej części.</p><p>Pole niżej służy do wklejenia odpowiedzi z Claude.ai (część po części).</p><p>Każda wczytana firma jest od razu przyjęta i trafia do przeglądu (krok 6), z wyjaśnieniem Claude'a w uwagach. Nie pasuje Ci jego wybór? W „porównaniu wersji” przyjmiesz ręcznie odpowiedź innego czatu.</p></div>
+            <h2>Wczytaj wyniki <i class="pomoc" data-pomoc="rozwyniki" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozwyniki" hidden><p>Gdy ta strona jest otwarta i zaznaczone jest „wczytuj automatycznie”, panel co kilka sekund sprawdza folder i sam wczytuje każdy nowy albo zmieniony plik wynik-NN.json. <b>Wczytaj wyniki z folderu</b> robi to samo ręcznie. Wynik identyczny z już przyjętym nie jest przyjmowany drugi raz, więc ponowne wczytanie nie kasuje decyzji ani poprawek z przeglądu.</p><p>Pole niżej służy do wklejenia odpowiedzi z Claude.ai (część po części).</p><p>Każda wczytana firma jest od razu przyjęta i trafia do przeglądu (krok 6), z wyjaśnieniem Claude'a w uwagach. Nie pasuje Ci jego wybór? W „porównaniu wersji” przyjmiesz ręcznie odpowiedź innego czatu.</p></div>
             <p>Panel zbiera wszystkie pliki wynik-NN.json z folderu, zapisuje je jako wersję „Rozstrzygnięcie” i od razu przyjmuje: firmy trafiają do przeglądu. Można wczytywać wiele razy, np. po każdej części.</p>
-            <div class="rzad" style="margin-bottom:10px"><button class="glowny" id="btnRozWczytaj">Wczytaj wyniki z folderu</button></div>
+            <div class="rzad" style="margin-bottom:10px"><button class="glowny" id="btnRozWczytaj">Wczytaj wyniki z folderu</button><label style="font-size:14px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="rozAuto" checked style="width:auto"> wczytuj automatycznie, gdy pojawi się nowy plik</label><span id="rozAutoInfo" style="font-size:13px;color:var(--slaby)"></span></div>
             <textarea id="rozTekst" placeholder="Albo wklej tutaj wynik z Claude.ai (Ctrl+V)" style="min-height:90px"></textarea>
             <div class="rzad" style="margin-top:10px"><button id="btnRozWklej">Wczytaj wklejony wynik</button></div>
             <div id="rozWynik" style="margin-top:12px"></div>
@@ -1449,7 +1450,7 @@ function rysujPlikiRoz() {
   if (!s || !s.czesci.length) { $("#rozPliki").innerHTML = s?.folderIstnieje ? '<span class="pusto">Folder jest pusty.</span>' : ""; return; }
   const tys = (n) => Math.round(n / 1000);
   $("#rozPliki").innerHTML = `<p style="font-size:13px;color:var(--slaby);margin:0 0 6px">Folder: <code>${esc(s.folder)}</code></p>
-    <table><tr><th>Plik</th><th>Firm</th><th>Rozmiar</th><th>Wynik</th></tr>${s.czesci.map((c) => `<tr><td>${esc(c.plik)}</td><td>${c.firm}</td><td>${tys(c.znakow)} tys. znaków (ok. ${Math.round(c.znakow / 3500)} tys. tokenów)</td><td>${c.wynik ? `<span class="plakietka p-ok">${esc(c.wynik)}</span>` : '<span class="plakietka">brak</span>'}</td></tr>`).join("")}</table>`;
+    <table><tr><th>Plik</th><th>Firm</th><th>Rozmiar</th><th>Wynik</th></tr>${s.czesci.map((c) => `<tr><td>${esc(c.plik)}</td><td>${c.firm}</td><td>${tys(c.znakow)} tys. znaków (ok. ${Math.round(c.znakow / 3500)} tys. tokenów)</td><td>${c.wynik ? `<span class="plakietka ${c.wczytany ? "p-ok" : "p-uwaga"}">${esc(c.wynik)}${c.wczytany ? " · wczytany" : " · nowy"}</span>` : '<span class="plakietka">czeka</span>'}</td></tr>`).join("")}</table>`;
 }
 
 $("#btnRozPliki").onclick = async () => {
@@ -1476,13 +1477,14 @@ Nie zmieniaj żadnych innych plików. Na koniec napisz krótko, ile firm rozstrz
   setTimeout(() => ($("#rozPolecenieInfo").textContent = ""), 4000);
 };
 
-async function wczytajRoz(tekst) {
-  const r = await wyslij("/api/panel/rozstrzygniecie-wczytaj", { partia: STAN.partia, tekst });
+async function wczytajRoz(tekst, auto = false) {
+  const r = await wyslij("/api/panel/rozstrzygniecie-wczytaj", { partia: STAN.partia, tekst, auto });
   if (r.blad) { $("#rozWynik").innerHTML = `<div class="pasmo blad">${esc(r.blad)}</div>`; return; }
+  if (auto && !r.pliki.length) return;
   const nie = r.pliki.flatMap((p) => p.niedopasowane);
   $("#rozWynik").innerHTML = `<div class="pasmo ${nie.length || r.bledy.length ? "" : "dobrze"}">
     ${r.pliki.map((p) => `${esc(p.plik)}: ${p.dopasowane} z ${p.obiektow} firm`).join("<br>")}
-    <br><b>Przyjęto ${r.przyjete.length} firm</b>, są już w przeglądzie.
+    <br>${auto ? "Wczytano automatycznie. " : ""}<b>Przyjęto ${r.przyjete.length} firm</b>, są już w przeglądzie.${r.bezZmian?.length ? ` ${r.bezZmian.length} bez zmian (już przyjęte, decyzje z przeglądu zostają).` : ""}
     ${nie.length ? `<br>Nie dopasowano: <b>${esc(nie.join(", "))}</b> (Claude zmienił nazwę marki?).` : ""}
     ${r.bledy.length ? `<br><span class="err">${r.bledy.map(esc).join("<br>")}</span>` : ""}</div>`;
   if (tekst) $("#rozTekst").value = "";
@@ -1490,6 +1492,21 @@ async function wczytajRoz(tekst) {
   rysujSciezke();
 }
 $("#btnRozWczytaj").onclick = () => wczytajRoz("");
+
+// Automatyczne wczytywanie: na ekranie kroku 5 co 8 s sprawdzamy, czy Claude zapisał nowy wynik.
+let ROZ_ZAJETE = false;
+setInterval(async () => {
+  if (STAN.ekran !== "rozstrzygniecie" || !STAN.partia || !$("#rozAuto").checked || ROZ_ZAJETE || document.hidden) return;
+  ROZ_ZAJETE = true;
+  try {
+    const s = await pobierz("/api/panel/rozstrzygniecie?partia=" + encodeURIComponent(STAN.partia));
+    const nowe = (s.czesci || []).filter((c) => c.wynik && !c.wczytany);
+    const gotowe = (s.czesci || []).filter((c) => c.wynik).length;
+    $("#rozAutoInfo").textContent = s.czesci?.length ? `wyniki: ${gotowe} z ${s.czesci.length} części` : "";
+    if (nowe.length) await wczytajRoz("", true);
+  } catch { /* panel chwilowo niedostępny: spróbujemy przy następnym razie */ }
+  ROZ_ZAJETE = false;
+}, 8000);
 $("#btnRozWklej").onclick = () => { const t = $("#rozTekst").value; if (!t.trim()) return alert("Najpierw wklej wynik."); wczytajRoz(t); };
 
 // ---------- porównanie ----------

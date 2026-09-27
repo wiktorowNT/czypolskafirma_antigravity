@@ -363,8 +363,12 @@ function faktyDoRozstrzygniecia(f, partia) {
 
 function blokRozstrzygniecia(f, partia, nr) {
   const odp = Object.entries(f.sledztwaReczne || {}).filter(([m]) => m !== ROZSTRZYGNIECIE);
+  const kraje = odp.map(([m, w]) => `${m} ${w.sledztwo?.country_code || "?"}`);
+  const zgodnosc = porownanie(f).stan === "zgodne" ? `wszystkie ${odp.length} czaty wskazują kraj ${odp[0]?.[1].sledztwo?.country_code || "?"} (zgodność czatów nie zastępuje źródeł)`
+    : odp.length === 1 ? "tylko jeden czat" : `czaty się różnią: ${kraje.join(", ")}`;
   return `## ${nr}. ${f.nazwa}
 marka (wpisz dokładnie tak w polu "marka"): ${f.nazwa}
+zgodność czatów: ${zgodnosc}
 
 ### Fakty z rejestrów (pobrane automatycznie przez program)
 ${faktyDoRozstrzygniecia(f, partia)}
@@ -459,22 +463,43 @@ export function firmyDoRozstrzygniecia(partia, zakres = "nierozstrzygniete") {
     && (zakres === "wszystkie" || (zakres === "nieprzyjete" ? !f.sledztwo : !f.sledztwaReczne?.[ROZSTRZYGNIECIE])));
 }
 
-export function czesciRozstrzygniecia(partia, { rozmiar = 20, zakres } = {}) {
-  const firmy = firmyDoRozstrzygniecia(partia, zakres);
-  const n = Math.max(1, Number(rozmiar) || 20);
-  const czesci = [];
-  for (let i = 0; i < firmy.length; i += n) {
-    const nr = String(czesci.length + 1).padStart(2, "0");
-    const grupa = firmy.slice(i, i + n);
-    czesci.push({ nr, plik: `czesc-${nr}.md`, wynik: `wynik-${nr}.json`, firmy: grupa.map((f) => f.nazwa), tekst: "" });
-  }
-  czesci.forEach((c, k) => {
-    const grupa = c.firmy.map((nazwa) => partia.firmy.find((f) => f.nazwa === nazwa));
-    c.tekst = `# Część ${c.nr} z ${String(czesci.length).padStart(2, "0")}: ${grupa.length} firm (partia ${partia.nazwa})
-Wynik zapisz jako ${c.wynik} (tablica JSON wg instrukcji w 00-instrukcja.md).
+// Podział "auto": części do ok. 150 tys. znaków (ok. 40 tys. tokenów), żeby jeden podagent miał
+// miejsce na wyszukiwanie. Nic nie jest skracane, firmy tylko rozkładają się na więcej części.
+export const MAKS_ZNAKOW_CZESCI = 150_000;
+// Kolejność: najpierw firmy sporne (czaty wskazują różne kraje), na końcu jednomyślne.
+const WAGA_SPORU = { rozne_kraje: 0, rozni_wlasciciele: 1, jeden: 2, zgodne: 3, brak: 4 };
 
-${grupa.map((f, j) => blokRozstrzygniecia(f, partia, k * n + j + 1)).join("\n\n---\n\n")}
-`;
+export function czesciRozstrzygniecia(partia, { rozmiar = "auto", zakres } = {}) {
+  const firmy = firmyDoRozstrzygniecia(partia, zakres)
+    .map((f, i) => ({ f, i, spor: WAGA_SPORU[porownanie(f).stan] ?? 4 }))
+    .sort((a, b) => a.spor - b.spor || a.i - b.i)
+    .map((x) => x.f);
+  const bloki = firmy.map((f, j) => ({ f, tekst: blokRozstrzygniecia(f, partia, j + 1) }));
+  const grupy = [];
+  if (rozmiar === "auto" || !Number(rozmiar)) {
+    let biezaca = [], znakow = 0;
+    for (const b of bloki) {
+      if (biezaca.length && znakow + b.tekst.length > MAKS_ZNAKOW_CZESCI) { grupy.push(biezaca); biezaca = []; znakow = 0; }
+      biezaca.push(b);
+      znakow += b.tekst.length;
+    }
+    if (biezaca.length) grupy.push(biezaca);
+  } else {
+    const n = Math.max(1, Number(rozmiar));
+    for (let i = 0; i < bloki.length; i += n) grupy.push(bloki.slice(i, i + n));
+  }
+  const razem = String(grupy.length).padStart(2, "0");
+  return grupy.map((grupa, k) => {
+    const nr = String(k + 1).padStart(2, "0");
+    const spornych = grupa.filter((b) => porownanie(b.f).stan !== "zgodne").length;
+    return {
+      nr, plik: `czesc-${nr}.md`, wynik: `wynik-${nr}.json`, firmy: grupa.map((b) => b.f.nazwa),
+      tekst: `# Część ${nr} z ${razem}: ${grupa.length} firm (partia ${partia.nazwa})
+Wynik zapisz jako wynik-${nr}.json (tablica JSON wg instrukcji w 00-instrukcja.md).${spornych ? `
+Firm, przy których czaty się różnią: ${spornych} (są na początku części). Tu sprawdzaj w internecie najdokładniej.` : ""}
+
+${grupa.map((b) => b.tekst).join("\n\n---\n\n")}
+`,
+    };
   });
-  return czesci;
 }

@@ -257,11 +257,13 @@ const folderRozstrzygniecia = (nazwa) => path.join(KATALOG_REPO, "data", "robocz
 function stanRozstrzygniecia(nazwa, partia) {
   const folder = folderRozstrzygniecia(nazwa);
   const pliki = fs.existsSync(folder) ? fs.readdirSync(folder) : [];
+  const wczytane = partia.wynikiRozstrzygniecia || {};
   const czesci = pliki.filter((x) => /^czesc-\d+\.md$/i.test(x)).sort().map((x) => {
     const nr = x.match(/\d+/)[0];
     const wynik = pliki.find((y) => new RegExp(`^wynik-${nr}\\.(json|md|txt)$`, "i").test(y));
     const tekst = fs.readFileSync(path.join(folder, x), "utf8");
-    return { plik: x, nr, znakow: tekst.length, firm: (tekst.match(/^## \d+\. /gm) || []).length, wynik: wynik || null };
+    const mtime = wynik ? Math.round(fs.statSync(path.join(folder, wynik)).mtimeMs) : null;
+    return { plik: x, nr, znakow: tekst.length, firm: (tekst.match(/^## \d+\. /gm) || []).length, wynik: wynik || null, wczytany: !!wynik && wczytane[wynik] === mtime };
   });
   const aktywne = partia.firmy.filter((f) => !f.pomin && f.tozsamosc);
   const modele = {};
@@ -825,6 +827,9 @@ const serwer = http.createServer(async (req, res) => {
       }
       fs.writeFileSync(path.join(folder, "00-instrukcja.md"), instrukcjaRozstrzygniecia({ kategorie, dzisiaj: dzisiaj(), nazwaPartii: nazwa, czesci, folder }), "utf8");
       for (const c of czesci) fs.writeFileSync(path.join(folder, c.plik), c.tekst, "utf8");
+      // Nowy podział: nowe wyniki. Znane pliki wynik-NN z poprzedniego podziału trafiły do "stare".
+      partia.wynikiRozstrzygniecia = {};
+      zapiszPartie(plikPartii(nazwa), partia);
       return json(res, { ok: true, ...stanRozstrzygniecia(nazwa, partia) });
     }
 
@@ -838,30 +843,43 @@ const serwer = http.createServer(async (req, res) => {
 
     // Wyniki: z plików wynik-*.json w folderze albo z wklejonego tekstu. Każdy dopasowany wynik
     // jest zapisywany jako wersja "Rozstrzygnięcie" i od razu przyjmowany (rekord do przeglądu).
+    // Wynik identyczny z już przyjętym nie jest przyjmowany drugi raz: ponowne wczytanie folderu
+    // nie kasuje decyzji ani poprawek z przeglądu. `auto`: tylko nowe albo zmienione pliki, które
+    // od kilku sekund się nie zmieniają (Claude mógł jeszcze pisać plik).
     if (req.method === "POST" && p === "/api/panel/rozstrzygniecie-wczytaj") {
-      const { partia: nazwa, tekst } = await cialo();
+      const { partia: nazwa, tekst, auto } = await cialo();
       const sciezka = plikPartii(nazwa);
       const partia = wczytajPartie(sciezka);
+      const znane = partia.wynikiRozstrzygniecia || {};
       const zrodla = [];
       if (String(tekst || "").trim()) zrodla.push({ plik: "wklejony tekst", tekst });
       else {
         const folder = folderRozstrzygniecia(nazwa);
         const pliki = fs.existsSync(folder) ? fs.readdirSync(folder).filter((x) => /^wynik-\d+\.(json|md|txt)$/i.test(x)).sort() : [];
-        for (const x of pliki) zrodla.push({ plik: x, tekst: fs.readFileSync(path.join(folder, x), "utf8") });
+        for (const x of pliki) {
+          const mtime = Math.round(fs.statSync(path.join(folder, x)).mtimeMs);
+          if (auto && (znane[x] === mtime || Date.now() - mtime < 4000)) continue;
+          zrodla.push({ plik: x, mtime, tekst: fs.readFileSync(path.join(folder, x), "utf8") });
+        }
       }
-      if (!zrodla.length) return json(res, { blad: "Nie ma jeszcze żadnego pliku wynik-NN.json w folderze." }, 400);
-      const pliki = [], przyjete = new Set(), bledy = [];
+      if (!zrodla.length) return auto ? json(res, { ok: true, pliki: [], przyjete: [], bledy: [], bezZmian: [] }) : json(res, { blad: "Nie ma jeszcze żadnego pliku wynik-NN.json w folderze." }, 400);
+      const pliki = [], przyjete = new Set(), bezZmian = new Set(), bledy = [];
       for (const z of zrodla) {
+        const przed = new Map(partia.firmy.map((f) => [f.nazwa, JSON.stringify(f.sledztwaReczne?.[ROZSTRZYGNIECIE]?.surowe ?? null)]));
         const w = zapiszOdpowiedz(partia, ROZSTRZYGNIECIE, z.tekst);
         pliki.push({ plik: z.plik, obiektow: w.obiektow, dopasowane: w.dopasowane.length, niedopasowane: w.niedopasowane });
+        // Plik bez żadnego obiektu (np. jeszcze zapisywany) nie jest oznaczany jako wczytany.
+        if (z.mtime && w.obiektow) znane[z.plik] = z.mtime;
         for (const n of w.dopasowane) {
           const f = partia.firmy.find((x) => x.nazwa === n);
+          if (f.przyjetaWersja?.model === ROZSTRZYGNIECIE && przed.get(n) === JSON.stringify(f.sledztwaReczne[ROZSTRZYGNIECIE].surowe ?? null)) { bezZmian.add(n); continue; }
           if (f.decyzja === "zaimportowany") { bledy.push(`${n}: już w bazie, rozstrzygnięcie zapisane, ale nie przyjęte (popraw w przeglądzie)`); continue; }
           try { przyjmijWersje(f, ROZSTRZYGNIECIE, { kategorie, dzisiaj: dzisiaj() }); przyjete.add(n); } catch (e) { bledy.push(`${n}: ${e.message}`); }
         }
       }
+      partia.wynikiRozstrzygniecia = znane;
       zapiszPartie(sciezka, partia);
-      return json(res, { ok: true, pliki, przyjete: [...przyjete], bledy });
+      return json(res, { ok: true, pliki, przyjete: [...przyjete], bezZmian: [...bezZmian], bledy });
     }
 
     if (req.method === "GET" && p === "/api/panel/import-plan") {
