@@ -1096,8 +1096,8 @@ const serwer = http.createServer(async (req, res) => {
       json(res, { ok: true, zadanie: z.id });
       (async () => {
         try {
-          // Najpierw firmy, potem kod: nowy build produkcji od razu ma je na listach, w sitemapie
-          // i z logotypami. Bez zmian w kodzie listy odświeżą się z cache w ciągu godziny.
+          // Najpierw firmy, potem kod: build produkcji zobaczy je już jako opublikowane. Strony
+          // mają cache do godziny (revalidate 3600), więc listy mogą dochodzić z opóźnieniem.
           if (klucze.length) {
             dopisz(z, "Backup bazy przed zapisem aktualizacji...");
             const cel = fs.existsSync(DYSK_GOOGLE) ? DYSK_GOOGLE : KATALOG_BACKUPU;
@@ -1120,11 +1120,11 @@ const serwer = http.createServer(async (req, res) => {
             git("fetch", "-q", "origin");
             if (git("rev-parse", "--abbrev-ref", "HEAD").wyjscie !== "main") git("branch", "-f", "main", "origin/main");
             const wynik = await czekajNaProdukcje(s.sha, z);
-            if (wynik === "success") dopisz(z, "Gotowe. Strona produkcyjna jest zbudowana: sprawdź https://czypolskafirma.pl (w razie czego Ctrl+F5).");
+            if (wynik === "success") dopisz(z, `Gotowe. Strona produkcyjna jest zbudowana: sprawdź https://czypolskafirma.pl (w razie czego Ctrl+F5).${idsNowych.length ? " Nowe firmy mogą dochodzić na listy, do wyszukiwarki i na strony kategorii do godziny (odświeżanie cache)." : ""}`);
             else if (wynik === "czas" || wynik === "nieznany") dopisz(z, "Wysłane. Nie doczekałem się potwierdzenia z Vercela: sprawdź stronę za kilka minut.");
             else throw new Error(`Build produkcji na Vercelu: ${wynik}. Strona dalej działa na poprzedniej wersji. Poproś Claude'a o sprawdzenie.`);
           } else {
-            dopisz(z, "Gotowe. Profile nowych firm działają od razu, listy i strona główna odświeżą się z cache w ciągu godziny.");
+            dopisz(z, "Gotowe. Firmy są opublikowane. Na listach, w wyszukiwarce i na stronach kategorii pojawią się w ciągu godziny (odświeżanie cache).");
           }
           z.status = "gotowe";
         } catch (e) {
