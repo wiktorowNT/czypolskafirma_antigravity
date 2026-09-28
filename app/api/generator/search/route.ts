@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
 
     try {
         const formattedQuery = query.trim().replace(/\s+/g, "*")
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,owner_name,ownership_description,founded_at,verified_at,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=20`
+        const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,owner_name,ownership_description,founded_at,verified_at,categories(name,slug)&or=(name.ilike.*${encodeURIComponent(formattedQuery)}*,slug.ilike.*${encodeURIComponent(formattedQuery)}*,nip.ilike.*${encodeURIComponent(formattedQuery)}*,krs.ilike.*${encodeURIComponent(formattedQuery)}*)&limit=20`
 
         const res = await fetch(url, {
             headers: {

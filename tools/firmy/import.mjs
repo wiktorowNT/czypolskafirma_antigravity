@@ -48,4 +48,5 @@ const { ok, zle } = await wykonajPlan(plan, partia, PLIK, {
   naWpis: (w) => console.log(w.blad ? `✘ ${w.nazwa}: ${w.blad}` : `✔ ${w.nazwa}: ${w.akcja} ${w.slug || ""}`),
 });
 console.log(`\nZaimportowano ${ok}, błędów ${zle}.`);
+if (ok && ctx.maPublished) console.log("Nowe firmy są tylko na podglądzie, aktualizacje czekają. Na czypolskafirma.pl trafią po kliknięciu \"Opublikuj\" w panelu (krok 8).");
 if (ok) console.log(`Następne kroki (logotypy nowych firm):\n  node tools/fetch-logos.mjs\n  node tools/generate-og-assets.mjs logos\nProfil odświeża się z cache w ciągu godziny.`);

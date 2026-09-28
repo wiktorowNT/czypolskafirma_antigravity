@@ -10,6 +10,7 @@ import { GlobalStats } from "@/components/global-stats"
 import { SupportSection } from "@/components/support-section"
 import { WhyPolish } from "@/components/WhyPolish"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { POKAZ_NIEOPUBLIKOWANE } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 export const revalidate = 3600 // ISR: odśwież dane hero co godzinę
@@ -66,7 +67,7 @@ async function getHeroData(): Promise<{
         since.setDate(since.getDate() - 30)
         return supabase.rpc("get_popular_companies", {
           since_date: since.toISOString(),
-          result_limit: 6,
+          result_limit: 10,
         })
       })(),
       supabase
@@ -92,7 +93,15 @@ async function getHeroData(): Promise<{
       }))
     }
     if (!popularRes.error && Array.isArray(popularRes.data)) {
-      result.popularTags = popularRes.data.map((c: any) => ({
+      let popularne: any[] = popularRes.data
+      // RPC nie zna flagi published: na produkcji zostawiamy tylko opublikowane firmy
+      // (odsłony nieopublikowanych mogą pochodzić z podglądu).
+      if (!POKAZ_NIEOPUBLIKOWANE && popularne.length) {
+        const { data: opublikowane } = await supabase.from("companies").select("id").in("id", popularne.map((c) => c.id))
+        const ids = new Set((opublikowane || []).map((c: { id: string }) => c.id))
+        popularne = popularne.filter((c) => ids.has(c.id))
+      }
+      result.popularTags = popularne.slice(0, 6).map((c: any) => ({
         id: c.id,
         slug: c.slug ? slugify(c.slug) : c.id,
         // Uwaga: aby display_name działało tu w pełni, funkcja RPC get_popular_companies

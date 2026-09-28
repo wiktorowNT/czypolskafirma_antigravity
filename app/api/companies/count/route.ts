@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -10,7 +11,7 @@ export async function GET() {
 
     try {
         // Use count query with Supabase REST API
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id`
+        const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id`
         const res = await fetch(url, {
             headers: {
                 apikey: SUPABASE_ANON_KEY,

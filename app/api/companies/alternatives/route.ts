@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -35,7 +36,7 @@ export async function GET(request: Request) {
         const categoryId = catData[0].id
 
         // Get Polish companies from the same category (country_code = PL), excluding the current one
-        let companiesUrl = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code&category_id=eq.${categoryId}&country_code=eq.PL&limit=${limit}&order=name`
+        let companiesUrl = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code&category_id=eq.${categoryId}&country_code=eq.PL&limit=${limit}&order=name`
 
         if (excludeId) {
             companiesUrl += `&id=neq.${excludeId}`

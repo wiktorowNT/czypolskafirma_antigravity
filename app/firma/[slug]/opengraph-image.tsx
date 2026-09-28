@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 import { getCountryName } from "@/lib/company-faq"
 import {
@@ -50,7 +51,7 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
       normalized,
     )},slug.ilike.${encodeURIComponent(decoded)})`
     const directRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/companies?select=${select}&${orFilter}&limit=1`,
+      `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=${select}&${orFilter}&limit=1`,
       { headers, ...revalidate },
     )
     if (directRes.ok) {
@@ -61,7 +62,7 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
     // 2) Fallback: kanoniczne dopasowanie po slugify (dla niekanonicznych slugów w bazie).
     const wanted = slugify(decoded)
     if (wanted) {
-      const allRes = await fetch(`${SUPABASE_URL}/rest/v1/companies?select=${select}`, {
+      const allRes = await fetch(`${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=${select}`, {
         headers,
         ...revalidate,
       })

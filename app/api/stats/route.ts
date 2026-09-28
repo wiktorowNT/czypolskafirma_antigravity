@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -16,7 +17,7 @@ export async function GET() {
 
     try {
         // Fetch all companies with their category info
-        const companiesUrl = `${SUPABASE_URL}/rest/v1/companies?select=id,country_code,categories(name,slug)`
+        const companiesUrl = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,country_code,categories(name,slug)`
         const companiesRes = await fetch(companiesUrl, {
             headers,
             next: { revalidate: 300 }, // Cache for 5 minutes

@@ -15,10 +15,10 @@ import { fileURLToPath } from "node:url";
 import { KATALOG_PARTII, KATALOG_REPO, dzisiaj, wczytajEnv } from "./lib/env.mjs";
 import { sprawdzLogowanie } from "./lib/claude.mjs";
 import { stanLogowaniaGemini, wybierzModelGemini } from "./lib/gemini.mjs";
-import { kontekstImportu, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
+import { kontekstImportu, odlozoneAktualizacje, opublikuj, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
-import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje } from "./lib/supabase.mjs";
+import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje, nieopublikowaneFirmy } from "./lib/supabase.mjs";
 import { ROZSTRZYGNIECIE, czekaNaCzaty, dopasuj, parsujOdpowiedz, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
 
@@ -429,7 +429,7 @@ function statusVercel(sha) {
   return ile === "0" ? "brak" : stan; // success | pending | failure | error
 }
 
-function stanPublikacji() {
+async function stanPublikacji() {
   const pobrane = git("fetch", "-q", "origin");
   if (pobrane.kod !== 0) return { blad: `Nie udało się połączyć z GitHubem: ${pobrane.wyjscie}` };
   const linie = (s) => (s ? s.split(/\r?\n/).filter(Boolean) : []);
@@ -449,7 +449,29 @@ function stanPublikacji() {
     niewyslaneCommity: galaz === "develop" ? Number(git("rev-list", "--count", "origin/develop..develop").wyjscie) || 0 : 0,
     niewyslaneLogo: stanGitLogotypow().plikow,
     vercel: commity.length ? statusVercel(sha) : null,
+    // firmy z kroku 7: nowe (published = false w bazie) i aktualizacje odłożone w plikach partii
+    noweFirmy: await nieopublikowaneFirmy(),
+    aktualizacje: odlozoneAktualizacje(),
   };
+}
+
+// Czeka, aż Vercel zbuduje produkcję z danego commita (GitHub Deployments). Zwraca stan końcowy.
+async function czekajNaProdukcje(sha, z) {
+  const koniec = Date.now() + 12 * 60 * 1000;
+  let zgloszono = false;
+  while (Date.now() < koniec) {
+    const r = spawnSync("gh", ["api", `repos/{owner}/{repo}/deployments?sha=${sha}&environment=Production`, "--jq", ".[0].id"], { cwd: KATALOG_REPO, encoding: "utf8", timeout: 20000 });
+    const id = r.status === 0 ? String(r.stdout).trim() : "";
+    if (r.status !== 0 && !id) return "nieznany";
+    if (id && id !== "null") {
+      const s = spawnSync("gh", ["api", `repos/{owner}/{repo}/deployments/${id}/statuses`, "--jq", ".[0].state"], { cwd: KATALOG_REPO, encoding: "utf8", timeout: 20000 });
+      const stan = String(s.stdout || "").trim();
+      if (["success", "failure", "error", "inactive"].includes(stan)) return stan;
+    }
+    if (!zgloszono) { dopisz(z, "Vercel buduje stronę produkcyjną (zwykle 2-4 minuty)…"); zgloszono = true; }
+    await new Promise((ok) => setTimeout(ok, 15000));
+  }
+  return "czas";
 }
 
 // ---------- backup ----------
@@ -923,6 +945,7 @@ const serwer = http.createServer(async (req, res) => {
       return json(res, {
         partia: nazwa,
         brakKolumn: [!ctx.maSources && "sources", !ctx.maConfidence && "confidence"].filter(Boolean),
+        doPublikacji: ctx.maPublished,
         // firmy z rekordem bez decyzji w przeglądzie: import ich nie weźmie, dopóki nie zatwierdzisz
         czekaWPrzegladzie: partia.firmy.filter((f) => !f.pomin && f.rekord && !f.decyzja).map((f) => f.nazwa),
         plan: plan.map((x) => ({
@@ -1054,27 +1077,62 @@ const serwer = http.createServer(async (req, res) => {
       return;
     }
 
-    if (req.method === "GET" && p === "/api/panel/publikacja-stan") return json(res, stanPublikacji());
+    if (req.method === "GET" && p === "/api/panel/publikacja-stan") return json(res, await stanPublikacji());
     if (req.method === "POST" && p === "/api/panel/publikuj") {
-      const { sha } = await cialo();
-      const s = stanPublikacji();
+      const { sha, nowe = [], aktualizacje = [] } = await cialo();
+      const s = await stanPublikacji();
       if (s.blad) return json(res, { blad: s.blad }, 400);
-      if (!s.commity.length) return json(res, { blad: "Nie ma nic do opublikowania: czypolskafirma.pl ma już wszystko, co jest na podglądzie." }, 400);
-      if (sha !== s.sha) return json(res, { blad: "Na podglądzie pojawiły się nowe zmiany, odkąd otworzyłeś ten ekran. Sprawdź listę jeszcze raz i opublikuj ponownie." }, 409);
-      if (!s.przewiniecie) return json(res, { blad: "Na produkcji jest zmiana, której nie ma na podglądzie. Tego nie da się opublikować przyciskiem: poproś Claude'a o merge develop do main." }, 400);
-      if (s.vercel === "pending") return json(res, { blad: "Podgląd na Vercelu jeszcze się buduje. Spróbuj za minutę." }, 400);
-      if (s.vercel === "failure" || s.vercel === "error") return json(res, { blad: "Build podglądu na Vercelu nie przeszedł. Strona z tym błędem nie zbudowałaby się też na produkcji. Poproś Claude'a o sprawdzenie." }, 400);
-      const z = nowezadanie("git", "Publikacja na czypolskafirma.pl", null);
+      if (s.noweFirmy === null) return json(res, { blad: "W bazie nie ma jeszcze kolumny published. Uruchom w Supabase (SQL Editor) plik tools/sql/2026-09-29-published.sql, dopiero potem publikuj." }, 400);
+      const idsNowych = nowe.filter((id) => s.noweFirmy.some((f) => f.id === id));
+      const klucze = aktualizacje.filter((k) => s.aktualizacje.some((a) => a.klucz === k));
+      if (!s.commity.length && !idsNowych.length && !klucze.length) return json(res, { blad: "Nie ma nic do opublikowania: czypolskafirma.pl ma już wszystko, co jest na podglądzie." }, 400);
+      if (s.commity.length) {
+        if (sha !== s.sha) return json(res, { blad: "Na podglądzie pojawiły się nowe zmiany, odkąd otworzyłeś ten ekran. Sprawdź listę jeszcze raz i opublikuj ponownie." }, 409);
+        if (!s.przewiniecie) return json(res, { blad: "Na produkcji jest zmiana, której nie ma na podglądzie. Tego nie da się opublikować przyciskiem: poproś Claude'a o merge develop do main." }, 400);
+        if (s.vercel === "pending") return json(res, { blad: "Podgląd na Vercelu jeszcze się buduje. Spróbuj za minutę." }, 400);
+        if (s.vercel === "failure" || s.vercel === "error") return json(res, { blad: "Build podglądu na Vercelu nie przeszedł. Strona z tym błędem nie zbudowałaby się też na produkcji. Poproś Claude'a o sprawdzenie." }, 400);
+      }
+      const z = nowezadanie("publikacja", "Publikacja na czypolskafirma.pl", null);
       json(res, { ok: true, zadanie: z.id });
-      dopisz(z, `Publikuję ${s.commity.length} zmian (${s.sha.slice(0, 7)}) na gałąź main…`);
-      const r = git("push", "origin", `${s.sha}:refs/heads/main`);
-      dopisz(z, `git push: ${r.wyjscie || "ok"}`);
-      if (r.kod !== 0) { z.status = "blad"; z.koniec = Date.now(); return; }
-      git("fetch", "-q", "origin");
-      if (git("rev-parse", "--abbrev-ref", "HEAD").wyjscie !== "main") git("branch", "-f", "main", "origin/main");
-      dopisz(z, "Gotowe. Vercel buduje teraz stronę produkcyjną: czypolskafirma.pl odświeży się w ciągu 2-5 minut (w razie czego Ctrl+F5).");
-      z.status = "gotowe";
-      z.koniec = Date.now();
+      (async () => {
+        try {
+          // Najpierw firmy, potem kod: nowy build produkcji od razu ma je na listach, w sitemapie
+          // i z logotypami. Bez zmian w kodzie listy odświeżą się z cache w ciągu godziny.
+          if (klucze.length) {
+            dopisz(z, "Backup bazy przed zapisem aktualizacji...");
+            const cel = fs.existsSync(DYSK_GOOGLE) ? DYSK_GOOGLE : KATALOG_BACKUPU;
+            const b = spawnSync(process.execPath, [path.join(KATALOG, "backup.mjs"), "--do", cel], { cwd: KATALOG_REPO, encoding: "utf8" });
+            dopisz(z, `${b.stdout || ""}${b.stderr || ""}`);
+            if (b.status !== 0) throw new Error("Backup się nie powiódł, publikacja przerwana (nic nie zmieniono).");
+          }
+          if (idsNowych.length || klucze.length) {
+            dopisz(z, `Firmy: ${idsNowych.length} nowych, ${klucze.length} aktualizacji…`);
+            const { ok, zle } = await opublikuj({ idsNowych, klucze, naWpis: (w) => dopisz(z, w.blad ? `BŁĄD ${w.nazwa || w.id}: ${w.blad}` : `${w.nazwa}: ${w.akcja}`) });
+            dopisz(z, `Firmy gotowe: ${ok}, błędów ${zle}.`);
+            await odswiezBaze();
+            if (zle) throw new Error("Część firm się nie zapisała (lista wyżej). Kod strony nie został wysłany; spróbuj ponownie.");
+          }
+          if (s.commity.length) {
+            dopisz(z, `Publikuję ${s.commity.length} zmian w kodzie i logotypach (${s.sha.slice(0, 7)}) na gałąź main…`);
+            const r = git("push", "origin", `${s.sha}:refs/heads/main`);
+            dopisz(z, `git push: ${r.wyjscie || "ok"}`);
+            if (r.kod !== 0) throw new Error("Wysyłka na main się nie udała.");
+            git("fetch", "-q", "origin");
+            if (git("rev-parse", "--abbrev-ref", "HEAD").wyjscie !== "main") git("branch", "-f", "main", "origin/main");
+            const wynik = await czekajNaProdukcje(s.sha, z);
+            if (wynik === "success") dopisz(z, "Gotowe. Strona produkcyjna jest zbudowana: sprawdź https://czypolskafirma.pl (w razie czego Ctrl+F5).");
+            else if (wynik === "czas" || wynik === "nieznany") dopisz(z, "Wysłane. Nie doczekałem się potwierdzenia z Vercela: sprawdź stronę za kilka minut.");
+            else throw new Error(`Build produkcji na Vercelu: ${wynik}. Strona dalej działa na poprzedniej wersji. Poproś Claude'a o sprawdzenie.`);
+          } else {
+            dopisz(z, "Gotowe. Profile nowych firm działają od razu, listy i strona główna odświeżą się z cache w ciągu godziny.");
+          }
+          z.status = "gotowe";
+        } catch (e) {
+          dopisz(z, `BŁĄD: ${e.message}`);
+          z.status = "blad";
+        }
+        z.koniec = Date.now();
+      })();
       return;
     }
 

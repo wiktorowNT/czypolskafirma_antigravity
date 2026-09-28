@@ -29,7 +29,9 @@ Menu boczne ma te same numery kroków:
    Wybierasz „Numer dobry”, „Numer do wymiany” (wpisujesz nowy albo bierzesz z czatu, potem
    „Sprawdź w Białej Liście”) albo „Pomiń firmę”. Nic tu nie szuka numerów automatem.
 3. **Rejestry**: odpis KRS, historia wspólników, CRBR, giełda (pobierane razem ze sprawdzeniem NIP).
-4. **Śledztwo w czatach** → 5. **Rozstrzygnięcie w Claude** → 6. **Przegląd** → 7. **Import** → 8. **Logotypy**.
+4. **Śledztwo w czatach** → 5. **Rozstrzygnięcie w Claude** → 6. **Przegląd** → 7. **Import** → 8. **Logotypy i publikacja**.
+   Import pokazuje firmy tylko na podglądzie Vercel; na czypolskafirma.pl trafiają razem
+   z logotypami dopiero po kliknięciu **„Opublikuj”** na końcu kroku 8.
 
 **Śledztwo w czatach:**
 
@@ -275,6 +277,16 @@ i opisowe; nic nie jest kasowane.
 `verified_at` = dziś, `sources`, `confidence`, `brands`, `brand_aliases`. Postęp widać
 w oknie logu pod tabelą.
 
+Zapis nie zmienia jeszcze czypolskafirma.pl (od 29.09.2026, kolumna `published`,
+`tools/sql/2026-09-29-published.sql`):
+
+- **nowe firmy** trafiają do bazy z `published = false`. Podgląd Vercel (`develop`)
+  i `npm run dev` pokazują je normalnie, produkcja je ukrywa (`lib/publikacja.ts`:
+  filtr w `getSupabaseServerClient` i w zapytaniach REST do `companies`);
+- **aktualizacje** istniejących firm czekają w pliku partii (`import.czekaNaPublikacje`)
+  i zapisują się do bazy dopiero przy publikacji. Na podglądzie ich nie widać, więc
+  sprawdzasz je w przeglądzie i w tabeli *było → jest*.
+
 ### Ekran 6: Logotypy
 
 - **Pobierz logotypy** — tylko dla firm, które ich nie mają.
@@ -282,6 +294,12 @@ w oknie logu pod tabelą.
 - **Wyślij logotypy na podgląd** — commit i push plików `public/logos` oraz
   `public/logos-og` na gałąź `develop`. Przycisk jest aktywny tylko na `develop`
   i tylko gdy są nowe pliki. Produkcja (`main`) się nie zmienia.
+- **Opublikuj na czypolskafirma.pl** — lista tego, co czeka: nowe firmy (z linkami do
+  podglądu, można odznaczyć te, które mają poczekać), aktualizacje firm i zmiany w kodzie.
+  Kolejność: backup (gdy są aktualizacje) → `published = true` i zapis aktualizacji →
+  przewinięcie `main` do `origin/develop` → czekanie na build produkcji na Vercelu.
+  Przycisk jest wyłączony, gdy build podglądu trwa albo się nie udał, gdy na `main` jest
+  coś spoza `develop` i gdy w bazie brakuje kolumny `published`.
 
 Audyt wzrokowy nowych znaków: wg `docs/SOP_logotypy.md` (Logo Fixer).
 
@@ -351,6 +369,7 @@ przez rodzinę Soares dos Santos. Polska to największy rynek grupy."
 | KRS: „brak podmiotu (404)" | zły numer KRS z kroku 1 albo podmiot spoza rejestru przedsiębiorców; popraw NIP na przystanku i sprawdź ponownie |
 | Wszystko ląduje w KONFLIKT | sprawdź, czy śledztwo zwraca źródła (pole `lancuch[].zrodlo_url`); bez źródeł pewność nie może być wyższa |
 | Import: „column companies.sources does not exist" | uruchom `tools/sql/2026-09-17-sources-confidence.sql` |
+| Panel: „W bazie nie ma jeszcze kolumny published” | uruchom `tools/sql/2026-09-29-published.sql`; bez niej import od razu pokazuje firmy na produkcji |
 | „Automat już pracuje" | trwa inna partia; zatrzymaj ją na ekranie „Praca w toku" albo poczekaj |
 
 Pliki: `tools/firmy/panel.mjs` + `panel.html` (panel), `panel.vbs` i `panel.cmd`

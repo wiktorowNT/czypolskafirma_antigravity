@@ -649,7 +649,7 @@
           <div class="rzad" style="gap:8px"><button id="btnPublOdswiez">Sprawdź ponownie</button><button class="glowny duzy" id="btnPublikuj" disabled>Opublikuj</button></div>
         </div>
         <div id="publLista"></div>
-        <p class="uwagi">Firmy z importu są na stronie od razu, bo podgląd i strona korzystają z tej samej bazy. Ten przycisk przenosi na czypolskafirma.pl resztę tego, co widać na podglądzie: logotypy i zmiany w kodzie (to samo co „zmerguj develop do main”). Działa tylko, gdy build podglądu na Vercelu przeszedł.</p>
+        <p class="uwagi">Przycisk przenosi na czypolskafirma.pl wszystko, co widać na podglądzie: firmy zapisane w kroku 7 (zaznaczone wyżej), logotypy i zmiany w kodzie (to samo co „zmerguj develop do main”). Najpierw zapisuje firmy, potem wysyła kod i czeka, aż Vercel zbuduje stronę. Nie ruszy, dopóki build podglądu się nie uda.</p>
       </div>
       <pre class="log" id="logoLog" style="display:none"></pre>
     </section>
@@ -1634,7 +1634,7 @@ $("#btnPrzyjmijZgodne").onclick = async () => {
 $("#importPartia").onchange = (e) => { ustawPartie(e.target.value); $("#importTabela").innerHTML = '<span class="pusto">Kliknij „Pokaż, co się zmieni”.</span>'; $("#btnZapisz").disabled = true; };
 $("#btnPlan").onclick = () => planImportu();
 
-let PLAN = [];
+let PLAN = [], PLAN_DO_PUBLIKACJI = false;
 async function ekranImport() { if (!STAN.partia) return; }
 
 async function planImportu() {
@@ -1642,7 +1642,9 @@ async function planImportu() {
   const j = await pobierz("/api/panel/import-plan?partia=" + encodeURIComponent(STAN.partia));
   if (j.blad) { $("#importTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
   PLAN = j.plan;
-  $("#importOstrzezenie").innerHTML = (j.brakKolumn.length ? `<div class="pasmo">W bazie brakuje kolumn ${esc(j.brakKolumn.join(", "))}. Import zadziała, ale źródła i pewność zostaną tylko w pliku partii.</div>` : "")
+  PLAN_DO_PUBLIKACJI = !!j.doPublikacji;
+  $("#importOstrzezenie").innerHTML = (j.doPublikacji ? `<div class="pasmo">Zapis nie zmienia jeszcze czypolskafirma.pl. <b>Nowe firmy</b> zobaczysz od razu na <a href="https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app/" target="_blank" rel="noopener">stronie podglądu</a>, a <b>aktualizacje</b> istniejących firm poczekają. Na stronę wszystko trafi razem z logotypami po kliknięciu „Opublikuj” w kroku 8.</div>` : `<div class="pasmo">Uwaga: w bazie nie ma kolumny published, więc zapis od razu pokaże firmy na czypolskafirma.pl. Uruchom w Supabase tools/sql/2026-09-29-published.sql, żeby firmy czekały na publikację.</div>`)
+    + (j.brakKolumn.length ? `<div class="pasmo">W bazie brakuje kolumn ${esc(j.brakKolumn.join(", "))}. Import zadziała, ale źródła i pewność zostaną tylko w pliku partii.</div>` : "")
     + ((j.czekaWPrzegladzie || []).length ? `<div class="pasmo">Import bierze tylko firmy zatwierdzone w przeglądzie. <b>${j.czekaWPrzegladzie.length} firm czeka jeszcze na Twoją decyzję</b>: ${esc(j.czekaWPrzegladzie.join(", "))}. <a href="#" onclick="pokaz('przeglad');return false">Przejdź do przeglądu</a> i kliknij „Zatwierdź wszystkie gotowe”, potem wróć tutaj.</div>` : "");
   if (!PLAN.length) {
     $("#importTabela").innerHTML = '<span class="pusto">W tej partii nie ma zatwierdzonych firm. Wróć do przeglądu i zatwierdź, co ma trafić do bazy.</span>';
@@ -1654,7 +1656,7 @@ async function planImportu() {
   const akt = PLAN.filter((p) => p.akcja === "UPDATE" && !p.bledy.length).length;
   const bledne = PLAN.filter((p) => p.bledy.length).length;
   $("#importTabela").innerHTML = `<table><tr><th>Firma</th><th>Co się stanie</th><th>Szczegóły</th></tr>` + PLAN.map((p) => {
-    const co = p.bledy.length ? `<span class="err">zablokowana</span>` : p.akcja === "INSERT" ? `<span class="ins">nowa firma</span>` : `<span class="upd">aktualizacja</span>`;
+    const co = p.bledy.length ? `<span class="err">zablokowana</span>` : p.akcja === "INSERT" ? `<span class="ins">nowa firma</span>` : `<span class="upd">aktualizacja</span>${PLAN_DO_PUBLIKACJI ? `<br><span style="font-size:12.5px;color:var(--slaby)">zapis przy publikacji</span>` : ""}`;
     const zmiana = p.bylo && (p.bylo.country_code !== p.kraj || p.bylo.owner_name !== p.wlasciciel)
       ? `kraj/właściciel: <span class="kreska">${esc(p.bylo.country_code)} · ${esc(p.bylo.owner_name)}</span> → ${esc(p.kraj)} · ${esc(p.wlasciciel)}`
       : `${esc(p.kraj || "")} · ${esc(p.wlasciciel || "")}${p.kategoria ? " · " + esc(p.kategoria) : ""}`;
@@ -1667,7 +1669,9 @@ async function planImportu() {
 
 $("#btnZapisz").onclick = async () => {
   const ile = PLAN.filter((p) => !p.bledy.length).length;
-  if (!confirm(`Zapisać ${ile} firm do bazy? Najpierw zrobi się backup. Tej operacji nie cofniesz jednym kliknięciem.`)) return;
+  if (!confirm(PLAN_DO_PUBLIKACJI
+    ? `Zapisać ${ile} firm? Nowe pojawią się na podglądzie, na czypolskafirma.pl dopiero po kliknięciu „Opublikuj” w kroku 8. Najpierw zrobi się backup.`
+    : `Zapisać ${ile} firm do bazy? Najpierw zrobi się backup. Tej operacji nie cofniesz jednym kliknięciem.`)) return;
   $("#btnZapisz").disabled = true;
   const j = await wyslij("/api/panel/import", { partia: STAN.partia });
   if (j.blad) { alert(j.blad); return; }
@@ -1771,31 +1775,47 @@ const OPIS_VERCEL = {
   nieznany: "nie udało się sprawdzić buildu podglądu na Vercelu",
 };
 let PUBL = null;
+// "2 nowe firmy", "5 nowych firm" (własna kopia, żeby publikacja nie zależała od innych ekranów)
+const ilePubl = (n, [jeden, kilka, wiele]) => `${n} ${n === 1 ? jeden : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? kilka : wiele}`;
+const PODGLAD = "https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app";
 async function ekranPublikacja() {
   $("#btnPublikuj").disabled = true;
   $("#publOpis").textContent = "Sprawdzam, co czeka na podglądzie…";
   $("#publLista").innerHTML = "";
   const j = PUBL = await pobierz("/api/panel/publikacja-stan");
-  if (j.blad || !j.commity) { $("#publOpis").textContent = j.blad || "Uruchom panel ponownie, żeby włączyć publikację."; return; }
-  const gotowe = j.commity.length && j.przewiniecie && !["pending", "failure", "error"].includes(j.vercel);
-  $("#publOpis").innerHTML = !j.commity.length ? "Strona czypolskafirma.pl ma już wszystko, co jest na podglądzie."
-    : !j.przewiniecie ? "Na produkcji jest zmiana, której nie ma na podglądzie. Przyciskiem tego nie opublikujesz: poproś Claude'a o merge develop do main."
-    : `<b>${j.commity.length} zmian czeka na publikację</b>: ${j.logotypow} logotypów${j.innychPlikowStrony ? `, ${j.innychPlikowStrony} innych plików strony` : ""}. Build: ${esc(OPIS_VERCEL[j.vercel] || j.vercel)}.`;
+  if (j.blad || !j.commity || !("aktualizacje" in j)) { $("#publOpis").textContent = j.blad || "Uruchom panel ponownie, żeby włączyć publikację."; return; }
+  const nowe = j.noweFirmy || [], akt = j.aktualizacje || [];
+  const kodBlokuje = j.commity.length && (!j.przewiniecie || ["pending", "failure", "error"].includes(j.vercel));
+  const czesci = [];
+  if (nowe.length) czesci.push(ilePubl(nowe.length, ["nowa firma", "nowe firmy", "nowych firm"]));
+  if (akt.length) czesci.push(ilePubl(akt.length, ["aktualizacja firmy", "aktualizacje firm", "aktualizacji firm"]));
+  if (j.commity.length) czesci.push(`${ilePubl(j.commity.length, ["zmiana w kodzie", "zmiany w kodzie", "zmian w kodzie"])} (${ilePubl(j.logotypow, ["logotyp", "logotypy", "logotypów"])}${j.innychPlikowStrony ? `, ${ilePubl(j.innychPlikowStrony, ["inny plik strony", "inne pliki strony", "innych plików strony"])}` : ""})`);
+  $("#publOpis").innerHTML = !czesci.length ? "Strona czypolskafirma.pl ma już wszystko, co jest na podglądzie."
+    : j.commity.length && !j.przewiniecie ? "Na produkcji jest zmiana, której nie ma na podglądzie. Przyciskiem tego nie opublikujesz: poproś Claude'a o merge develop do main."
+    : `<b>Czeka na publikację:</b> ${czesci.join(", ")}.${j.commity.length ? ` Build: ${esc(OPIS_VERCEL[j.vercel] || j.vercel)}.` : ""}`;
   const ostrzezenia = [];
+  if (j.noweFirmy === null) ostrzezenia.push("W bazie nie ma jeszcze kolumny published. Uruchom w Supabase (SQL Editor) plik tools/sql/2026-09-29-published.sql. Do tego czasu publikacja jest wyłączona.");
   if (j.niewyslaneLogo) ostrzezenia.push(`${j.niewyslaneLogo} logotypów nie wysłano jeszcze na podgląd, więc nie trafią na stronę. Najpierw kliknij „Wyślij” wyżej, poczekaj, aż podgląd się zbuduje, i dopiero wtedy publikuj.`);
   if (j.niewyslaneCommity) ostrzezenia.push(`${j.niewyslaneCommity} zmian jest tylko na tym komputerze (nie wysłano ich na podgląd) i nie trafi na stronę.`);
+  const wiersz = (wartosc, rodzaj, tresc) => `<label style="display:flex;gap:8px;align-items:baseline;padding:3px 0"><input type="checkbox" checked data-${rodzaj}="${esc(wartosc)}"><span>${tresc}</span></label>`;
   $("#publLista").innerHTML = ostrzezenia.map((t) => `<div class="pasmo">${esc(t)}</div>`).join("")
-    + (j.commity.length ? `<details style="margin:8px 0"><summary>Co wejdzie na stronę (${j.commity.length})</summary><ul>${j.commity.map((c) => `<li><code>${esc(c.h)}</code> ${esc(c.kiedy)} · ${esc(c.tytul)}</li>`).join("")}</ul></details>` : "");
-  $("#btnPublikuj").disabled = !gotowe;
+    + (nowe.length ? `<details open style="margin:8px 0"><summary>Nowe firmy (${nowe.length}): odznacz te, które mają jeszcze poczekać</summary>${nowe.map((f) => wiersz(f.id, "nowa", `<b>${esc(f.display_name || f.name)}</b> · ${esc(f.country_code || "?")} · ${esc(f.owner_name || "")} · <a href="${PODGLAD}/firma/${encodeURIComponent(f.slug)}" target="_blank" rel="noopener">na podglądzie ↗</a>`)).join("")}</details>` : "")
+    + (akt.length ? `<details open style="margin:8px 0"><summary>Aktualizacje istniejących firm (${akt.length})</summary>${akt.map((a) => wiersz(a.klucz, "akt", `<b>${esc(a.nazwa)}</b> · będzie: ${esc(a.kraj || "?")} · ${esc(a.wlasciciel || "")} <span style="color:var(--slaby)">(partia ${esc(a.partia)})</span>`)).join("")}</details>` : "")
+    + (j.commity.length ? `<details style="margin:8px 0"><summary>Zmiany w kodzie i logotypach (${j.commity.length})</summary><ul>${j.commity.map((c) => `<li><code>${esc(c.h)}</code> ${esc(c.kiedy)} · ${esc(c.tytul)}</li>`).join("")}</ul></details>` : "");
+  $("#btnPublikuj").disabled = !czesci.length || kodBlokuje || j.noweFirmy === null;
 }
 $("#btnPublOdswiez").onclick = () => ekranPublikacja();
 $("#btnPublikuj").onclick = async () => {
   const j = PUBL;
   if (!j?.sha) return;
-  const niepewny = ["brak", "nieznany"].includes(j.vercel) ? "\n\nUwaga: nie udało się potwierdzić, że podgląd zbudował się poprawnie. Otwórz go i sprawdź przed publikacją." : "";
-  if (!confirm(`Opublikować na czypolskafirma.pl ${j.commity.length} zmian z podglądu (${j.logotypow} logotypów)?${niepewny}\n\nStrona produkcyjna odświeży się w ciągu kilku minut.`)) return;
+  const nowe = [...document.querySelectorAll("#publLista [data-nowa]:checked")].map((x) => x.dataset.nowa);
+  const aktualizacje = [...document.querySelectorAll("#publLista [data-akt]:checked")].map((x) => x.dataset.akt);
+  const co = [nowe.length && ilePubl(nowe.length, ["nową firmę", "nowe firmy", "nowych firm"]), aktualizacje.length && ilePubl(aktualizacje.length, ["aktualizację", "aktualizacje", "aktualizacji"]), j.commity.length && `${ilePubl(j.commity.length, ["zmianę w kodzie", "zmiany w kodzie", "zmian w kodzie"])} (${ilePubl(j.logotypow, ["logotyp", "logotypy", "logotypów"])})`].filter(Boolean);
+  if (!co.length) return alert("Nic nie zaznaczono.");
+  const niepewny = j.commity.length && ["brak", "nieznany"].includes(j.vercel) ? "\n\nUwaga: nie udało się potwierdzić, że podgląd zbudował się poprawnie. Otwórz go i sprawdź przed publikacją." : "";
+  if (!confirm(`Opublikować na czypolskafirma.pl: ${co.join(", ")}?${niepewny}\n\nStrona produkcyjna odświeży się w ciągu kilku minut.`)) return;
   $("#btnPublikuj").disabled = true;
-  const z = await wyslij("/api/panel/publikuj", { sha: j.sha });
+  const z = await wyslij("/api/panel/publikuj", { sha: j.sha, nowe, aktualizacje });
   if (z.blad) { alert(z.blad); return ekranPublikacja(); }
   $("#logoLog").style.display = "";
   sledzZadanie(z.zadanie, "#logoLog", ekranPublikacja);

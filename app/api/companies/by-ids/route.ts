@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -27,7 +28,7 @@ export async function GET(request: Request) {
     try {
         // Use PostgREST 'in' filter
         const filter = `id=in.(${cappedIds.map(id => encodeURIComponent(id)).join(",")})`
-        const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,siedziba_pl,vat_czynny,categories(name,slug)&${filter}`
+        const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,siedziba_pl,vat_czynny,categories(name,slug)&${filter}`
 
         const res = await fetch(url, {
             headers: {

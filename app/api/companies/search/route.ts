@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
@@ -42,7 +43,7 @@ export async function GET(request: Request) {
         let data: any[]
         if (countryCode) {
             // If it's a country search, filter by country_code
-            const url = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
+            const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
             const res = await fetch(url, { headers })
             if (!res.ok) return NextResponse.json([])
             data = await res.json()
@@ -53,8 +54,8 @@ export async function GET(request: Request) {
             // Wariant z brand_aliases; jeśli kolumny jeszcze nie ma w bazie
             // (przed migracją tools/sql/2026-07-18-brand-aliases.sql),
             // PostgREST zwróci błąd i przechodzimy na wariant bez aliasów.
-            const urlWithAliases = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,brand_aliases,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*,brand_aliases.ilike.*${q}*)&limit=50`
-            const urlLegacy = `${SUPABASE_URL}/rest/v1/companies?select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*)&limit=50`
+            const urlWithAliases = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,brand_aliases,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*,brand_aliases.ilike.*${q}*)&limit=50`
+            const urlLegacy = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*)&limit=50`
 
             let res = await fetch(urlWithAliases, { headers })
             if (!res.ok) {

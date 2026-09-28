@@ -86,6 +86,14 @@ export async function aktualizuj(tabela, id, zmiany) {
   return { dane: JSON.parse(tekst)[0] };
 }
 
+// Firmy zaimportowane w panelu, ale jeszcze nieopublikowane na czypolskafirma.pl
+// (published = false, widać je tylko na podglądzie). null = brak kolumny published w bazie.
+export async function nieopublikowaneFirmy() {
+  if (!(await kolumnaIstnieje("companies", "published"))) return null;
+  const { dane } = await odczyt("companies?select=id,slug,name,display_name,country_code,owner_name&published=eq.false&order=name");
+  return dane;
+}
+
 // Czy kolumna istnieje (np. sources/confidence przed migracją).
 export async function kolumnaIstnieje(tabela, kolumna) {
   const klucz = wymagaj("NEXT_PUBLIC_SUPABASE_ANON_KEY");
