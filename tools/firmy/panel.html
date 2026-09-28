@@ -642,6 +642,15 @@
         </div>
         <p class="uwagi" id="logoGitStopka"></p>
       </div>
+      <div class="karta">
+        <div class="rozdziel">
+          <div><h2 style="margin-bottom:2px">Opublikuj na czypolskafirma.pl</h2>
+            <span style="font-size:13.5px;color:var(--slaby)" id="publOpis">Sprawdzam…</span></div>
+          <div class="rzad" style="gap:8px"><button id="btnPublOdswiez">Sprawdź ponownie</button><button class="glowny duzy" id="btnPublikuj" disabled>Opublikuj</button></div>
+        </div>
+        <div id="publLista"></div>
+        <p class="uwagi">Firmy z importu są na stronie od razu, bo podgląd i strona korzystają z tej samej bazy. Ten przycisk przenosi na czypolskafirma.pl resztę tego, co widać na podglądzie: logotypy i zmiany w kodzie (to samo co „zmerguj develop do main”). Działa tylko, gdy build podglądu na Vercelu przeszedł.</p>
+      </div>
       <pre class="log" id="logoLog" style="display:none"></pre>
     </section>
 
@@ -1670,6 +1679,7 @@ $("#btnZapisz").onclick = async () => {
 async function ekranLogo() {
   await ekranLogoStan();
   podgladLogo();
+  ekranPublikacja();
 }
 async function ekranLogoStan() {
   const j = await pobierz("/api/panel/logo-stan");
@@ -1691,7 +1701,7 @@ async function ekranLogoStan() {
   const g = j.git;
   $("#logoGitOpis").innerHTML = !g.naDevelop
     ? `Jesteś na gałęzi <b>${esc(g.galaz)}</b>. Wysyłka działa tylko z gałęzi develop.`
-    : g.plikow ? `${g.plikow} nowych plików. Trafią na gałąź develop i za chwilę zobaczysz je na stronie podglądu. Strona czypolskafirma.pl się nie zmieni.` : "Nie ma nowych plików do wysłania.";
+    : g.plikow ? `${g.plikow} nowych plików. Trafią na gałąź develop i za chwilę zobaczysz je na stronie podglądu. Na czypolskafirma.pl pojawią się po publikacji (niżej).` : "Nie ma nowych plików do wysłania.";
   $("#btnWyslijLogo").disabled = !g.naDevelop || !g.plikow;
   $("#logoGitStopka").innerHTML = (g.ostatniCommit ? `Ostatnia zmiana logotypów: ${esc(g.ostatniCommit)}. ` : "") + `<a href="https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app/" target="_blank" rel="noopener">Otwórz stronę podglądu</a>`;
 }
@@ -1749,6 +1759,46 @@ $("#btnWyslijLogo").onclick = async () => {
   if (z.blad) return alert(z.blad);
   $("#logoLog").style.display = "";
   sledzZadanie(z.zadanie, "#logoLog", ekranLogo);
+};
+
+// ---------- publikacja na produkcję ----------
+const OPIS_VERCEL = {
+  success: "podgląd zbudował się poprawnie",
+  pending: "podgląd jeszcze się buduje, kliknij „Sprawdź ponownie” za minutę",
+  failure: "build podglądu nie przeszedł, poproś Claude'a o sprawdzenie",
+  error: "build podglądu nie przeszedł, poproś Claude'a o sprawdzenie",
+  brak: "Vercel nie zgłosił jeszcze buildu podglądu",
+  nieznany: "nie udało się sprawdzić buildu podglądu na Vercelu",
+};
+let PUBL = null;
+async function ekranPublikacja() {
+  $("#btnPublikuj").disabled = true;
+  $("#publOpis").textContent = "Sprawdzam, co czeka na podglądzie…";
+  $("#publLista").innerHTML = "";
+  const j = PUBL = await pobierz("/api/panel/publikacja-stan");
+  if (j.blad || !j.commity) { $("#publOpis").textContent = j.blad || "Uruchom panel ponownie, żeby włączyć publikację."; return; }
+  const gotowe = j.commity.length && j.przewiniecie && !["pending", "failure", "error"].includes(j.vercel);
+  $("#publOpis").innerHTML = !j.commity.length ? "Strona czypolskafirma.pl ma już wszystko, co jest na podglądzie."
+    : !j.przewiniecie ? "Na produkcji jest zmiana, której nie ma na podglądzie. Przyciskiem tego nie opublikujesz: poproś Claude'a o merge develop do main."
+    : `<b>${j.commity.length} zmian czeka na publikację</b>: ${j.logotypow} logotypów${j.innychPlikowStrony ? `, ${j.innychPlikowStrony} innych plików strony` : ""}. Build: ${esc(OPIS_VERCEL[j.vercel] || j.vercel)}.`;
+  const ostrzezenia = [];
+  if (j.niewyslaneLogo) ostrzezenia.push(`${j.niewyslaneLogo} logotypów nie wysłano jeszcze na podgląd, więc nie trafią na stronę. Najpierw kliknij „Wyślij” wyżej, poczekaj, aż podgląd się zbuduje, i dopiero wtedy publikuj.`);
+  if (j.niewyslaneCommity) ostrzezenia.push(`${j.niewyslaneCommity} zmian jest tylko na tym komputerze (nie wysłano ich na podgląd) i nie trafi na stronę.`);
+  $("#publLista").innerHTML = ostrzezenia.map((t) => `<div class="pasmo">${esc(t)}</div>`).join("")
+    + (j.commity.length ? `<details style="margin:8px 0"><summary>Co wejdzie na stronę (${j.commity.length})</summary><ul>${j.commity.map((c) => `<li><code>${esc(c.h)}</code> ${esc(c.kiedy)} · ${esc(c.tytul)}</li>`).join("")}</ul></details>` : "");
+  $("#btnPublikuj").disabled = !gotowe;
+}
+$("#btnPublOdswiez").onclick = () => ekranPublikacja();
+$("#btnPublikuj").onclick = async () => {
+  const j = PUBL;
+  if (!j?.sha) return;
+  const niepewny = ["brak", "nieznany"].includes(j.vercel) ? "\n\nUwaga: nie udało się potwierdzić, że podgląd zbudował się poprawnie. Otwórz go i sprawdź przed publikacją." : "";
+  if (!confirm(`Opublikować na czypolskafirma.pl ${j.commity.length} zmian z podglądu (${j.logotypow} logotypów)?${niepewny}\n\nStrona produkcyjna odświeży się w ciągu kilku minut.`)) return;
+  $("#btnPublikuj").disabled = true;
+  const z = await wyslij("/api/panel/publikuj", { sha: j.sha });
+  if (z.blad) { alert(z.blad); return ekranPublikacja(); }
+  $("#logoLog").style.display = "";
+  sledzZadanie(z.zadanie, "#logoLog", ekranPublikacja);
 };
 
 // ---------- backup ----------

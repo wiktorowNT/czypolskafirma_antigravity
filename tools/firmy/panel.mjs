@@ -419,6 +419,39 @@ function stanGitLogotypow() {
   };
 }
 
+// ---------- publikacja na produkcję (develop → main) ----------
+// Przycisk tylko przewija main do commita, który już jest na origin/develop i przeszedł
+// build podglądu na Vercelu. Nic tu nie commitujemy ani nie scalamy lokalnie.
+function statusVercel(sha) {
+  const r = spawnSync("gh", ["api", `repos/{owner}/{repo}/commits/${sha}/status`, "--jq", '[.state, (.total_count|tostring)] | join(" ")'], { cwd: KATALOG_REPO, encoding: "utf8", timeout: 20000 });
+  if (r.status !== 0) return "nieznany";
+  const [stan, ile] = String(r.stdout).trim().split(" ");
+  return ile === "0" ? "brak" : stan; // success | pending | failure | error
+}
+
+function stanPublikacji() {
+  const pobrane = git("fetch", "-q", "origin");
+  if (pobrane.kod !== 0) return { blad: `Nie udało się połączyć z GitHubem: ${pobrane.wyjscie}` };
+  const linie = (s) => (s ? s.split(/\r?\n/).filter(Boolean) : []);
+  const sha = git("rev-parse", "origin/develop").wyjscie;
+  const commity = linie(git("log", "--format=%h|%ad|%s", "--date=format:%d.%m %H:%M", "origin/main..origin/develop").wyjscie)
+    .map((l) => { const [h, kiedy, ...t] = l.split("|"); return { h, kiedy, tytul: t.join("|") }; });
+  const pliki = linie(git("diff", "--name-only", "origin/main", "origin/develop").wyjscie);
+  const logo = pliki.filter((f) => /^public\/logos(-og)?\//.test(f));
+  const galaz = git("rev-parse", "--abbrev-ref", "HEAD").wyjscie;
+  return {
+    sha,
+    commity,
+    logotypow: pliki.filter((f) => f.startsWith("public/logos/")).length,
+    // pliki, które zmieniają wygląd albo działanie strony (narzędzia i dokumentacja jej nie ruszają)
+    innychPlikowStrony: pliki.filter((f) => !logo.includes(f) && !/^(tools|docs|data\/robocze|data\/panel|\.claude|\.github)\//.test(f) && !/\.md$/.test(f)).length,
+    przewiniecie: git("merge-base", "--is-ancestor", "origin/main", "origin/develop").kod === 0,
+    niewyslaneCommity: galaz === "develop" ? Number(git("rev-list", "--count", "origin/develop..develop").wyjscie) || 0 : 0,
+    niewyslaneLogo: stanGitLogotypow().plikow,
+    vercel: commity.length ? statusVercel(sha) : null,
+  };
+}
+
 // ---------- backup ----------
 function stanBackupu() {
   const zKatalogu = (katalog, skad) => {
@@ -1016,6 +1049,30 @@ const serwer = http.createServer(async (req, res) => {
         if (r.kod !== 0) { z.status = "blad"; z.koniec = Date.now(); return; }
       }
       dopisz(z, "Gotowe. Podgląd odświeży się na Vercelu w ciągu 1-2 minut.");
+      z.status = "gotowe";
+      z.koniec = Date.now();
+      return;
+    }
+
+    if (req.method === "GET" && p === "/api/panel/publikacja-stan") return json(res, stanPublikacji());
+    if (req.method === "POST" && p === "/api/panel/publikuj") {
+      const { sha } = await cialo();
+      const s = stanPublikacji();
+      if (s.blad) return json(res, { blad: s.blad }, 400);
+      if (!s.commity.length) return json(res, { blad: "Nie ma nic do opublikowania: czypolskafirma.pl ma już wszystko, co jest na podglądzie." }, 400);
+      if (sha !== s.sha) return json(res, { blad: "Na podglądzie pojawiły się nowe zmiany, odkąd otworzyłeś ten ekran. Sprawdź listę jeszcze raz i opublikuj ponownie." }, 409);
+      if (!s.przewiniecie) return json(res, { blad: "Na produkcji jest zmiana, której nie ma na podglądzie. Tego nie da się opublikować przyciskiem: poproś Claude'a o merge develop do main." }, 400);
+      if (s.vercel === "pending") return json(res, { blad: "Podgląd na Vercelu jeszcze się buduje. Spróbuj za minutę." }, 400);
+      if (s.vercel === "failure" || s.vercel === "error") return json(res, { blad: "Build podglądu na Vercelu nie przeszedł. Strona z tym błędem nie zbudowałaby się też na produkcji. Poproś Claude'a o sprawdzenie." }, 400);
+      const z = nowezadanie("git", "Publikacja na czypolskafirma.pl", null);
+      json(res, { ok: true, zadanie: z.id });
+      dopisz(z, `Publikuję ${s.commity.length} zmian (${s.sha.slice(0, 7)}) na gałąź main…`);
+      const r = git("push", "origin", `${s.sha}:refs/heads/main`);
+      dopisz(z, `git push: ${r.wyjscie || "ok"}`);
+      if (r.kod !== 0) { z.status = "blad"; z.koniec = Date.now(); return; }
+      git("fetch", "-q", "origin");
+      if (git("rev-parse", "--abbrev-ref", "HEAD").wyjscie !== "main") git("branch", "-f", "main", "origin/main");
+      dopisz(z, "Gotowe. Vercel buduje teraz stronę produkcyjną: czypolskafirma.pl odświeży się w ciągu 2-5 minut (w razie czego Ctrl+F5).");
       z.status = "gotowe";
       z.koniec = Date.now();
       return;
