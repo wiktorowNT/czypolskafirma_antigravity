@@ -60,12 +60,22 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+  - pominięty 2026-09-29: tymi trzema markami są Junak, Kross i Romet, a Kross i Romet
+    były bohaterami paczki z 2026-09-27, więc temat sprowadza się do powtórki sprzed
+    dwóch dni. Wraca po 2026-10-11 albo w ujęciu „polskie marki motoryzacyjne poza
+    rowerami", jeśli właściciel uzna je za osobny temat
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-09-29: Plus i Polsat Box były bohaterami paczki z 2026-09-17,
+    a bez nich zestawienia sieci komórkowych nie da się zrobić. Wolny od 2026-10-01
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
+  - pominięty 2026-09-29: paczka z 2026-09-09 opowiedziała kategorię meblową
+    (Black Red White, Agnella, Profim, Bydgoskie Meble, Fameg) w ujęciu „co zostaje
+    z marki po przejęciu". Do decyzji właściciela, czy zestawienie polskiego kapitału
+    w tej kategorii to osobny temat, czy powtórka
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
 - [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
 - [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
 
