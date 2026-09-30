@@ -33,6 +33,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | 2026-09-24 | circle-k, moya, amic-energy, pko-bp, mbank, ing, pekao, alior-bank, millennium, bnp-paribas, credit-agricole (11) | Limit wyczerpany na 12. URL-u (velobank odbił się o limit — pierwszy na jutro). Wszystkie 11 miały „Adres URL nie znajduje się w Google" i „Nie wykryto odsyłających map witryn" — to normalne przed pierwszym skanem; sitemapa OK (odczyt 23.09, 792 strony). Stan indeksu: 91 zindeksowanych, 695 „wykryta – niezindeksowana". `/firma/zara` zwraca już 200, walidacja wciąż „Rozpoczęto" (Google nie skanował od 2.07) — zgłosić jutro razem z velobankiem. Dodano `www` w Vercelu (308 → wersja bez www). |
 | 2026-09-25 | velobank, zara, nest-bank, empik, media-expert, rtv-euro-agd, x-kom, morele, komputronik, ccc, deichmann (11) | Limit liczony ok. 24 h od zgłoszeń — próba o 14:20 odbiła się od razu, wieczorem przeszło. Limit wyczerpany na 12. URL-u (cropp odbił się o limit — pierwszy na jutro). `zara` ponownie zgłoszona: test wersji opublikowanej przeszedł, czekamy na zamknięcie walidacji „Błąd przekierowania". |
 | 2026-09-27 | cropp, house, mohito, sinsay, 4f, martes-sport, decathlon, tk-maxx, black-red-white, leroy-merlin, castorama (11) | `jysk` i `agata-meble` były już w indeksie — pominięte bez zużywania limitu. Limit wyczerpany na 12. URL-u (obi odbił się o limit — pierwszy na jutro). |
+| 2026-09-30 | obi, selgros, makro, play, plus, orange, t-mobile, heyah, virgin-mobile, dpd, dhl (11) | `bricomarche` było już w indeksie — pominięte. Limit wyczerpany na 12. URL-u (poczta-polska odbiła się o limit — pierwsza na następną partię). |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -90,19 +91,19 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `black-red-white`  — zgłoszone 2026-09-27
 - [x] `leroy-merlin`  — zgłoszone 2026-09-27
 - [x] `castorama`  — zgłoszone 2026-09-27
-- [ ] `obi`
-- [ ] `bricomarche`
-- [ ] `selgros`
-- [ ] `makro`
-- [ ] `play`
-- [ ] `plus`
-- [ ] `orange`
-- [ ] `t-mobile`
-- [ ] `heyah`
-- [ ] `virgin-mobile`
+- [x] `obi`  — zgłoszone 2026-09-30
+- [x] `bricomarche`  — już w indeksie 2026-09-30 (bez zgłoszenia)
+- [x] `selgros`  — zgłoszone 2026-09-30
+- [x] `makro`  — zgłoszone 2026-09-30
+- [x] `play`  — zgłoszone 2026-09-30
+- [x] `plus`  — zgłoszone 2026-09-30
+- [x] `orange`  — zgłoszone 2026-09-30
+- [x] `t-mobile`  — zgłoszone 2026-09-30
+- [x] `heyah`  — zgłoszone 2026-09-30
+- [x] `virgin-mobile`  — zgłoszone 2026-09-30
 - [x] `inpost`  — zgłoszone 2026-07-23
-- [ ] `dpd`
-- [ ] `dhl`
+- [x] `dpd`  — zgłoszone 2026-09-30
+- [x] `dhl`  — zgłoszone 2026-09-30
 - [ ] `poczta-polska`
 - [ ] `apart`
 - [ ] `w-kruk`
