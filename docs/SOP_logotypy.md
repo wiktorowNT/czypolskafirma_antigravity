@@ -13,7 +13,22 @@ z terminala w folderze projektu.
 ## 🏗️ Faza 1 — Masowe pobieranie po dodaniu nowych firm
 
 Gdy dodasz nową paczkę firm do Supabase, uruchom automat, który pobierze brakujące loga
-z Brandfetch (priorytet: pliki wektorowe SVG).
+(w Panelu projektu: krok 8, „Pobierz logotypy”). Kolejność źródeł (od 30.09.2026,
+`tools/firmy/lib/logo-zrodla.mjs`):
+
+1. **Strona firmy**: logo z nagłówka strony, obrazki i grafiki SVG oznaczone jako logo.
+   Na stronie grupy z kilkoma markami wygrywa logo z nazwą marki w nazwie pliku.
+2. **Wikipedia** (Wikidata, dopasowanie po adresie strony firmy): zwykle SVG.
+3. Brandfetch API (darmowy limit bywa wyczerpany).
+4. Ikonki stron (Google, icon.horse, DuckDuckGo): tylko gdy nic lepszego nie ma.
+
+Automat pomija logo białe (wersje na ciemne tło, na stronie niewidoczne) i mniejsze niż
+120 px. Clearbit (serwis wyłączony) i Favicone (nie działa) usunięte we wrześniu 2026.
+
+**Poprawki w panelu:** w podglądzie logotypów przy każdej firmie jest przycisk
+**„Inne źródła”**. Pokazuje wszystkich kandydatów ze strony firmy, Wikipedii i serwisów
+z ikonkami (miniatura na białym i ciemnym tle, format, rozmiar), a „Użyj” podmienia plik.
+Gdy nic nie pasuje: link do Google Grafika i ręczne „Podmień”.
 
 **Krok 1 — pobierz brakujące logotypy:**
 

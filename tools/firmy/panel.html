@@ -158,6 +158,10 @@
   .logo-okno.brak{background:#faf8f5;color:var(--slaby);font-size:12.5px}
   .logo-karta b{font-size:13.5px}
   .logo-karta .male{line-height:1.35}
+  .logo-okno.ciemne{background:#2b2b2b;border-color:#2b2b2b;height:44px;padding:5px}
+  dialog.logo-zrodla{width:min(1200px,94vw);max-height:90vh;border:1px solid var(--linia);border-radius:8px;padding:18px 20px;background:var(--tlo,#fff)}
+  dialog.logo-zrodla::backdrop{background:rgba(0,0,0,.35)}
+  dialog.logo-zrodla .logo-karta.teraz{box-shadow:inset 0 3px 0 var(--slaby)}
 </style>
 </head>
 <body>
@@ -629,9 +633,15 @@
             <button id="btnLogoOdswiez">Odśwież podgląd</button>
           </div>
         </div>
-        <div class="pomoc-tresc" id="pomoc-logopodglad" hidden><p>Tak logo będzie wyglądać na stronie (na białym tle). Pod obrazkiem: format, rozmiar w pikselach i ocena:</p><ul><li><b>✓ w porządku</b>: prawdziwe logo.</li><li><b>ikonka zamiast logo</b>: pobrała się ikonka strony (favicon), wygląda słabo. Do podmiany.</li><li><b>małe</b>: obrazek mniejszy niż 100 px, może być nieostry.</li><li><b>zła końcówka nazwy</b>: obrazek jest dobry, tylko plik ma inną końcówkę niż format.</li><li><b>brak logo</b>: automat nic nie znalazł.</li></ul><p>Żeby podmienić: kliknij „Podmień” i wybierz plik albo przeciągnij plik na kartę (PNG, JPG, WebP, SVG, najlepiej z przezroczystym albo białym tłem). „Strona firmy” otwiera stronę, z której zwykle da się pobrać logo. Po sprawdzeniu wyślij zmiany przyciskiem „Wyślij” niżej.</p></div>
+        <div class="pomoc-tresc" id="pomoc-logopodglad" hidden><p>Tak logo będzie wyglądać na stronie (na białym tle). Pod obrazkiem: format, rozmiar w pikselach i ocena:</p><ul><li><b>✓ w porządku</b>: prawdziwe logo.</li><li><b>ikonka zamiast logo</b>: pobrała się ikonka strony (favicon), wygląda słabo. Do podmiany.</li><li><b>białe</b>: logo w wersji na ciemne tło, na stronie (białe tło) go nie widać. Do podmiany.</li><li><b>małe</b>: obrazek mniejszy niż 100 px, może być nieostry.</li><li><b>zła końcówka nazwy</b>: obrazek jest dobry, tylko plik ma inną końcówkę niż format.</li><li><b>brak logo</b>: automat nic nie znalazł.</li></ul><p><b>Inne źródła</b> szuka logo na stronie firmy, w Wikipedii i w serwisach z ikonkami i pokazuje wszystko, co znajdzie. Klikasz „Użyj” przy najlepszym. Gdy nic nie pasuje, w oknie jest link do Google Grafika.</p><p>Żeby podmienić ręcznie: kliknij „Podmień” i wybierz plik albo przeciągnij plik na kartę (PNG, JPG, WebP, SVG, najlepiej z przezroczystym albo białym tłem). „Strona firmy” otwiera stronę, z której zwykle da się pobrać logo. Po sprawdzeniu wyślij zmiany przyciskiem „Wyślij” niżej.</p></div>
         <div id="logoPodsumowanie" class="uwagi" style="margin:0 0 10px"></div>
         <div id="logoSiatka" class="logo-siatka"><span class="pusto">Wczytuję…</span></div>
+        <dialog class="logo-zrodla" id="logoZrodla">
+          <div class="rozdziel"><h2 id="lzTytul" style="margin:0">Inne źródła</h2><button id="lzZamknij">Zamknij</button></div>
+          <p class="uwagi" id="lzOpis"></p>
+          <div id="lzSiatka" class="logo-siatka"></div>
+          <p class="uwagi" id="lzLinki"></p>
+        </dialog>
         <input type="file" id="logoPlik" accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml" hidden>
       </div>
       <div class="karta">
@@ -1714,6 +1724,7 @@ async function ekranLogoStan() {
 const OPIS_RODZAJU = {
   ok: ['<span class="plakietka p-ok">✓ w porządku</span>', ""],
   ikonka: ['<span class="plakietka p-zle">ikonka zamiast logo</span>', "zle"],
+  biale: ['<span class="plakietka p-zle">białe, na stronie niewidoczne</span>', "zle"],
   brak: ['<span class="plakietka p-zle">brak logo</span>', "zle"],
   "bez-strony": ['<span class="plakietka p-zle">brak adresu strony</span>', "zle"],
   male: ['<span class="plakietka p-uwaga">małe, może być nieostre</span>', "uwaga"],
@@ -1735,9 +1746,10 @@ async function podgladLogo() {
       <b>${esc(x.nazwa)}</b>
       <span class="male">${esc(x.domena || "brak adresu strony")}${x.plik ? `<br>${esc(x.format)} · ${x.szer && x.wys ? `${x.szer}×${x.wys} px` : "rozmiar ?"} · ${Math.round((x.bajtow || 0) / 1024)} KB` : ""}</span>
       <div>${OPIS_RODZAJU[x.rodzaj]?.[0] || ""}</div>
-      <div class="rzad" style="gap:6px">${x.domena ? `<button data-podmien="${esc(x.domena)}" style="font-size:12.5px;padding:5px 9px">Podmień</button><a href="${esc(x.www && /^https?:/.test(x.www) ? x.www : "https://" + x.domena)}" target="_blank" rel="noopener" style="font-size:12.5px">strona firmy ↗</a>` : ""}</div>
+      <div class="rzad" style="gap:6px">${x.domena ? `<button data-zrodla="${esc(x.domena)}" data-nazwa="${esc(x.nazwa)}" data-www="${esc(x.www || "")}" style="font-size:12.5px;padding:5px 9px">Inne źródła</button><button data-podmien="${esc(x.domena)}" style="font-size:12.5px;padding:5px 9px">Podmień</button><a href="${esc(x.www && /^https?:/.test(x.www) ? x.www : "https://" + x.domena)}" target="_blank" rel="noopener" style="font-size:12.5px">strona firmy ↗</a>` : ""}</div>
     </div>`).join("") || '<span class="pusto">Brak firm do pokazania.</span>';
   $("#logoSiatka").querySelectorAll("[data-podmien]").forEach((b) => b.addEventListener("click", () => { LOGO_CEL = b.dataset.podmien; $("#logoPlik").value = ""; $("#logoPlik").click(); }));
+  $("#logoSiatka").querySelectorAll("[data-zrodla]").forEach((b) => b.addEventListener("click", () => inneZrodla(b.dataset.zrodla, b.dataset.nazwa, b.dataset.www)));
   $("#logoSiatka").querySelectorAll(".logo-karta[data-domena]").forEach((k) => {
     if (!k.dataset.domena) return;
     k.addEventListener("dragover", (e) => { e.preventDefault(); k.classList.add("nad"); });
@@ -1753,6 +1765,40 @@ async function podmienLogo(domena, plik) {
   await podgladLogo();
   ekranLogoStan();
 }
+// „Inne źródła”: kandydaci ze strony firmy, Wikipedii i serwisów z ikonkami; „Użyj” podmienia plik.
+const RODZAJ_KANDYDATA = { logo: '<span class="plakietka p-ok">logo</span>', obrazek: '<span class="plakietka p-uwaga">obrazek ze strony</span>', ikonka: '<span class="plakietka p-zle">ikonka</span>' };
+async function inneZrodla(domena, nazwa, www) {
+  const okno = $("#logoZrodla");
+  $("#lzTytul").textContent = `Logo: ${nazwa} (${domena})`;
+  $("#lzOpis").textContent = "Szukam na stronie firmy, w Wikipedii i w serwisach z ikonkami… (do pół minuty)";
+  const obecne = document.querySelector(`#logoSiatka .logo-karta[data-domena="${CSS.escape(domena)}"] .logo-okno`)?.innerHTML || "brak pliku";
+  $("#lzSiatka").innerHTML = `<div class="logo-karta teraz"><div class="logo-okno">${obecne}</div><div class="logo-okno ciemne">${obecne}</div><b>Teraz na stronie</b></div>`;
+  const google = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(`${nazwa} logo`)}`;
+  $("#lzLinki").innerHTML = `Nic nie pasuje? <a href="${google}" target="_blank" rel="noopener">Szukaj logo w Google Grafika ↗</a> · <a href="${esc(www && /^https?:/.test(www) ? www : "https://" + domena)}" target="_blank" rel="noopener">strona firmy ↗</a>. Zapisany plik przeciągnij na kartę firmy albo użyj „Podmień”.`;
+  if (!okno.open) okno.showModal();
+  const j = await pobierz(`/api/panel/logo-kandydaci?domena=${encodeURIComponent(domena)}&nazwa=${encodeURIComponent(nazwa)}&www=${encodeURIComponent(www || "")}`);
+  if (j.blad || !j.kandydaci) { $("#lzOpis").textContent = j.blad || "Uruchom panel ponownie, żeby włączyć „Inne źródła”."; return; }
+  $("#lzOpis").innerHTML = j.kandydaci.length
+    ? `Znaleziono ${j.kandydaci.length}. Najlepsze są na początku. Ciemny pasek pod obrazkiem pokazuje, czy logo nie jest białe (na stronie byłoby niewidoczne). Kliknij „Użyj”, żeby podmienić plik.`
+    : "Żadne źródło nie dało obrazka. Skorzystaj z linków niżej.";
+  $("#lzSiatka").insertAdjacentHTML("beforeend", j.kandydaci.map((k) => `<div class="logo-karta">
+      <div class="logo-okno"><img src="/logo-kandydat/${k.id}" alt=""></div>
+      <div class="logo-okno ciemne"><img src="/logo-kandydat/${k.id}" alt=""></div>
+      <b>${esc(k.zrodlo)}</b> <div>${RODZAJ_KANDYDATA[k.rodzaj] || ""}${k.pasuje ? ' <span class="plakietka p-ok">z nazwą marki</span>' : ""}${k.biale ? ' <span class="plakietka p-zle">białe, na stronie niewidoczne</span>' : ""}${k.pewne === false ? ' <span class="plakietka p-uwaga">może być inna firma</span>' : ""}</div>
+      <span class="male">${esc(k.opis)}<br>${esc(k.format)} · ${k.szer && k.wys ? `${k.szer}×${k.wys} px` : "rozmiar ?"} · ${Math.max(1, Math.round(k.bajtow / 1024))} KB</span>
+      <div class="rzad" style="gap:6px"><button class="glowny" data-uzyj="${k.id}" style="font-size:12.5px;padding:5px 11px">Użyj</button>${k.url ? `<a href="${esc(k.url)}" target="_blank" rel="noopener" style="font-size:12.5px">źródło ↗</a>` : ""}</div>
+    </div>`).join(""));
+  $("#lzSiatka").querySelectorAll("[data-uzyj]").forEach((b) => b.addEventListener("click", async () => {
+    b.disabled = true;
+    const w = await wyslij("/api/panel/logo-uzyj", { domena, id: b.dataset.uzyj });
+    if (w.blad) { b.disabled = false; return alert(`Nie podmieniono logo: ${w.blad}`); }
+    okno.close();
+    await podgladLogo();
+    ekranLogoStan();
+  }));
+}
+$("#lzZamknij").onclick = () => $("#logoZrodla").close();
+
 $("#logoPlik").onchange = (e) => { const f = e.target.files[0]; if (f && LOGO_CEL) podmienLogo(LOGO_CEL, f); };
 $("#logoZakres").onchange = () => podgladLogo();
 $("#btnLogoOdswiez").onclick = () => podgladLogo();

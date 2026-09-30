@@ -20,6 +20,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { wczytajEnv } from './firmy/lib/env.mjs'
+import { najlepszeLogo } from './firmy/lib/logo-zrodla.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -276,12 +277,9 @@ async function fetchFromBrandfetch(domain, apiKey) {
 
 // ── Logo Sources (fallback cascade) ─────────────────────────────────────
 
+// Clearbit (serwis wyłączony) i Favicone (zwraca 400) usunięte we wrześniu 2026.
+// To same ikonki stron: automat sięga po nie dopiero, gdy strona firmy i Wikipedia nic nie dały.
 const LOGO_SOURCES = [
-  {
-    name: 'Clearbit',
-    getUrl: (domain) => `https://logo.clearbit.com/${domain}?size=512`,
-    priority: 1,
-  },
   {
     name: 'Google Favicon V2',
     getUrl: (domain) => `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${domain}&size=512`,
@@ -291,11 +289,6 @@ const LOGO_SOURCES = [
     name: 'icon.horse',
     getUrl: (domain) => `https://icon.horse/icon/${domain}`,
     priority: 2,
-  },
-  {
-    name: 'Favicone',
-    getUrl: (domain) => `https://favicone.com/${domain}?s=512`,
-    priority: 3,
   },
   {
     name: 'DuckDuckGo',
@@ -311,10 +304,16 @@ const LOGO_SOURCES = [
 
 /**
  * Try all sources for a domain and return the best result.
- * Brandfetch jest próbowany PIERWSZY — jeśli zwróci wynik, pomijamy resztę.
+ * Kolejność: logo ze strony firmy albo z Wikipedii (lib/logo-zrodla.mjs), Brandfetch, ikonki.
  */
-async function fetchBestLogo(domain, brandfetchKey) {
-  // ── Źródło #1: Brandfetch API (profesjonalne logo) ──
+async function fetchBestLogo(domain, brandfetchKey, company = {}) {
+  // ── Źródło #1: strona firmy i Wikipedia (prawdziwe logo, SVG albo co najmniej 120 px) ──
+  const zeStrony = await najlepszeLogo({ domena: domain, www: company.website_url, nazwa: company.name }).catch(() => null)
+  if (zeStrony) {
+    return { source: zeStrony.zrodlo, priority: 0, buffer: zeStrony.dane, size: zeStrony.bajtow, contentType: '' }
+  }
+
+  // ── Źródło #2: Brandfetch API (profesjonalne logo) ──
   if (brandfetchKey) {
     const brandfetchResult = await fetchFromBrandfetch(domain, brandfetchKey)
     if (brandfetchResult) {
@@ -544,7 +543,7 @@ async function main() {
     
     const promises = batch.map(async (domain) => {
       const company = domainToCompany.get(domain)
-      const result = await fetchBestLogo(domain, brandfetchKey)
+      const result = await fetchBestLogo(domain, brandfetchKey, company)
 
       if (result) {
         const ext = getExtension(result)

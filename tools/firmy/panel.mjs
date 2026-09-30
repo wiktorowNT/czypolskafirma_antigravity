@@ -7,6 +7,7 @@
 //   node tools/firmy/panel.mjs            (otworzy przeglądarkę na http://localhost:3010)
 //   node tools/firmy/panel.mjs --port 3011 --bez-przegladarki
 import { spawn, spawnSync } from "node:child_process";
+import crypto from "node:crypto";
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import http from "node:http";
@@ -16,6 +17,7 @@ import { KATALOG_PARTII, KATALOG_REPO, dzisiaj, wczytajEnv } from "./lib/env.mjs
 import { sprawdzLogowanie } from "./lib/claude.mjs";
 import { stanLogowaniaGemini, wybierzModelGemini } from "./lib/gemini.mjs";
 import { kontekstImportu, odlozoneAktualizacje, opublikuj, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
+import { czyBiale, kandydaciLogo } from "./lib/logo-zrodla.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
 import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje, nieopublikowaneFirmy } from "./lib/supabase.mjs";
@@ -374,7 +376,9 @@ async function opisLogo(domena) {
   const plik = pliki[0], sciezka = path.join(KATALOG_LOGO, plik);
   const b = naglowekPliku(sciezka), format = formatPliku(b), roz = path.extname(plik).slice(1).toLowerCase().replace("jpeg", "jpg");
   const { szer, wys } = await wymiary(sciezka, format, b);
-  const rodzaj = format === "ico" || format === "inny" ? "ikonka" : format !== roz ? "rozszerzenie" : szer && Math.max(szer, wys || 0) < 100 && format !== "svg" ? "male" : "ok";
+  let rodzaj = format === "ico" || format === "inny" ? "ikonka" : format !== roz ? "rozszerzenie" : szer && Math.max(szer, wys || 0) < 100 && format !== "svg" ? "male" : "ok";
+  // białe logo na białym tle strony jest niewidoczne (np. wersja do ciemnego nagłówka)
+  if ((rodzaj === "ok" || rodzaj === "male") && ["png", "webp", "svg"].includes(format) && (await czyBiale(fs.readFileSync(sciezka)))) rodzaj = "biale";
   return { plik, format, szer, wys, bajtow: fs.statSync(sciezka).size, rodzaj, zmieniono: fs.statSync(sciezka).mtimeMs };
 }
 
@@ -400,6 +404,23 @@ function stanLogotypow() {
   }
   return { plikow: pliki.length, brakujacych: brakujace.length, brakujace: brakujace.slice(0, 40), bezUrl: indeks.filter((f) => !domenaZUrl(f.website_url)).length, podejrzane };
 }
+
+// Zapis logo firmy do public/logos (ręczna podmiana i wybór z „Inne źródła”). Format po bajtach,
+// ikonki .ico i SVG ze skryptami odrzucane, stare pliki tej domeny usuwane.
+async function zapiszLogo(domena, bufor) {
+  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(String(domena || ""))) return { blad: "Zła domena." };
+  if (bufor.length > 5 * 1024 * 1024) return { blad: "Plik większy niż 5 MB." };
+  const format = formatPliku(bufor);
+  if (format === "ico") return { blad: "To ikonka strony (.ico), a nie logo. Wybierz plik PNG, JPG, WebP albo SVG." };
+  if (!["png", "jpg", "webp", "svg"].includes(format)) return { blad: "To nie jest obrazek PNG, JPG, WebP ani SVG." };
+  if (format === "svg" && /<script|\bon[a-z]+\s*=|javascript:|<foreignObject|<iframe|<embed|<object/i.test(bufor.toString("utf8"))) return { blad: "SVG zawiera skrypty lub aktywne elementy." };
+  for (const x of fs.readdirSync(KATALOG_LOGO)) if (x.toLowerCase().startsWith(domena.toLowerCase() + ".") && x.slice(domena.length + 1).split(".").length === 1) fs.unlinkSync(path.join(KATALOG_LOGO, x));
+  fs.writeFileSync(path.join(KATALOG_LOGO, `${domena.toLowerCase()}.${format}`), bufor);
+  return { ok: true, ...(await opisLogo(domena.toLowerCase())) };
+}
+
+// Kandydaci z „Inne źródła” trzymani w pamięci, żeby „Użyj” nie pobierało pliku drugi raz.
+const kandydaciPamiec = new Map();
 
 function git(...argumenty) {
   const r = spawnSync("git", argumenty, { cwd: KATALOG_REPO, encoding: "utf8" });
@@ -1035,16 +1056,38 @@ const serwer = http.createServer(async (req, res) => {
     // ikonki .ico i SVG ze skryptami odrzucane, stare pliki tej domeny usuwane.
     if (req.method === "POST" && p === "/api/panel/logo-podmien") {
       const { domena, dane } = await cialo();
-      if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(String(domena || ""))) return json(res, { blad: "Zła domena." }, 400);
-      const bufor = Buffer.from(String(dane || ""), "base64");
-      if (bufor.length > 5 * 1024 * 1024) return json(res, { blad: "Plik większy niż 5 MB." }, 400);
-      const format = formatPliku(bufor);
-      if (format === "ico") return json(res, { blad: "To ikonka strony (.ico), a nie logo. Wybierz plik PNG, JPG, WebP albo SVG." }, 400);
-      if (!["png", "jpg", "webp", "svg"].includes(format)) return json(res, { blad: "To nie jest obrazek PNG, JPG, WebP ani SVG." }, 400);
-      if (format === "svg" && /<script|\bon[a-z]+\s*=|javascript:|<foreignObject|<iframe|<embed|<object/i.test(bufor.toString("utf8"))) return json(res, { blad: "SVG zawiera skrypty lub aktywne elementy." }, 400);
-      for (const x of fs.readdirSync(KATALOG_LOGO)) if (x.toLowerCase().startsWith(domena.toLowerCase() + ".") && x.slice(domena.length + 1).split(".").length === 1) fs.unlinkSync(path.join(KATALOG_LOGO, x));
-      fs.writeFileSync(path.join(KATALOG_LOGO, `${domena.toLowerCase()}.${format}`), bufor);
-      return json(res, { ok: true, ...(await opisLogo(domena.toLowerCase())) });
+      const w = await zapiszLogo(domena, Buffer.from(String(dane || ""), "base64"));
+      return json(res, w, w.blad ? 400 : 200);
+    }
+
+    // „Inne źródła”: kandydaci ze strony firmy, Wikipedii i serwisów z ikonkami (lib/logo-zrodla.mjs).
+    if (req.method === "GET" && p === "/api/panel/logo-kandydaci") {
+      const domena = String(url.searchParams.get("domena") || "").toLowerCase();
+      if (!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domena)) return json(res, { blad: "Zła domena." }, 400);
+      const lista = await kandydaciLogo({ domena, www: url.searchParams.get("www") || "", nazwa: url.searchParams.get("nazwa") || "" });
+      if (kandydaciPamiec.size > 400) kandydaciPamiec.clear();
+      return json(res, {
+        kandydaci: lista.map((k) => {
+          const id = crypto.randomBytes(8).toString("hex");
+          kandydaciPamiec.set(id, { dane: k.dane, format: k.format });
+          const { dane, skrot, waga, ...opis } = k;
+          return { id, ...opis };
+        }),
+      });
+    }
+    if (req.method === "GET" && p.startsWith("/logo-kandydat/")) {
+      const k = kandydaciPamiec.get(p.slice("/logo-kandydat/".length));
+      if (!k) { res.writeHead(404); return res.end(); }
+      // SVG z obcej strony: sandbox, żeby nic w nim nie zadziałało przy otwarciu w osobnej karcie
+      res.writeHead(200, { "Content-Type": { png: "image/png", jpg: "image/jpeg", webp: "image/webp", svg: "image/svg+xml" }[k.format], "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox", "Cache-Control": "no-store" });
+      return res.end(k.dane);
+    }
+    if (req.method === "POST" && p === "/api/panel/logo-uzyj") {
+      const { domena, id } = await cialo();
+      const k = kandydaciPamiec.get(String(id || ""));
+      if (!k) return json(res, { blad: "Ten podgląd wygasł. Kliknij „Inne źródła” jeszcze raz." }, 400);
+      const w = await zapiszLogo(domena, k.dane);
+      return json(res, w, w.blad ? 400 : 200);
     }
 
     if (req.method === "POST" && p === "/api/panel/logo-pobierz") {
