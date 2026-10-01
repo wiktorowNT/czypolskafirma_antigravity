@@ -547,7 +547,7 @@
         <div class="etap">
           <i class="nrb">1</i>
           <div class="tresc-etapu">
-            <h2>Skopiuj prompt <i class="pomoc" data-pomoc="prompt" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-prompt" hidden><p>Prompt to gotowy tekst dla czatu: metodologia, fakty z rejestrów przy każdej firmie i wzór odpowiedzi w JSON. Kopiujesz go raz i wklejasz do każdego czatu.</p><p>Pierwsza lista wybiera, które firmy wejdą do promptu:</p><ul><li><b>Firmy bez przyjętej wersji</b>: zwykły wybór. Za pierwszym razem to wszystkie firmy z partii.</li><li><b>Firmy bez odpowiedzi od wybranego czatu</b>: gdy czat uciął odpowiedź albo pominął firmy. Prompt obejmie tylko brakujące dla czatu wybranego na górze.</li><li><b>Wszystkie firmy z NIP-em</b>: gdy chcesz przepytać czat jeszcze raz o wszystko.</li></ul><p>Druga lista dzieli firmy na paczki. Zostaw „wszystkie w jednej paczce”, chyba że któryś czat ucina długie odpowiedzi: wtedy po 10–20 i każda paczka osobno.</p></div>
+            <h2>Skopiuj prompt <i class="pomoc" data-pomoc="prompt" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-prompt" hidden><p>Prompt to gotowy tekst dla czatu: metodologia, fakty z rejestrów przy każdej firmie i wzór odpowiedzi w JSON. Kopiujesz go raz i wklejasz do każdego czatu.</p><p>Pierwsza lista wybiera, które firmy wejdą do promptu:</p><ul><li><b>Firmy bez przyjętej wersji</b>: zwykły wybór. Za pierwszym razem to wszystkie firmy z partii.</li><li><b>Firmy bez odpowiedzi od wybranego czatu</b>: gdy czat uciął odpowiedź albo pominął firmy. Prompt obejmie tylko brakujące dla czatu wybranego na górze.</li><li><b>Wszystkie firmy z NIP-em</b>: gdy chcesz przepytać czat jeszcze raz o wszystko.</li></ul><p>Druga lista dzieli firmy na paczki. Zalecane są <b>równe paczki do 30 firm</b> (np. 84 firmy = 3 paczki po 28). Przy większych paczkach czaty ucinają odpowiedź i gubią firmy (przy 42 firmach Gemini oddał 22, ChatGPT 23), a przy reszcie szukają płycej. Każdą paczkę wklejasz w nowej rozmowie. Możesz też podzielić na 2, 3 albo 4 równe paczki albo wpisać własną liczbę firm.</p></div>
             <p>W prompcie są już fakty z rejestrów (NIP, KRS, wspólnicy, historia, CRBR, giełda), więc model szuka tylko tego, kto stoi wyżej, i pisze opisy. Liczba firm w paczce nie jest ograniczona.</p>
             <div class="rzad" style="margin-bottom:10px">
               <select id="czatyZakres" style="width:auto">
@@ -555,13 +555,20 @@
                 <option value="bezModelu">Firmy bez odpowiedzi od wybranego czatu</option>
                 <option value="wszystkie">Wszystkie firmy z NIP-em</option>
               </select>
-              <select id="czatyRozmiar" style="width:auto" title="Ile firm w jednej paczce">
-                <option value="0">wszystkie w jednej paczce</option>
+              <select id="czatyRozmiar" style="width:auto" title="Jak podzielić firmy na paczki">
+                <option value="zalecane">równe paczki do 30 firm (zalecane)</option>
+                <option value="k2">na 2 równe paczki</option>
+                <option value="k3">na 3 równe paczki</option>
+                <option value="k4">na 4 równe paczki</option>
                 <option value="10">po 10 firm</option>
                 <option value="20">po 20 firm</option>
                 <option value="30">po 30 firm</option>
                 <option value="40">po 40 firm</option>
+                <option value="50">po 50 firm</option>
+                <option value="0">wszystkie w jednej paczce</option>
+                <option value="wlasna">własna liczba firm w paczce…</option>
               </select>
+              <input id="czatyRozmiarWlasny" type="number" min="1" max="500" placeholder="np. 45" title="Ile firm w jednej paczce" style="width:110px" hidden>
             </div>
             <div id="czatyPaczki" class="pusto">Wczytuję…</div>
             <pre class="prompt" id="czatyPodglad" style="display:none;margin-top:10px"></pre>
@@ -1521,7 +1528,13 @@ let CZATY = { firmy: [], bezNip: [] };
 try { const m = localStorage.getItem("panel.czatModel"); if (m) $("#czatyModel").value = m; } catch {}
 $("#czatyModel").onchange = () => { try { localStorage.setItem("panel.czatModel", $("#czatyModel").value); } catch {} rysujPaczki(); };
 $("#czatyZakres").onchange = () => rysujPaczki();
-$("#czatyRozmiar").onchange = () => rysujPaczki();
+$("#czatyRozmiar").onchange = () => { rysujPaczki(); if ($("#czatyRozmiar").value === "wlasna") $("#czatyRozmiarWlasny").focus(); };
+$("#czatyRozmiarWlasny").oninput = () => rysujPaczki();
+try {
+  const zap = localStorage.getItem("czatyRozmiar");
+  if (zap && [...$("#czatyRozmiar").options].some((o) => o.value === zap)) $("#czatyRozmiar").value = zap;
+  $("#czatyRozmiarWlasny").value = localStorage.getItem("czatyRozmiarWlasny") || "";
+} catch {}
 
 async function ekranCzaty() {
   if (!STAN.partia) { $("#czatyTabela").innerHTML = '<span class="pusto">Nie wybrano partii. Wejdź w „Moje partie”.</span>'; return; }
@@ -1563,9 +1576,23 @@ function firmyDoPromptu() {
   return CZATY.firmy.filter((f) => zakres === "wszystkie" ? true : zakres === "bezModelu" ? !f.odpowiedzi.some((o) => o.model === model) : !f.przyjeta);
 }
 
+// Podział na paczki. Czaty ucinają długie odpowiedzi (ok. 2-3 tys. znaków JSON-u na firmę) i przy
+// dużych paczkach płyciej szukają, dlatego domyślnie równe paczki do 30 firm (84 firmy = 3 x 28).
+function rozmiarPaczki(n) {
+  const w = $("#czatyRozmiar").value;
+  if (w === "wlasna") return Math.max(1, Number($("#czatyRozmiarWlasny").value) || n || 1);
+  if (w === "zalecane" || /^k\d$/.test(w)) {
+    const ile = w === "zalecane" ? Math.ceil(n / 30) : Number(w.slice(1));
+    return Math.max(1, Math.ceil(n / Math.max(1, ile)));
+  }
+  return Number(w) || n || 1;
+}
+
 function rysujPaczki() {
   const firmy = firmyDoPromptu();
-  const rozmiar = Number($("#czatyRozmiar").value) || firmy.length || 1;
+  $("#czatyRozmiarWlasny").hidden = $("#czatyRozmiar").value !== "wlasna";
+  try { localStorage.setItem("czatyRozmiar", $("#czatyRozmiar").value); localStorage.setItem("czatyRozmiarWlasny", $("#czatyRozmiarWlasny").value); } catch {}
+  const rozmiar = rozmiarPaczki(firmy.length);
   const paczki = [];
   for (let i = 0; i < firmy.length; i += rozmiar) paczki.push(firmy.slice(i, i + rozmiar));
   $("#czatyPaczki").className = "";

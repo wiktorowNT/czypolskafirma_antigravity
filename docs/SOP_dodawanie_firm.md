@@ -39,8 +39,11 @@ Menu boczne ma te same numery kroków:
 
 **Śledztwo w czatach:**
 
-- Wybierz czat, z którym pracujesz, i kliknij „Kopiuj prompt”. Liczba firm w prompcie nie jest
-  ograniczona (domyślnie wszystkie w jednej paczce). Na liście możesz też podzielić je po 10–40.
+- Wybierz czat, z którym pracujesz, i kliknij „Kopiuj prompt”. Domyślnie panel dzieli firmy na
+  równe paczki do 30 firm (84 firmy = 3 x 28); każdą paczkę wklejasz w nowej rozmowie. Przy
+  większych paczkach czaty ucinają odpowiedź i gubią firmy (przy 42 firmach Gemini oddał 22,
+  ChatGPT 23) i szukają płycej. Można też wybrać 2, 3 albo 4 równe paczki, po 10–50 firm,
+  wszystkie naraz albo wpisać własną liczbę.
   W prompcie są już fakty z rejestrów, metodologia (Ostateczny Właściciel, Efektywna Kontrola,
   Złota Klatka, drzewo D1–D4 i reguły B1–B12) i wzór odpowiedzi w JSON.
 - Wklej prompt do czatu z włączonym wyszukiwaniem. Odpowiedź wklej z powrotem do panelu. Parser

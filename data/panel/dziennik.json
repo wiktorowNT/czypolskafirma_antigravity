@@ -41,6 +41,13 @@
       "tekst": "Krok 2 (NIP-y): polski oddział zagranicznej spółki, którego nie ma w Białej Liście MF (np. Visa, Mastercard), jest żółty zamiast czerwonego i nie blokuje przejścia dalej. Wybór „Numer dobry” przy czerwonej firmie panel zapamiętuje.",
       "proces": "firmy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-02-paczki-czatow",
+      "data": "2026-10-02",
+      "tekst": "Śledztwo w czatach (krok 4): domyślnie równe paczki do 30 firm (84 firmy = 3 x 28), bo przy 42 firmach w jednej paczce Gemini i ChatGPT oddały tylko ok. połowę. Do wyboru też 2/3/4 równe paczki i własna liczba firm.",
+      "proces": "firmy",
+      "autor": "Claude"
     }
   ]
 }
