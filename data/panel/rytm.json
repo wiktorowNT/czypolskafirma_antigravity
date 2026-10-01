@@ -1,0 +1,21 @@
+{
+  "_opis": "Rytm projektu dla Centrum projektu (Panel projektu). 'cykliczne': co ile dni albo w jaki dzień tygodnia (0 = niedziela). 'auto': panel sam ustala, kiedy to było zrobione (pr-tresci, seo, partia, publikacja, backup, metryki); bez 'auto' odhaczasz ręcznie. 'proces': id karty z docs/PROCESY.md. 'przypomnienia': jednorazowe, pokazują się od daty 'od'. Odhaczenia zapisuje panel w data/panel/stan.json (poza gitem).",
+  "cykliczne": [
+    { "id": "pr-tresci", "nazwa": "Przejrzyj paczkę automatu treści", "coIleDni": 1, "auto": "pr-tresci", "proces": "tresc" },
+    { "id": "seo", "nazwa": "Partia indeksacji w Google (GSC)", "coIleDni": 1, "auto": "seo", "proces": "seo" },
+    { "id": "posty", "nazwa": "Post dnia na X i Facebooku", "coIleDni": 1, "proces": "posty" },
+    { "id": "paczka-postow", "nazwa": "Paczka postów na tydzień", "coIleDni": 7, "proces": "posty" },
+    { "id": "partia-firm", "nazwa": "Partia firm w panelu", "coIleDni": 7, "auto": "partia", "proces": "firmy" },
+    { "id": "publikacja", "nazwa": "Publikacja develop → main", "coIleDni": 7, "auto": "publikacja", "proces": "publikacja" },
+    { "id": "backup", "nazwa": "Kontrola backupu bazy", "dzienTygodnia": 0, "auto": "backup", "proces": "backup" },
+    { "id": "wrzutka", "nazwa": "Zestawienie do grup FB albo na Wykop", "coIleDni": 7, "proces": "posty" },
+    { "id": "metryki", "nazwa": "Metryki miesięczne", "coIleDni": 30, "auto": "metryki", "proces": "metryki" }
+  ],
+  "przypomnienia": [
+    { "id": "sql-edukacja", "nazwa": "Wklej SQL kategorii „edukacja” w Supabase", "od": "2026-09-23", "opis": "Plik tools/sql/2026-09-23-kategoria-edukacja.sql czeka na uruchomienie w SQL Editor (backlog, zadanie 3).", "proces": "sql" },
+    { "id": "mokate", "nazwa": "Napraw rekord Mokate", "od": "2026-09-17", "opis": "Partia „proba-mokate” już istnieje: przegląd → zatwierdź → import (backlog, zadanie A).", "proces": "firmy" },
+    { "id": "poprawki-nip", "nazwa": "Poprawki NIP z przeglądu tożsamości", "od": "2026-09-27", "opis": "docs/POPRAWKI_NIP_2026-09-27.md i tools/sql/2026-09-27-poprawki-nip.sql: przejrzyj i zdecyduj.", "proces": "sql" },
+    { "id": "zabka", "nazwa": "Żabka: re-weryfikacja po wezwaniu Couche-Tard", "od": "2026-10-06", "opis": "Wezwanie rozlicza się na przełomie IX/X 2026, potem Żabka to kapitał kanadyjski (CA). Partia re-weryfikacji: Żabka | 5223071241.", "proces": "reweryfikacja" },
+    { "id": "dostrojenie-automatu", "nazwa": "Po 2–3 partiach: uwagi do automatu firm", "od": "2026-10-10", "opis": "Zapisz, co przeszkadzało w partiach, i zleć dostrojenie (backlog, zadanie 9).", "proces": "zlecanie" }
+  ]
+}

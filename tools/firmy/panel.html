@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Panel firm — CzyPolskaFirma</title>
+<title>Panel projektu — CzyPolskaFirma</title>
 <link rel="icon" href="/favicon.ico">
 <style>
   :root{
@@ -153,6 +153,7 @@
   .logo-karta.zle{border-color:#e6c2c2;box-shadow:inset 0 3px 0 var(--czerwony)}
   .logo-karta.uwaga{box-shadow:inset 0 3px 0 var(--bursztyn)}
   .logo-karta.nad{outline:2px dashed var(--akcent);outline-offset:2px}
+  .logo-karta.laduje{opacity:.45;pointer-events:none}
   .logo-okno{height:96px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #eee;border-radius:4px;padding:8px}
   .logo-okno img{max-width:100%;max-height:100%;object-fit:contain}
   .logo-okno.brak{background:#faf8f5;color:var(--slaby);font-size:12.5px}
@@ -162,14 +163,110 @@
   dialog.logo-zrodla{width:min(1200px,94vw);max-height:90vh;border:1px solid var(--linia);border-radius:8px;padding:18px 20px;background:var(--tlo,#fff)}
   dialog.logo-zrodla::backdrop{background:rgba(0,0,0,.35)}
   dialog.logo-zrodla .logo-karta.teraz{box-shadow:inset 0 3px 0 var(--slaby)}
+  /* Centrum projektu */
+  .centrum{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:1150px){.centrum{grid-template-columns:1fr}}
+  .zad{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #eeebe6}
+  .zad:last-child{border-bottom:0}
+  .zad .tresc{flex:1;min-width:0}
+  .zad .tresc b{font-weight:600}
+  .zad small{display:block;color:var(--slaby);font-size:13px;margin-top:2px}
+  .zad .akcje{display:flex;gap:6px;flex:none;flex-wrap:wrap;justify-content:flex-end}
+  .zad.gotowe b{font-weight:500;color:var(--slaby)}
+  button.maly,a.maly{padding:4px 10px;font-size:13px;border-radius:5px}
+  a.maly{border:1px solid var(--linia);background:#fff;text-decoration:none;color:var(--tekst);display:inline-block;white-space:nowrap}
+  a.maly:hover{background:#f2f0ec}
+  .pozniej summary{cursor:pointer;font-size:14px;color:var(--slaby);padding-top:4px}
+  .lampka ul{margin:4px 0 0;padding-left:18px;font-size:13px;color:var(--slaby)}
+  .szybkie{display:flex;flex-wrap:wrap;gap:6px}
+  .szybkie a{font-size:13px;padding:5px 11px;border:1px solid var(--linia);border-radius:99px;background:#fff;color:var(--tekst);text-decoration:none}
+  .szybkie a:hover{border-color:var(--akcent);color:var(--akcent)}
+  .okno{position:fixed;inset:0;background:rgba(28,27,25,.45);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
+  .okno[hidden]{display:none}
+  .okno>.karta{max-width:920px;width:100%;position:relative;padding:22px 26px}
+  .okno .zamknij{position:absolute;top:12px;right:12px}
+  .md{font-size:14.5px;line-height:1.6;max-width:110ch}
+  .md h2{font-size:19px;margin:18px 0 8px} .md h3{font-size:16px;margin:18px 0 6px} .md h4{font-size:14.5px;margin:14px 0 4px}
+  .md p{margin:0 0 10px} .md ol,.md ul{margin:0 0 10px;padding-left:22px} .md li{margin-bottom:4px}
+  .md code{font:12.5px ui-monospace,Consolas,monospace;background:#f1eee9;border-radius:3px;padding:1px 5px}
+  .md pre{margin:0 0 10px;max-height:none}
+  .md table{margin:0 0 12px} .md td,.md th{padding:6px 10px 6px 0}
+  a.dok{cursor:pointer;text-decoration:underline dotted}
+  .meta-procesu{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13.5px;margin:0 0 14px;padding:10px 12px;background:#fbf9f5;border-radius:5px}
+  .meta-procesu dt{color:var(--slaby)} .meta-procesu dd{margin:0}
+  details.proces{padding:0}
+  details.proces>summary{list-style:none;cursor:pointer;padding:14px 20px;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+  details.proces>summary::-webkit-details-marker{display:none}
+  details.proces>summary small{color:var(--slaby);font-size:13px;text-align:right}
+  details.proces[open]>summary{border-bottom:1px solid var(--linia)}
+  details.proces .wnetrze{padding:14px 20px 16px}
+  input[type=date],input[type=month],input[type=number]{font:inherit;padding:7px 9px;border:1px solid var(--linia);border-radius:5px;background:#fff;color:var(--tekst)}
+  /* Dziennik zmian */
+  .dzien{margin-bottom:18px}
+  .dzien h3{font-size:13px;font-weight:600;color:var(--slaby);margin:0 0 6px;text-transform:uppercase;letter-spacing:.04em}
+  .wpis{display:flex;gap:10px;align-items:baseline;padding:8px 12px;background:#fff;border:1px solid var(--linia);border-radius:6px;margin-bottom:6px;font-size:14px}
+  .wpis .tresc{flex:1;min-width:0}
+  .wpis .tresc a{color:var(--tekst);text-decoration:none} .wpis .tresc a:hover{text-decoration:underline}
+  .wpis.notatka{background:#fffaf0;border-color:#e4d3ae;box-shadow:inset 3px 0 0 var(--bursztyn)}
+  .wpis .plakietka{flex:none}
+  .p-proc{color:var(--akcent);border-color:#e6c2c2;background:#fbf0f0}
+  .zmiany-procesu{margin:0 0 14px;padding:10px 12px;border-left:3px solid var(--bursztyn);background:#fffaf0;border-radius:0 5px 5px 0;font-size:13.5px}
+  .zmiany-procesu b{display:block;margin-bottom:4px}
+  .zmiany-procesu div{margin-bottom:3px}
+  /* Metryki */
+  .siatka-metryk{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:12px}
+  .siatka-metryk label{display:block;font-size:13px;color:var(--slaby)}
+  .siatka-metryk label input,.siatka-metryk label textarea{display:block;width:100%;margin-top:4px}
+  .siatka-metryk .szeroko{grid-column:1/-1}
+  .wykresy{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px}
+  .wykres{background:#fff;border:1px solid var(--linia);border-radius:6px;padding:14px 16px 10px}
+  .wykres .tytul{font-size:13px;color:var(--slaby)}
+  .wykres .wartosc{font-size:26px;font-weight:600;line-height:1.2;margin:2px 0}
+  .wykres .zmiana{font-size:12.5px;color:var(--slaby)}
+  .wykres svg{display:block;width:100%;height:auto;margin-top:8px;overflow:visible}
+  .wykres .os{font-size:10px;fill:var(--slaby)}
+  .wykres .slupek{fill:#b8453e}
+  .wykres .cel{fill:transparent;cursor:default}
+  .wykres .cel:hover+.slupek,.wykres g:hover .slupek{fill:#8f1d1d}
+  #dymek{position:fixed;z-index:60;background:#211f1c;color:#fff;font-size:12.5px;padding:5px 9px;border-radius:5px;pointer-events:none;white-space:nowrap}
+  #dymek[hidden]{display:none}
+  table.metryki td,table.metryki th{white-space:nowrap}
+  table.metryki td.dlugi{white-space:normal;min-width:200px}
+  /* Mapa procesów: kolumny według obszaru, strzałki w SVG pod węzłami */
+  .mapa-przewijana{overflow-x:auto;margin:0 -6px;padding:0 6px}
+  .mapa{position:relative;min-width:920px}
+  .mapa svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:1}
+  .mapa svg.etykiety{z-index:3}
+  .mapa-kolumny{position:relative;display:grid;grid-template-columns:repeat(var(--kolumn,4),minmax(0,1fr));gap:72px;padding-left:18px}
+  .pas{background:#faf8f5;border:1px dashed #e4e0d9;border-radius:8px;padding:10px 18px 14px;display:flex;flex-direction:column;gap:16px}
+  .pas h3{margin:0;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slaby);font-weight:600}
+  .wezel{position:relative;z-index:2;width:100%;text-align:left;background:#fff;border:1px solid var(--linia);border-radius:7px;padding:9px 11px;display:flex;gap:9px;align-items:flex-start;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:opacity .15s,border-color .15s,box-shadow .15s}
+  .wezel:hover{background:#fff;border-color:var(--akcent);box-shadow:0 2px 8px rgba(143,29,29,.12)}
+  .wezel .kropka{margin-top:5px}
+  .wezel .brak{width:9px;flex:none}
+  .wezel b{display:block;font-size:13.5px;font-weight:600;line-height:1.3}
+  .wezel small{display:block;font-size:12px;color:var(--slaby);line-height:1.3;margin-top:2px}
+  .mapa.skupienie .wezel:not(.pow){opacity:.3}
+  .mapa.skupienie .wezel.pow{border-color:var(--akcent)}
+  .mapa.szukanie .wezel:not(.traf){opacity:.3}
+  .mapa .krawedz{fill:none;stroke:#b9b3aa;stroke-width:1.4;transition:opacity .15s;marker-end:url(#grot)}
+  .mapa.skupienie .krawedz{opacity:.12}
+  .mapa.skupienie .krawedz.akt{opacity:1;stroke:var(--akcent);stroke-width:2;marker-end:url(#grotAkt)}
+  .mapa .etykieta{font-size:11.5px;fill:var(--akcent);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round;display:none}
+  .mapa.skupienie .etykieta.akt{display:block}
 </style>
 </head>
 <body>
 <div class="app">
   <aside>
-    <div class="marka"><b>CzyPolskaFirma</b><span>Panel dodawania firm</span></div>
+    <div class="marka"><b>CzyPolskaFirma</b><span>Panel projektu</span></div>
     <nav>
-      <a data-e="start" class="akt"><i class="nr">·</i> Gotowość</a>
+      <a data-e="centrum" class="akt"><i class="nr">·</i> Centrum projektu</a>
+      <a data-e="procesy"><i class="nr">·</i> Procesy (ściągi)</a>
+      <a data-e="dziennik"><i class="nr">·</i> Dziennik zmian</a>
+      <a data-e="metryki"><i class="nr">·</i> Metryki</a>
+      <div class="nav-grupa">Firmy</div>
+      <a data-e="start"><i class="nr">·</i> Firmy: start</a>
       <a data-e="partie"><i class="nr">·</i> Moje partie</a>
       <div class="nav-grupa">Dodawanie firm, krok po kroku</div>
       <a data-e="nowa"><i class="nr">1</i> Lista firm i NIP-y</a>
@@ -194,10 +291,87 @@
   <main>
     <div id="pasekWersji" class="pasek-wersji" hidden></div>
     <div id="sciezka" class="sciezka" hidden></div>
+    <!-- CENTRUM PROJEKTU -->
+    <section class="ekran akt" id="e-centrum">
+      <div class="rozdziel" style="align-items:flex-start">
+        <div><h1>Centrum projektu</h1><p class="podtytul" id="centrumData">Co dziś zrobić i w jakim stanie jest projekt.</p></div>
+        <button id="btnCentrumOdswiez" title="Sprawdza GitHuba i gałęzie jeszcze raz">Odśwież z GitHuba</button>
+      </div>
+      <div class="centrum">
+        <div>
+          <div class="karta">
+            <div class="rozdziel" style="margin-bottom:4px"><h2 style="margin:0">Do zrobienia</h2><span id="rytmLicznik" class="male"></span></div>
+            <div id="rytmTeraz" class="pusto">Wczytuję…</div>
+            <details class="pozniej"><summary id="rytmPozniejTytul">Zrobione i zaplanowane</summary><div id="rytmPozniej"></div></details>
+          </div>
+          <div class="karta">
+            <h2>Szybkie linki</h2>
+            <div class="szybkie" id="szybkieLinki"></div>
+          </div>
+          <p class="uwagi">Rytm i przypomnienia są w pliku data/panel/rytm.json, karty procesów w <a class="dok" data-dok="docs/PROCESY.md">docs/PROCESY.md</a>. Nowe przypomnienie? Poproś Claude'a: „dodaj do Centrum przypomnienie…”.</p>
+        </div>
+        <div class="karta" id="stanProjektu"><span class="pusto">Sprawdzam…</span></div>
+      </div>
+    </section>
+
+    <!-- PROCESY -->
+    <section class="ekran" id="e-procesy">
+      <h1>Procesy</h1>
+      <p class="podtytul">Jak co się robi, krok po kroku. Karty pochodzą z pliku docs/PROCESY.md: zmiana procesu to zmiana karty w tym pliku.</p>
+      <input type="text" id="procesySzukaj" placeholder="Szukaj, np. logo, backup, NIP, produkcja…" style="margin-bottom:16px;max-width:520px">
+      <div class="karta" style="padding-bottom:12px">
+        <div class="rozdziel" style="margin-bottom:10px"><h2 style="margin:0">Mapa procesów</h2>
+          <span class="male"><i class="kropka zle" style="display:inline-block;margin:0 4px 0 0"></i>zaległe <i class="kropka uwaga" style="display:inline-block;margin:0 4px 0 10px"></i>na dziś <i class="kropka ok" style="display:inline-block;margin:0 4px 0 10px"></i>zrobione</span></div>
+        <div class="mapa-przewijana"><div class="mapa" id="mapaProcesow"><span class="pusto">Wczytuję…</span></div></div>
+        <p class="uwagi">Najedź na proces, żeby zobaczyć, z czym się łączy. Kliknij, żeby otworzyć jego kartę.</p>
+      </div>
+      <h2 style="margin:22px 0 12px">Wszystkie karty</h2>
+      <div id="procesyLista" class="pusto">Wczytuję…</div>
+    </section>
+
+    <!-- DZIENNIK ZMIAN -->
+    <section class="ekran" id="e-dziennik">
+      <h1>Dziennik zmian</h1>
+      <p class="podtytul">Co się zmieniło w projekcie: Twoje notatki i zmiany w kodzie na gałęzi develop. Notatka przypięta do procesu pokazuje się też na jego karcie w „Procesach”.</p>
+      <div class="karta">
+        <h2>Dodaj notatkę</h2>
+        <textarea id="notatkaTekst" style="min-height:64px" placeholder="np. Od dziś blog publikuje wpisy z przyszłą datą dopiero w ich dniu."></textarea>
+        <div class="rzad" style="margin-top:10px">
+          <label class="male">Dotyczy procesu <select id="notatkaProces" style="width:auto;margin-left:4px"></select></label>
+          <label class="male">Data <input type="date" id="notatkaData" style="margin-left:4px"></label>
+          <button class="glowny" id="btnNotatka">Zapisz notatkę</button>
+          <span id="notatkaKomunikat" class="male"></span>
+        </div>
+      </div>
+      <div class="rozdziel" style="margin:20px 0 12px">
+        <div class="skoki" id="dziennikFiltr" style="margin:0"></div>
+        <select id="dziennikDni" style="width:auto"><option value="30">ostatnie 30 dni</option><option value="90">ostatnie 90 dni</option><option value="365">ostatni rok</option></select>
+      </div>
+      <div id="dziennikLista" class="pusto">Wczytuję…</div>
+    </section>
+
+    <!-- METRYKI -->
+    <section class="ekran" id="e-metryki">
+      <h1>Metryki</h1>
+      <p class="podtytul">Raz w miesiącu zapisz liczby. Zostają w pliku data/panel/metryki.json i przydadzą się do media kitu i wniosków o granty.</p>
+      <div id="metrykiWykresy" class="wykresy"></div>
+      <div class="karta">
+        <div class="rozdziel" style="margin-bottom:12px"><h2 style="margin:0">Zapisz miesiąc</h2><div class="szybkie" id="metrykiZrodla"></div></div>
+        <div class="rzad" style="margin-bottom:14px">
+          <label class="male">Miesiąc <input type="month" id="metrykiMiesiac" style="margin-left:4px"></label>
+          <span class="male" id="metrykiStanMiesiaca"></span>
+        </div>
+        <div id="metrykiPola" class="siatka-metryk"></div>
+        <div class="rzad"><button class="glowny" id="btnMetryki">Zapisz miesiąc</button><span id="metrykiKomunikat" class="male"></span></div>
+      </div>
+      <div class="karta"><h2>Wszystkie miesiące</h2><div id="metrykiTabela" class="pusto"></div></div>
+      <div id="dymek" hidden></div>
+    </section>
+
     <!-- 1. GOTOWOŚĆ -->
-    <section class="ekran akt" id="e-start">
-      <h1>Gotowość</h1>
-      <p class="podtytul">Sprawdzenie przed rozpoczęciem pracy.</p>
+    <section class="ekran" id="e-start">
+      <h1>Firmy: start</h1>
+      <p class="podtytul">Jak dodajesz firmy i czy narzędzia są gotowe do partii. Baza, backup i reszta projektu są w Centrum projektu.</p>
       <div class="karta jak">
         <h2 style="margin:0">Jak dodajesz firmy</h2>
         <ol>
@@ -633,7 +807,7 @@
             <button id="btnLogoOdswiez">Odśwież podgląd</button>
           </div>
         </div>
-        <div class="pomoc-tresc" id="pomoc-logopodglad" hidden><p>Tak logo będzie wyglądać na stronie (na białym tle). Pod obrazkiem: format, rozmiar w pikselach i ocena:</p><ul><li><b>✓ w porządku</b>: prawdziwe logo.</li><li><b>ikonka zamiast logo</b>: pobrała się ikonka strony (favicon), wygląda słabo. Do podmiany.</li><li><b>białe</b>: logo w wersji na ciemne tło, na stronie (białe tło) go nie widać. Do podmiany.</li><li><b>małe</b>: obrazek mniejszy niż 100 px, może być nieostry.</li><li><b>zła końcówka nazwy</b>: obrazek jest dobry, tylko plik ma inną końcówkę niż format.</li><li><b>brak logo</b>: automat nic nie znalazł.</li></ul><p><b>Inne źródła</b> szuka logo na stronie firmy, w Wikipedii i w serwisach z ikonkami i pokazuje wszystko, co znajdzie. Klikasz „Użyj” przy najlepszym. Gdy nic nie pasuje, w oknie jest link do Google Grafika.</p><p>Żeby podmienić ręcznie: kliknij „Podmień” i wybierz plik albo przeciągnij plik na kartę (PNG, JPG, WebP, SVG, najlepiej z przezroczystym albo białym tłem). „Strona firmy” otwiera stronę, z której zwykle da się pobrać logo. Po sprawdzeniu wyślij zmiany przyciskiem „Wyślij” niżej.</p></div>
+        <div class="pomoc-tresc" id="pomoc-logopodglad" hidden><p>Tak logo będzie wyglądać na stronie (na białym tle). Pod obrazkiem: format, rozmiar w pikselach i ocena:</p><ul><li><b>✓ w porządku</b>: prawdziwe logo.</li><li><b>ikonka zamiast logo</b>: pobrała się ikonka strony (favicon), wygląda słabo. Do podmiany.</li><li><b>białe</b>: logo w wersji na ciemne tło, na stronie (białe tło) go nie widać. Do podmiany.</li><li><b>małe</b>: obrazek mniejszy niż 100 px, może być nieostry.</li><li><b>zła końcówka nazwy</b>: obrazek jest dobry, tylko plik ma inną końcówkę niż format.</li><li><b>brak logo</b>: automat nic nie znalazł.</li></ul><p><b>Inne źródła</b> szuka logo na stronie firmy, w Wikipedii i w serwisach z ikonkami i pokazuje wszystko, co znajdzie. Klikasz „Użyj” przy najlepszym. Gdy nic nie pasuje, w oknie jest link do Google Grafika.</p><p><b>Najszybciej:</b> otwórz stronę firmy (albo Google Grafika) obok panelu i przeciągnij obrazek logo myszką prosto na kartę firmy. Panel sam pobierze plik i podmieni logo, bez zapisywania na dysk.</p><p>Żeby podmienić z pliku: kliknij „Podmień” i wybierz plik albo przeciągnij plik z dysku na kartę (PNG, JPG, WebP, SVG, najlepiej z przezroczystym albo białym tłem). „Strona firmy” otwiera stronę, z której zwykle da się pobrać logo. Po sprawdzeniu wyślij zmiany przyciskiem „Wyślij” niżej.</p></div>
         <div id="logoPodsumowanie" class="uwagi" style="margin:0 0 10px"></div>
         <div id="logoSiatka" class="logo-siatka"><span class="pusto">Wczytuję…</span></div>
         <dialog class="logo-zrodla" id="logoZrodla">
@@ -678,6 +852,8 @@
   </main>
 </div>
 
+<div class="okno" id="okno" hidden><div class="karta"><button class="zamknij maly" id="oknoZamknij">Zamknij ✕</button><div id="oknoTresc" class="md"></div></div></div>
+
 <script>
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -685,7 +861,7 @@ const pobierz = async (u, o) => { const r = await fetch(u, o); const j = await r
 const wyslij = (u, dane) => pobierz(u, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(dane || {}) });
 const kiedy = (ms) => { const d = new Date(ms); const dzis = new Date(); const ten = d.toDateString() === dzis.toDateString(); return (ten ? "dzisiaj" : d.toLocaleDateString("pl-PL")) + ", " + d.toTimeString().slice(0, 5); };
 
-let STAN = { ekran: "start", partia: localStorage.getItem("panel.partia") || null, zadanie: null, partie: [], kategorie: [], odliczanie: null };
+let STAN = { ekran: "centrum", partia: localStorage.getItem("panel.partia") || null, zadanie: null, partie: [], kategorie: [], odliczanie: null };
 
 // ---------- wyjaśnienia "?" ----------
 document.addEventListener("click", (e) => {
@@ -730,6 +906,10 @@ async function wczytajListePartii() {
 }
 
 function odswiezEkran() {
+  if (STAN.ekran === "centrum") ekranCentrum();
+  if (STAN.ekran === "procesy") ekranProcesy();
+  if (STAN.ekran === "dziennik") ekranDziennik();
+  if (STAN.ekran === "metryki") ekranMetryki();
   if (STAN.ekran === "start") ekranGotowosc();
   if (STAN.ekran === "nowa") ekranNowa();
   if (STAN.ekran === "praca") ekranPraca();
@@ -761,21 +941,10 @@ async function ekranGotowosc() {
   l.push(lampka(g.gemini.ok ? "ok" : "szary", "Gemini API " + (g.gemini.ok ? "jest gotowe" : "jest nieaktywne"),
     "Nieużywane na ścieżce w czatach: numery NIP bierzesz z czatu, a panel sprawdza je w rejestrach.",
     `<span class="plakietka">${g.gemini.ok ? "gotowe" : "nieużywane"}</span>`));
-  l.push(lampka(g.baza.ok ? "ok" : "zle", "Połączenie z bazą",
-    g.baza.ok ? `Supabase odpowiada. W bazie: ${g.baza.firm} firm, ${g.baza.kategorii} kategorii.` : esc(g.baza.blad || "brak połączenia"),
-    `<span class="plakietka ${g.baza.ok ? "p-ok" : "p-zle"}">${g.baza.ok ? "w porządku" : "błąd"}</span>`));
-  const kol = g.kolumny.sources && g.kolumny.confidence;
-  l.push(lampka(kol ? "ok" : "uwaga", "Kolumny źródeł i pewności",
-    kol ? "Tabela companies ma pola sources i confidence." : "Brakuje kolumn sources/confidence. Import zadziała, ale źródła zostaną tylko w pliku partii (plik tools/sql/2026-09-17-sources-confidence.sql w edytorze SQL Supabase).",
-    `<span class="plakietka ${kol ? "p-ok" : "p-uwaga"}">${kol ? "w porządku" : "do zrobienia raz"}</span>`));
   const mfStan = g.mf.zostalo > 30 ? "ok" : g.mf.zostalo > 0 ? "uwaga" : "zle";
   l.push(lampka(mfStan, "Limit zapytań do Ministerstwa Finansów",
     `Zużyto ${g.mf.zapytan} ze ${g.mf.limit} na dziś. Odnawia się o północy. Starczy na ok. ${g.mf.zostalo} firm.`,
     `<span class="plakietka ${mfStan === "ok" ? "p-ok" : mfStan === "uwaga" ? "p-uwaga" : "p-zle"}">${g.mf.zostalo} zostało</span>`));
-  const dni = g.backup ? Math.floor((Date.now() - g.backup.kiedy) / 86400000) : null;
-  l.push(lampka(!g.backup ? "zle" : dni > 10 ? "uwaga" : "ok", "Ostatni backup bazy",
-    g.backup ? `${kiedy(g.backup.kiedy)} — ${esc(g.backup.skad)}, ${g.backup.firm || "?"} firm.` : "Nie znaleziono żadnego backupu.",
-    `<span class="plakietka ${!g.backup ? "p-zle" : dni > 10 ? "p-uwaga" : "p-ok"}">${g.backup ? (dni === 0 ? "dzisiaj" : dni + " dni temu") : "brak"}</span>`));
   $("#lampki").innerHTML = l.join("");
   STAN.geminiOk = !!g.gemini.ok;
   const przyciskClaude = $("#btnZalogujClaude");
@@ -798,7 +967,7 @@ async function ustawWyborNip(selektor) {
   const el = $(selektor);
   const opcjaGemini = el.querySelector('option[value="gemini"]');
   opcjaGemini.disabled = !STAN.geminiOk;
-  opcjaGemini.textContent = STAN.geminiOk ? "Gemini — klucz API Google (nie zużywa limitu Claude)" : "Gemini — nieaktywne (potrzebny klucz API, patrz Gotowość)";
+  opcjaGemini.textContent = STAN.geminiOk ? "Gemini — klucz API Google (nie zużywa limitu Claude)" : "Gemini — nieaktywne (potrzebny klucz API, patrz Firmy: start)";
   if (!el.dataset.ruszony) el.value = STAN.geminiOk ? "gemini" : "claude";
   el.onchange = () => (el.dataset.ruszony = "1");
 }
@@ -1738,25 +1907,78 @@ async function podgladLogo() {
   const j = await pobierz(`/api/panel/logo-podglad?zakres=${zakres}&partia=${encodeURIComponent(STAN.partia || "")}`);
   if (j.blad) { $("#logoSiatka").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
   const zle = j.pozycje.filter((x) => OPIS_RODZAJU[x.rodzaj]?.[1] === "zle").length, uwaga = j.pozycje.filter((x) => OPIS_RODZAJU[x.rodzaj]?.[1] === "uwaga").length;
-  $("#logoPodsumowanie").innerHTML = `${j.pozycje.length} firm · <b style="color:var(--czerwony)">${zle} do podmiany</b> · <b style="color:var(--bursztyn)">${uwaga} do sprawdzenia</b> · ${j.pozycje.length - zle - uwaga} w porządku. Najpierw pokazane te z problemem.`;
+  $("#logoPodsumowanie").innerHTML = `${j.pozycje.length} firm · <b style="color:var(--czerwony)">${zle} do podmiany</b> · <b style="color:var(--bursztyn)">${uwaga} do sprawdzenia</b> · ${j.pozycje.length - zle - uwaga} w porządku. Najpierw pokazane te z problemem.<br><span style="font-size:13px;color:var(--slaby)">Logo możesz przeciągnąć myszką prosto ze strony firmy na jej kartę: panel sam je pobierze.</span>`;
   const waga = (x) => ({ zle: 0, uwaga: 1 }[OPIS_RODZAJU[x.rodzaj]?.[1]] ?? 2);
   j.pozycje.sort((a, b) => waga(a) - waga(b) || a.nazwa.localeCompare(b.nazwa, "pl"));
   $("#logoSiatka").innerHTML = j.pozycje.map((x) => `<div class="logo-karta ${OPIS_RODZAJU[x.rodzaj]?.[1] || ""}" data-domena="${esc(x.domena || "")}">
       <div class="logo-okno ${x.plik ? "" : "brak"}">${x.plik ? `<img src="/logo-plik/${encodeURIComponent(x.plik)}?t=${Math.round(x.zmieniono || 0)}" alt="${esc(x.nazwa)}">` : "brak pliku"}</div>
       <b>${esc(x.nazwa)}</b>
-      <span class="male">${esc(x.domena || "brak adresu strony")}${x.plik ? `<br>${esc(x.format)} · ${x.szer && x.wys ? `${x.szer}×${x.wys} px` : "rozmiar ?"} · ${Math.round((x.bajtow || 0) / 1024)} KB` : ""}</span>
+      ${x.domena || !x.firma ? "" : `<div class="rzad" style="gap:6px;margin:4px 0"><input data-www-pole="${esc(x.firma)}" placeholder="adres strony firmy" style="flex:1;min-width:0;font-size:13px;padding:5px 8px"><button data-www-zapisz="${esc(x.firma)}" data-wbazie="${x.wBazie ? 1 : ""}" style="font-size:12.5px;padding:5px 9px">Zapisz</button></div>`}<span class="male">${esc(x.domena || (x.firma ? "brak adresu strony: wpisz go, wtedy przeciągnięcie zadziała" : "brak adresu strony"))}${x.plik ? `<br>${esc(x.format)} · ${x.szer && x.wys ? `${x.szer}×${x.wys} px` : "rozmiar ?"} · ${Math.round((x.bajtow || 0) / 1024)} KB` : ""}</span>
       <div>${OPIS_RODZAJU[x.rodzaj]?.[0] || ""}</div>
       <div class="rzad" style="gap:6px">${x.domena ? `<button data-zrodla="${esc(x.domena)}" data-nazwa="${esc(x.nazwa)}" data-www="${esc(x.www || "")}" style="font-size:12.5px;padding:5px 9px">Inne źródła</button><button data-podmien="${esc(x.domena)}" style="font-size:12.5px;padding:5px 9px">Podmień</button><a href="${esc(x.www && /^https?:/.test(x.www) ? x.www : "https://" + x.domena)}" target="_blank" rel="noopener" style="font-size:12.5px">strona firmy ↗</a>` : ""}</div>
     </div>`).join("") || '<span class="pusto">Brak firm do pokazania.</span>';
+  $("#logoSiatka").querySelectorAll("[data-www-zapisz]").forEach((b) => b.addEventListener("click", () => zapiszWww(b)));
+  $("#logoSiatka").querySelectorAll("[data-www-pole]").forEach((p) => p.addEventListener("keydown", (e) => { if (e.key === "Enter") zapiszWww(p.nextElementSibling); }));
   $("#logoSiatka").querySelectorAll("[data-podmien]").forEach((b) => b.addEventListener("click", () => { LOGO_CEL = b.dataset.podmien; $("#logoPlik").value = ""; $("#logoPlik").click(); }));
   $("#logoSiatka").querySelectorAll("[data-zrodla]").forEach((b) => b.addEventListener("click", () => inneZrodla(b.dataset.zrodla, b.dataset.nazwa, b.dataset.www)));
   $("#logoSiatka").querySelectorAll(".logo-karta[data-domena]").forEach((k) => {
-    if (!k.dataset.domena) return;
-    k.addEventListener("dragover", (e) => { e.preventDefault(); k.classList.add("nad"); });
-    k.addEventListener("dragleave", () => k.classList.remove("nad"));
-    k.addEventListener("drop", (e) => { e.preventDefault(); k.classList.remove("nad"); const f = e.dataTransfer.files[0]; if (f) podmienLogo(k.dataset.domena, f); });
+    k.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; k.classList.add("nad"); });
+    k.addEventListener("dragleave", (e) => { if (!k.contains(e.relatedTarget)) k.classList.remove("nad"); });
+    k.addEventListener("drop", (e) => { e.preventDefault(); k.classList.remove("nad"); upuszczoneLogo(k, e.dataTransfer); });
   });
 }
+// Upuszczenie na kartę: plik z dysku albo obrazek przeciągnięty prosto ze strony internetowej.
+// Ze strony przeglądarka daje kod HTML z <img> i adres; obrazek w linku ma w adresie link do
+// strony, dlatego najpierw bierzemy src obrazka z HTML-a. Plik pobiera serwer panelu.
+function adresZPrzeciagniecia(dt) {
+  const html = dt.getData("text/html");
+  if (html) {
+    const d = new DOMParser().parseFromString(html, "text/html");
+    const img = d.querySelector("img");
+    // srcset: największy wariant (najostrzejszy); gdy go nie ma, zwykłe src
+    const zSrcset = (img?.getAttribute("srcset") || "").split(",").map((x) => x.trim().split(/\s+/)).filter((x) => x[0])
+      .map(([u, w]) => ({ u, w: parseFloat(w) || 1 })).sort((a, b) => b.w - a.w)[0]?.u;
+    const src = zSrcset || img?.getAttribute("src");
+    if (src && /^(https?:|data:image\/)/i.test(src)) return src;
+    const svg = d.querySelector("svg");
+    if (svg) return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg.outerHTML)));
+  }
+  const lista = (dt.getData("text/uri-list") || "").split(/\r?\n/).find((x) => x && !x.startsWith("#"));
+  if (lista) return lista.trim();
+  const tekst = (dt.getData("text/plain") || "").trim();
+  return /^(https?:|data:image\/)\S+$/i.test(tekst) ? tekst : null;
+}
+
+// Adres strony dla firmy bez niego: zapis w partii, a dla firmy już zaimportowanej także w bazie.
+async function zapiszWww(b) {
+  const www = b.previousElementSibling.value.trim();
+  if (!www) return alert("Wpisz adres strony firmy, np. https://ingridcosmetics.com");
+  if (b.dataset.wbazie && !confirm(`Firma jest już w bazie. Zapisać adres ${www} także w bazie (pole website_url)?`)) return;
+  b.disabled = true;
+  const j = await wyslij("/api/panel/firma-www", { partia: STAN.partia, firma: b.dataset.wwwZapisz, www });
+  b.disabled = false;
+  if (j.blad) return alert(j.blad);
+  await podgladLogo();
+}
+
+async function upuszczoneLogo(karta, dt) {
+  const domena = karta.dataset.domena;
+  if (!domena) return alert("Ta firma nie ma adresu strony, a plik logo nazywa się od domeny. Wpisz adres na karcie i kliknij „Zapisz”, potem przeciągnij logo jeszcze raz.");
+  const plik = [...(dt.files || [])].find((f) => f.type.startsWith("image/") || /\.(png|jpe?g|webp|svg)$/i.test(f.name));
+  if (plik) return podmienLogo(domena, plik);
+  const adres = adresZPrzeciagniecia(dt);
+  if (!adres) return alert("Nie rozpoznałem obrazka. Przeciągnij samo logo (obrazek) ze strony albo plik z dysku.");
+  karta.classList.add("laduje");
+  try {
+    const j = adres.startsWith("data:")
+      ? await wyslij("/api/panel/logo-podmien", { domena, dane: adres.split(",")[1] || "" })
+      : await wyslij("/api/panel/logo-z-adresu", { domena, adres });
+    if (j.blad) return alert(`Nie podmieniono logo ${domena}: ${j.blad}`);
+    await podgladLogo();
+    ekranLogoStan();
+  } finally { karta.classList.remove("laduje"); }
+}
+
 async function podmienLogo(domena, plik) {
   if (plik.size > 5 * 1024 * 1024) return alert("Plik większy niż 5 MB.");
   const dane = await new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.readAsDataURL(plik); });
@@ -1774,7 +1996,7 @@ async function inneZrodla(domena, nazwa, www) {
   const obecne = document.querySelector(`#logoSiatka .logo-karta[data-domena="${CSS.escape(domena)}"] .logo-okno`)?.innerHTML || "brak pliku";
   $("#lzSiatka").innerHTML = `<div class="logo-karta teraz"><div class="logo-okno">${obecne}</div><div class="logo-okno ciemne">${obecne}</div><b>Teraz na stronie</b></div>`;
   const google = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(`${nazwa} logo`)}`;
-  $("#lzLinki").innerHTML = `Nic nie pasuje? <a href="${google}" target="_blank" rel="noopener">Szukaj logo w Google Grafika ↗</a> · <a href="${esc(www && /^https?:/.test(www) ? www : "https://" + domena)}" target="_blank" rel="noopener">strona firmy ↗</a>. Zapisany plik przeciągnij na kartę firmy albo użyj „Podmień”.`;
+  $("#lzLinki").innerHTML = `Nic nie pasuje? <a href="${google}" target="_blank" rel="noopener">Szukaj logo w Google Grafika ↗</a> · <a href="${esc(www && /^https?:/.test(www) ? www : "https://" + domena)}" target="_blank" rel="noopener">strona firmy ↗</a>. Logo z otwartej strony przeciągnij prosto na kartę firmy (bez zapisywania), albo użyj „Podmień”.`;
   if (!okno.open) okno.showModal();
   const j = await pobierz(`/api/panel/logo-kandydaci?domena=${encodeURIComponent(domena)}&nazwa=${encodeURIComponent(nazwa)}&www=${encodeURIComponent(www || "")}`);
   if (j.blad || !j.kandydaci) { $("#lzOpis").textContent = j.blad || "Uruchom panel ponownie, żeby włączyć „Inne źródła”."; return; }
@@ -1921,14 +2143,563 @@ async function sprawdzWersje() {
   } else el.hidden = true;
 }
 
+// ---------- centrum projektu ----------
+const dzienKrotko = (s) => (s ? new Date(s + "T12:00:00").toLocaleDateString("pl-PL", { day: "numeric", month: "numeric" }) : "");
+const odmiana = (n, [jeden, kilka, wiele]) => (n === 1 ? jeden : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? kilka : wiele);
+const dni = (n) => (n === 1 ? "1 dzień" : `${n} dni`);
+const godzina = (iso) => new Date(iso).toLocaleString("pl-PL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" });
+const link = (href, tekst) => (href ? `<a class="maly" href="${esc(href)}" target="_blank" rel="noopener">${tekst}</a>` : "");
+
+async function ekranCentrum(dane) {
+  const c = dane || (await pobierz("/api/panel/centrum"));
+  if (c.blad) { $("#stanProjektu").innerHTML = `<span class="pusto">Nie udało się sprawdzić: ${esc(c.blad)}</span>`; return; }
+  const d = new Date(c.dzis + "T12:00:00").toLocaleDateString("pl-PL", { weekday: "long", day: "numeric", month: "long" });
+  $("#centrumData").textContent = d.charAt(0).toUpperCase() + d.slice(1) + ". Co dziś zrobić i w jakim stanie jest projekt.";
+  rysujRytm(c);
+  rysujStan(c);
+  const l = c.linki;
+  $("#szybkieLinki").innerHTML = [
+    [l.produkcja, "Strona (produkcja)"], [l.podglad, "Podgląd develop"], [l.pr, "Pull requesty"], [l.actions, "Automat treści (Actions)"],
+    [l.gsc, "Search Console"], [l.supabase, "Supabase"], [l.vercel, "Vercel"],
+  ].filter(([h]) => h).map(([h, t]) => `<a href="${esc(h)}" target="_blank" rel="noopener">${t}</a>`).join("");
+}
+
+function wierszRytmu(r, pozniej) {
+  const kropka = { zalegle: "zle", dzis: "uwaga", zrobione: "ok", odlozone: "szary", wkrotce: "szary" }[r.status] || "szary";
+  const opis = [];
+  if (r.info) opis.push(mdLinia(r.info));
+  if (r.status === "zalegle") opis.push(r.typ === "przypomnienie" ? `<span class="err">czeka od ${dzienKrotko(r.termin)}</span>` : `<span class="err">zaległe ${dni(r.opoznienie)}</span>`);
+  if (r.status === "zrobione" && r.typ === "cykliczne") opis.push(`następny raz ${dzienKrotko(r.termin)}`);
+  if (r.status === "zrobione" && r.typ === "przypomnienie") opis.push(`zrobione ${dzienKrotko(r.zrobione)}`);
+  if (r.status === "odlozone") opis.push(`odłożone do ${dzienKrotko(r.odlozoneDo)}`);
+  if (r.status === "wkrotce") opis.push(`pojawi się ${dzienKrotko(r.termin)}`);
+  if (r.typ === "cykliczne" && r.ostatnio && r.status !== "zrobione") opis.push(`ostatnio ${dzienKrotko(r.ostatnio)}`);
+  if (r.typ === "cykliczne" && !r.ostatnio && !r.auto) opis.push("jeszcze nie odhaczone w panelu");
+  const akcje = [];
+  if (r.proces) akcje.push(`<button class="maly" data-proces="${esc(r.proces)}">Jak?</button>`);
+  if (r.link) akcje.push(link(r.link, "Otwórz"));
+  if (!pozniej) {
+    akcje.push(`<button class="maly" data-odloz="${esc(r.id)}" title="Schowaj do jutra">Jutro</button>`);
+    akcje.push(`<button class="maly glowny" data-odhacz="${esc(r.id)}" data-typ="${r.typ}">Zrobione</button>`);
+  } else if ((r.typ === "przypomnienie" && r.zrobione) || r.odhaczoneDzis) {
+    akcje.push(`<button class="maly" data-cofnij="${esc(r.id)}" data-typ="${r.typ}">Cofnij</button>`);
+  } else if (r.status === "odlozone") {
+    akcje.push(`<button class="maly glowny" data-odhacz="${esc(r.id)}" data-typ="${r.typ}">Zrobione</button>`);
+  }
+  const znak = r.typ === "przypomnienie" ? "jednorazowe" : r.co;
+  return `<div class="zad${pozniej ? " gotowe" : ""}"><i class="kropka ${kropka}"></i><div class="tresc"><b>${esc(r.nazwa)}</b> <span class="plakietka">${esc(znak)}</span><small>${opis.join(" · ")}</small></div><div class="akcje">${akcje.join("")}</div></div>`;
+}
+
+function rysujRytm(c) {
+  const teraz = c.rytm.filter((r) => r.status === "zalegle" || r.status === "dzis").sort((a, b) => b.opoznienie - a.opoznienie || (a.status === "zalegle" ? -1 : 1));
+  const dawno = (r) => r.typ === "przypomnienie" && r.zrobione && Date.now() - new Date(r.zrobione + "T12:00:00") > 14 * 86400000;
+  const pozniej = c.rytm.filter((r) => !teraz.includes(r) && !dawno(r)).sort((a, b) => a.termin.localeCompare(b.termin));
+  const zal = teraz.filter((r) => r.status === "zalegle").length;
+  $("#rytmLicznik").textContent = teraz.length ? `${teraz.length} na dziś${zal ? `, w tym ${zal} zaległe` : ""}` : "";
+  $("#rytmTeraz").className = "";
+  $("#rytmTeraz").innerHTML = teraz.length ? teraz.map((r) => wierszRytmu(r, false)).join("") : `<div class="pasmo dobrze" style="margin:10px 0">Na dziś wszystko zrobione.</div>`;
+  $("#rytmPozniejTytul").textContent = `Zrobione i zaplanowane (${pozniej.length})`;
+  $("#rytmPozniej").innerHTML = pozniej.map((r) => wierszRytmu(r, true)).join("");
+}
+
+function rysujStan(c) {
+  const l = [];
+  const g = c.git;
+  const czeka = g.czekaNaMain.length;
+  l.push(lampka(czeka ? "uwaga" : "ok", "Produkcja (main)",
+    czeka ? `${czeka} ${odmiana(czeka, ["zmiana czeka", "zmiany czekają", "zmian czeka"])} na podglądzie na merge do main. Ostatnia publikacja: ${dzienKrotko(g.ostatniaPublikacja)}.<ul>${g.czekaNaMain.slice(0, 6).map((k) => `<li>${esc(k.tytul)} <span class="male">(${dzienKrotko(k.data)})</span></li>`).join("")}${czeka > 6 ? `<li>i ${czeka - 6} więcej</li>` : ""}</ul>` : `Aktualna, na develop nie czeka nic nowego. Ostatnia publikacja: ${dzienKrotko(g.ostatniaPublikacja)}.`,
+    czeka ? `<div class="akcje" style="display:flex;gap:6px">${link(c.linki.podglad, "Podgląd")}${link(c.linki.porownanie, "Różnice")}<button class="maly" data-proces="publikacja">Jak?</button></div>` : ""));
+  const kl = [];
+  if (!g.naDevelop) kl.push(`<span class="err">Jesteś na gałęzi <b>${esc(g.galaz)}</b>, a praca odbywa się na develop.</span>`);
+  if (g.zmienionychPlikow) kl.push(`${g.zmienionychPlikow} ${odmiana(g.zmienionychPlikow, ["plik zmieniony", "pliki zmienione", "plików zmienionych"])}, ale nie zapisanych w gicie (commit).`);
+  if (g.niewypchniete) kl.push(`${g.niewypchniete} ${odmiana(g.niewypchniete, ["commit nie wysłany", "commity nie wysłane", "commitów nie wysłanych"])} na GitHub (push).`);
+  l.push(lampka(!g.naDevelop ? "zle" : kl.length ? "uwaga" : "ok", "Ten komputer", kl.length ? kl.join("<br>") : `Gałąź develop, wszystko zapisane i wysłane.`,
+    `<span class="plakietka">${esc(g.galaz || "?")}</span>`));
+  const a = c.github.automatTresci;
+  const poOsmej = new Date().getHours() >= 8;
+  const aStan = !a ? "szary" : a.conclusion === "failure" ? "zle" : !a.dzis && poOsmej ? "uwaga" : "ok";
+  l.push(lampka(aStan, "Automat treści",
+    !a ? esc(c.github.blad || "Brak danych z GitHuba.") : `Ostatni przebieg ${godzina(a.createdAt)}: ${a.status !== "completed" ? "w trakcie" : a.conclusion === "success" ? "udany" : `<span class="err">${esc(a.conclusion || "nieudany")}</span>`}.${!a.dzis && poOsmej ? " Dziś jeszcze nie ruszył (startuje ok. 6:00, GitHub bywa spóźniony)." : ""}`,
+    link(c.linki.actions, "Actions")));
+  const pr = c.github.pr;
+  if (pr) l.push(lampka(pr.length ? "uwaga" : "ok", "Otwarte pull requesty",
+    pr.length ? `<ul>${pr.map((x) => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">#${x.number} ${esc(x.title)}</a> <span class="male">(od ${dzienKrotko(x.createdAt.slice(0, 10))})</span></li>`).join("")}</ul>` : "Nic nie czeka.",
+    link(c.linki.pr, "GitHub")));
+  const b = c.blog;
+  if (b) {
+    const zapas = b.buforDo ? Math.round((new Date(b.buforDo + "T12:00:00") - new Date(c.dzis + "T12:00:00")) / 86400000) : 0;
+    const naDev = b.zaplanowane.filter((w) => !w.naMain).length;
+    l.push(lampka(zapas >= 7 ? "ok" : zapas > 0 ? "uwaga" : "zle", "Blog",
+      `${b.zaplanowane.length ? `Zaplanowane: ${b.zaplanowane.length} ${odmiana(b.zaplanowane.length, ["wpis", "wpisy", "wpisów"])}, ostatni na ${dzienKrotko(b.buforDo)} (zapas ${dni(zapas)}).` : "Brak zaplanowanych wpisów."}${naDev ? ` <span class="err">${naDev} z nich jest tylko na develop: bez merge'a do main się nie opublikują.</span>` : ""}${b.ostatniNaProdukcji ? `<br>Ostatni na stronie: ${dzienKrotko(b.ostatniNaProdukcji.data)}, „${esc(b.ostatniNaProdukcji.tytul)}”.` : ""}`,
+      `<span class="plakietka">${b.wszystkich} ${odmiana(b.wszystkich, ["wpis", "wpisy", "wpisów"])}</span>`));
+  }
+  const s = c.seo;
+  if (s) l.push(lampka(s.zostalo ? (s.ostatnio === c.dzis ? "ok" : "uwaga") : "ok", "Kolejka indeksacji (GSC)",
+    s.zostalo ? `Zgłoszono ${s.zgloszone}, zostało ${s.zostalo} (ok. ${Math.ceil(s.zostalo / 11)} dni po 11). Ostatnio ${dzienKrotko(s.ostatnio)}.` : "Kolejka wyczerpana. Resztę indeksuje sitemapa.",
+    `<button class="maly" data-proces="seo">Jak?</button>`));
+  const bk = c.backup;
+  const dniBk = bk ? Math.floor((Date.now() - bk.kiedy) / 86400000) : null;
+  l.push(lampka(!bk ? "zle" : dniBk > 8 ? "uwaga" : "ok", "Backup bazy",
+    bk ? `${kiedy(bk.kiedy)}, ${esc(bk.skad)}${bk.firm ? `, ${bk.firm} firm` : ""}.` : "Nie znaleziono żadnego backupu.",
+    `<button class="maly" data-idz-ekran="backup">${!bk || dniBk > 8 ? "Zrób teraz" : "Backup"}</button>`));
+  const n = c.narzedzia;
+  if (n && !n.blad) {
+    const mfZostalo = n.mf?.zostalo ?? 0;
+    const problemy = [!n.baza?.ok && "brak połączenia z bazą", !n.kolumny && "brak kolumn sources/confidence", mfZostalo <= 0 && "limit MF na dziś wyczerpany"].filter(Boolean);
+    l.push(lampka(!n.baza?.ok ? "zle" : problemy.length ? "uwaga" : "ok", "Narzędzia do firm",
+      `${n.baza?.ok ? `Baza odpowiada: ${n.baza.firm} firm, ${n.baza.kategorii} kategorii.` : `<span class="err">${esc(n.baza?.blad || "Brak połączenia z bazą.")}</span>`} Limit MF na dziś: zostało ${mfZostalo} z ${n.mf?.limit ?? "?"}. Claude (płatny automat): ${n.claude ? "zalogowany" : "niezalogowany, ścieżka w czatach działa bez niego"}.${!n.kolumny ? " Brakuje kolumn sources/confidence (plik tools/sql/2026-09-17-sources-confidence.sql)." : ""}`,
+      `<button class="maly" data-idz-ekran="start">Firmy: start</button>`));
+  }
+  const pw = c.partieWToku;
+  l.push(lampka(pw.length ? "uwaga" : "ok", "Partie firm w toku",
+    pw.length ? pw.map((p) => `<b style="font-weight:500">${esc(p.nazwa)}</b>: ${p.krok ? `krok „${esc(p.krok.nazwa)}” (${esc(p.krok.info || "")})` : "bez kroku"} <button class="maly" data-partia="${esc(p.nazwa)}" data-ekran="${esc(p.krok?.ekran || "partie")}">Otwórz</button>`).join("<br>") : "Brak rozpoczętych partii.",
+    ""));
+  const sprawdzono = c.github.sprawdzono ? new Date(c.github.sprawdzono).toTimeString().slice(0, 5) : "–";
+  $("#stanProjektu").innerHTML = `<h2>Stan projektu</h2>${l.join("")}<p class="uwagi">GitHub sprawdzony o ${sprawdzono}${c.github.fetchBlad ? `, pobranie gałęzi nie wyszło: ${esc(c.github.fetchBlad)}` : ""}. Odświeża się samo co 5 minut.</p>`;
+}
+
+$("#btnCentrumOdswiez").onclick = async (e) => {
+  const b = e.currentTarget;
+  b.disabled = true;
+  b.textContent = "Sprawdzam…";
+  const c = await wyslij("/api/panel/centrum/odswiez");
+  b.disabled = false;
+  b.textContent = "Odśwież z GitHuba";
+  ekranCentrum(c);
+};
+
+document.addEventListener("click", async (e) => {
+  const t = e.target.closest("[data-odhacz],[data-cofnij],[data-odloz],[data-proces],[data-idz-ekran],[data-partia],a.dok");
+  if (!t) return;
+  if (t.dataset.odhacz || t.dataset.cofnij) {
+    t.disabled = true;
+    ekranCentrum(await wyslij("/api/panel/centrum/odhacz", { id: t.dataset.odhacz || t.dataset.cofnij, typ: t.dataset.typ, cofnij: !!t.dataset.cofnij }));
+  } else if (t.dataset.odloz) {
+    t.disabled = true;
+    ekranCentrum(await wyslij("/api/panel/centrum/odloz", { id: t.dataset.odloz, dni: 1 }));
+  } else if (t.dataset.proces) {
+    pokazProces(t.dataset.proces);
+  } else if (t.dataset.idzEkran) {
+    pokaz(t.dataset.idzEkran);
+  } else if (t.dataset.partia) {
+    ustawPartie(t.dataset.partia);
+    pokaz(t.dataset.ekran || "partie");
+  } else if (t.dataset.dok) {
+    e.preventDefault();
+    pokazDokument(t.dataset.dok);
+  }
+});
+
+// ---------- procesy ----------
+let PROCESY = null;
+async function wczytajProcesy() {
+  const j = await pobierz("/api/panel/procesy");
+  PROCESY = j.procesy || [];
+  return j;
+}
+
+function kartaProcesu(p) {
+  const meta = [["Kiedy", p.kiedy], ["Gdzie", p.gdzie], ["Pełny opis", p.opis]].filter(([, v]) => v)
+    .map(([k, v]) => `<dt>${k}</dt><dd>${mdLinia(v)}</dd>`).join("");
+  const nazwa = (id) => (PROCESY || []).find((x) => x.id === id)?.nazwa || id;
+  const odnosnik = (id, opis) => `<a class="dok" data-proces="${esc(id)}">${esc(nazwa(id))}</a>${opis ? ` <span class="male">(${esc(opis)})</span>` : ""}`;
+  const skad = (PROCESY || []).flatMap((x) => x.dalej.filter((d) => d.id === p.id).map((d) => odnosnik(x.id, d.etykieta)));
+  const powiazania = (skad.length ? `<dt>Wynika z</dt><dd>${skad.join(", ")}</dd>` : "")
+    + (p.dalej.length ? `<dt>Prowadzi do</dt><dd>${p.dalej.map((d) => odnosnik(d.id, d.etykieta)).join(", ")}</dd>` : "");
+  const rytm = p.rytm.length ? `<dt>W Centrum</dt><dd>${p.rytm.map(esc).join(", ")}</dd>` : "";
+  const zmiany = p.zmiany?.length ? `<div class="zmiany-procesu"><b>Ostatnie zmiany</b>${p.zmiany.map((z) => `<div><span class="male">${dzienKrotko(z.data)}</span> ${mdLinia(z.tekst)}</div>`).join("")}</div>` : "";
+  return `<dl class="meta-procesu">${meta}${powiazania}${rytm}</dl>${zmiany}${md(p.tresc)}`;
+}
+
+async function ekranProcesy() {
+  const [j, c] = await Promise.all([wczytajProcesy(), pobierz("/api/panel/centrum").catch(() => null)]);
+  if (j.blad) { $("#procesyLista").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  rysujMape(c && !c.blad ? c.rytm : []);
+  $("#procesyLista").className = "";
+  $("#procesyLista").innerHTML = PROCESY.map((p) => `<details class="karta proces" id="proces-${esc(p.id)}"><summary><b>${esc(p.nazwa)}</b><small>${esc(p.kiedy || "")}</small></summary><div class="wnetrze">${kartaProcesu(p)}</div></details>`).join("");
+  filtrujProcesy();
+}
+
+// ---------- mapa procesów ----------
+// Kolumny = „Obszar” z karty, strzałki = „Prowadzi do”, kolejność w kolumnie = kolejność kart
+// w docs/PROCESY.md (układ mapy ustawia się, przestawiając karty w pliku).
+const KOLEJNOSC_OBSZAROW = ["Treści", "Firmy i dane", "Strona", "Wyniki i utrzymanie"];
+let MAPA_KRAWEDZIE = [];
+let mapaObserwator = null;
+
+function rysujMape(rytm) {
+  const el = $("#mapaProcesow");
+  const obszary = [...new Set([...KOLEJNOSC_OBSZAROW.filter((o) => PROCESY.some((p) => p.obszar === o)), ...PROCESY.map((p) => p.obszar || "Inne")])];
+  const stanProcesu = (id) => {
+    const r = rytm.filter((x) => x.proces === id);
+    if (r.some((x) => x.status === "zalegle")) return ["zle", "zaległe"];
+    if (r.some((x) => x.status === "dzis")) return ["uwaga", "na dziś"];
+    if (r.some((x) => x.typ === "cykliczne")) return ["ok", "zrobione"];
+    return null;
+  };
+  const kiedyKrotko = (k) => (k || "").replace(/`/g, "").split(/[;,(]/)[0].trim();
+  el.style.setProperty("--kolumn", obszary.length);
+  el.innerHTML = `<svg aria-hidden="true"><defs><marker id="grot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b9b3aa"/></marker><marker id="grotAkt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8f1d1d"/></marker></defs></svg><svg class="etykiety" aria-hidden="true"></svg>
+    <div class="mapa-kolumny">${obszary.map((o) => `<div class="pas"><h3>${esc(o)}</h3>${PROCESY
+      .filter((p) => (p.obszar || "Inne") === o)
+      .map((p) => { const s = stanProcesu(p.id); return `<button class="wezel" data-wezel="${esc(p.id)}" title="${esc(p.gdzie || "")}">${s ? `<i class="kropka ${s[0]}" title="${s[1]}"></i>` : `<i class="brak"></i>`}<span><b>${esc(p.nazwa)}</b><small>${esc(kiedyKrotko(p.kiedy))}</small></span></button>`; }).join("")}</div>`).join("")}</div>`;
+  const kolumna = Object.fromEntries(PROCESY.map((p) => [p.id, obszary.indexOf(p.obszar || "Inne")]));
+  MAPA_KRAWEDZIE = PROCESY.flatMap((p) => p.dalej.filter((d) => kolumna[d.id] !== undefined).map((d) => ({ z: p.id, do: d.id, etykieta: d.etykieta })));
+  rysujKrawedzie();
+  if (mapaObserwator) mapaObserwator.disconnect();
+  mapaObserwator = new ResizeObserver(() => rysujKrawedzie());
+  mapaObserwator.observe(el);
+}
+
+function rysujKrawedzie() {
+  const el = $("#mapaProcesow");
+  const svg = el.querySelector("svg");
+  if (!svg || !el.offsetWidth) return;
+  const baza = el.getBoundingClientRect();
+  const prost = (id) => { const w = el.querySelector(`[data-wezel="${CSS.escape(id)}"]`); if (!w) return null; const r = w.getBoundingClientRect(); return { l: r.left - baza.left, r: r.right - baza.left, t: r.top - baza.top, b: r.bottom - baza.top, cy: (r.top + r.bottom) / 2 - baza.top, kol: [...el.querySelectorAll(".pas")].indexOf(w.closest(".pas")) }; };
+  const sciezki = [], etykiety = [];
+  MAPA_KRAWEDZIE.forEach((k, i) => {
+    const a = prost(k.z), b = prost(k.do);
+    if (!a || !b) return;
+    let d, lx, ly, kotwica;
+    if (a.kol === b.kol) {
+      // W tej samej kolumnie: łuk po lewej stronie węzłów (prawa strona jest dla strzałek między kolumnami).
+      const x = Math.min(a.l, b.l), wybrzuszenie = 22 + Math.min(30, Math.abs(b.cy - a.cy) / 8);
+      d = `M${a.l},${a.cy} C${x - wybrzuszenie},${a.cy} ${x - wybrzuszenie},${b.cy} ${b.l - 2},${b.cy}`;
+      lx = x - wybrzuszenie * 0.75 - 4; ly = (a.cy + b.cy) / 2 + 4; kotwica = "end";
+    } else {
+      const wPrawo = b.kol > a.kol;
+      const x1 = wPrawo ? a.r : a.l, x2 = wPrawo ? b.l - 2 : b.r + 2;
+      const dx = Math.max(40, Math.abs(x2 - x1) / 2.2) * (wPrawo ? 1 : -1);
+      d = `M${x1},${a.cy} C${x1 + dx},${a.cy} ${x2 - dx},${b.cy} ${x2},${b.cy}`;
+      // Podpis przy grocie, nad linią: tam zawsze jest wolne miejsce między kolumnami.
+      lx = wPrawo ? x2 - 10 : x2 + 10; ly = b.cy - 8; kotwica = wPrawo ? "end" : "start";
+    }
+    sciezki.push(`<path class="krawedz" data-k="${i}" d="${d}"/>`);
+    if (k.etykieta) etykiety.push(`<text class="etykieta" data-k="${i}" x="${lx}" y="${ly}" text-anchor="${kotwica}">${esc(k.etykieta)}</text>`);
+  });
+  svg.querySelectorAll("path.krawedz").forEach((x) => x.remove());
+  svg.insertAdjacentHTML("beforeend", sciezki.join(""));
+  el.querySelector("svg.etykiety").innerHTML = etykiety.join("");
+}
+
+function podswietl(id) {
+  const el = $("#mapaProcesow");
+  el.classList.toggle("skupienie", !!id);
+  const pow = new Set(id ? [id] : []);
+  MAPA_KRAWEDZIE.forEach((k, i) => {
+    const akt = !!id && (k.z === id || k.do === id);
+    if (akt) { pow.add(k.z); pow.add(k.do); }
+    el.querySelectorAll(`[data-k="${i}"]`).forEach((x) => x.classList.toggle("akt", akt));
+  });
+  el.querySelectorAll(".wezel").forEach((w) => w.classList.toggle("pow", pow.has(w.dataset.wezel)));
+}
+$("#mapaProcesow").addEventListener("mouseover", (e) => { const w = e.target.closest(".wezel"); if (w) podswietl(w.dataset.wezel); });
+$("#mapaProcesow").addEventListener("mouseleave", () => podswietl(null));
+$("#mapaProcesow").addEventListener("focusin", (e) => { const w = e.target.closest(".wezel"); if (w) podswietl(w.dataset.wezel); });
+$("#mapaProcesow").addEventListener("click", (e) => { const w = e.target.closest(".wezel"); if (w) pokazProces(w.dataset.wezel); });
+
+function filtrujProcesy() {
+  const q = $("#procesySzukaj").value.trim();
+  // Od początku słowa: „logo” znajdzie „logotypy”, ale nie „zalogowane”.
+  const wzor = new RegExp("(^|[^\\p{L}\\p{N}])" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "iu");
+  for (const p of PROCESY || []) {
+    const el = document.getElementById("proces-" + p.id);
+    if (!el) continue;
+    const pasuje = !q || wzor.test([p.nazwa, p.kiedy, p.gdzie, p.opis, p.tresc].join(" "));
+    el.hidden = !pasuje;
+    el.open = !!q && pasuje;
+    document.querySelector(`#mapaProcesow [data-wezel="${CSS.escape(p.id)}"]`)?.classList.toggle("traf", !!q && pasuje);
+  }
+  $("#mapaProcesow").classList.toggle("szukanie", !!q);
+}
+$("#procesySzukaj").addEventListener("input", filtrujProcesy);
+
+async function pokazProces(id) {
+  if (!PROCESY) await wczytajProcesy();
+  const p = PROCESY.find((x) => x.id === id);
+  otworzOkno(p ? `<h2 style="margin-top:0">${esc(p.nazwa)}</h2>${kartaProcesu(p)}` : `<p>Nie ma karty „${esc(id)}” w docs/PROCESY.md.</p>`);
+}
+
+async function pokazDokument(sciezka) {
+  const j = await pobierz("/api/panel/dokument?sciezka=" + encodeURIComponent(sciezka));
+  otworzOkno(j.blad ? `<p>${esc(j.blad)}</p>` : `<p class="male" style="margin:0 0 6px">${esc(j.sciezka)}</p>${md(j.tresc.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, ""))}`);
+}
+
+function otworzOkno(html) {
+  $("#oknoTresc").innerHTML = html;
+  $("#okno").hidden = false;
+  $("#okno").scrollTop = 0;
+}
+const zamknijOkno = () => { $("#okno").hidden = true; };
+$("#oknoZamknij").onclick = zamknijOkno;
+$("#okno").addEventListener("click", (e) => { if (e.target.id === "okno") zamknijOkno(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#okno").hidden) zamknijOkno(); });
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("button.kopiuj");
+  if (!b) return;
+  await navigator.clipboard.writeText(b.nextElementSibling.textContent);
+  b.textContent = "Skopiowano";
+  setTimeout(() => { b.textContent = "Kopiuj"; }, 1500);
+});
+
+// Prosty Markdown: nagłówki, listy, tabele, cytaty, bloki kodu, **pogrubienie**, `kod`, linki
+// i ścieżki do dokumentów (otwierają się w oknie panelu).
+function mdLinia(s) {
+  return esc(s)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/(^|[\s(>])(https?:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>')
+    .replace(/(^|[^\w/.-])((?:docs|tools\/skills)\/[\w\-./ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+\.md)/g, '$1<a class="dok" data-dok="$2">$2</a>');
+}
+
+function md(tekst) {
+  const linie = String(tekst || "").replace(/\r\n/g, "\n").split("\n");
+  const out = [];
+  const poczatekBloku = (l) => /^(```|#{1,4} |\s*\d+\.\s|\s*[-*]\s|\||>|---\s*$)/.test(l);
+  let i = 0;
+  while (i < linie.length) {
+    const l = linie[i];
+    if (/^```/.test(l)) {
+      const kod = [];
+      i++;
+      while (i < linie.length && !/^```/.test(linie[i])) kod.push(linie[i++]);
+      i++;
+      out.push(`<div style="position:relative"><button class="maly kopiuj" style="position:absolute;top:6px;right:6px">Kopiuj</button><pre class="prompt">${esc(kod.join("\n"))}</pre></div>`);
+    } else if (/^#{1,4} /.test(l)) {
+      const n = Math.min(l.match(/^#+/)[0].length + 1, 4);
+      out.push(`<h${n}>${mdLinia(l.replace(/^#+\s*/, ""))}</h${n}>`);
+      i++;
+    } else if (/^\s*(\d+\.|[-*])\s/.test(l)) {
+      const numerowana = /^\s*\d+\./.test(l);
+      const start = numerowana ? parseInt(l, 10) : 1;
+      const el = [];
+      while (i < linie.length && (/^\s*(\d+\.|[-*])\s/.test(linie[i]) || (/^\s{2,}\S/.test(linie[i]) && el.length))) {
+        if (/^\s*(\d+\.|[-*])\s/.test(linie[i])) el.push(linie[i].replace(/^\s*(\d+\.|[-*])\s+/, ""));
+        else el[el.length - 1] += " " + linie[i].trim();
+        i++;
+      }
+      const tag = numerowana ? "ol" : "ul";
+      out.push(`<${tag}${numerowana && start !== 1 ? ` start="${start}"` : ""}>${el.map((x) => `<li>${mdLinia(x)}</li>`).join("")}</${tag}>`);
+    } else if (/^\|/.test(l)) {
+      const wiersze = [];
+      while (i < linie.length && /^\|/.test(linie[i])) wiersze.push(linie[i++]);
+      const komorki = (w) => w.replace(/^\||\|\s*$/g, "").split("|").map((x) => x.trim());
+      const [glowa, ...reszta] = wiersze.filter((w) => !/^\|[\s:|-]+\|?\s*$/.test(w));
+      out.push(`<table><tr>${komorki(glowa).map((x) => `<th>${mdLinia(x)}</th>`).join("")}</tr>${reszta.map((w) => `<tr>${komorki(w).map((x) => `<td>${mdLinia(x)}</td>`).join("")}</tr>`).join("")}</table>`);
+    } else if (/^>/.test(l)) {
+      const cyt = [];
+      while (i < linie.length && /^>/.test(linie[i])) cyt.push(linie[i++].replace(/^>\s?/, ""));
+      out.push(`<div class="pomoc-tresc">${md(cyt.join("\n"))}</div>`);
+    } else if (/^---\s*$/.test(l)) {
+      out.push("<hr>");
+      i++;
+    } else if (!l.trim()) {
+      i++;
+    } else {
+      const akapit = [];
+      while (i < linie.length && linie[i].trim() && !poczatekBloku(linie[i])) akapit.push(linie[i++]);
+      if (!akapit.length) akapit.push(linie[i++]);
+      out.push(`<p>${mdLinia(akapit.join(" "))}</p>`);
+    }
+  }
+  return out.join("\n");
+}
+
+// ---------- dziennik zmian ----------
+const FILTRY_DZIENNIKA = [
+  ["wszystko", "Wszystko", () => true],
+  ["notatki", "Notatki", (w) => w.typ === "notatka"],
+  ["procesy", "Zmiany procesów", (w) => w.typ === "notatka" || w.rodzaj === "procesy"],
+  ["narzedzia", "Narzędzia", (w) => w.rodzaj === "narzedzia"],
+  ["strona", "Strona i logotypy", (w) => w.rodzaj === "strona" || w.rodzaj === "logotypy"],
+  ["tresci", "Treści i SEO", (w) => w.rodzaj === "tresci" || w.rodzaj === "seo"],
+];
+let DZIENNIK = { wpisy: [] };
+let filtrDziennika = "wszystko";
+
+async function ekranDziennik() {
+  if (!PROCESY) await wczytajProcesy();
+  const sel = $("#notatkaProces");
+  if (!sel.options.length) sel.innerHTML = `<option value="">ogólna (bez procesu)</option>` + PROCESY.map((p) => `<option value="${esc(p.id)}">${esc(p.nazwa)}</option>`).join("");
+  if (!$("#notatkaData").value) $("#notatkaData").value = new Date().toLocaleDateString("sv-SE");
+  const j = await pobierz("/api/panel/dziennik?dni=" + $("#dziennikDni").value);
+  if (j.blad) { $("#dziennikLista").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  DZIENNIK = j;
+  rysujDziennik();
+}
+
+function rysujDziennik() {
+  const liczba = (f) => DZIENNIK.wpisy.filter(f).length;
+  $("#dziennikFiltr").innerHTML = FILTRY_DZIENNIKA.map(([id, nazwa, f]) => `<a data-filtr="${id}" style="${id === filtrDziennika ? "border-color:var(--akcent);color:var(--akcent)" : ""}">${nazwa} (${liczba(f)})</a>`).join("");
+  const f = FILTRY_DZIENNIKA.find((x) => x[0] === filtrDziennika)[2];
+  const wpisy = DZIENNIK.wpisy.filter(f);
+  const nazwaProcesu = (id) => PROCESY?.find((x) => x.id === id)?.nazwa || id;
+  const dni = [...new Set(wpisy.map((w) => w.data))];
+  $("#dziennikLista").className = "";
+  $("#dziennikLista").innerHTML = dni.length ? dni.map((d) => {
+    const naglowek = new Date(d + "T12:00:00").toLocaleDateString("pl-PL", { weekday: "long", day: "numeric", month: "long" });
+    return `<div class="dzien"><h3>${naglowek}</h3>${wpisy.filter((w) => w.data === d).map((w) => w.typ === "notatka"
+      ? `<div class="wpis notatka"><span class="plakietka p-uwaga">notatka · ${esc(w.autor || "Wiktor")}</span><div class="tresc">${mdLinia(w.tekst)}${w.proces ? ` <a class="dok" data-proces="${esc(w.proces)}">${esc(nazwaProcesu(w.proces))}</a>` : ""}</div><button class="x" data-usun-notatke="${esc(w.id)}" title="Usuń notatkę">✕</button></div>`
+      : `<div class="wpis"><span class="plakietka${w.rodzaj === "procesy" ? " p-proc" : ""}">${esc(w.rodzajNazwa)}</span><div class="tresc">${w.link ? `<a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.tytul)}</a>` : esc(w.tytul)} <span class="male">· ${esc(w.hash)} · ${w.plikow} ${odmiana(w.plikow, ["plik", "pliki", "plików"])}</span></div><span class="plakietka ${w.naProdukcji ? "p-ok" : ""}" title="${w.naProdukcji ? "Ta zmiana jest już na gałęzi main (produkcja)." : "Ta zmiana jest tylko na develop (podgląd), czeka na merge do main."}">${w.naProdukcji ? "na stronie" : "na podglądzie"}</span></div>`).join("")}</div>`;
+  }).join("") : `<span class="pusto">Brak wpisów w tym widoku.</span>`;
+}
+
+$("#dziennikFiltr").addEventListener("click", (e) => { const a = e.target.closest("[data-filtr]"); if (!a) return; filtrDziennika = a.dataset.filtr; rysujDziennik(); });
+$("#dziennikDni").addEventListener("change", ekranDziennik);
+$("#btnNotatka").onclick = async () => {
+  const tekst = $("#notatkaTekst").value.trim();
+  if (!tekst) { $("#notatkaKomunikat").textContent = "Wpisz treść notatki."; return; }
+  const r = await wyslij("/api/panel/dziennik/notatka", { tekst, proces: $("#notatkaProces").value || null, data: $("#notatkaData").value });
+  if (r.blad) { $("#notatkaKomunikat").textContent = r.blad; return; }
+  $("#notatkaTekst").value = "";
+  $("#notatkaKomunikat").textContent = "Zapisane.";
+  setTimeout(() => { $("#notatkaKomunikat").textContent = ""; }, 2000);
+  PROCESY = null;
+  ekranDziennik();
+};
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-usun-notatke]");
+  if (!b || !confirm("Usunąć tę notatkę?")) return;
+  await wyslij("/api/panel/dziennik/usun", { id: b.dataset.usunNotatke });
+  PROCESY = null;
+  ekranDziennik();
+});
+
+// ---------- metryki ----------
+let METRYKI = { pola: [], miesiace: [] };
+const liczbaPl = (n) => (n === undefined || n === null ? "–" : Number(n).toLocaleString("pl-PL"));
+const nazwaMiesiaca = (m, krotko) => new Date(m + "-15T12:00:00").toLocaleDateString("pl-PL", krotko ? { month: "short", year: "2-digit" } : { month: "long", year: "numeric" });
+
+async function ekranMetryki() {
+  const j = await pobierz("/api/panel/metryki");
+  if (j.blad) { $("#metrykiTabela").innerHTML = `<span class="pusto">${esc(j.blad)}</span>`; return; }
+  METRYKI = j;
+  if (!$("#metrykiPola").children.length) {
+    $("#metrykiPola").innerHTML = j.pola.map((p) => p.liczba
+      ? `<label>${esc(p.nazwa)}<input type="number" min="0" step="1" data-pole="${p.id}" placeholder="${esc(p.zrodlo)}"></label>`
+      : p.id === "notatka"
+        ? `<label class="szeroko">${esc(p.nazwa)}<textarea data-pole="${p.id}" style="min-height:60px" placeholder="np. quizy na X dały 3× więcej wejść niż zestawienia"></textarea></label>`
+        : `<label class="${p.id === "najlepszyPost" ? "szeroko" : "szeroko"}">${esc(p.nazwa)}<input type="text" data-pole="${p.id}"></label>`).join("");
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() - 1);
+    $("#metrykiMiesiac").value = d.toLocaleDateString("sv-SE").slice(0, 7);
+    $("#metrykiZrodla").innerHTML = [
+      ["https://vercel.com/wiktorow123-3833s-projects/czypolskafirmalive/analytics", "Vercel Analytics"],
+      ["https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Aczypolskafirma.pl", "Search Console"],
+      ["https://x.com/i/account_analytics", "Statystyki X"],
+      ["https://www.facebook.com/", "Facebook"],
+    ].map(([h, t]) => `<a href="${h}" target="_blank" rel="noopener">${t}</a>`).join("");
+  }
+  wypelnijMiesiac();
+  rysujWykresy();
+  rysujTabeleMetryk();
+}
+
+function wypelnijMiesiac() {
+  const m = $("#metrykiMiesiac").value;
+  const wpis = METRYKI.miesiace.find((x) => x.miesiac === m);
+  document.querySelectorAll("#metrykiPola [data-pole]").forEach((el) => { el.value = wpis?.[el.dataset.pole] ?? ""; });
+  $("#metrykiStanMiesiaca").textContent = wpis ? `Zapisane ${dzienKrotko(wpis.zapisano)}. Zapis nadpisze ten miesiąc.` : "Ten miesiąc nie jest jeszcze zapisany.";
+}
+$("#metrykiMiesiac").addEventListener("change", wypelnijMiesiac);
+
+$("#btnMetryki").onclick = async () => {
+  const dane = { miesiac: $("#metrykiMiesiac").value };
+  document.querySelectorAll("#metrykiPola [data-pole]").forEach((el) => { dane[el.dataset.pole] = el.value; });
+  const r = await wyslij("/api/panel/metryki", dane);
+  if (r.blad) { $("#metrykiKomunikat").textContent = r.blad; return; }
+  $("#metrykiKomunikat").textContent = `Zapisano: ${nazwaMiesiaca(dane.miesiac)}.`;
+  setTimeout(() => { $("#metrykiKomunikat").textContent = ""; }, 3000);
+  METRYKI = r;
+  wypelnijMiesiac();
+  rysujWykresy();
+  rysujTabeleMetryk();
+};
+
+// Małe wykresy kolumnowe, jeden na metrykę (różne skale, więc bez wspólnej osi).
+// Kolumny do 24 px, zaokrąglony tylko wierzchołek, etykieta wartości tylko przy ostatnim miesiącu.
+function rysujWykresy() {
+  const liczbowe = METRYKI.pola.filter((p) => p.liczba);
+  const miesiace = METRYKI.miesiace.slice(-12);
+  if (!miesiace.length) { $("#metrykiWykresy").innerHTML = `<div class="karta pusto" style="grid-column:1/-1;margin:0">Nie ma jeszcze zapisanych miesięcy. Wykresy pojawią się po pierwszym zapisie.</div>`; return; }
+  $("#metrykiWykresy").innerHTML = liczbowe.map((p) => {
+    const punkty = miesiace.filter((m) => m[p.id] !== undefined).map((m) => ({ m: m.miesiac, v: m[p.id] }));
+    const ost = punkty.at(-1), prz = punkty.at(-2);
+    let zmiana = "brak danych";
+    if (ost && prz) {
+      const roznica = ost.v - prz.v;
+      const proc = prz.v ? Math.round((roznica / prz.v) * 100) : null;
+      zmiana = `${roznica >= 0 ? "▲ +" : "▼ "}${liczbaPl(roznica)}${proc !== null ? ` (${proc >= 0 ? "+" : ""}${proc}%)` : ""} względem ${nazwaMiesiaca(prz.m, true)}`;
+    } else if (ost) zmiana = `${nazwaMiesiaca(ost.m)}; porównanie po drugim miesiącu`;
+    return `<div class="wykres"><div class="tytul">${esc(p.nazwa)}</div><div class="wartosc">${ost ? liczbaPl(ost.v) : "–"}</div><div class="zmiana">${zmiana}</div>${punkty.length >= 2 ? svgKolumn(punkty, p.nazwa) : ""}</div>`;
+  }).join("");
+}
+
+function svgKolumn(punkty, nazwa) {
+  const W = 280, H = 96, dol = 16, gora = 14;
+  const max = Math.max(...punkty.map((x) => x.v), 1);
+  const slot = W / punkty.length;
+  const szer = Math.min(19, slot - 2); // ok. 24 px na ekranie przy typowej szerokości karty
+  const r = Math.min(4, szer / 2);
+  const kolumny = punkty.map((x, i) => {
+    const h = Math.max(1, ((H - dol - gora) * x.v) / max);
+    const x0 = i * slot + (slot - szer) / 2, y0 = H - dol - h;
+    const ksztalt = h > r
+      ? `M${x0},${H - dol} V${y0 + r} Q${x0},${y0} ${x0 + r},${y0} H${x0 + szer - r} Q${x0 + szer},${y0} ${x0 + szer},${y0 + r} V${H - dol} Z`
+      : `M${x0},${H - dol} V${y0} H${x0 + szer} V${H - dol} Z`;
+    const opis = `${nazwaMiesiaca(x.m)}: ${liczbaPl(x.v)}`;
+    const etykieta = i === punkty.length - 1 ? `<text class="os" x="${x0 + szer / 2}" y="${y0 - 4}" text-anchor="middle" style="fill:var(--tekst);font-weight:600">${liczbaPl(x.v)}</text>` : "";
+    return `<g data-dymek="${esc(opis)}"><rect class="cel" x="${i * slot}" y="0" width="${slot}" height="${H - dol}"/><path class="slupek" d="${ksztalt}"/>${etykieta}</g>`;
+  }).join("");
+  const osie = `<line x1="0" x2="${W}" y1="${H - dol}" y2="${H - dol}" stroke="#ddd9d2" stroke-width="1"/>`
+    + `<text class="os" x="${slot / 2}" y="${H - 3}" text-anchor="middle">${nazwaMiesiaca(punkty[0].m, true)}</text>`
+    + `<text class="os" x="${W - slot / 2}" y="${H - 3}" text-anchor="middle">${nazwaMiesiaca(punkty.at(-1).m, true)}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(nazwa)}, ${punkty.length} miesięcy">${osie}${kolumny}</svg>`;
+}
+
+$("#metrykiWykresy").addEventListener("mousemove", (e) => {
+  const g = e.target.closest("[data-dymek]");
+  const d = $("#dymek");
+  if (!g) { d.hidden = true; return; }
+  d.textContent = g.dataset.dymek;
+  d.hidden = false;
+  d.style.left = e.clientX + 12 + "px";
+  d.style.top = e.clientY - 30 + "px";
+});
+$("#metrykiWykresy").addEventListener("mouseleave", () => { $("#dymek").hidden = true; });
+
+function rysujTabeleMetryk() {
+  const m = [...METRYKI.miesiace].reverse();
+  if (!m.length) { $("#metrykiTabela").innerHTML = "Brak zapisanych miesięcy."; return; }
+  const liczbowe = METRYKI.pola.filter((p) => p.liczba);
+  $("#metrykiTabela").className = "";
+  $("#metrykiTabela").innerHTML = `<div style="overflow-x:auto"><table class="metryki"><tr><th>Miesiąc</th>${liczbowe.map((p) => `<th>${esc(p.nazwa)}</th>`).join("")}<th>Najlepszy post</th><th>Co zadziałało</th><th></th></tr>${m.map((w) => `<tr><td>${esc(nazwaMiesiaca(w.miesiac))}</td>${liczbowe.map((p) => `<td>${liczbaPl(w[p.id])}</td>`).join("")}<td class="dlugi">${w.najlepszyPostLink ? `<a href="${esc(w.najlepszyPostLink)}" target="_blank" rel="noopener">${esc(w.najlepszyPost || "link")}</a>` : esc(w.najlepszyPost || "")}</td><td class="dlugi">${esc(w.notatka || "")}</td><td><button class="maly" data-edytuj-miesiac="${w.miesiac}">Edytuj</button> <button class="x" data-usun-miesiac="${w.miesiac}" title="Usuń miesiąc">✕</button></td></tr>`).join("")}</table></div>`;
+}
+
+document.addEventListener("click", async (e) => {
+  const ed = e.target.closest("[data-edytuj-miesiac]");
+  if (ed) { $("#metrykiMiesiac").value = ed.dataset.edytujMiesiac; wypelnijMiesiac(); $("#metrykiMiesiac").scrollIntoView({ block: "center" }); return; }
+  const us = e.target.closest("[data-usun-miesiac]");
+  if (us && confirm(`Usunąć metryki za ${nazwaMiesiaca(us.dataset.usunMiesiac)}?`)) {
+    METRYKI = await wyslij("/api/panel/metryki/usun", { miesiac: us.dataset.usunMiesiac });
+    wypelnijMiesiac();
+    rysujWykresy();
+    rysujTabeleMetryk();
+  }
+});
+
 // ---------- start ----------
 (async () => {
   sprawdzWersje();
   setInterval(sprawdzWersje, 30000);
   await wczytajListePartii();
   ustawPartie(STAN.partia);
-  pokaz("start");
+  pokaz("centrum");
   setInterval(() => { if (["praca", "start"].includes(STAN.ekran)) odswiezEkran(); }, 5000);
+  setInterval(() => { if (STAN.ekran === "centrum" && $("#okno").hidden) ekranCentrum(); }, 60000);
 })();
 </script>
 </body>

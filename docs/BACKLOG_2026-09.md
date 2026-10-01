@@ -76,6 +76,7 @@ w pliku po przetworzeniu (`- [x]` albo przeniesienie do sekcji „przetworzone")
 --kandydaci --partia test` tworzy partię z tych firm.
 
 ### 3. Kategoria „edukacja" i brakujące pola z KRS
+**✅ Zrobione 2026-09-23 (`63422f7`).** SQL w `tools/sql/2026-09-23-kategoria-edukacja.sql` czeka na wklejenie w Supabase. `founded_at` tylko z wpisów KRS od 2004 r., z uwagą w przeglądzie (data KRS to często przekształcenie spółki, nie założenie marki); pole daty edytowalne w przeglądzie.
 **Pliki:** tabela `categories` w Supabase (SQL do wklejenia przez właściciela),
 `data/categories.json` tylko jeśli okaże się używany, `tools/firmy/lib/rekord.mjs`.
 **Co zrobić:** (a) przygotuj `tools/sql/2026-09-xx-kategoria-edukacja.sql` (insert do
@@ -87,6 +88,7 @@ DD.MM.RRRR → RRRR-MM-DD) i `adres` z `tozsamosc.mf.adres`, jeśli puste; (c) w
 rekordy z `founded_at`; import próbny pokazuje pole.
 
 ### 4. Audyt lipcowy: K1 i K2
+**✅ Zrobione 2026-09-23 (`732bfb3`).** Upload logo: 404 na produkcji, limit 5 MB, filtr SVG (bez nagłówka `x-admin-key`, bo blokada produkcji wystarcza). Przy okazji `janpol.pl.svg` był zapisaną stroną HTML; podmienione na prawdziwe logo (`1e02e2b`).
 **Pliki:** `app/api/tools/upload-logo/route.ts`, `package.json`, `package-lock.json`.
 Opis: `docs/AUDYT_TECHNICZNY_2026-07.md` (plik jest w .gitignore, leży lokalnie).
 **Co zrobić:** (a) K1: `POST` odrzuca żądanie bez nagłówka `x-admin-key` równego

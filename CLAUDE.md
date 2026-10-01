@@ -139,6 +139,16 @@ zatwierdzenia właściciela. Pełna procedura: `docs/SOP_dodawanie_firm.md`.
 
 ## 7. Dokumenty referencyjne
 
+- `docs/PROCESY.md` — **ściągi procesów** (kiedy, gdzie, kroki); czyta je Centrum projektu w Panelu projektu
+- `data/panel/rytm.json` — rytm projektu (czynności cykliczne) i przypomnienia z datą;
+  odhaczenia właściciela są lokalnie w `data/panel/stan.json` (poza gitem).
+  Na pytanie „co mam dziś zrobić?” przeczytaj oba pliki i odpowiedz tak, jak pokazuje
+  Centrum projektu. Nowe przypomnienie („przypomnij mi…”) dopisz do `przypomnienia`
+  w `rytm.json`; zmiana procesu = aktualizacja karty w `docs/PROCESY.md`.
+- `data/panel/dziennik.json` — dziennik zmian (notatki). Gdy zmieniasz sposób, w jaki coś się
+  robi (proces, workflow, narzędzie), dopisz notatkę: `{ id, data, tekst, proces, autor: "Claude" }`
+  (id w formacie `RRRR-MM-DD-cokolwiek`, `proces` = id karty z `PROCESY.md` albo null).
+- `data/panel/metryki.json` — metryki miesięczne wpisywane przez właściciela w panelu.
 - `docs/DEVELOPMENT_WORKFLOW.md` — workflow git i proces akceptacji
 - `docs/SOP_dodawanie_firm.md` — automat dodawania firm i przegląd partii
 - `docs/METODOLOGIA_V2_przypadki_brzegowe.md` — drzewo decyzyjne i reguły brzegowe (wersja obowiązująca)

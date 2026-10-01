@@ -44,6 +44,7 @@ Generator.html
 /data/robocze/backup/
 # licznik zapytan do Bialej Listy MF i listy firm generowane przez panel
 /data/robocze/automat/mf-licznik.json
+/data/robocze/tozsamosc-cache.json
 /data/robocze/automat/lista-*.txt
 
 # generowany przez fetch-logos.mjs (lista domen bez logo z ostatniego przebiegu)

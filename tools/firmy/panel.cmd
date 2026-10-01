@@ -1,5 +1,5 @@
 @echo off
-rem Uruchamia Panel firm i otwiera go w przegladarce.
+rem Uruchamia Panel projektu i otwiera go w przegladarce.
 rem Zwykle wolane przez "panel.vbs" (bez czarnego okna) albo skrot z pulpitu.
 chcp 65001 >nul
 setlocal

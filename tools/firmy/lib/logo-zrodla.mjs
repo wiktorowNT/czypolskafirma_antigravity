@@ -46,6 +46,27 @@ async function pobierz(url, { timeout = 8000, naglowki = {}, tekst = false } = {
   }
 }
 
+/**
+ * Obrazek z adresu przeciągniętego do panelu ze strony internetowej. Tylko http(s) i tylko adresy
+ * publiczne (panel działa lokalnie, nie ma pobierać niczego z komputera ani sieci domowej).
+ * Referer ze strony obrazka, bo część serwerów blokuje pobieranie obrazków bez niego.
+ */
+export async function obrazekZAdresu(adres) {
+  let u;
+  try { u = new URL(String(adres || "").trim()); } catch { return { blad: "To nie jest adres obrazka." }; }
+  if (!/^https?:$/.test(u.protocol)) return { blad: "Obsługiwane są tylko adresy http i https." };
+  const host = u.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  if (/^(localhost|0\.0\.0\.0|::1?|127\.|10\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host) || host.endsWith(".local") || !host.includes(".")) {
+    return { blad: "Adres lokalny, nie pobieram." };
+  }
+  const wiki = /(^|\.)(wikimedia|wikipedia)\.org$/.test(host) ? { "User-Agent": UA_WIKI } : {};
+  const r = await pobierz(u.href, { timeout: 15000, naglowki: { ...wiki, Referer: `${u.origin}/` } })
+    || await pobierz(u.href, { timeout: 15000, naglowki: wiki });
+  if (!r) return { blad: "Nie udało się pobrać obrazka (serwer odmówił albo plik ma ponad 6 MB). Zapisz go na dysk i przeciągnij plik." };
+  if (!formatObrazka(r.buf) && /text\/html/i.test(r.typ)) return { blad: "To link do strony, a nie do obrazka. Przeciągnij sam obrazek logo." };
+  return { buf: r.buf };
+}
+
 function liczbaPx(v) {
   const m = String(v || "").match(/^\s*([\d.]+)\s*(px)?\s*$/i);
   return m ? Math.round(Number(m[1])) : null;

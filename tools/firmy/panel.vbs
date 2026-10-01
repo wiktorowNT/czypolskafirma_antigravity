@@ -1,4 +1,4 @@
-' Uruchamia Panel firm bez czarnego okna terminala.
+' Uruchamia Panel projektu bez czarnego okna terminala.
 ' Skrot na pulpicie ("CzyPolskaFirma - Panel") wskazuje na ten plik.
 ' Panel sam otwiera przegladarke na http://localhost:3010/.
 ' Zatrzymanie: przycisk "Zamknij panel" w lewym dolnym rogu strony.

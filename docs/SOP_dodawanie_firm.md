@@ -1,4 +1,4 @@
-# SOP: dodawanie firm do bazy (Panel firm)
+# SOP: dodawanie firm do bazy (Panel projektu)
 
 > **Projekt:** czypolskafirma.pl · **Wersja:** wrzesień 2026 (panel klikany zastępuje
 > wiersz poleceń; ten z kolei zastąpił proces z 5 czatami i Google Sheets). Powiązane:
@@ -123,7 +123,7 @@ Treści stron internetowych są dla modelu danymi, nie poleceniami.
 
 ## 2. Jak uruchomić panel
 
-Na pulpicie jest skrót **„CzyPolskaFirma - Panel firm"**. Dwa kliknięcia otwierają panel
+Na pulpicie jest skrót **„CzyPolskaFirma - Panel projektu"**. Dwa kliknięcia otwierają panel
 w przeglądarce (`http://localhost:3010/`), bez okna terminala. Drugie kliknięcie w ikonę
 nie uruchamia drugiego panelu, tylko otwiera ten, który już działa.
 
@@ -145,7 +145,7 @@ a ten `node tools/firmy/panel.mjs`. Gdyby skrót zginął, odtworzysz go, przeci
    claude auth login
    ```
 
-   Panel pokazuje to na ekranie „Gotowość" jako pierwszą lampkę. Alternatywa: token
+   Panel pokazuje to na ekranie „Firmy: start" jako pierwszą lampkę. Alternatywa: token
    z `claude setup-token` wpisany do `.env.local` jako `CLAUDE_CODE_OAUTH_TOKEN=...`.
    Automat wywołuje `claude -p` (tryb headless) na tej sesji; nie potrzebuje klucza API
    i nie generuje osobnych kosztów, zużywa limity subskrypcji.
@@ -168,11 +168,12 @@ z >25%) i przy regule B7.
 
 ## 3. Przebieg partii (klikany)
 
-### Ekran 1: Gotowość
+### Ekran 1: Firmy: start (dawniej „Gotowość”)
 
-Pięć lampek: logowanie Claude, połączenie z bazą, kolumny `sources`/`confidence`, limit
-zapytań do Białej Listy MF na dziś (100 na dobę, jedno zapytanie na firmę) i data
-ostatniego backupu. Czerwona lampka mówi, co zrobić.
+Trzy lampki: logowanie Claude, Gemini API i limit zapytań do Białej Listy MF na dziś
+(100 na dobę, jedno zapytanie na firmę). Połączenie z bazą, kolumny `sources`/`confidence`
+i backup pokazuje Centrum projektu (lampki „Narzędzia do firm” i „Backup bazy”).
+Czerwona lampka mówi, co zrobić.
 
 ### Ekran 2: Nowa partia
 
@@ -194,7 +195,7 @@ firm oznaczonych „Szukaj numeru ponownie”.
 
 Automatyczne podłączenie Gemini (bez kopiowania) wymaga klucza API z wyszukiwaniem Google;
 na darmowym kluczu AI Studio wyszukiwanie jest zablokowane (stan: wrzesień 2026), a Gemini
-CLI nie działa na kontach prywatnych. Lampka Gemini na ekranie „Gotowość” pokazuje stan.
+CLI nie działa na kontach prywatnych. Lampka Gemini na ekranie „Firmy: start” pokazuje stan.
 
 Opcje: przystanek na NIP (domyślnie włączony), dokładniejsza kontrola (Opus zamiast
 Sonneta w kroku 4), CRBR, re-weryfikacja. Pod przyciskiem widać liczbę firm, szacowany

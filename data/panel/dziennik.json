@@ -1,0 +1,39 @@
+{
+  "notatki": [
+    {
+      "id": "2026-09-27-mujs1sgf",
+      "data": "2026-09-27",
+      "tekst": "Blog: wpis z datą w przyszłości czeka na swój dzień (na produkcji pojawia się sam, najpóźniej godzinę po północy). Kilka paczek można scalić naraz i rozłożyć im daty.",
+      "proces": "tresc",
+      "autor": "Claude"
+    },
+    {
+      "id": "2026-09-29-publikuj",
+      "data": "2026-09-29",
+      "tekst": "Publikacja na czypolskafirma.pl przyciskiem „Opublikuj” w panelu (krok 8, Logotypy): przewija main do tego, co jest na podglądzie, tylko gdy build podglądu na Vercelu przeszedł.",
+      "proces": "publikacja",
+      "autor": "Claude"
+    },
+    {
+      "id": "2026-09-29-published",
+      "data": "2026-09-29",
+      "tekst": "Import firm (krok 7) nie pokazuje ich od razu na czypolskafirma.pl: nowe firmy są tylko na podglądzie, aktualizacje czekają. Na stronę trafiają razem z logotypami po kliknięciu „Opublikuj” w kroku 8 (kolumna published w bazie).",
+      "proces": "firmy",
+      "autor": "Claude"
+    },
+    {
+      "id": "2026-09-30-logo-zrodla",
+      "data": "2026-09-30",
+      "tekst": "Logotypy: automat szuka najpierw logo na stronie firmy i w Wikipedii, dopiero potem ikonek; pomija białe logo. W podglądzie (krok 8) przycisk „Inne źródła” pokazuje wszystkich kandydatów i podmienia plik jednym kliknięciem.",
+      "proces": "logotypy",
+      "autor": "Claude"
+    },
+    {
+      "id": "2026-10-01-logo-przeciagnij",
+      "data": "2026-10-01",
+      "tekst": "Logotypy (krok 8): logo można przeciągnąć myszką prosto ze strony firmy albo z Google Grafika na kartę firmy w podglądzie. Panel sam pobiera plik, bez zapisywania na dysk.",
+      "proces": "logotypy",
+      "autor": "Claude"
+    }
+  ]
+}

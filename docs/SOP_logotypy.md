@@ -28,7 +28,10 @@ Automat pomija logo białe (wersje na ciemne tło, na stronie niewidoczne) i mni
 **Poprawki w panelu:** w podglądzie logotypów przy każdej firmie jest przycisk
 **„Inne źródła”**. Pokazuje wszystkich kandydatów ze strony firmy, Wikipedii i serwisów
 z ikonkami (miniatura na białym i ciemnym tle, format, rozmiar), a „Użyj” podmienia plik.
-Gdy nic nie pasuje: link do Google Grafika i ręczne „Podmień”.
+Gdy nic nie pasuje: otwórz stronę firmy albo Google Grafika obok panelu i **przeciągnij
+obrazek logo prosto na kartę firmy**. Panel bierze adres obrazka (przy `srcset` największy
+wariant), pobiera plik po swojej stronie i sprawdza go jak przy ręcznej podmianie. Działa też
+przeciągnięcie pliku z dysku i przycisk „Podmień”. Link do strony zamiast obrazka daje komunikat.
 
 **Krok 1 — pobierz brakujące logotypy:**
 

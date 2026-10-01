@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Panel firm: cały proces dodawania firm klikany w przeglądarce, bez wiersza poleceń.
+// Panel projektu: Centrum projektu (rytm, stan, procesy, dziennik, metryki) i cały proces
+// dodawania firm klikany w przeglądarce, bez wiersza poleceń.
 // Uruchamia automat, pokazuje postęp, przystanek na NIP, przegląd, konsylium, import,
 // logotypy i backup. Działa wyłącznie lokalnie (127.0.0.1), bo używa subskrypcji Claude
 // na tym komputerze i klucza service_role z .env.local.
@@ -15,12 +16,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { KATALOG_PARTII, KATALOG_REPO, dzisiaj, wczytajEnv } from "./lib/env.mjs";
 import { sprawdzLogowanie } from "./lib/claude.mjs";
+import { dodajNotatke, dokument, dziennik, metryki, odhacz, odloz, odswiezGithub, procesy, stanCentrum, usunMetryki, usunNotatke, zapiszMetryki } from "./lib/centrum.mjs";
 import { stanLogowaniaGemini, wybierzModelGemini } from "./lib/gemini.mjs";
 import { kontekstImportu, odlozoneAktualizacje, opublikuj, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
-import { czyBiale, kandydaciLogo } from "./lib/logo-zrodla.mjs";
+import { czyBiale, kandydaciLogo, obrazekZAdresu } from "./lib/logo-zrodla.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
 import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
-import { kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje, nieopublikowaneFirmy } from "./lib/supabase.mjs";
+import { aktualizuj, firmaPoSlugu, kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje, nieopublikowaneFirmy } from "./lib/supabase.mjs";
 import { ROZSTRZYGNIECIE, czekaNaCzaty, dopasuj, parsujOdpowiedz, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
 
@@ -338,9 +340,12 @@ function tabelaNip(nazwa) {
 }
 
 // ---------- logotypy ----------
+// Pusty adres (null z rozstrzygnięcia) nie może dać domeny "null": bez kropki to nie jest strona.
 function domenaZUrl(url) {
+  if (!url || typeof url !== "string") return null;
   try {
-    return new URL(String(url).startsWith("http") ? url : `https://${url}`).hostname.replace(/^www\./, "").toLowerCase();
+    const d = new URL(url.startsWith("http") ? url : `https://${url}`).hostname.replace(/^www\./, "").toLowerCase();
+    return /^[a-z0-9.-]+\.[a-z]{2,}$/.test(d) ? d : null;
   } catch {
     return null;
   }
@@ -560,6 +565,38 @@ async function gotowosc() {
   };
 }
 
+// ---------- centrum projektu ----------
+function partieWToku() {
+  return listaPartii()
+    .filter((p) => !p.blad && p.firm - p.pominiete > p.zaimportowane)
+    .slice(0, 5)
+    .map((p) => {
+      const s = sciezkaPartii(p.nazwa);
+      const krok = s.kroki?.find((k) => k.id === s.biezacy);
+      return { nazwa: p.nazwa, firm: p.firm, zaimportowane: p.zaimportowane, zmieniono: p.zmieniono, krok: krok ? { id: krok.id, nazwa: krok.nazwa, ekran: krok.ekran, info: krok.info } : null };
+    });
+}
+
+// Lampka „Narzędzia” w Centrum: te same sprawdzenia co przy starcie partii, ale trzymane kilka
+// minut, bo sprawdzenie logowania Claude uruchamia osobny proces.
+let narzedziaCache = { kiedy: 0, dane: null };
+async function narzedzia() {
+  if (!narzedziaCache.dane || Date.now() - narzedziaCache.kiedy > 5 * 60000) {
+    const g = await gotowosc();
+    narzedziaCache = { kiedy: Date.now(), dane: { claude: g.claude.ok, baza: g.baza, kolumny: !!(g.kolumny.sources && g.kolumny.confidence), mf: g.mf } };
+  }
+  return { ...narzedziaCache.dane, mf: { ...mfLicznik(), limit: LIMIT_MF_NA_DOBE } };
+}
+
+async function centrum() {
+  const partie = listaPartii();
+  const [stan, narz] = await Promise.all([
+    stanCentrum({ partie, partieWToku: partieWToku(), backup: stanBackupu().backupy[0] || null }),
+    narzedzia().catch((e) => ({ blad: e.message })),
+  ]);
+  return { ...stan, narzedzia: narz };
+}
+
 // ---------- serwer ----------
 function json(res, dane, kod = 200) {
   res.writeHead(kod, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
@@ -611,6 +648,18 @@ const serwer = http.createServer(async (req, res) => {
 
     // --- API panelu ---
     if (req.method === "GET" && p === "/api/panel/gotowosc") return json(res, await gotowosc());
+    if (req.method === "GET" && p === "/api/panel/centrum") return json(res, await centrum());
+    if (req.method === "POST" && p === "/api/panel/centrum/odswiez") { await odswiezGithub(); return json(res, await centrum()); }
+    if (req.method === "POST" && p === "/api/panel/centrum/odhacz") { odhacz(await cialo()); return json(res, await centrum()); }
+    if (req.method === "POST" && p === "/api/panel/centrum/odloz") { odloz(await cialo()); return json(res, await centrum()); }
+    if (req.method === "GET" && p === "/api/panel/procesy") return json(res, procesy());
+    if (req.method === "GET" && p === "/api/panel/dziennik") return json(res, dziennik({ dni: Math.min(365, Number(url.searchParams.get("dni")) || 30) }));
+    if (req.method === "POST" && p === "/api/panel/dziennik/notatka") { dodajNotatke(await cialo()); return json(res, { ok: true }); }
+    if (req.method === "POST" && p === "/api/panel/dziennik/usun") { usunNotatke(await cialo()); return json(res, { ok: true }); }
+    if (req.method === "GET" && p === "/api/panel/metryki") return json(res, metryki());
+    if (req.method === "POST" && p === "/api/panel/metryki") { zapiszMetryki(await cialo()); return json(res, metryki()); }
+    if (req.method === "POST" && p === "/api/panel/metryki/usun") { usunMetryki(await cialo()); return json(res, metryki()); }
+    if (req.method === "GET" && p === "/api/panel/dokument") return json(res, dokument(url.searchParams.get("sciezka")));
     if (req.method === "GET" && p === "/api/panel/kategorie") return json(res, { kategorie });
     if (req.method === "GET" && p === "/api/panel/partie") return json(res, { partie: listaPartii(), automatPracuje: zadanieAutomatuTrwa() });
     if (req.method === "GET" && p === "/api/panel/postep") return json(res, postepPartii(url.searchParams.get("partia")));
@@ -1034,7 +1083,7 @@ const serwer = http.createServer(async (req, res) => {
         const partia = wczytajPartie(plikPartii(nazwa));
         for (const f of partia.firmy.filter((x) => !x.pomin && x.rekord)) {
           const domena = domenaZUrl(f.rekord.website_url);
-          pozycje.push({ nazwa: f.rekord.display_name || f.nazwa, slug: f.rekord.slug, domena, www: f.rekord.website_url, wBazie: f.decyzja === "zaimportowany" });
+          pozycje.push({ nazwa: f.rekord.display_name || f.nazwa, firma: f.nazwa, slug: f.rekord.slug, domena, www: f.rekord.website_url, wBazie: f.decyzja === "zaimportowany" });
         }
       }
       for (const x of pozycje) Object.assign(x, x.domena ? await opisLogo(x.domena) : { plik: null, rodzaj: "bez-strony" });
@@ -1057,6 +1106,45 @@ const serwer = http.createServer(async (req, res) => {
     if (req.method === "POST" && p === "/api/panel/logo-podmien") {
       const { domena, dane } = await cialo();
       const w = await zapiszLogo(domena, Buffer.from(String(dane || ""), "base64"));
+      return json(res, w, w.blad ? 400 : 200);
+    }
+
+    // Adres strony dla firmy bez niego (plik logo nazywa się od domeny, a strona serwisu szuka logo
+    // po website_url). Zapis do partii, a gdy firma jest już w bazie, także website_url w bazie,
+    // tylko jeśli tam jest puste (istniejącego adresu nie nadpisujemy).
+    if (req.method === "POST" && p === "/api/panel/firma-www") {
+      const { partia: nazwa, firma, www } = await cialo();
+      const adres = /^https?:\/\//i.test(String(www || "").trim()) ? String(www).trim() : `https://${String(www || "").trim()}`;
+      if (!domenaZUrl(adres)) return json(res, { blad: "To nie wygląda na adres strony (np. https://ingridcosmetics.com)." }, 400);
+      const sciezka = plikPartii(nazwa);
+      if (!fs.existsSync(sciezka)) return json(res, { blad: "Nie ma takiej partii." }, 404);
+      const partia = wczytajPartie(sciezka);
+      const f = partia.firmy.find((x) => x.nazwa === firma);
+      if (!f?.rekord) return json(res, { blad: "Nie ma takiej firmy w partii." }, 404);
+      let wBazie = false;
+      if (f.decyzja === "zaimportowany") {
+        const wiersz = await firmaPoSlugu(f.rekord.slug);
+        if (!wiersz) return json(res, { blad: `Nie znalazłem firmy ${f.rekord.slug} w bazie.` }, 404);
+        if (wiersz.website_url && domenaZUrl(wiersz.website_url) !== domenaZUrl(adres)) return json(res, { blad: `W bazie jest już inny adres: ${wiersz.website_url}. Popraw go w bazie ręcznie.` }, 409);
+        if (!wiersz.website_url) {
+          const w = await aktualizuj("companies", wiersz.id, { website_url: adres });
+          if (w.blad) return json(res, { blad: `Zapis w bazie nie powiódł się: ${w.blad}` }, 500);
+          wBazie = true;
+        }
+      }
+      f.rekord.website_url = adres;
+      zapiszPartie(sciezka, partia);
+      if (wBazie) await odswiezBaze();
+      return json(res, { ok: true, domena: domenaZUrl(adres), wBazie });
+    }
+
+    // Logo przeciągnięte ze strony internetowej na kartę firmy: przeglądarka daje tylko adres
+    // obrazka, plik pobiera serwer (bez blokad CORS) i zapisuje jak ręczną podmianę.
+    if (req.method === "POST" && p === "/api/panel/logo-z-adresu") {
+      const { domena, adres } = await cialo();
+      const o = await obrazekZAdresu(adres);
+      if (o.blad) return json(res, o, 400);
+      const w = await zapiszLogo(domena, o.buf);
       return json(res, w, w.blad ? 400 : 200);
     }
 
@@ -1240,7 +1328,7 @@ serwer.on("error", (e) => {
 });
 
 serwer.listen(PORT, "127.0.0.1", () => {
-  console.log(`Panel firm: ${ADRES}  (Ctrl+C kończy)`);
+  console.log(`Panel projektu: ${ADRES}  (Ctrl+C kończy)`);
   console.log(`Partie: ${KATALOG_PARTII}`);
   if (bazaBlad) console.log(`Uwaga: baza nie odpowiada (${bazaBlad}).`);
   otworzPrzegladarke();
