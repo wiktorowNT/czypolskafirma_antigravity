@@ -60,19 +60,28 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+  - pominięty 2026-10-01: zestawienie musiałoby stanąć na Ursusie i Solarisie, a obie marki były
+    bohaterkami paczek z 24 i 25 września 2026. Wraca po 2026-10-09, gdy minie karencja
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
-- [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
+  - pominięty 2026-10-01: Plus i Polsat Box były bohaterami paczki z 17 września 2026, czyli
+    dokładnie na granicy czternastodniowej karencji. Wraca od 2026-10-02
+- [x] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową (temat pokryty paczką
+  z 2026-09-09 o markach meblowych: Black Red White, Agnella, Profim, Bydgoskie Meble, Fameg)
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
 - [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+  - pominięty 2026-10-01: Amica, czyli naturalna bohaterka takiego zestawienia, prowadziła
+    paczkę z 26 września 2026. Wraca po 2026-10-10
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
 - [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
+  - pominięty 2026-10-01: temat stoi na Lidlu i Kauflandzie, bohaterach paczek z 18 i 23 września
+    2026. Wraca po 2026-10-08
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
 - [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
 - [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
 - [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
