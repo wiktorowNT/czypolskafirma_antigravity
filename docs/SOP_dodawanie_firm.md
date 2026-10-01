@@ -28,6 +28,10 @@ Menu boczne ma te same numery kroków:
    jest wykreślona, status VAT, czy nazwa spółki podana przez czat zgadza się z MF) i z KRS.
    Wybierasz „Numer dobry”, „Numer do wymiany” (wpisujesz nowy albo bierzesz z czatu, potem
    „Sprawdź w Białej Liście”) albo „Pomiń firmę”. Nic tu nie szuka numerów automatem.
+   „Numer dobry” przy czerwonej firmie jest zapamiętywany (w przeglądzie to uwaga, nie konflikt).
+   Polski oddział zagranicznej spółki („… ODDZIAŁ W POLSCE”) bez wpisu w Białej Liście jest żółty,
+   nie czerwony: oddziały często nie są czynnymi podatnikami VAT. Taki oddział nie ma też danych
+   z KRS w partii, śledztwo robią czaty.
 3. **Rejestry**: odpis KRS, historia wspólników, CRBR, giełda (pobierane razem ze sprawdzeniem NIP).
 4. **Śledztwo w czatach** → 5. **Rozstrzygnięcie w Claude** → 6. **Przegląd** → 7. **Import** → 8. **Logotypy i publikacja**.
    Import pokazuje firmy tylko na podglądzie Vercel; na czypolskafirma.pl trafiają razem

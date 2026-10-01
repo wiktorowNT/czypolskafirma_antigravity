@@ -66,13 +66,26 @@ export function ogniwaKontrolne(lancuch = []) {
   return lancuch.filter((o) => !["spolka_polska", "mniejszosciowy", "free_float"].includes(o.rola) && (kontrolne.includes(o) || o.rola === "ostateczny"));
 }
 
+// Konflikt tożsamości, który nie blokuje: numer zaakceptowany ręcznie w kroku 2 albo polski oddział
+// zagranicznej spółki, którego jedynym problemem jest brak w Białej Liście MF (oddziały często nie
+// są czynnymi podatnikami VAT, więc w wykazie ich nie ma, choć NIP jest prawdziwy).
+export function tozsamoscDoAkceptacji(t) {
+  if (!t || t.status !== "KONFLIKT") return null;
+  if (t.zaakceptowana) return `numer zaakceptowany ręcznie mimo: ${t.powod || "ostrzeżenia rejestrów"}`;
+  const tylkoBrakMf = /^MF: (brak podmiotu w wykazie|NIP nie występuje w Białej Liście)$/.test(String(t.powod || ""));
+  if (tylkoBrakMf && /ODDZIAŁ/i.test(`${t.nazwa_spolki || ""} ${t.spolkaPodana || ""}`)) return "oddział zagranicznej spółki, nie ma go w Białej Liście MF (zwykle nie jest czynnym podatnikiem VAT); sprawdź nazwę oddziału";
+  return null;
+}
+
 // Łączy ustalenia z kroków: tożsamość, rejestr, śledztwo, kontrola. Zwraca status i listę konfliktów.
 export function ocenPewnosc(firma) {
   const konflikty = [], uwagi = [];
   const t = firma.tozsamosc || {}, rej = firma.rejestr || {}, sl = firma.sledztwo || {}, k = firma.kontrola || {};
 
   // 1. Tożsamość
-  if (t.status === "KONFLIKT") konflikty.push(`tożsamość: ${t.powod || "MF, KRS i nazwa marki nie zgadzają się"}`);
+  const akceptacja = tozsamoscDoAkceptacji(t);
+  if (akceptacja) uwagi.push(`tożsamość: ${akceptacja}`);
+  else if (t.status === "KONFLIKT") konflikty.push(`tożsamość: ${t.powod || "MF, KRS i nazwa marki nie zgadzają się"}`);
   if (t.istniejeWBazie && firma.tryb !== "reweryfikacja") uwagi.push(`firma jest już w bazie jako ${t.istniejeWBazie.slug} (${t.istniejeWBazie.country_code})`);
 
   // 2. Śledztwo vs kontrola

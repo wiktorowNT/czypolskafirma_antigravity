@@ -25,6 +25,7 @@ import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
 import { aktualizuj, firmaPoSlugu, kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje, nieopublikowaneFirmy } from "./lib/supabase.mjs";
 import { ROZSTRZYGNIECIE, czekaNaCzaty, dopasuj, parsujOdpowiedz, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
+import { tozsamoscDoAkceptacji } from "./lib/walidacja.mjs";
 
 const KATALOG = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -313,7 +314,9 @@ function tabelaNip(nazwa) {
     nazwa,
     firmy: partia.firmy.map((f) => {
       const t = f.tozsamosc || {};
-      const problem = t.status === "KONFLIKT" ? t.powod : null;
+      // Numer zaakceptowany w kroku 2 albo oddział bez wpisu w Białej Liście: żółte "do sprawdzenia", nie blokuje.
+      const akceptacja = tozsamoscDoAkceptacji(t);
+      const problem = t.status === "KONFLIKT" && !akceptacja ? t.powod : null;
       const uwaga = f.uwagiTozsamosci || (t.status !== "KONFLIKT" && t.mf?.nazwa && t.nazwa_spolki && !problem ? null : null);
       return {
         nazwa: f.nazwa,
@@ -325,8 +328,8 @@ function tabelaNip(nazwa) {
         spolkaPodana: f.spolkaPodana || t.spolkaPodana || null,
         vat: t.mf?.statusVat || null,
         // "czeka": numer wpisany ręcznie albo wczytany z Gemini, jeszcze niesprawdzony w rejestrach
-        wynik: !f.tozsamosc && f.nipPodany ? "czeka" : !t.nip ? "brak" : problem ? "zle" : uwaga || f.uwagiTozsamosci ? "uwaga" : "ok",
-        powod: problem || f.uwagiTozsamosci || null,
+        wynik: !f.tozsamosc && f.nipPodany ? "czeka" : !t.nip ? "brak" : problem ? "zle" : akceptacja || uwaga || f.uwagiTozsamosci ? "uwaga" : "ok",
+        powod: problem || akceptacja || f.uwagiTozsamosci || null,
         wBazie: t.istniejeWBazie ? { slug: t.istniejeWBazie.slug, kraj: t.istniejeWBazie.country_code, wlasciciel: t.istniejeWBazie.owner_name } : null,
         tenSamNipCo: (wgNipu.get(t.nip || f.nipPodany) || []).filter((n) => n !== f.nazwa),
         blad: f.pomin || f.tozsamosc || !f.bledy?.length ? null
@@ -779,6 +782,11 @@ const serwer = http.createServer(async (req, res) => {
         if (f.pomin) continue;
         const nowy = normalizujNip(zm.nip || "");
         const stary = normalizujNip(f.tozsamosc?.nip || f.nipPodany || "");
+        // "Numer dobry" przy czerwonej firmie zapamiętujemy: po odświeżeniu nie wraca "do wymiany".
+        if (f.tozsamosc?.status === "KONFLIKT" && (!nowy || nowy === stary)) {
+          if (decyzja === "dalej" && !f.tozsamosc.zaakceptowana) f.tozsamosc.zaakceptowana = dzisiaj();
+          if (decyzja === "szukaj") delete f.tozsamosc.zaakceptowana;
+        }
         if (nowy && nowy !== stary) {
           doSprawdzeniaNazwy.push(f.nazwa);
           if (ponow) {

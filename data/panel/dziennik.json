@@ -34,6 +34,13 @@
       "tekst": "Logotypy (krok 8): logo można przeciągnąć myszką prosto ze strony firmy albo z Google Grafika na kartę firmy w podglądzie. Panel sam pobiera plik, bez zapisywania na dysk.",
       "proces": "logotypy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-02-nip-oddzialy",
+      "data": "2026-10-02",
+      "tekst": "Krok 2 (NIP-y): polski oddział zagranicznej spółki, którego nie ma w Białej Liście MF (np. Visa, Mastercard), jest żółty zamiast czerwonego i nie blokuje przejścia dalej. Wybór „Numer dobry” przy czerwonej firmie panel zapamiętuje.",
+      "proces": "firmy",
+      "autor": "Claude"
     }
   ]
 }
