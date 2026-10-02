@@ -25,6 +25,14 @@ import {
   Utensils,
   Wrench,
   Zap,
+  Baby,
+  CreditCard,
+  Dumbbell,
+  Gamepad2,
+  House,
+  Plane,
+  Refrigerator,
+  Wine,
   Tag,
   type LucideIcon,
 } from "lucide-react"
@@ -50,6 +58,14 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Utensils,
   Wrench,
   Zap,
+  Baby,
+  CreditCard,
+  Dumbbell,
+  Gamepad2,
+  House,
+  Plane,
+  Refrigerator,
+  Wine,
 }
 
 /** Ikona kategorii po nazwie z bazy; nieznana/pusta nazwa -> Tag. */
