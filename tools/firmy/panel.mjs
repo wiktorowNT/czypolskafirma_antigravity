@@ -21,7 +21,7 @@ import { stanLogowaniaGemini, wybierzModelGemini } from "./lib/gemini.mjs";
 import { kontekstImportu, odlozoneAktualizacje, opublikuj, wykonajPlan, zbudujPlan } from "./lib/import-lib.mjs";
 import { czyBiale, kandydaciLogo, obrazekZAdresu } from "./lib/logo-zrodla.mjs";
 import { obsluzApiPrzegladu, wczytajPartie, zapiszPartie } from "./lib/przeglad-api.mjs";
-import { LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
+import { czyBladPolaczeniaMf, LIMIT_MF_NA_DOBE, mfLicznik } from "./lib/rejestry.mjs";
 import { aktualizuj, firmaPoSlugu, kategorie as pobierzKategorie, indeksFirm, kolumnaIstnieje, nieopublikowaneFirmy } from "./lib/supabase.mjs";
 import { ROZSTRZYGNIECIE, czekaNaCzaty, dopasuj, parsujOdpowiedz, cofnijWersje, czesciRozstrzygniecia, firmyDoRozstrzygniecia, instrukcjaRozstrzygniecia, porownanie, promptZbiorczy, przyjmijWersje, zapiszOdpowiedz } from "./lib/sledztwo-reczne.mjs";
 import { normalizujNip } from "./lib/tekst.mjs";
@@ -787,7 +787,18 @@ const serwer = http.createServer(async (req, res) => {
           if (decyzja === "dalej" && !f.tozsamosc.zaakceptowana) f.tozsamosc.zaakceptowana = dzisiaj();
           if (decyzja === "szukaj") delete f.tozsamosc.zaakceptowana;
         }
-        if (nowy && nowy !== stary) {
+        if ((!nowy || nowy === stary) && czyBladPolaczeniaMf(f.tozsamosc?.mf)) {
+          // MF nie odpowiedział (np. timeout), więc numer nie został ani potwierdzony, ani
+          // odrzucony. Sprawdzamy ten sam NIP jeszcze raz, bez szukania nowego modelem.
+          doSprawdzeniaNazwy.push(f.nazwa);
+          if (ponow) {
+            const spolka = f.tozsamosc.spolkaPodana;
+            wyczyscTozsamosc(f);
+            f.nipPodany = stary;
+            if (spolka) f.spolkaPodana = spolka;
+            delete f.szukajDokladnie;
+          }
+        } else if (nowy && nowy !== stary) {
           doSprawdzeniaNazwy.push(f.nazwa);
           if (ponow) {
             wyczyscTozsamosc(f);

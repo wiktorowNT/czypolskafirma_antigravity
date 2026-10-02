@@ -61,14 +61,33 @@ function zliczZapytanieMf() {
   } catch {}
 }
 
+// Błąd połączenia (timeout, sieć, 5xx) mówi tylko, że MF nie odpowiedział, nic o samym NIP-ie.
+// Taki wynik nie jest odrzuceniem numeru i można go sprawdzić ponownie.
+export function czyBladPolaczeniaMf(mf) {
+  return !!(mf && mf.blad && !mf.brak);
+}
+
+// MF przy serii zapytań potrafi przestać odpowiadać na kilkadziesiąt sekund (partia 02.10.2026:
+// 18 timeoutów pod rząd). Ponawiamy tylko błędy połączenia, nie 4xx (np. przekroczony limit).
+const PRZERWY_MF_MS = [5000, 20000];
+
+async function zapytajMf(url) {
+  for (let proba = 0; ; proba++) {
+    zliczZapytanieMf();
+    const r = await pobierzJson(url, "mf");
+    const doPonowienia = r.blad && !/^HTTP 4/.test(r.blad);
+    if (!doPonowienia || proba >= PRZERWY_MF_MS.length) return r;
+    await new Promise((ok) => setTimeout(ok, PRZERWY_MF_MS[proba]));
+  }
+}
+
 export async function mfPoNipach(nipy, data) {
   const lista = [...new Set(nipy.map(normalizujNip).filter((n) => n.length === 10))];
   const wynik = {};
   for (let i = 0; i < lista.length; i += 30) {
     const paczka = lista.slice(i, i + 30);
     const url = `https://wl-api.mf.gov.pl/api/search/nips/${paczka.join(",")}?date=${data}`;
-    zliczZapytanieMf();
-    const r = await pobierzJson(url, "mf");
+    const r = await zapytajMf(url);
     if (r.blad) {
       for (const n of paczka) wynik[n] = { blad: r.blad };
       continue;

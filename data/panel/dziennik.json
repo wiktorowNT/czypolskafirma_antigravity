@@ -48,6 +48,13 @@
       "tekst": "Śledztwo w czatach (krok 4): domyślnie równe paczki do 30 firm (84 firmy = 3 x 28), bo przy 42 firmach w jednej paczce Gemini i ChatGPT oddały tylko ok. połowę. Do wyboru też 2/3/4 równe paczki i własna liczba firm.",
       "proces": "firmy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-03-mf-zbiorczo",
+      "data": "2026-10-03",
+      "tekst": "Automat firm: NIP-y podane na wejściu sprawdza w Białej Liście MF zbiorczo (30 na zapytanie, partia 82 firm = 3 zapytania zamiast 82) i ponawia zapytanie przy timeoucie. Firma z „MF: timeout” wraca do sprawdzenia przyciskiem „Sprawdź ponownie” z tym samym NIP-em, bez szukania numeru modelem.",
+      "proces": "firmy",
+      "autor": "Claude"
     }
   ]
 }

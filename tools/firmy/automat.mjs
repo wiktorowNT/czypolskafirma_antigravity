@@ -28,7 +28,7 @@ import path from "node:path";
 import { KATALOG_PARTII, dzisiaj } from "./lib/env.mjs";
 import { MODELE, sprawdzLogowanie, zapytajModel } from "./lib/claude.mjs";
 import { stanLogowaniaGemini, zapytajGemini } from "./lib/gemini.mjs";
-import { bankierAkcjonariat, krsHistoriaWlascicieli, krsOdpisAktualny, mfPoNipach } from "./lib/rejestry.mjs";
+import { bankierAkcjonariat, czyBladPolaczeniaMf, krsHistoriaWlascicieli, krsOdpisAktualny, mfPoNipach } from "./lib/rejestry.mjs";
 import { crbrBeneficjenci } from "./lib/crbr.mjs";
 import { indeksFirm, kategorie as pobierzKategorie } from "./lib/supabase.mjs";
 import { czyNip, normalizujKrs, normalizujNip, podobienstwoNazw, slugify } from "./lib/tekst.mjs";
@@ -253,7 +253,7 @@ async function przetworzFirme(f) {
         problemy.push(`NIP ${x.nip || "(pusty)"} ma złą sumę kontrolną`);
         return problemy;
       }
-      const mf = (await mfPoNipach([x.nip], DZIS))[x.nip];
+      const mf = mfZgory.get(x.nip) || (await mfPoNipach([x.nip], DZIS))[x.nip];
       x.mf = mf;
       if (!mf || mf.brak || mf.blad) {
         problemy.push(`MF: ${mf?.blad || "NIP nie występuje w Białej Liście"}`);
@@ -403,6 +403,18 @@ if (arg.przelicz) {
 partia.przystanekNip = !!arg["stop-po-nip"] || PRZYSTANEK_RECZNY;
 const doZrobienia = partia.firmy.filter((f) => !f.pomin && (!f.rekord || f.etapy?.sledztwo === "czeka" || f.etapy?.kontrola === "czeka" || f.etapy?.opisy === "czeka" || f.etapy?.tozsamosc === "czeka"));
 log(`do przetworzenia: ${doZrobienia.length} z ${partia.firmy.length} (równolegle ${ROWNOLEGLE}, modele: ${Object.entries(MODEL).map(([k, v]) => k + "=" + v).join(", ")})`);
+
+// NIP-y podane na wejściu sprawdzamy w MF zbiorczo (30 na zapytanie) zamiast osobno dla każdej
+// firmy: 82 firmy to 3 zapytania zamiast 82. Błędów połączenia nie zapamiętujemy, wtedy firma
+// pyta MF sama jeszcze raz.
+const mfZgory = new Map();
+const nipyZgory = doZrobienia.filter((f) => !f.tozsamosc && czyNip(f.nipPodany)).map((f) => normalizujNip(f.nipPodany));
+if (nipyZgory.length > 1) {
+  const wynikMf = await mfPoNipach(nipyZgory, DZIS);
+  for (const [nip, mf] of Object.entries(wynikMf)) if (!czyBladPolaczeniaMf(mf)) mfZgory.set(nip, mf);
+  log(`MF zbiorczo: ${mfZgory.size} z ${new Set(nipyZgory).size} NIP-ów sprawdzonych z góry`);
+}
+
 let i = 0;
 await Promise.all(
   Array.from({ length: Math.min(ROWNOLEGLE, doZrobienia.length) }, async () => {
