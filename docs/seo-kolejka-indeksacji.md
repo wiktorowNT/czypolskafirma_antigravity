@@ -34,6 +34,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | 2026-09-25 | velobank, zara, nest-bank, empik, media-expert, rtv-euro-agd, x-kom, morele, komputronik, ccc, deichmann (11) | Limit liczony ok. 24 h od zgłoszeń — próba o 14:20 odbiła się od razu, wieczorem przeszło. Limit wyczerpany na 12. URL-u (cropp odbił się o limit — pierwszy na jutro). `zara` ponownie zgłoszona: test wersji opublikowanej przeszedł, czekamy na zamknięcie walidacji „Błąd przekierowania". |
 | 2026-09-27 | cropp, house, mohito, sinsay, 4f, martes-sport, decathlon, tk-maxx, black-red-white, leroy-merlin, castorama (11) | `jysk` i `agata-meble` były już w indeksie — pominięte bez zużywania limitu. Limit wyczerpany na 12. URL-u (obi odbił się o limit — pierwszy na jutro). |
 | 2026-09-30 | obi, selgros, makro, play, plus, orange, t-mobile, heyah, virgin-mobile, dpd, dhl (11) | `bricomarche` było już w indeksie — pominięte. Limit wyczerpany na 12. URL-u (poczta-polska odbiła się o limit — pierwsza na następną partię). |
+| 2026-10-02 | poczta-polska, apart, yes, apple, xiaomi, hortex, wawel, mieszko, danone, mlekovita (10) | `w-kruk`, `samsung`, `zott`, `mlekpol` były już w indeksie — pominięte. `apart` zgłoszony dwukrotnie (pierwsze potwierdzenie się nie wczytało), więc limit skończył się na 10 firmach — piatnica odbiła się o limit, pierwsza na następną partię. |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -104,20 +105,20 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `inpost`  — zgłoszone 2026-07-23
 - [x] `dpd`  — zgłoszone 2026-09-30
 - [x] `dhl`  — zgłoszone 2026-09-30
-- [ ] `poczta-polska`
-- [ ] `apart`
-- [ ] `w-kruk`
-- [ ] `yes`
-- [ ] `apple`
-- [ ] `samsung`
-- [ ] `xiaomi`
-- [ ] `hortex`
-- [ ] `wawel`
-- [ ] `mieszko`
-- [ ] `danone`
-- [ ] `zott`
-- [ ] `mlekovita`
-- [ ] `mlekpol`
+- [x] `poczta-polska`  — zgłoszone 2026-10-02
+- [x] `apart`  — zgłoszone 2026-10-02
+- [x] `w-kruk`  — już w indeksie 2026-10-02 (bez zgłoszenia)
+- [x] `yes`  — zgłoszone 2026-10-02
+- [x] `apple`  — zgłoszone 2026-10-02
+- [x] `samsung`  — już w indeksie 2026-10-02 (bez zgłoszenia)
+- [x] `xiaomi`  — zgłoszone 2026-10-02
+- [x] `hortex`  — zgłoszone 2026-10-02
+- [x] `wawel`  — zgłoszone 2026-10-02
+- [x] `mieszko`  — zgłoszone 2026-10-02
+- [x] `danone`  — zgłoszone 2026-10-02
+- [x] `zott`  — już w indeksie 2026-10-02 (bez zgłoszenia)
+- [x] `mlekovita`  — zgłoszone 2026-10-02
+- [x] `mlekpol`  — już w indeksie 2026-10-02 (bez zgłoszenia)
 - [ ] `piatnica`
 - [ ] `animex-foods`
 - [ ] `sokolow`
