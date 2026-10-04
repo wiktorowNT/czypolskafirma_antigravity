@@ -1,0 +1,20 @@
+{
+  "slug": "jak-sprawdzic-wlasciciela-firmy-krs-crbr",
+  "tytul": "Jak sprawdzić właściciela firmy",
+  "akcent": "właściciela firmy",
+  "podtytul": "Trzy jawne rejestry, jeden numer NIP, kilkanaście minut",
+  "staty": [
+    {
+      "wartosc": "10 proc.",
+      "opis": "próg wspólnika w KRS"
+    },
+    {
+      "wartosc": "25 proc.",
+      "opis": "próg w rejestrze CRBR"
+    },
+    {
+      "wartosc": "0 zł",
+      "opis": "koszt całej drogi"
+    }
+  ]
+}

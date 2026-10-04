@@ -11,8 +11,8 @@ export const metadata = {
 export default function SearchPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <div className="text-slate-500">Ładowanie wyników...</div>
+            <div className="min-h-screen bg-warm flex items-center justify-center">
+                <div className="text-ink-3">Ładowanie wyników...</div>
             </div>
         }>
             <SearchResultsClient />

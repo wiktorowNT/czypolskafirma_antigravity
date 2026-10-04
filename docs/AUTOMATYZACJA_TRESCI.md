@@ -124,8 +124,11 @@ Są dwa różne rodzaje grafiki i tylko jeden robi się sam.
 **Okładka wpisu (automatyczna).** 1200×630 w `public/images/blog/[slug].png`, wpięta we
 frontmatter polami `image` i `imageAlt`. To jest og:image, czyli obrazek widoczny przy
 udostępnianiu linku na Facebooku i X, oraz miniatura na liście `/blog`. Automat składa
-ją z szablonu [tools/okladka-szablon.html](../tools/okladka-szablon.html): pasek marki,
-tytuł z czerwonym akcentem, podtytuł i trzy liczby z tekstu.
+ją z szablonu [tools/okladka-szablon.html](../tools/okladka-szablon.html) w stylu strony
+(system „Półka”, [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)): ciepłe tło, logo, tytuł z akcentem
+w kolorze cegły, podtytuł i do trzech liczb na białych kartach. Dane każdej okładki zapisują
+się obok w `public/images/blog/dane/[slug].json`, więc po zmianie szablonu wszystkie okładki
+odświeża się pętlą po tych plikach (polecenie w nagłówku skryptu).
 
 Ręcznie robi się to tak samo, jednym poleceniem:
 
@@ -134,9 +137,8 @@ node tools/okladka-wpisu.mjs dane.json
 ```
 
 Format `dane.json` jest opisany w nagłówku [tools/okladka-wpisu.mjs](../tools/okladka-wpisu.mjs).
-Wygląd zmienia się w szablonie HTML, bez dotykania skryptu. Fonty (Gelasio i Arimo)
-ładują się z Google Fonts, żeby render na Twoim Windowsie i na runnerze wychodził
-tak samo.
+Wygląd zmienia się w szablonie HTML, bez dotykania skryptu. Font Manrope ładuje się
+z Google Fonts, żeby render na Twoim Windowsie i na runnerze wychodził tak samo.
 
 **Obrazek do posta na X i Facebooka (ręczny).** Automat go nie tworzy, podaje tylko
 pomysł w linijce „Grafika:" na górze pliku newsowego, np. oś czasu albo wykres kursu.

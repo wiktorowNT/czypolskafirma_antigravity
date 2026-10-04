@@ -31,17 +31,17 @@ export function CompanyGrid({
 }: CompanyGridProps) {
     if (companies.length === 0) {
         return (
-            <div className="text-center py-12 md:py-20 bg-white rounded-2xl border border-slate-100 border-dashed">
-                <div className="bg-slate-50 w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-6 h-6 md:w-8 md:h-8 text-slate-400" />
+            <div className="text-center py-12 md:py-20 bg-warm rounded-[24px]">
+                <div className="bg-card w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-6 h-6 md:w-8 md:h-8 text-ink-3" />
                 </div>
-                <h3 className="text-base md:text-lg font-semibold text-slate-900 mb-2">
+                <h3 className="text-base md:text-lg font-extrabold text-ink mb-2">
                     {categoryName ? "Brak wyników w tej kategorii" : "Brak wyników"}
                 </h3>
-                <p className="text-sm md:text-base text-slate-500 mb-6 max-w-sm mx-auto px-4">
+                <p className="text-sm md:text-base text-ink-3 mb-6 max-w-sm mx-auto px-4">
                     {categoryName ? (
                         <>
-                            Nie znaleźliśmy tej firmy w kategorii <strong className="text-slate-700">{categoryName}</strong>. Firma może istnieć w innej kategorii.
+                            Nie znaleźliśmy tej firmy w kategorii <strong className="text-ink-2">{categoryName}</strong>. Firma może istnieć w innej kategorii.
                         </>
                     ) : (
                         "Nie znaleźliśmy tej firmy w naszej bazie. Sprawdź pisownię lub zgłoś ją do dodania."
@@ -51,20 +51,20 @@ export function CompanyGrid({
                     {categoryName && (
                         <Link
                             href={searchTerm ? `/szukaj?q=${encodeURIComponent(searchTerm)}` : "/szukaj"}
-                            className="w-full sm:w-auto px-6 py-2.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-medium text-sm text-center"
+                            className="w-full sm:w-auto h-11 inline-flex items-center justify-center px-6 bg-panel text-white rounded-full hover:bg-black transition-colors font-bold text-sm text-center"
                         >
                             Szukaj w całej bazie
                         </Link>
                     )}
                     <ReportDialog defaultBrandName={searchTerm || ""}>
-                        <button className="w-full sm:w-auto px-6 py-2.5 bg-white text-blue-700 border border-blue-200 rounded-xl hover:bg-blue-50 transition-colors font-medium text-sm text-center shadow-sm">
+                        <button className="w-full sm:w-auto h-11 px-6 bg-card text-ink border-[1.5px] border-line rounded-full hover:border-ink transition-colors font-bold text-sm text-center">
                             Zgłoś firmę
                         </button>
                     </ReportDialog>
                     {onClearFilters && (
                         <button
                             onClick={onClearFilters}
-                            className="w-full sm:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium text-sm"
+                            className="w-full sm:w-auto h-11 px-6 bg-card text-ink-2 border-[1.5px] border-line rounded-full hover:border-ink transition-colors font-bold text-sm"
                         >
                             Wyczyść filtry
                         </button>
@@ -75,7 +75,7 @@ export function CompanyGrid({
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2.5">
             {companies.map((company) => {
                 const isPolish = company.country_code === "PL"
 

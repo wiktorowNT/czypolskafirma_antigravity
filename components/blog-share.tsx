@@ -9,7 +9,7 @@ interface BlogShareProps {
 }
 
 const buttonClass =
-  "inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-200 bg-white text-sm font-medium text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-sm transition-all"
+  "inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-line bg-white text-sm font-medium text-ink-2 hover:text-ink hover:border-line transition-all"
 
 export function BlogShare({ url, title }: BlogShareProps) {
   const [copied, setCopied] = useState(false)
@@ -40,7 +40,7 @@ export function BlogShare({ url, title }: BlogShareProps) {
         Facebook
       </a>
       <button onClick={copyLink} className={buttonClass} aria-label="Kopiuj link do wpisu">
-        {copied ? <Check className="h-4 w-4 text-green-600" /> : <Link2 className="h-4 w-4" />}
+        {copied ? <Check className="h-4 w-4 text-ink" /> : <Link2 className="h-4 w-4" />}
         {copied ? "Skopiowano" : "Kopiuj link"}
       </button>
     </div>

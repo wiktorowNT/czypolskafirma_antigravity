@@ -25,7 +25,7 @@ interface CompanySearchProps {
   placeholder?: string
   showButton?: boolean
   showSearchResult?: boolean
-  variant?: "default" | "minimal"
+  variant?: "default" | "minimal" | "hero"
   onSelect?: (company: Company) => void
 }
 
@@ -164,7 +164,7 @@ export function CompanySearch({
   const getScoreColor = (score: number) => {
     if (score >= 70) return "text-green-600"
     if (score >= 40) return "text-yellow-600"
-    return "text-red-600"
+    return "text-brand-ink"
   }
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export function CompanySearch({
     <div className={`relative ${className}`}>
       <div className={`relative ${showButton ? "flex gap-2" : ""}`}>
         <div className="relative flex-1">
-          <Search className={`absolute top-1/2 transform -translate-y-1/2 text-slate-400 ${variant === "minimal" ? "left-3 h-4 w-4" : "left-3 h-4 w-4"}`} />
+          <Search className={`absolute top-1/2 transform -translate-y-1/2 ${variant === "hero" ? "left-5 h-5 w-5 text-ink" : "left-3 h-4 w-4 text-ink-3"}`} />
           <input
             ref={inputRef}
             type="text"
@@ -213,10 +213,12 @@ export function CompanySearch({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             className={`w-full focus:outline-none transition-all duration-200 ${
-              variant === "minimal"
-                ? "py-2 pl-9 pr-9 bg-slate-100/70 border border-transparent rounded-full text-sm hover:bg-slate-100 focus:bg-white focus:border-slate-200 focus:shadow-sm"
-                : "py-2 pl-10 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            } ${showButton && variant !== "minimal" ? "h-12 text-base" : ""}`}
+              variant === "hero"
+                ? "h-14 sm:h-[58px] pl-14 pr-10 bg-card border-[1.5px] border-ink rounded-full text-base font-medium placeholder:text-ink-3 focus:ring-4 focus:ring-brand/15"
+                : variant === "minimal"
+                ? "py-2 pl-9 pr-9 bg-warm border-[1.5px] border-transparent rounded-full text-sm font-medium placeholder:text-ink-3 focus:bg-card focus:border-line"
+                : "py-2 pl-10 pr-10 border-[1.5px] border-line rounded-full font-medium placeholder:text-ink-3 focus:border-ink"
+            } ${showButton && variant === "default" ? "h-12 text-base" : ""}`}
             aria-label="Wyszukaj firmę"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -224,13 +226,13 @@ export function CompanySearch({
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-red-600"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-line border-t-brand"></div>
             </div>
           )}
           {!isLoading && query && (
             <button
               onClick={clearSearch}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-ink-3 hover:text-ink-2"
               aria-label="Wyczyść wyszukiwanie"
             >
               <X className="h-4 w-4" />
@@ -241,11 +243,11 @@ export function CompanySearch({
         {showButton && (
           <button
             onClick={handleSearch}
-            className="h-12 px-4 sm:px-6 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-medium flex items-center justify-center gap-2 flex-shrink-0"
+            className={`${variant === "hero" ? "h-14 sm:h-[58px] px-5 sm:px-7 text-base" : "h-12 px-5 sm:px-6"} bg-brand text-white rounded-full hover:bg-brand-ink transition-colors font-bold flex items-center justify-center gap-2 flex-shrink-0`}
             aria-label="Szukaj"
           >
             <Search className="h-4 w-4" />
-            <span className="hidden sm:inline">Szukaj</span>
+            <span className="hidden sm:inline">{variant === "hero" ? "Sprawdź" : "Szukaj"}</span>
           </button>
         )}
       </div>
@@ -253,14 +255,14 @@ export function CompanySearch({
       {isOpen && suggestions.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-[100] max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-card border-[1.5px] border-line rounded-2xl shadow-[0_16px_40px_-16px_rgba(31,29,26,0.35)] z-[100] max-h-80 overflow-y-auto"
           role="listbox"
         >
           {suggestions.map((company, index) => (
             <button
               key={company.id}
               onClick={() => handleSelectCompany(company)}
-              className={`w-full text-left px-4 py-3 hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors ${index === selectedIndex ? "bg-slate-50" : ""
+              className={`w-full text-left px-4 py-3 hover:bg-warm border-b border-line last:border-b-0 transition-colors ${index === selectedIndex ? "bg-warm" : ""
                 }`}
               role="option"
               aria-selected={index === selectedIndex}
@@ -274,21 +276,21 @@ export function CompanySearch({
                   className="mr-3"
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-slate-900 truncate flex items-center gap-2">
+                  <div className="font-medium text-ink truncate flex items-center gap-2">
                     {company.brand}
                     {company.country_code && (
                       <img
                         src={`https://flagcdn.com/w40/${company.country_code.toLowerCase()}.png`}
                         alt={company.country_code}
-                        className="w-5 h-auto rounded-[2px] border border-slate-200 flex-shrink-0"
+                        className="w-5 h-auto rounded-[2px] border border-line flex-shrink-0"
                       />
                     )}
                   </div>
-                  <div className="text-sm text-slate-500 truncate">{company.company}</div>
-                  <div className="text-xs text-slate-400 mt-0.5">
+                  <div className="text-sm text-ink-3 truncate">{company.company}</div>
+                  <div className="text-xs text-ink-3 mt-0.5">
                     {company.category}
                     {company.matchedBrand && (
-                      <span className="text-red-600 font-medium"> · marka: {company.matchedBrand}</span>
+                      <span className="text-brand-ink font-medium"> · marka: {company.matchedBrand}</span>
                     )}
                   </div>
                 </div>
@@ -299,25 +301,25 @@ export function CompanySearch({
       )}
 
       {searchResult && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-card border-[1.5px] border-line rounded-2xl shadow-[0_16px_40px_-16px_rgba(31,29,26,0.35)] z-50">
           <button
             onClick={() => handleSearchResultClick(searchResult)}
-            className="w-full text-left p-4 hover:bg-slate-50 transition-colors rounded-lg"
+            className="w-full text-left p-4 hover:bg-warm transition-colors rounded-2xl"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-slate-900 text-lg truncate">{searchResult.brand}</div>
-                <div className="text-sm text-slate-500 truncate">{searchResult.company}</div>
-                <div className="text-xs text-slate-400 mt-1">{searchResult.category}</div>
+                <div className="font-semibold text-ink text-lg truncate">{searchResult.brand}</div>
+                <div className="text-sm text-ink-3 truncate">{searchResult.company}</div>
+                <div className="text-xs text-ink-3 mt-1">{searchResult.category}</div>
               </div>
             </div>
 
-            <div className="text-xs text-slate-500">Kliknij, aby zobaczyć pełny profil firmy</div>
+            <div className="text-xs text-ink-3">Kliknij, aby zobaczyć pełny profil firmy</div>
           </button>
 
           <button
             onClick={closeSearchResult}
-            className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 p-1"
+            className="absolute top-2 right-2 text-ink-3 hover:text-ink-2 p-1"
             aria-label="Zamknij wynik wyszukiwania"
           >
             <X className="h-4 w-4" />
@@ -326,10 +328,10 @@ export function CompanySearch({
       )}
 
       {showNoResults && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 p-4">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-card border-[1.5px] border-line rounded-2xl shadow-[0_16px_40px_-16px_rgba(31,29,26,0.35)] z-50 p-4">
           <div className="text-center">
-            <div className="text-slate-600 mb-2">Nie znaleziono firmy. Spróbuj inną nazwę.</div>
-            <button onClick={closeSearchResult} className="text-sm text-red-600 hover:text-red-700 font-medium">
+            <div className="text-ink-2 mb-2">Nie znaleziono firmy. Spróbuj inną nazwę.</div>
+            <button onClick={closeSearchResult} className="text-sm text-brand-ink hover:text-brand-ink font-medium">
               Zamknij
             </button>
           </div>

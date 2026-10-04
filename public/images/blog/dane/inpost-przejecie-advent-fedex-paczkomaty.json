@@ -1,0 +1,20 @@
+{
+  "slug": "inpost-przejecie-advent-fedex-paczkomaty",
+  "tytul": "Kto przejmuje paczkomaty",
+  "akcent": "paczkomaty",
+  "podtytul": "InPost trafia do konsorcjum Advent, FedEx, PPF i Rafała Brzoski",
+  "staty": [
+    {
+      "wartosc": "7,8 mld €",
+      "opis": "wycena całego InPostu"
+    },
+    {
+      "wartosc": "68 925",
+      "opis": "paczkomatów w sieci"
+    },
+    {
+      "wartosc": "37% + 37%",
+      "opis": "dla Adventu i FedEksu"
+    }
+  ]
+}

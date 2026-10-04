@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-solarisa",
+  "tytul": "Kto jest właścicielem Solarisa",
+  "akcent": "Solarisa",
+  "podtytul": "Autobusy z Bolechowa, decyzje w Kraju Basków",
+  "staty": [
+    {
+      "wartosc": "300 mln €",
+      "opis": "cena sprzedaży w 2018"
+    },
+    {
+      "wartosc": "ok. 30 000",
+      "opis": "dostarczonych pojazdów"
+    },
+    {
+      "wartosc": "33 kraje",
+      "opis": "gdzie jeżdżą autobusy"
+    }
+  ]
+}

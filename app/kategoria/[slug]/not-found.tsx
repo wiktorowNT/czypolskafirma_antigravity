@@ -4,18 +4,18 @@ import { Button } from "@/components/ui/button"
 
 export default function CategoryNotFound() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-warm flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <div className="bg-white rounded-lg shadow-sm border p-8">
+        <div className="bg-white rounded-lg border p-8">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-              <AlertCircle className="w-8 h-8 text-red-600" />
+            <div className="w-16 h-16 bg-brand-soft rounded-full flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-brand-ink" />
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">Nie znaleziono kategorii</h1>
+          <h1 className="text-2xl font-bold text-ink mb-4">Nie znaleziono kategorii</h1>
 
-          <p className="text-slate-600 mb-8">Przepraszamy, ale kategoria o podanej nazwie nie została znaleziona.</p>
+          <p className="text-ink-2 mb-8">Przepraszamy, ale kategoria o podanej nazwie nie została znaleziona.</p>
 
           <div className="space-y-3">
             <Button asChild className="w-full">
@@ -31,7 +31,7 @@ export default function CategoryNotFound() {
           </div>
         </div>
 
-        <p className="text-sm text-slate-500 mt-6">Sprawdź dostępne kategorie na stronie głównej.</p>
+        <p className="text-sm text-ink-3 mt-6">Sprawdź dostępne kategorie na stronie głównej.</p>
       </div>
     </div>
   )

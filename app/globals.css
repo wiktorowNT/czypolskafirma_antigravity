@@ -1,78 +1,97 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* =====================================================================
+   CzyPolskaFirma — system projektowy „Półka” (kierunek C, październik 2026)
+   Opis i zasady użycia: docs/DESIGN_SYSTEM.md
+   Kontrast: wszystkie pary tekst/tło spełniają WCAG AA (≥ 4,5:1).
+   ===================================================================== */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Marka */
+  --brand: #c2381f;          /* cegła: werdykt „polska”, główny przycisk, akcent (5,4:1 na bieli) */
+  --brand-ink: #9e2d18;      /* tekst w odcieniu marki na jasnym tle */
+  --brand-soft: #fbe9e4;     /* tło wyróżnienia polskiego właściciela */
+  --graphite: #3b3833;       /* werdykt „zagraniczna” */
+  --sun: #f2c14e;            /* drobny akcent, maks. kilka punktów na stronę */
+
+  /* Neutralne */
+  --ink: #1f1d1a;            /* tekst główny */
+  --ink-2: #6b665e;          /* tekst drugorzędny (5,7:1 na bieli) */
+  --ink-3: #716b62;          /* etykiety, podpisy (AA na bieli i na --warm) */
+  --warm: #f6f3ee;           /* ciepłe tło sekcji */
+  --warm-2: #ece7df;         /* puste części wykresów, inicjały */
+  --line: #e4dfd6;           /* obramowania 1,5 px */
+  --panel: #1f1d1a;          /* ciemny blok (wsparcie, CTA bloga) — biały tekst w obu motywach */
+
+  /* Tokeny shadcn — używane przez components/ui */
+  --background: #ffffff;
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: #ffffff;
+  --secondary: var(--warm);
+  --secondary-foreground: var(--ink);
+  --muted: var(--warm);
+  --muted-foreground: var(--ink-2);
+  --accent: var(--warm);
+  --accent-foreground: var(--ink);
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--ink);
+  --chart-1: var(--brand);
+  --chart-2: var(--graphite);
+  --chart-3: #8f8a80;
+  --chart-4: var(--warm-2);
+  --chart-5: var(--sun);
+  --radius: 1rem;
 }
 
+/* Tryb ciemny: tokeny gotowe. Włączany klasą .dark na <html> (next-themes),
+   gdy wszystkie strony przejdą na tokeny — patrz docs/DESIGN_SYSTEM.md. */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --brand: #e8644a;
+  --brand-ink: #f3a08c;
+  --brand-soft: #3a1f19;
+  --graphite: #4a4640;
+  --sun: #e9b949;
+  --ink: #f2efe9;
+  --ink-2: #b5afa5;
+  --ink-3: #948d82;
+  --warm: #211f1c;
+  --warm-2: #2e2b27;
+  --line: #3a3632;
+  --panel: #2a2724;
+
+  --background: #171614;
+  --card: #1c1a18;
+  --popover: #1c1a18;
+  --primary: var(--ink);
+  --primary-foreground: #171614;
+  --destructive: #e8644a;
 }
 
 @theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-graphite: var(--graphite);
+  --color-sun: var(--sun);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-warm: var(--warm);
+  --color-warm-2: var(--warm-2);
+  --color-line: var(--line);
+  --color-panel: var(--panel);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -97,18 +116,13 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Promienie: 10 px drobne elementy, 16 px karty, 20–24 px duże bloki */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
 }
 
 @layer base {
@@ -118,6 +132,55 @@
   body {
     @apply bg-background text-foreground;
   }
+  ::selection {
+    background: var(--brand-soft);
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  /* Metka z werdyktem — komponent React: components/verdict-tag.tsx */
+  .metka {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px 9px 28px;
+    border-radius: 10px 999px 999px 10px;
+    background: var(--graphite);
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    clip-path: polygon(0 50%, 12px 0, 100% 0, 100% 100%, 12px 100%);
+  }
+  .metka::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translateY(-50%);
+  }
+  .metka-pl { background: var(--brand); }
+  .dark .metka-pl { background: #c2381f; }
+  .metka img { width: 18px; height: auto; border-radius: 3px; }
+  .metka-sm { font-size: 10.5px; padding: 6px 10px 6px 23px; gap: 6px; }
+  .metka-sm::before { left: 10px; width: 5px; height: 5px; }
+  .metka-sm img { width: 14px; }
+  .metka-lg { font-size: 14px; padding: 13px 22px 13px 36px; gap: 10px; }
+  .metka-lg::before { left: 16px; width: 8px; height: 8px; }
+  .metka-lg img { width: 20px; }
+
+  /* Rzędy pigułek przewijane w poziomie na telefonie */
+  .scroll-row { scrollbar-width: none; }
+  .scroll-row::-webkit-scrollbar { display: none; }
 }
 
 html {
@@ -150,8 +213,6 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #dc2626;
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
-
-

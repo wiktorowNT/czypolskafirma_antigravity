@@ -140,7 +140,7 @@ linku na Facebooku i X. Zapisz dane do `.tmp/okladka.json`:
 {
   "slug": "[slug wpisu]",
   "tytul": "[krótszy tytuł na grafikę, do ~60 znaków]",
-  "akcent": "[fragment tytułu na czerwono, dokładnie tak jak w tytule]",
+  "akcent": "[fragment tytułu wyróżniony kolorem marki, dokładnie tak jak w tytule]",
   "podtytul": "[jedno zdanie, do ~70 znaków]",
   "staty": [
     { "wartosc": "25,3 mld €", "opis": "sprzedaż sieci w 2025" }

@@ -66,21 +66,21 @@ export default function CompanyFAQ({
     if (faqItems.length === 0) return null
 
     return (
-        <section className="mt-8 pt-6 border-t border-slate-100">
-            <h2 className="text-sm font-medium text-slate-400 mb-3">
+        <section>
+            <h2 className="text-2xl font-extrabold tracking-tight text-ink mb-4">
                 Najczęściej zadawane pytania o {name}
             </h2>
-            <Accordion type="single" collapsible className="space-y-1">
+            <Accordion type="single" collapsible className="space-y-2">
                 {faqItems.map((item, index) => (
                     <AccordionItem
                         key={index}
                         value={`faq-${index}`}
-                        className="border border-slate-100 rounded-lg px-4 data-[state=open]:bg-slate-50/50"
+                        className="border-[1.5px] border-line rounded-2xl px-5 last:border-b-[1.5px] data-[state=open]:border-ink/40"
                     >
-                        <AccordionTrigger className="text-sm text-slate-600 hover:text-slate-900 hover:no-underline py-3 [&[data-state=open]]:text-slate-900">
+                        <AccordionTrigger className="text-[15.5px] font-bold text-ink hover:no-underline py-4">
                             {item.question}
                         </AccordionTrigger>
-                        <AccordionContent className="text-sm text-slate-500 leading-relaxed pb-3">
+                        <AccordionContent className="text-[15px] text-ink-2 leading-relaxed pb-4">
                             {item.answer}
                         </AccordionContent>
                     </AccordionItem>

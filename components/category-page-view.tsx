@@ -448,15 +448,15 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
     label: string
   }) => (
     <div className="mb-4">
-      <div className="text-sm font-medium text-slate-700 mb-2">{label}</div>
-      <div className="flex bg-slate-100 p-1 rounded-lg">
+      <div className="text-sm font-medium text-ink-2 mb-2">{label}</div>
+      <div className="flex bg-warm p-1 rounded-full">
         {(["any", "yes", "no"] as FilterState[]).map((option) => (
           <button
             key={option}
             onClick={() => onChange(option)}
-            className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${value === option
-              ? "bg-white text-slate-900 shadow-sm"
-              : "text-slate-500 hover:text-slate-700"
+            className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-all duration-200 ${value === option
+              ? "bg-card text-ink"
+              : "text-ink-3 hover:text-ink-2"
               }`}
           >
             {option === "any" ? "Dowolnie" : option === "yes" ? "Tak" : "Nie"}
@@ -467,10 +467,10 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
   )
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-screen bg-background">
       {showToast && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md shadow-lg animate-in slide-in-from-top-2 duration-200 ${showToast.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+          className={`fixed top-4 right-4 z-50 px-4 py-2.5 rounded-full text-sm font-bold animate-in slide-in-from-top-2 duration-200 ${showToast.type === "success" ? "bg-panel text-white" : "bg-brand text-white"
             }`}
         >
           {showToast.message}
@@ -486,38 +486,38 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
         categorySlug={category.slug}
       />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-14">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center space-x-2 text-sm text-slate-500">
+          <ol className="flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-2">
             <li>
-              <Link href="/" className="hover:text-slate-900 transition-colors">
+              <Link href="/" className="hover:text-ink transition-colors">
                 Strona główna
               </Link>
             </li>
             <li>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5 text-ink-3" />
             </li>
             <li>
-              <Link href="/kategorie" className="hover:text-slate-900 transition-colors">
+              <Link href="/kategorie" className="hover:text-ink transition-colors">
                 Kategorie
               </Link>
             </li>
             <li>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5 text-ink-3" />
             </li>
             <li>
-              <span className="text-slate-900 font-medium">{category.name}</span>
+              <span className="text-ink">{category.name}</span>
             </li>
           </ol>
         </nav>
 
         {/* Hero Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          <h1 className="text-[32px] sm:text-[40px] font-extrabold tracking-tight leading-tight text-ink mb-1.5">
             {category.name}
           </h1>
-          <p className="text-slate-500 text-sm">
+          <p className="text-ink-2 text-[15px] font-medium">
             Znaleziono {metrics.count} firm w tej kategorii.
           </p>
         </div>
@@ -529,11 +529,11 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
 
 
               {/* Capital Type Filter */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900 text-sm mb-4">Rodzaj kapitału</h3>
+              <div className="bg-card rounded-[20px] border-[1.5px] border-line p-5">
+                <h3 className="text-[12.5px] font-extrabold uppercase tracking-[0.06em] text-ink-2 mb-3.5">Rodzaj kapitału</h3>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 cursor-pointer group">
-                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300 group-hover:border-slate-400"
+                    <div className={`w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-panel border-panel" : "bg-card border-line group-hover:border-ink-3"
                       }`}>
                       {capitalFilter.polish && <Check className="w-3.5 h-3.5 text-white" />}
                     </div>
@@ -543,11 +543,11 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                       checked={capitalFilter.polish}
                       onChange={(e) => setCapitalFilter(prev => ({ ...prev, polish: e.target.checked }))}
                     />
-                    <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Polska firma</span>
+                    <span className="text-sm text-ink-2 group-hover:text-ink transition-colors">Polska firma</span>
                   </label>
 
                   <label className="flex items-center gap-3 cursor-pointer group">
-                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300 group-hover:border-slate-400"
+                    <div className={`w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-panel border-panel" : "bg-card border-line group-hover:border-ink-3"
                       }`}>
                       {capitalFilter.foreign && <Check className="w-3.5 h-3.5 text-white" />}
                     </div>
@@ -557,15 +557,15 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                       checked={capitalFilter.foreign}
                       onChange={(e) => setCapitalFilter(prev => ({ ...prev, foreign: e.target.checked }))}
                     />
-                    <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Zagraniczna firma</span>
+                    <span className="text-sm text-ink-2 group-hover:text-ink transition-colors">Zagraniczna firma</span>
                   </label>
                 </div>
               </div>
 
               {/* Other Categories */}
               {sidebarCategories.length > 0 && (
-                <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                  <h3 className="font-semibold text-slate-900 text-sm mb-4">Inne kategorie</h3>
+                <div className="bg-card rounded-[20px] border-[1.5px] border-line p-5">
+                  <h3 className="text-[12.5px] font-extrabold uppercase tracking-[0.06em] text-ink-2 mb-3.5">Inne kategorie</h3>
                   <div className="space-y-2">
                     {sidebarCategories.map((cat) => {
                       const Icon = cat.icon ? getCategoryIcon(cat.icon) : FolderOpen
@@ -573,12 +573,12 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                         <Link
                           key={cat.slug}
                           href={`/kategoria/${cat.slug}`}
-                          className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group"
+                          className="flex items-center gap-3 px-2 py-1.5 rounded-xl text-ink-2 hover:text-ink hover:bg-warm transition-colors group"
                         >
-                          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
+                          <div className="w-8 h-8 rounded-full bg-warm flex items-center justify-center text-ink-2 group-hover:bg-warm-2 transition-colors">
                             <Icon className="w-4 h-4" />
                           </div>
-                          <span className="text-sm font-medium">{cat.name}</span>
+                          <span className="text-[14.5px] font-semibold">{cat.name}</span>
                         </Link>
                       )
                     })}
@@ -587,19 +587,16 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
               )}
 
               {/* Missing Company CTA */}
-              <div className="bg-blue-50 rounded-xl border border-blue-100 p-5">
+              <div className="bg-warm rounded-[20px] border-[1.5px] border-line p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <MessageSquarePlus className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-semibold text-slate-900 text-sm">Nie widzisz firmy?</h3>
+                                    <h3 className="font-semibold text-ink text-sm">Nie widzisz firmy?</h3>
                 </div>
-                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                  Pomóż nam budować największą bazę polskich firm. Zgłoś brakującą markę.
+                <p className="text-sm text-ink-2 mb-4 leading-relaxed">
+                  Zgłoś brakującą markę — sprawdzimy ją i dodamy do bazy.
                 </p>
                 <ReportDialog>
                   <button
-                    className="w-full flex items-center justify-center px-4 py-2.5 bg-white border border-blue-200 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all shadow-sm"
+                    className="w-full flex items-center justify-center h-10 px-4 bg-card border-[1.5px] border-line text-ink text-sm font-bold rounded-full hover:border-ink transition-colors"
                   >
                     Zgłoś firmę
                   </button>
@@ -614,27 +611,27 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
             <div className="flex flex-col gap-4 mb-8">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-ink-3 w-5 h-5" />
                   <input
                     type="text"
                     placeholder={`Szukaj w kategorii ${category.name}...`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-11 pr-4 py-4 bg-white border border-slate-200 rounded-xl text-base outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all shadow-md placeholder:text-slate-400"
+                    className="w-full h-[52px] pl-11 pr-4 bg-card border-[1.5px] border-ink rounded-full text-base font-medium outline-none focus:ring-4 focus:ring-brand/15 transition-all placeholder:text-ink-3"
                   />
                 </div>
 
                 <div className="flex items-center gap-3 self-end md:self-auto">
                   <div className="relative group flex-1 md:min-w-[200px]">
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                      <Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+                      <Globe className="w-4 h-4 text-ink-3 group-focus-within:text-ink-2 transition-colors" />
                     </div>
                     <input
                       type="text"
                       placeholder="Kraj (np. Niemcy)..."
                       value={countryQuery}
                       onChange={(e) => setCountryQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-4 bg-white border border-slate-200 rounded-xl text-base outline-none focus:ring-2 focus:ring-slate-900 transition-all shadow-md placeholder:text-slate-400"
+                      className="w-full h-[52px] pl-10 pr-4 bg-card border-[1.5px] border-line rounded-full text-base font-medium outline-none focus:border-ink transition-all placeholder:text-ink-3"
                     />
                   </div>
 
@@ -642,7 +639,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="appearance-none pl-4 pr-10 py-4 bg-white border border-slate-200 rounded-xl text-base font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer shadow-md min-w-[180px]"
+                      className="appearance-none h-[52px] pl-4 pr-10 bg-card border-[1.5px] border-line rounded-full text-[15px] font-bold text-ink focus:outline-none focus:border-ink cursor-pointer min-w-[180px]"
                     >
                       <option value="name-asc">Sortuj: Nazwa A-Z</option>
                       <option value="name-desc">Sortuj: Nazwa Z-A</option>
@@ -650,12 +647,12 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                       <option value="age-desc">Najstarsze firmy</option>
                       <option value="age-asc">Najmłodsze firmy</option>
                     </select>
-                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-4 h-4 pointer-events-none" />
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-ink-3 w-4 h-4 pointer-events-none" />
                   </div>
 
                   <button
                     onClick={() => setShowMobileFilters(true)}
-                    className="lg:hidden px-4 py-4 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors shadow-md"
+                    className="lg:hidden w-[52px] h-[52px] grid place-items-center flex-shrink-0 bg-card border-[1.5px] border-line rounded-full text-ink hover:border-ink transition-colors"
                   >
                     <Filter className="w-5 h-5" />
                   </button>
@@ -666,16 +663,16 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
             {/* Active Filters */}
             {activeFilters.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
-                <span className="text-xs font-medium text-slate-500 self-center mr-1">Aktywne filtry:</span>
+                <span className="text-xs font-medium text-ink-3 self-center mr-1">Aktywne filtry:</span>
                 {activeFilters.map((filter) => (
                   <div
                     key={filter.key}
-                    className="flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600 shadow-sm"
+                    className="flex items-center gap-1.5 h-8 px-3 bg-warm rounded-full text-[12.5px] font-bold text-ink"
                   >
                     <span>{filter.label}</span>
                     <button
                       onClick={() => clearFilter(filter.key)}
-                      className="hover:text-red-500 transition-colors"
+                      className="hover:text-brand transition-colors"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -683,7 +680,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                 ))}
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs text-slate-500 hover:text-slate-900 underline underline-offset-2 ml-2"
+                  className="text-xs text-ink-3 hover:text-ink underline underline-offset-2 ml-2"
                 >
                   Wyczyść
                 </button>
@@ -715,23 +712,23 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
 
         {showMobileFilters && (
           <div className="lg:hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm">
-            <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl overflow-y-auto">
-              <div className="p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
-                <h2 className="text-lg font-bold text-slate-900">Filtry</h2>
+            <div className="absolute right-0 top-0 h-full w-80 bg-card overflow-y-auto">
+              <div className="p-5 border-b border-line flex items-center justify-between sticky top-0 bg-card z-10">
+                <h2 className="text-lg font-bold text-ink">Filtry</h2>
                 <button
                   onClick={() => setShowMobileFilters(false)}
-                  className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-warm rounded-full transition-colors"
                 >
-                  <X className="w-5 h-5 text-slate-500" />
+                  <X className="w-5 h-5 text-ink-3" />
                 </button>
               </div>
               <div className="p-5 space-y-8">
                 {/* Mobile filters content - reusing the same logic as desktop sidebar */}
                 <div>
-                  <h3 className="font-semibold text-slate-900 text-sm mb-4">Rodzaj kapitału</h3>
+                  <h3 className="text-[12.5px] font-extrabold uppercase tracking-[0.06em] text-ink-2 mb-3.5">Rodzaj kapitału</h3>
                   <div className="space-y-3">
                     <label className="flex items-center gap-3 cursor-pointer group">
-                      <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300"
+                      <div className={`w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-panel border-panel" : "bg-card border-line"
                         }`}>
                         {capitalFilter.polish && <Check className="w-3.5 h-3.5 text-white" />}
                       </div>
@@ -741,11 +738,11 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                         checked={capitalFilter.polish}
                         onChange={(e) => setCapitalFilter(prev => ({ ...prev, polish: e.target.checked }))}
                       />
-                      <span className="text-sm text-slate-600">Polska firma</span>
+                      <span className="text-sm text-ink-2">Polska firma</span>
                     </label>
 
                     <label className="flex items-center gap-3 cursor-pointer group">
-                      <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300"
+                      <div className={`w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-panel border-panel" : "bg-card border-line"
                         }`}>
                         {capitalFilter.foreign && <Check className="w-3.5 h-3.5 text-white" />}
                       </div>
@@ -755,14 +752,14 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                         checked={capitalFilter.foreign}
                         onChange={(e) => setCapitalFilter(prev => ({ ...prev, foreign: e.target.checked }))}
                       />
-                      <span className="text-sm text-slate-600">Zagraniczna firma</span>
+                      <span className="text-sm text-ink-2">Zagraniczna firma</span>
                     </label>
                   </div>
                 </div>
 
 
                 <div>
-                  <h3 className="font-semibold text-slate-900 text-sm mb-4">Szczegóły</h3>
+                  <h3 className="text-[12.5px] font-extrabold uppercase tracking-[0.06em] text-ink-2 mb-3.5">Szczegóły</h3>
                   <FilterToggle
                     value={advancedFilters.headquarters}
                     onChange={(value) => setAdvancedFilters((prev) => ({ ...prev, headquarters: value }))}
@@ -780,10 +777,10 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                   />
                 </div>
               </div>
-              <div className="p-5 border-t border-slate-100 sticky bottom-0 bg-white">
+              <div className="p-5 border-t border-line sticky bottom-0 bg-card">
                 <button
                   onClick={() => setShowMobileFilters(false)}
-                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors"
+                  className="w-full h-12 bg-panel text-white rounded-full font-bold hover:bg-black transition-colors"
                 >
                   Pokaż wyniki ({filteredAndSortedItems.length})
                 </button>
@@ -792,6 +789,6 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
           </div>
         )}
       </div>
-    </div >
+    </div>
   )
 }

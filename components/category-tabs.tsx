@@ -23,7 +23,7 @@ export function CategoryTabs({ categories, className }: CategoryTabsProps) {
 
   return (
     <div className={cn("w-full", className)}>
-      <ScrollArea className="w-full whitespace-nowrap rounded-md border bg-white p-4 shadow-sm">
+      <ScrollArea className="w-full whitespace-nowrap rounded-md border bg-white p-4">
         <div className="flex w-max space-x-4 p-1">
           {categories.map((category) => {
             const IconComponent = getIconComponent(category.icon)
@@ -32,8 +32,8 @@ export function CategoryTabs({ categories, className }: CategoryTabsProps) {
                 key={category.id}
                 href={`/kategoria/${category.slug}`}
                 className={cn(
-                  "inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2",
-                  "hover:border-red-200 hover:shadow-sm"
+                  "inline-flex items-center justify-center rounded-full border border-line bg-warm px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-warm hover:text-brand-ink focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2",
+                  "hover:border-brand/30"
                 )}
               >
                 <IconComponent className="mr-2 h-4 w-4" />

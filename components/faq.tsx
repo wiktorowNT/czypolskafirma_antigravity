@@ -52,35 +52,33 @@ export function FAQ() {
   }
 
   return (
-    <section id="faq" className="py-20 bg-slate-50 border-t border-slate-100">
+    <section id="faq" className="bg-warm py-14 sm:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Najczęściej zadawane pytania</h2>
-        </div>
+        <h2 className="text-[26px] sm:text-[28px] font-extrabold tracking-tight text-ink mb-6">Najczęściej zadawane pytania</h2>
 
-        <div className="space-y-4" role="list">
+        <div className="space-y-2" role="list">
           {faqs.map((faq, index) => {
             const isOpen = openIndexes.includes(index)
             const panelId = `faq-panel-${index}`
             const buttonId = `faq-button-${index}`
             return (
-              <div key={index} className="border border-slate-200 rounded-lg" role="listitem">
+              <div key={index} className="bg-card border-[1.5px] border-line rounded-2xl" role="listitem">
                 <button
                   id={buttonId}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
+                  className="w-full px-5 py-4 text-left flex items-center justify-between gap-4"
                   onClick={() => toggleIndex(index)}
                   aria-expanded={isOpen}
                   aria-controls={panelId}
                 >
-                  <span className="font-medium text-slate-900">{faq.question}</span>
+                  <span className="text-[15.5px] font-bold text-ink">{faq.question}</span>
                   {isOpen ? (
-                    <ChevronUp className="h-5 w-5 text-slate-500" />
+                    <ChevronUp className="h-5 w-5 flex-shrink-0 text-ink-2" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-slate-500" />
+                    <ChevronDown className="h-5 w-5 flex-shrink-0 text-ink-2" />
                   )}
                 </button>
                 {isOpen && (
@@ -88,9 +86,9 @@ export function FAQ() {
                     id={panelId}
                     role="region"
                     aria-labelledby={buttonId}
-                    className="px-6 pb-4"
+                    className="px-5 pb-4"
                   >
-                    <p className="text-slate-600 leading-relaxed">{faq.answer}</p>
+                    <p className="text-[15px] text-ink-2 leading-relaxed">{faq.answer}</p>
                   </div>
                 )}
               </div>

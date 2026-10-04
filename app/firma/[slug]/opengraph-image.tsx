@@ -118,9 +118,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const domain = getDomainFromUrl(company?.website_url)
   const flagCode = found ? getFlagCode(code) : null
 
-  const [logo, wordmarkFlag, verdictFlag] = await Promise.all([
+  const [logo, verdictFlag] = await Promise.all([
     domain ? loadLogoDataUri(domain, base) : Promise.resolve(null),
-    loadFlagDataUri("pl", base),
     flagCode ? loadFlagDataUri(flagCode, base) : Promise.resolve(null),
   ])
 
@@ -158,9 +157,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
         >
           {/* Wordmark — stała belka nad treścią */}
           <div style={{ display: "flex", alignItems: "center" }}>
-            {wordmarkFlag && (
-              <img src={wordmarkFlag} width={38} alt="" style={{ borderRadius: 5, marginRight: 16 }} />
-            )}
             <div
               style={{
                 display: "flex",
@@ -201,11 +197,12 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     alignSelf: "flex-start",
                     background: accent,
                     borderRadius: 9999,
-                    padding: "16px 34px",
+                    padding: "16px 34px 16px 30px",
                     marginTop: 28,
-                    boxShadow: `0 14px 30px -10px ${accent}`,
                   }}
                 >
+                  {/* kropka „dziurki” metki — ten sam znak co na stronie */}
+                  <div style={{ display: "flex", width: 12, height: 12, borderRadius: 9999, background: "#ffffff", marginRight: 18 }} />
                   {verdictFlag && (
                     <img
                       src={verdictFlag}
@@ -262,8 +259,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   marginLeft: 56,
                   background: OG_COLORS.tile,
                   borderRadius: 30,
-                  border: `1px solid ${OG_COLORS.tileBorder}`,
-                  boxShadow: "0 18px 40px -12px rgb(0 0 0 / 0.55)",
+                  border: `3px solid ${OG_COLORS.tileBorder}`,
                 }}
               >
                 {logo ? (

@@ -143,9 +143,9 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
 
                 {isSubmitted ? (
                     <div className="text-center py-8">
-                        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">Dziękujemy za zgłoszenie!</h3>
-                        <p className="text-slate-600">
+                        <CheckCircle className="h-16 w-16 text-ink mx-auto mb-4" />
+                        <h3 className="text-lg font-semibold text-ink mb-2">Dziękujemy za zgłoszenie!</h3>
+                        <p className="text-ink-2">
                             {formData.requestType === "remove-logo"
                                 ? "Sprawdzimy Twoje zgłoszenie i usuniemy logo w ciągu 48 godzin."
                                 : "Sprawdzimy podane informacje i dodamy je do bazy."}
@@ -154,7 +154,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-3">
-                            <Label className="text-sm font-medium text-slate-700">Typ zgłoszenia *</Label>
+                            <Label className="text-sm font-medium text-ink-2">Typ zgłoszenia *</Label>
                             <RadioGroup
                                 value={formData.requestType}
                                 onValueChange={(value) => setFormData({ ...formData, requestType: value })}
@@ -169,10 +169,10 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                                         <RadioGroupItem value={option.id} id={option.id} className="peer sr-only" />
                                         <Label
                                             htmlFor={option.id}
-                                            className="flex items-center justify-between p-4 rounded-lg border-2 border-slate-200 bg-white cursor-pointer hover:bg-slate-50 peer-data-[state=checked]:border-red-600 peer-data-[state=checked]:bg-red-50 transition-all"
+                                            className="flex items-center justify-between p-4 rounded-lg border-2 border-line bg-white cursor-pointer hover:bg-warm peer-data-[state=checked]:border-red-600 peer-data-[state=checked]:bg-red-50 transition-all"
                                         >
-                                            <span className="text-sm font-medium text-slate-900">{option.label}</span>
-                                            <div className={`w-4 h-4 rounded-full border-2 ${formData.requestType === option.id ? 'border-red-600 bg-red-600' : 'border-slate-300'}`} />
+                                            <span className="text-sm font-medium text-ink">{option.label}</span>
+                                            <div className={`w-4 h-4 rounded-full border-2 ${formData.requestType === option.id ? 'border-brand bg-brand' : 'border-line'}`} />
                                         </Label>
                                     </div>
                                 ))}
@@ -180,7 +180,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="brandName" className="text-sm font-medium text-slate-700">
+                            <Label htmlFor="brandName" className="text-sm font-medium text-ink-2">
                                 Nazwa firmy *
                             </Label>
                             <Input
@@ -195,7 +195,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
 
                         {formData.requestType !== "remove-logo" && (
                             <div className="space-y-2">
-                                <Label htmlFor="sourceLink" className="text-sm font-medium text-slate-700">
+                                <Label htmlFor="sourceLink" className="text-sm font-medium text-ink-2">
                                     Link do źródła *
                                 </Label>
                                 <Input
@@ -212,7 +212,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
 
                         {(formData.requestType === "correction" || formData.requestType === "remove-logo") && (
                             <div className="space-y-3">
-                                <Label htmlFor="attachment" className="text-sm font-medium text-slate-700">
+                                <Label htmlFor="attachment" className="text-sm font-medium text-ink-2">
                                     Załączniki (opcjonalnie)
                                 </Label>
                                 <div className="space-y-3">
@@ -223,13 +223,13 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                                             multiple
                                             onChange={handleFileChange}
                                             accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.txt,.csv,.xlsx,.xls"
-                                            className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-slate-50 file:text-slate-700 hover:file:bg-slate-100 cursor-pointer"
+                                            className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-warm file:text-ink-2 hover:file:bg-warm cursor-pointer"
                                         />
-                                        <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                                        <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-ink-3 pointer-events-none" />
                                     </div>
 
                                     {fileError && (
-                                        <p className="text-sm text-red-600 font-medium">
+                                        <p className="text-sm text-brand-ink font-medium">
                                             {fileError}
                                         </p>
                                     )}
@@ -237,20 +237,20 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                                     {attachments.length > 0 && (
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                             {attachments.map((file, index) => (
-                                                <div key={`${file.name}-${index}`} className="flex items-center justify-between p-2 bg-slate-50 border border-slate-200 rounded-md">
+                                                <div key={`${file.name}-${index}`} className="flex items-center justify-between p-2 bg-warm border border-line rounded-md">
                                                     <div className="flex items-center gap-2 overflow-hidden">
-                                                        <div className="p-1.5 bg-white rounded border border-slate-100 shrink-0">
-                                                            <Flag className="h-3 w-3 text-slate-400" />
+                                                        <div className="p-1.5 bg-white rounded border border-line shrink-0">
+                                                            <Flag className="h-3 w-3 text-ink-3" />
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="text-sm font-medium text-slate-700 truncate">{file.name}</p>
-                                                            <p className="text-xs text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                            <p className="text-sm font-medium text-ink-2 truncate">{file.name}</p>
+                                                            <p className="text-xs text-ink-3">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                                                         </div>
                                                     </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => removeFile(index)}
-                                                        className="p-1 text-slate-400 hover:text-red-500 transition-colors"
+                                                        className="p-1 text-ink-3 hover:text-brand transition-colors"
                                                         aria-label="Usuń plik"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -263,7 +263,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                                     )}
                                 </div>
 
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-ink-3">
                                     {formData.requestType === "remove-logo"
                                         ? "Dołącz dokumenty potwierdzające prawo do znaku towarowego."
                                         : "Obsługiwane formaty: PDF, DOC, IMG, XLS. Max 8MB łącznie. Max 5 plików."}
@@ -272,7 +272,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                         )}
 
                         <div className="space-y-2">
-                            <Label htmlFor="comment" className="text-sm font-medium text-slate-700">
+                            <Label htmlFor="comment" className="text-sm font-medium text-ink-2">
                                 {formData.requestType === "remove-logo" ? "Uzasadnienie żądania usunięcia" : "Komentarz"}
                             </Label>
                             <Textarea
@@ -291,7 +291,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-sm font-medium text-slate-700">
+                            <Label htmlFor="email" className="text-sm font-medium text-ink-2">
                                 Twój email {formData.requestType === "remove-logo" ? "*" : "(opcjonalnie)"}
                             </Label>
                             <Input
@@ -303,7 +303,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                                 className="w-full"
                                 required={formData.requestType === "remove-logo"}
                             />
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-ink-3">
                                 {formData.requestType === "remove-logo"
                                     ? "Wymagany do kontaktu w sprawie usunięcia logo"
                                     : "Podaj email, aby otrzymać powiadomienie gdy firma zostanie dodana lub zaktualizowana."}
@@ -319,7 +319,7 @@ export function ReportDialog({ children, defaultBrandName = "" }: ReportDialogPr
                             </div>
                         )}
 
-                        <Button type="submit" disabled={isSubmitting} className="w-full bg-red-600 hover:bg-red-700 text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed">
+                        <Button type="submit" disabled={isSubmitting} className="w-full bg-brand hover:bg-brand-ink text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed">
                             {isSubmitting
                                 ? "Wysyłanie..."
                                 : (formData.requestType === "remove-logo" ? "Zgłoś do usunięcia" : "Wyślij zgłoszenie")

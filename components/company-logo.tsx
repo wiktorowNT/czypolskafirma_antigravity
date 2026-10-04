@@ -43,24 +43,10 @@ function getDomainFromUrl(url?: string | null): string | null {
   }
 }
 
-// Generate deterministic color from company name
-function getAvatarColor(name: string): { bg: string; text: string } {
-  const colors = [
-    { bg: "#EFF6FF", text: "#2563EB" }, // Blue
-    { bg: "#F0FDF4", text: "#16A34A" }, // Green
-    { bg: "#FEF2F2", text: "#DC2626" }, // Red
-    { bg: "#FFF7ED", text: "#EA580C" }, // Orange
-    { bg: "#FAF5FF", text: "#9333EA" }, // Purple
-    { bg: "#ECFEFF", text: "#0891B2" }, // Cyan
-    { bg: "#FDF4FF", text: "#C026D3" }, // Fuchsia
-  ]
-
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = ((hash << 5) - hash + name.charCodeAt(i)) & 0xffffffff
-  }
-
-  return colors[Math.abs(hash) % colors.length]
+// Awatar z inicjałem: jeden spokojny kolor dla wszystkich firm (system „Półka”),
+// zamiast losowych par kolorów, które nic nie znaczyły.
+function getAvatarColor(_name: string): { bg: string; text: string } {
+  return { bg: "var(--warm)", text: "var(--ink-2)" }
 }
 
 // Brandfetch CDN client ID (public — designed for use in <img> tags)
@@ -165,13 +151,13 @@ export function CompanyLogo({
         height: size,
         borderRadius: size >= 40 ? 16 : 12,
         backgroundColor: showFallback ? theme.bg : '#ffffff',
-        border: showFallback ? 'none' : '1px solid #e2e8f0',
+        border: '1px solid var(--line)',
       }}
     >
       {showFallback ? (
         // Letter Avatar Fallback
         <span
-          className="font-bold select-none"
+          className="font-extrabold select-none"
           style={{
             color: theme.text,
             fontSize: size * 0.45,
@@ -185,7 +171,7 @@ export function CompanyLogo({
           {/* Loading skeleton */}
           {imageLoading && (
             <div
-              className="absolute inset-0 bg-slate-100 animate-pulse"
+              className="absolute inset-0 bg-warm animate-pulse"
               style={{ borderRadius: size >= 40 ? 16 : 12 }}
             />
           )}

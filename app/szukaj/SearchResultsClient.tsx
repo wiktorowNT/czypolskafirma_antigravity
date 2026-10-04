@@ -121,12 +121,12 @@ export default function SearchResultsClient() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-warm">
             <div className="container mx-auto px-4 py-8">
                 {/* Back Link */}
                 <Link
                     href="/"
-                    className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors"
+                    className="inline-flex items-center gap-2 text-sm text-ink-3 hover:text-ink mb-6 transition-colors"
                 >
                     <ChevronLeft className="w-4 h-4" />
                     Powrót do strony głównej
@@ -134,21 +134,21 @@ export default function SearchResultsClient() {
 
                 {/* Search Header */}
                 <div className="mb-8">
-                    <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+                    <h1 className="text-2xl md:text-3xl font-bold text-ink mb-2">
                         {query ? (
-                            <>Wyniki wyszukiwania dla: "<span className="text-red-600">{query}</span>"</>
+                            <>Wyniki wyszukiwania dla: "<span className="text-brand-ink">{query}</span>"</>
                         ) : (
                             "Wpisz nazwę firmy"
                         )}
                     </h1>
                     {!isLoading && query && (
-                        <p className="text-sm text-slate-500">
-                            Znaleziono <strong className="text-slate-900">{metrics.total}</strong> wyników
+                        <p className="text-sm text-ink-3">
+                            Znaleziono <strong className="text-ink">{metrics.total}</strong> wyników
                             {metrics.polishCount > 0 && (
-                                <> • <strong className="text-green-600">{metrics.polishCount}</strong> polskich</>
+                                <> • <strong className="text-ink">{metrics.polishCount}</strong> polskich</>
                             )}
                             {metrics.foreignCount > 0 && (
-                                <> • <strong className="text-slate-700">{metrics.foreignCount}</strong> zagranicznych</>
+                                <> • <strong className="text-ink-2">{metrics.foreignCount}</strong> zagranicznych</>
                             )}
                         </p>
                     )}
@@ -159,11 +159,11 @@ export default function SearchResultsClient() {
                     <div className="hidden lg:block w-72 flex-shrink-0">
                         <div className="sticky top-24 space-y-6">
                             {/* Capital Type Filter */}
-                            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                                <h3 className="font-semibold text-slate-900 text-sm mb-4">Rodzaj kapitału</h3>
+                            <div className="bg-white rounded-xl border border-line p-5">
+                                <h3 className="font-semibold text-ink text-sm mb-4">Rodzaj kapitału</h3>
                                 <div className="space-y-3">
                                     <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300 group-hover:border-slate-400"
+                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-ink border-ink" : "bg-white border-line group-hover:border-ink-3"
                                             }`}>
                                             {capitalFilter.polish && <Check className="w-3.5 h-3.5 text-white" />}
                                         </div>
@@ -173,11 +173,11 @@ export default function SearchResultsClient() {
                                             checked={capitalFilter.polish}
                                             onChange={(e) => setCapitalFilter(prev => ({ ...prev, polish: e.target.checked }))}
                                         />
-                                        <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Polska firma</span>
+                                        <span className="text-sm text-ink-2 group-hover:text-ink transition-colors">Polska firma</span>
                                     </label>
 
                                     <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300 group-hover:border-slate-400"
+                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-ink border-ink" : "bg-white border-line group-hover:border-ink-3"
                                             }`}>
                                             {capitalFilter.foreign && <Check className="w-3.5 h-3.5 text-white" />}
                                         </div>
@@ -187,15 +187,15 @@ export default function SearchResultsClient() {
                                             checked={capitalFilter.foreign}
                                             onChange={(e) => setCapitalFilter(prev => ({ ...prev, foreign: e.target.checked }))}
                                         />
-                                        <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Zagraniczna firma</span>
+                                        <span className="text-sm text-ink-2 group-hover:text-ink transition-colors">Zagraniczna firma</span>
                                     </label>
                                 </div>
                             </div>
 
                             {/* Browse Categories */}
                             {sidebarCategories.length > 0 && (
-                                <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                                    <h3 className="font-semibold text-slate-900 text-sm mb-4">Przeglądaj kategorie</h3>
+                                <div className="bg-white rounded-xl border border-line p-5">
+                                    <h3 className="font-semibold text-ink text-sm mb-4">Przeglądaj kategorie</h3>
                                     <div className="space-y-2">
                                         {sidebarCategories.map((cat) => {
                                             const Icon = cat.icon ? getCategoryIcon(cat.icon) : FolderOpen
@@ -203,9 +203,9 @@ export default function SearchResultsClient() {
                                                 <Link
                                                     key={cat.slug}
                                                     href={`/kategoria/${cat.slug}`}
-                                                    className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group"
+                                                    className="flex items-center gap-3 p-2 rounded-lg text-ink-2 hover:text-ink hover:bg-warm transition-colors group"
                                                 >
-                                                    <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:bg-blue-50 transition-colors">
+                                                    <div className="w-8 h-8 rounded-lg bg-warm flex items-center justify-center text-ink-3 group-hover:text-ink group-hover:bg-warm transition-colors">
                                                         <Icon className="w-4 h-4" />
                                                     </div>
                                                     <span className="text-sm font-medium">{cat.name}</span>
@@ -217,19 +217,19 @@ export default function SearchResultsClient() {
                             )}
 
                             {/* Missing Company CTA */}
-                            <div className="bg-blue-50 rounded-xl border border-blue-100 p-5">
+                            <div className="bg-warm rounded-xl border border-line p-5">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                    <div className="w-10 h-10 rounded-full bg-warm-2 flex items-center justify-center text-ink">
                                         <MessageSquarePlus className="w-5 h-5" />
                                     </div>
-                                    <h3 className="font-semibold text-slate-900 text-sm">Nie widzisz firmy?</h3>
+                                    <h3 className="font-semibold text-ink text-sm">Nie widzisz firmy?</h3>
                                 </div>
-                                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                                <p className="text-sm text-ink-2 mb-4 leading-relaxed">
                                     Pomóż nam budować największą bazę polskich firm. Zgłoś brakującą markę.
                                 </p>
                                 <ReportDialog>
                                     <button
-                                        className="w-full flex items-center justify-center px-4 py-2.5 bg-white border border-blue-200 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all shadow-sm"
+                                        className="w-full flex items-center justify-center px-4 py-2.5 bg-white border border-line text-ink text-sm font-medium rounded-lg hover:bg-warm hover:border-line transition-all"
                                     >
                                         Zgłoś firmę
                                     </button>
@@ -244,13 +244,13 @@ export default function SearchResultsClient() {
                         <div className="flex flex-col gap-4 mb-8">
                             <div className="flex flex-col md:flex-row gap-4">
                                 <form onSubmit={handleSearch} className="relative flex-1">
-                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-ink-3 w-5 h-5" />
                                     <input
                                         type="text"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         placeholder="Szukaj firmy..."
-                                        className="w-full pl-11 pr-4 py-4 bg-white border border-slate-200 rounded-xl text-base outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all shadow-md placeholder:text-slate-400"
+                                        className="w-full pl-11 pr-4 py-4 bg-white border border-line rounded-xl text-base outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all placeholder:text-ink-3"
                                     />
                                 </form>
 
@@ -259,17 +259,17 @@ export default function SearchResultsClient() {
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value)}
-                                            className="appearance-none pl-4 pr-10 py-4 bg-white border border-slate-200 rounded-xl text-base font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer shadow-md min-w-[180px]"
+                                            className="appearance-none pl-4 pr-10 py-4 bg-white border border-line rounded-xl text-base font-medium text-ink-2 focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer min-w-[180px]"
                                         >
                                             <option value="name-asc">Sortuj: Nazwa A-Z</option>
                                             <option value="name-desc">Sortuj: Nazwa Z-A</option>
                                         </select>
-                                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 w-4 h-4 pointer-events-none" />
+                                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-ink-3 w-4 h-4 pointer-events-none" />
                                     </div>
 
                                     <button
                                         onClick={() => setShowMobileFilters(true)}
-                                        className="lg:hidden px-4 py-4 bg-white border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors shadow-md"
+                                        className="lg:hidden px-4 py-4 bg-white border border-line rounded-xl text-ink-2 hover:bg-warm transition-colors"
                                     >
                                         <Filter className="w-5 h-5" />
                                     </button>
@@ -280,7 +280,7 @@ export default function SearchResultsClient() {
                         {/* Loading State */}
                         {isLoading && (
                             <div className="flex items-center justify-center py-20">
-                                <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                                <Loader2 className="w-8 h-8 text-ink-3 animate-spin" />
                             </div>
                         )}
 
@@ -300,14 +300,14 @@ export default function SearchResultsClient() {
 
                         {/* No Query State */}
                         {!isLoading && !query && (
-                            <div className="text-center py-20 bg-white rounded-2xl border border-slate-100 border-dashed">
-                                <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Search className="w-8 h-8 text-slate-400" />
+                            <div className="text-center py-20 bg-white rounded-2xl border border-line border-dashed">
+                                <div className="bg-warm w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Search className="w-8 h-8 text-ink-3" />
                                 </div>
-                                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                                <h3 className="text-lg font-semibold text-ink mb-2">
                                     Wpisz frazę do wyszukania
                                 </h3>
-                                <p className="text-slate-500 max-w-sm mx-auto">
+                                <p className="text-ink-3 max-w-sm mx-auto">
                                     Użyj pola wyszukiwania powyżej, aby znaleźć firmę w naszej bazie.
                                 </p>
                             </div>
@@ -318,22 +318,22 @@ export default function SearchResultsClient() {
                 {/* Mobile Filters Drawer */}
                 {showMobileFilters && (
                     <div className="lg:hidden fixed inset-0 bg-black/50 z-50 backdrop-blur-sm">
-                        <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl overflow-y-auto">
-                            <div className="p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
-                                <h2 className="text-lg font-bold text-slate-900">Filtry</h2>
+                        <div className="absolute right-0 top-0 h-full w-80 bg-white overflow-y-auto">
+                            <div className="p-5 border-b border-line flex items-center justify-between sticky top-0 bg-white z-10">
+                                <h2 className="text-lg font-bold text-ink">Filtry</h2>
                                 <button
                                     onClick={() => setShowMobileFilters(false)}
-                                    className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+                                    className="p-2 hover:bg-warm rounded-full transition-colors"
                                 >
-                                    <X className="w-5 h-5 text-slate-500" />
+                                    <X className="w-5 h-5 text-ink-3" />
                                 </button>
                             </div>
                             <div className="p-5 space-y-8">
                                 <div>
-                                    <h3 className="font-semibold text-slate-900 text-sm mb-4">Rodzaj kapitału</h3>
+                                    <h3 className="font-semibold text-ink text-sm mb-4">Rodzaj kapitału</h3>
                                     <div className="space-y-3">
                                         <label className="flex items-center gap-3 cursor-pointer group">
-                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300"}`}>
+                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.polish ? "bg-ink border-ink" : "bg-white border-line"}`}>
                                                 {capitalFilter.polish && <Check className="w-3.5 h-3.5 text-white" />}
                                             </div>
                                             <input
@@ -342,10 +342,10 @@ export default function SearchResultsClient() {
                                                 checked={capitalFilter.polish}
                                                 onChange={(e) => setCapitalFilter(prev => ({ ...prev, polish: e.target.checked }))}
                                             />
-                                            <span className="text-sm text-slate-600">Polska firma</span>
+                                            <span className="text-sm text-ink-2">Polska firma</span>
                                         </label>
                                         <label className="flex items-center gap-3 cursor-pointer group">
-                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-slate-900 border-slate-900" : "bg-white border-slate-300"}`}>
+                                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${capitalFilter.foreign ? "bg-ink border-ink" : "bg-white border-line"}`}>
                                                 {capitalFilter.foreign && <Check className="w-3.5 h-3.5 text-white" />}
                                             </div>
                                             <input
@@ -354,20 +354,20 @@ export default function SearchResultsClient() {
                                                 checked={capitalFilter.foreign}
                                                 onChange={(e) => setCapitalFilter(prev => ({ ...prev, foreign: e.target.checked }))}
                                             />
-                                            <span className="text-sm text-slate-600">Zagraniczna firma</span>
+                                            <span className="text-sm text-ink-2">Zagraniczna firma</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 {sidebarCategories.length > 0 && (
                                     <div>
-                                        <h3 className="font-semibold text-slate-900 text-sm mb-4">Przeglądaj kategorie</h3>
+                                        <h3 className="font-semibold text-ink text-sm mb-4">Przeglądaj kategorie</h3>
                                         <div className="space-y-2">
                                             {sidebarCategories.map((cat) => (
                                                 <Link
                                                     key={cat.slug}
                                                     href={`/kategoria/${cat.slug}`}
-                                                    className="flex items-center gap-3 p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                                                    className="flex items-center gap-3 p-2 rounded-lg text-ink-2 hover:text-ink hover:bg-warm transition-colors"
                                                     onClick={() => setShowMobileFilters(false)}
                                                 >
                                                     <FolderOpen className="w-4 h-4" />
@@ -378,10 +378,10 @@ export default function SearchResultsClient() {
                                     </div>
                                 )}
                             </div>
-                            <div className="p-5 border-t border-slate-100 sticky bottom-0 bg-white">
+                            <div className="p-5 border-t border-line sticky bottom-0 bg-white">
                                 <button
                                     onClick={() => setShowMobileFilters(false)}
-                                    className="w-full py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors"
+                                    className="w-full py-3 bg-ink text-white rounded-xl font-medium hover:bg-black transition-colors"
                                 >
                                     Pokaż wyniki ({filteredAndSortedResults.length})
                                 </button>

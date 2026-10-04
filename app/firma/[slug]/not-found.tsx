@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button"
 
 export default function CompanyNotFound() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+    <div className="min-h-screen bg-warm flex items-center justify-center">
       <div className="max-w-md mx-auto text-center px-4">
         <div className="mb-8">
-          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search className="w-12 h-12 text-red-600" />
+          <div className="w-24 h-24 bg-brand-soft rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-12 h-12 text-brand-ink" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Firma nie znaleziona</h1>
-          <p className="text-slate-600">
+          <h1 className="text-2xl font-bold text-ink mb-2">Firma nie znaleziona</h1>
+          <p className="text-ink-2">
             Nie znaleźliśmy profilu firmy o podanym identyfikatorze w naszej bazie danych.
           </p>
         </div>

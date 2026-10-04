@@ -37,7 +37,7 @@ export default function HeroCategoriesClient() {
     }
   }, [])
 
-  if (error) return <div className="text-red-600">Błąd: {error}</div>
+  if (error) return <div className="text-brand-ink">Błąd: {error}</div>
   if (!categories) return <div>Ładowanie kategorii…</div>
 
   return (
@@ -50,13 +50,13 @@ export default function HeroCategoriesClient() {
               <Link
                 key={cat.id}
                 href={`/kategoria/${cat.slug}`}
-                className="block bg-white rounded-lg p-6 shadow-sm border border-slate-200 hover:shadow-md transition"
+                className="block bg-white rounded-lg p-6 border border-line transition"
               >
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4">
-                  <Icon className="h-6 w-6 text-green-600" />
+                  <Icon className="h-6 w-6 text-ink" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">{cat.name}</h3>
-                <p className="text-slate-600 mb-0">Marki i firmy z kategorii {cat.name.toLowerCase()}</p>
+                <h3 className="text-lg font-semibold text-ink mb-2">{cat.name}</h3>
+                <p className="text-ink-2 mb-0">Marki i firmy z kategorii {cat.name.toLowerCase()}</p>
               </Link>
             )
           })}

@@ -118,8 +118,15 @@ async function main() {
     fs.rmSync(plikHtml, { force: true })
   }
 
+  // Dane okładki zostają w repo, żeby przy zmianie wyglądu dało się odtworzyć wszystkie
+  // okładki jednym poleceniem, bez przepisywania ich z obrazków:
+  //   for f in public/images/blog/dane/*.json; do node tools/okladka-wpisu.mjs "$f"; done
+  const katalogDanych = path.join(KATALOG_WYJSCIA, "dane")
+  fs.mkdirSync(katalogDanych, { recursive: true })
+  fs.writeFileSync(path.join(katalogDanych, `${dane.slug}.json`), JSON.stringify(dane, null, 2) + "\n", "utf8")
+
   const relatywna = `/images/blog/${dane.slug}.png`
-  console.log(`okladka-wpisu: zapisano public${relatywna}`)
+  console.log(`okladka-wpisu: zapisano public${relatywna} (+ dane/${dane.slug}.json)`)
   console.log("Do frontmattera wpisu:")
   console.log(`image: "${relatywna}"`)
   console.log(`imageAlt: "${dane.tytul}"`)

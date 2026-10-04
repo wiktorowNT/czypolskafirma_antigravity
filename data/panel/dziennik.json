@@ -55,6 +55,13 @@
       "tekst": "Automat firm: NIP-y podane na wejściu sprawdza w Białej Liście MF zbiorczo (30 na zapytanie, partia 82 firm = 3 zapytania zamiast 82) i ponawia zapytanie przy timeoucie. Firma z „MF: timeout” wraca do sprawdzenia przyciskiem „Sprawdź ponownie” z tym samym NIP-em, bez szukania numeru modelem.",
       "proces": "firmy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-04-okladki-dane",
+      "data": "2026-10-04",
+      "tekst": "Okładki bloga w nowym stylu „Półka” (gałąź redesign): tools/okladka-wpisu.mjs zapisuje teraz dane każdej okładki do public/images/blog/dane/[slug].json, więc po zmianie szablonu wszystkie okładki odświeża się jedną pętlą zamiast przepisywać je z obrazków. Format danych wejściowych bez zmian, automat treści działa jak dotąd.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }

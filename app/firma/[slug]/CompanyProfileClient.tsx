@@ -86,66 +86,53 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
         })
     }, [company.id])
     return (
-        <main className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white">
-            {/* Top Navigation - Breadcrumbs */}
-            <div className="bg-white/80 backdrop-blur-md border-b border-slate-200/60">
-                <div className="max-w-3xl mx-auto px-4 sm:px-6">
-                    <div className="flex items-center justify-between h-14 overflow-x-auto">
-                        {/* Breadcrumbs */}
-                        <nav className="flex items-center gap-1.5 text-sm min-w-0">
-                            {/* Home */}
-                            <Link
-                                href="/"
-                                className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-colors hover:underline flex-shrink-0"
-                            >
-                                <Home className="w-4 h-4" />
-                                <span className="hidden sm:inline">Start</span>
-                            </Link>
+        <main className="min-h-screen bg-background">
+            {/* Okruszki + ulubione + data weryfikacji */}
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+                <div className="flex items-center justify-between gap-3 pt-4 sm:pt-5">
+                    <nav className="flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-2 min-w-0">
+                        <Link href="/" className="inline-flex items-center gap-1.5 hover:text-ink flex-shrink-0">
+                            <Home className="w-4 h-4" />
+                            <span className="hidden sm:inline">Start</span>
+                        </Link>
+                        <ChevronRight className="w-3.5 h-3.5 text-ink-3 flex-shrink-0" />
+                        <Link
+                            href={`/kategoria/${company.categorySlug}`}
+                            className="hover:text-ink flex-shrink-0"
+                        >
+                            {formatSlugAsName(company.categorySlug)}
+                        </Link>
+                        <ChevronRight className="w-3.5 h-3.5 text-ink-3 flex-shrink-0" />
+                        <span className="text-ink truncate max-w-[120px] sm:max-w-[260px]">
+                            {company.brandName || formatSlugAsName(company.slug)}
+                        </span>
+                    </nav>
 
-                            {/* Separator */}
-                            <ChevronRight className="w-4 h-4 text-slate-300 flex-shrink-0" />
-
-                            {/* Category */}
-                            <Link
-                                href={`/kategoria/${company.categorySlug}`}
-                                className="text-slate-600 hover:text-slate-900 transition-colors hover:underline flex-shrink-0"
-                            >
-                                {formatSlugAsName(company.categorySlug)}
-                            </Link>
-
-                            {/* Separator */}
-                            <ChevronRight className="w-4 h-4 text-slate-300 flex-shrink-0" />
-
-                            {/* Current Page - Company Name */}
-                            <span className="text-slate-400 truncate max-w-[150px] sm:max-w-[250px]">
-                                {company.brandName || formatSlugAsName(company.slug)}
-                            </span>
-                        </nav>
-
-                        {/* Bookmark + Verification Date */}
-                        <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-                            <button
-                                onClick={() => toggleBookmark(company.id)}
-                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 border ${
-                                    bookmarked
-                                        ? "text-red-600 bg-red-50 border-red-200 hover:bg-red-100"
-                                        : "text-slate-500 bg-white border-slate-200 hover:text-red-500 hover:border-red-200 hover:bg-red-50"
-                                }`}
-                                title={bookmarked ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
-                            >
-                                <Heart className={`w-3.5 h-3.5 ${bookmarked ? "fill-current" : ""}`} />
-                                {bookmarked ? "W ulubionych" : "Ulubione"}
-                            </button>
-                            <p className="text-xs text-slate-400">
-                                Weryfikacja: {company.lastVerified}
-                            </p>
-                        </div>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                        <span className="hidden sm:inline text-[12.5px] font-semibold text-ink-3 tabular-nums">
+                            Weryfikacja: {company.lastVerified}
+                        </span>
+                        <button
+                            onClick={() => toggleBookmark(company.id)}
+                            className={`inline-flex items-center gap-1.5 h-9 px-3.5 text-[13px] font-bold rounded-full border-[1.5px] transition-colors ${
+                                bookmarked
+                                    ? "text-brand-ink bg-brand-soft border-brand/40"
+                                    : "text-ink border-line hover:border-ink"
+                            }`}
+                            title={bookmarked ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+                        >
+                            <Heart className={`w-3.5 h-3.5 ${bookmarked ? "fill-current" : ""}`} />
+                            {bookmarked ? "W ulubionych" : "Ulubione"}
+                        </button>
                     </div>
                 </div>
+                <p className="sm:hidden mt-2 text-[12.5px] font-semibold text-ink-3 tabular-nums">
+                    Weryfikacja: {company.lastVerified}
+                </p>
             </div>
 
             {/* Main Content */}
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-7 pb-14 space-y-12">
 
                 {/* Company Hero - Identity, Status & Insights */}
                 <CompanyHero
@@ -193,20 +180,18 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     initialAlternatives={relatedCompanies}
                 />
 
-                {/* Report CTA */}
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200/60 p-5">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div>
-                            <p className="text-sm font-medium text-slate-700">Widzisz błąd lub masz więcej informacji?</p>
-                            <p className="text-xs text-slate-500 mt-0.5">Pomóż nam poprawić dane o tej firmie.</p>
-                        </div>
-                        <ReportDialog defaultBrandName={company.brandName || formatSlugAsName(company.slug)}>
-                            <button className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
-                                <Flag className="w-4 h-4" />
-                                Zgłoś uwagi
-                            </button>
-                        </ReportDialog>
+                {/* Zgłoś uwagi */}
+                <div className="bg-warm rounded-3xl px-5 py-5 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <p className="text-[15.5px] font-bold text-ink">Widzisz błąd lub masz więcej informacji?</p>
+                        <p className="text-sm text-ink-2 mt-0.5">Pomóż nam poprawić dane o tej firmie.</p>
                     </div>
+                    <ReportDialog defaultBrandName={company.brandName || formatSlugAsName(company.slug)}>
+                        <button className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-card border-[1.5px] border-line text-[15px] font-bold text-ink hover:border-ink transition-colors">
+                            <Flag className="w-4 h-4" />
+                            Zgłoś uwagi
+                        </button>
+                    </ReportDialog>
                 </div>
 
                 {/* SEO Content — subtle bottom sections for Google indexing */}
@@ -242,7 +227,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                 />
 
             </div>
-        </main >
+        </main>
     )
 }
 

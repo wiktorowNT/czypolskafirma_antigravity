@@ -13,19 +13,21 @@ export const OG_SIZE = { width: 1200, height: 630 }
 
 // Paleta karty. Ciemne tło daje kontrast w feedzie X-a i Facebooka —
 // poprzednia biała karta zlewała się z tłem osi czasu.
+// Kolory kart OG w systemie „Półka” (docs/DESIGN_SYSTEM.md): ciepłe tło, cegła = polski
+// kapitał, grafit = zagraniczny — tak samo jak metka z werdyktem na stronie.
 export const OG_COLORS = {
-  bgFrom: "#0b1120",
-  bgVia: "#182236",
-  bgTo: "#0b1120",
+  bgFrom: "#f6f3ee",
+  bgVia: "#f6f3ee",
+  bgTo: "#f6f3ee",
   tile: "#ffffff",
-  tileBorder: "#e2e8f0",
-  brand: "#ffffff",
-  muted: "#94a3b8",
-  wordmark: "#e2e8f0",
-  polish: "#16a34a",
-  polishBright: "#22c55e",
-  foreign: "#dc2626",
-  foreignBright: "#ef4444",
+  tileBorder: "#e4dfd6",
+  brand: "#1f1d1a",
+  muted: "#6b665e",
+  wordmark: "#1f1d1a",
+  polish: "#c2381f",
+  polishBright: "#c2381f",
+  foreign: "#3b3833",
+  foreignBright: "#3b3833",
 } as const
 
 // X nakłada na dolną krawędź obrazka własną plakietkę z tytułem strony.

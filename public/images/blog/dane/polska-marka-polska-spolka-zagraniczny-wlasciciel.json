@@ -1,0 +1,20 @@
+{
+  "slug": "polska-marka-polska-spolka-zagraniczny-wlasciciel",
+  "tytul": "Polska marka, polski NIP, obcy właściciel",
+  "akcent": "obcy właściciel",
+  "podtytul": "Nazwa na opakowaniu nie mówi, dokąd trafia zysk",
+  "staty": [
+    {
+      "wartosc": "52%",
+      "opis": "akcji Wawelu ma grupa Hosta"
+    },
+    {
+      "wartosc": "100%",
+      "opis": "Pudliszek u Kraft Heinza"
+    },
+    {
+      "wartosc": "2024",
+      "opis": "Indykpol trafia do LDC"
+    }
+  ]
+}

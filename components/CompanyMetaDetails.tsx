@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MapPin, Copy, Check, Globe, ExternalLink, FileText } from "lucide-react"
+import { MapPin, Copy, Check, ExternalLink } from "lucide-react"
 
 interface CompanyMetaDetailsProps {
     adres?: string | null
@@ -28,17 +28,17 @@ function CopyButton({ text }: { text: string }) {
     return (
         <button
             onClick={handleCopy}
-            className="p-1 rounded hover:bg-slate-200/80 transition-colors"
+            className="p-1 rounded-md text-ink-3 hover:text-ink hover:bg-warm transition-colors"
             title="Kopiuj"
+            aria-label={`Kopiuj ${text}`}
         >
-            {copied ? (
-                <Check className="w-3.5 h-3.5 text-green-600" />
-            ) : (
-                <Copy className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600" />
-            )}
+            {copied ? <Check className="w-3.5 h-3.5 text-ink" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
     )
 }
+
+const label = "text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.06em] mb-2"
+const pill = "inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-card border-[1.5px] border-line text-[13.5px] font-bold text-ink"
 
 export default function CompanyMetaDetails({
     adres,
@@ -57,43 +57,36 @@ export default function CompanyMetaDetails({
     }
 
     return (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-5">
+        <div className="bg-warm rounded-3xl p-5 sm:p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Left Column: Address */}
                 <div className="space-y-4">
                     {hasAddress && (
                         <div>
-                            <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
-                                Adres Siedziby w Polsce
-                            </h4>
+                            <h4 className={label}>Adres Siedziby w Polsce</h4>
                             <div className="flex items-start gap-2">
-                                <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
-                                <span className="text-sm text-slate-700 break-words">{adres}</span>
+                                <MapPin className="w-4 h-4 text-ink-2 mt-0.5 flex-shrink-0" />
+                                <span className="text-[15px] font-semibold text-ink break-words">{adres}</span>
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* Right Column: Identifiers + Links */}
                 <div className="space-y-4">
-                    {/* Registry Identifiers */}
                     {hasIdentifiers && (
                         <div>
-                            <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
-                                Dane Rejestrowe
-                            </h4>
-                            <div className="flex flex-wrap items-center gap-3">
+                            <h4 className={label}>Dane Rejestrowe</h4>
+                            <div className="flex flex-wrap items-center gap-2">
                                 {nip && (
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-white border border-slate-200">
-                                        <span className="text-xs text-slate-500 font-medium">NIP</span>
-                                        <span className="text-sm font-mono text-slate-700">{nip}</span>
+                                    <div className={pill}>
+                                        <span className="text-xs text-ink-2">NIP</span>
+                                        <span className="tabular-nums">{nip}</span>
                                         <CopyButton text={nip} />
                                     </div>
                                 )}
                                 {krs && (
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-white border border-slate-200">
-                                        <span className="text-xs text-slate-500 font-medium">KRS</span>
-                                        <span className="text-sm font-mono text-slate-700">{krs}</span>
+                                    <div className={pill}>
+                                        <span className="text-xs text-ink-2">KRS</span>
+                                        <span className="tabular-nums">{krs}</span>
                                         <CopyButton text={krs} />
                                     </div>
                                 )}
@@ -101,23 +94,19 @@ export default function CompanyMetaDetails({
                         </div>
                     )}
 
-                    {/* External Links */}
                     {hasLinks && (
                         <div>
-                            <h4 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
-                                Linki
-                            </h4>
+                            <h4 className={label}>Linki</h4>
                             <div className="flex flex-wrap items-center gap-2">
                                 {website_url && (
                                     <a
                                         href={website_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 hover:border-slate-300 transition-colors"
+                                        className={`${pill} hover:border-ink transition-colors`}
                                     >
-                                        <Globe className="w-3.5 h-3.5 text-blue-500" />
                                         Strona WWW
-                                        <ExternalLink className="w-3 h-3 text-slate-400" />
+                                        <ExternalLink className="w-3.5 h-3.5 text-ink-2" />
                                     </a>
                                 )}
                                 {registry_url && (
@@ -125,11 +114,10 @@ export default function CompanyMetaDetails({
                                         href={registry_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-100 hover:border-slate-300 transition-colors"
+                                        className={`${pill} hover:border-ink transition-colors`}
                                     >
-                                        <FileText className="w-3.5 h-3.5 text-emerald-500" />
                                         Rejestr
-                                        <ExternalLink className="w-3 h-3 text-slate-400" />
+                                        <ExternalLink className="w-3.5 h-3.5 text-ink-2" />
                                     </a>
                                 )}
                             </div>

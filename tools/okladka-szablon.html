@@ -1,16 +1,17 @@
 <!doctype html>
 <!--
-  Szablon okładki wpisu blogowego (1200x630, og:image).
+  Szablon okładki wpisu blogowego (1200x630, og:image) — system „Półka” (docs/DESIGN_SYSTEM.md).
   Wypełniany przez tools/okladka-wpisu.mjs, nie edytuj placeholderów {{...}}.
-  Fonty ładowane z Google Fonts, żeby render na Windowsie i na runnerze GitHuba
-  wyglądał tak samo: Gelasio ma metryki Georgii, Arimo metryki Arial.
+  Plik roboczy powstaje w public/images/blog/, stąd ścieżka do logo ../../logo.png.
+  Font Manrope ładowany z Google Fonts (latin-ext), żeby render na Windowsie i na runnerze
+  GitHuba wyglądał tak samo.
 -->
 <html lang="pl">
 <head>
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Gelasio:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -19,74 +20,68 @@
     height: 630px;
     overflow: hidden;
     position: relative;
-    background:
-      radial-gradient(700px 420px at 100% 0%, rgba(224, 41, 60, 0.22), transparent 70%),
-      radial-gradient(600px 400px at 100% 100%, rgba(224, 41, 60, 0.14), transparent 70%),
-      #0a0d1a;
-    font-family: Arimo, "Liberation Sans", Arial, Helvetica, sans-serif;
+    background: #f6f3ee;
+    color: #1f1d1a;
+    font-family: Manrope, "Liberation Sans", Arial, Helvetica, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 0 90px;
+    padding: 64px 80px 60px;
   }
 
-  .pasek { position: absolute; left: 0; right: 0; height: 10px; background: #e0293c; }
-  .pasek-gora { top: 0; }
-  .pasek-dol { bottom: 0; }
+  .marka { display: flex; align-items: center; gap: 14px; }
+  .marka img { width: 46px; height: 46px; object-fit: contain; }
+  .marka span { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .marka .domena { color: #6b665e; font-weight: 700; }
 
-  .marka { display: flex; align-items: center; gap: 22px; margin-bottom: 54px; }
-  .flaga { width: 58px; height: 38px; border-radius: 3px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
-  .flaga div { height: 50%; }
-  .flaga .bialy { background: #ffffff; }
-  .flaga .czerwony { background: #dc143c; }
-  .marka span {
-    font-size: 30px;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-  }
+  .tresc { margin-top: auto; margin-bottom: auto; padding-top: 18px; }
 
   h1 {
-    font-family: Gelasio, Georgia, "Liberation Serif", "Times New Roman", serif;
-    font-weight: 700;
-    font-size: 68px;
-    line-height: 1.16;
-    color: #ffffff;
-    max-width: 1010px;
+    font-weight: 800;
+    font-size: 72px;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    max-width: 1040px;
   }
-  h1 .akcent { color: #ef3049; }
+  h1 .akcent { color: #c2381f; }
 
   .podtytul {
-    margin-top: 26px;
-    font-size: 26px;
-    line-height: 1.4;
-    color: #c3ccdd;
-    max-width: 950px;
+    margin-top: 20px;
+    font-size: 27px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #6b665e;
+    max-width: 980px;
   }
 
-  .staty { display: flex; gap: 74px; margin-top: 62px; }
-  .stat-wartosc { font-size: 34px; font-weight: 700; color: #ffffff; white-space: nowrap; }
-  .stat-opis { margin-top: 8px; font-size: 15px; color: #7d879e; }
+  .staty { display: flex; gap: 14px; }
+  .stat {
+    background: #ffffff;
+    border: 2px solid #e4dfd6;
+    border-radius: 22px;
+    padding: 18px 26px 16px;
+    min-width: 230px;
+  }
+  .stat-wartosc { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .stat-opis { margin-top: 4px; font-size: 16px; font-weight: 600; color: #6b665e; }
+  .staty:empty { display: none; }
 
   /* Dłuższe tytuły same schodzą o stopień, żeby nie wyjść poza kadr. */
-  body.dlugi h1 { font-size: 58px; }
-  body.bardzo-dlugi h1 { font-size: 50px; }
+  body.dlugi h1 { font-size: 60px; }
+  body.bardzo-dlugi h1 { font-size: 52px; }
   body.bardzo-dlugi .podtytul { font-size: 24px; }
 </style>
 </head>
 <body class="{{KLASA_DLUGOSCI}}">
-  <div class="pasek pasek-gora"></div>
-
   <div class="marka">
-    <div class="flaga"><div class="bialy"></div><div class="czerwony"></div></div>
-    <span>CZYPOLSKAFIRMA.PL</span>
+    <img src="../../logo.png" alt="">
+    <span>CzyPolskaFirma<span class="domena">.pl</span></span>
   </div>
 
-  <h1>{{TYTUL}}</h1>
-  <p class="podtytul">{{PODTYTUL}}</p>
+  <div class="tresc">
+    <h1>{{TYTUL}}</h1>
+    <p class="podtytul">{{PODTYTUL}}</p>
+  </div>
 
   <div class="staty">{{STATY}}</div>
-
-  <div class="pasek pasek-dol"></div>
 </body>
 </html>

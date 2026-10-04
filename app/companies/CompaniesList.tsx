@@ -145,55 +145,55 @@ export function CompaniesList({ initialCompanies }: CompaniesListProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+      <div className="min-h-screen bg-warm flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand"></div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center max-w-md">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Błąd</h2>
-          <p className="text-slate-600">{error}</p>
+      <div className="min-h-screen bg-warm flex items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl border border-line text-center max-w-md">
+          <AlertCircle className="w-12 h-12 text-brand mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-ink mb-2">Błąd</h2>
+          <p className="text-ink-2">{error}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-warm py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Wszystkie firmy</h1>
-            <p className="text-slate-600">
+            <h1 className="text-3xl font-bold text-ink mb-2">Wszystkie firmy</h1>
+            <p className="text-ink-2">
               Przeglądaj pełną bazę firm i marek dostępnych w serwisie ({companies.length})
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="relative group flex-1 sm:min-w-[240px]">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <Globe className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+                <Globe className="w-4 h-4 text-ink-3 group-focus-within:text-ink-2 transition-colors" />
               </div>
               <input
                 type="text"
                 placeholder="Filtruj wg kraju (np. Niemcy)..."
                 value={countryQuery}
                 onChange={(e) => setCountryQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-line rounded-xl text-sm font-medium text-ink-2 hover:border-line focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all"
               />
             </div>
             <div className="relative group">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <ArrowUpDown className="w-4 h-4 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
+                <ArrowUpDown className="w-4 h-4 text-ink-3 group-focus-within:text-ink-2 transition-colors" />
               </div>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all appearance-none cursor-pointer min-w-[200px]"
+                className="pl-10 pr-4 py-2.5 bg-white border border-line rounded-xl text-sm font-medium text-ink-2 hover:border-line focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all appearance-none cursor-pointer min-w-[200px]"
               >
                 <option value="name-asc">Nazwa (A-Z)</option>
                 <option value="name-desc">Nazwa (Z-A)</option>
@@ -204,10 +204,10 @@ export function CompaniesList({ initialCompanies }: CompaniesListProps) {
           </div>
         </div>
         {filteredCompanies.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 border-dashed">
-            <Building2 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">Brak firm spełniających kryteria</h3>
-            <p className="text-slate-600">Spróbuj zmienić filtry lub wyszukać inną nazwę</p>
+          <div className="text-center py-12 bg-white rounded-2xl border border-line border-dashed">
+            <Building2 className="w-16 h-16 text-ink-3 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-ink mb-2">Brak firm spełniających kryteria</h3>
+            <p className="text-ink-2">Spróbuj zmienić filtry lub wyszukać inną nazwę</p>
           </div>
         ) : (
           <CompanyGrid companies={sortedCompanies} />

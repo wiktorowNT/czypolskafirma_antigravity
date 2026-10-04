@@ -1,225 +1,143 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { TrendingUp, TrendingDown, Globe2, ChevronRight } from "lucide-react"
+import { getCountryName } from "@/lib/company-faq"
+import type { HomeStats } from "@/lib/home-data"
 
-interface StatsData {
+/** Ten sam kształt co odpowiedź /api/stats (fallback, gdy brak danych z serwera). */
+interface ApiStats {
     total: number
     polishCount: number
-    foreignCount: number
-    polishPercentage: number
     countryCount: number
-    mostPolishCategory: {
-        name: string
-        slug: string
-        total: number
-        polish: number
-        polishPercentage: number
-    } | null
-    leastPolishCategory: {
-        name: string
-        slug: string
-        total: number
-        polish: number
-        polishPercentage: number
-    } | null
+    categories: HomeStats["categories"]
 }
 
-// Animated counter hook
-function useCountUp(target: number, duration = 1500, shouldStart = false) {
-    const [value, setValue] = useState(0)
-    const startTime = useRef<number | null>(null)
-
-    useEffect(() => {
-        if (!shouldStart || target === 0) {
-            setValue(target)
-            return
-        }
-
-        startTime.current = null
-        let animationId: number
-
-        function step(timestamp: number) {
-            if (!startTime.current) startTime.current = timestamp
-            const elapsed = timestamp - startTime.current
-            const progress = Math.min(elapsed / duration, 1)
-
-            // Ease-out cubic
-            const eased = 1 - Math.pow(1 - progress, 3)
-            setValue(Math.round(eased * target))
-
-            if (progress < 1) {
-                animationId = requestAnimationFrame(step)
-            }
-        }
-
-        animationId = requestAnimationFrame(step)
-        return () => cancelAnimationFrame(animationId)
-    }, [target, duration, shouldStart])
-
-    return value
-}
-
-export function GlobalStats() {
-    const [stats, setStats] = useState<StatsData | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [isVisible, setIsVisible] = useState(false)
-    const sectionRef = useRef<HTMLElement>(null)
-
-    useEffect(() => {
-        async function fetchStats() {
-            try {
-                const res = await fetch("/api/stats")
-                if (res.ok) {
-                    const data = await res.json()
-                    setStats(data)
-                }
-            } catch (err) {
-                console.error("Błąd ładowania statystyk:", err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchStats()
-    }, [])
-
-    // Intersection Observer for count-up animation
-    useEffect(() => {
-        if (!sectionRef.current) return
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true)
-                    observer.disconnect()
-                }
-            },
-            { threshold: 0.2 }
-        )
-
-        observer.observe(sectionRef.current)
-        return () => observer.disconnect()
-    }, [])
-
-    const animatedPolishPct = useCountUp(stats?.polishPercentage ?? 0, 1500, isVisible && !loading)
-    const animatedTotal = useCountUp(stats?.total ?? 0, 1500, isVisible && !loading)
-    const animatedCountries = useCountUp(stats?.countryCount ?? 0, 1200, isVisible && !loading)
-
-    if (loading) {
-        return (
-            <section className="py-8 bg-white border-y border-slate-100">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="animate-pulse">
-                        <div className="h-5 bg-slate-200 rounded w-48 mx-auto mb-6" />
-                        <div className="grid sm:grid-cols-3 gap-4">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="h-28 bg-slate-100 rounded-xl" />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-        )
+/**
+ * Koszyk 100 kwadratów: 1 kwadrat = 1% firm w bazie.
+ * Kolory: polski kapitał (cegła), dwa największe kraje (grafit),
+ * kolejne cztery (szarość), reszta (jasna szarość).
+ */
+function buildWaffle(stats: HomeStats) {
+    const foreign = stats.countries.filter((c) => c.code !== "PL")
+    const pct = (n: number) => (n / stats.total) * 100
+    const groups = [
+        { key: "pl", label: "Polska", value: pct(stats.polishCount), cls: "bg-brand" },
+        { key: "top", label: foreign.slice(0, 2).map((c) => getCountryName(c.code)).join(" + "), value: pct(foreign.slice(0, 2).reduce((s, c) => s + c.count, 0)), cls: "bg-graphite" },
+        { key: "mid", label: foreign.slice(2, 6).map((c) => getCountryName(c.code)).join(", "), value: pct(foreign.slice(2, 6).reduce((s, c) => s + c.count, 0)), cls: "bg-[#8f8a80]" },
+        { key: "rest", label: `${Math.max(foreign.length - 6, 0)} innych krajów`, value: pct(foreign.slice(6).reduce((s, c) => s + c.count, 0)), cls: "bg-warm-2" },
+    ]
+    // Zaokrąglenie do 100 kwadratów metodą największych reszt
+    const floors = groups.map((g) => Math.floor(g.value))
+    let missing = 100 - floors.reduce((s, n) => s + n, 0)
+    const order = groups.map((g, i) => ({ i, r: g.value - floors[i] })).sort((a, b) => b.r - a.r)
+    for (const o of order) {
+        if (missing <= 0) break
+        floors[o.i]++
+        missing--
     }
+    return groups.map((g, i) => ({ ...g, cells: floors[i] })).filter((g) => g.cells > 0)
+}
 
+export function GlobalStats({ initialStats }: { initialStats?: HomeStats | null }) {
+    const [apiStats, setApiStats] = useState<ApiStats | null>(null)
+
+    useEffect(() => {
+        if (initialStats) return
+        fetch("/api/stats")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((d) => d && setApiStats(d))
+            .catch(() => {})
+    }, [initialStats])
+
+    const stats = initialStats || apiStats
     if (!stats) return null
 
+    const pct = stats.total > 0 ? Math.round((stats.polishCount / stats.total) * 100) : 0
+    const cats = stats.categories
+    const most = cats[0]
+    const least = cats[cats.length - 1]
+    const waffle = initialStats ? buildWaffle(initialStats) : null
+    // Półki: przy wielu kategoriach pokazujemy skrajne (6 najbardziej polskich, 4 najbardziej
+    // zagraniczne); pełna lista jest w kaflach kategorii wyżej na stronie.
+    const shelf: (HomeStats["categories"][number] | null)[] =
+        cats.length > 12 ? [...cats.slice(0, 6), null, ...cats.slice(-4)] : cats
+
     return (
-        <section ref={sectionRef} className="py-8 bg-white border-y border-slate-100">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-6">
-                    <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-1">
-                        Statystyki projektu
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                        Podsumowanie danych z naszej bazy
-                    </p>
+        <section className="bg-warm py-14 sm:py-16">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mb-6">
+                    <h2 className="text-[26px] sm:text-[28px] font-extrabold tracking-tight text-ink">Statystyki projektu</h2>
+                    <p className="text-[15px] text-ink-2 mt-1">Podsumowanie danych z naszej bazy.</p>
                 </div>
 
-                {/* Stats Cards */}
-                <div className="grid sm:grid-cols-3 gap-3 auto-rows-fr">
-
-                    {/* Card 1: Polish percentage */}
-                    <div className="relative overflow-hidden bg-gradient-to-br from-red-50 to-white rounded-xl border border-red-100 p-3 text-center group hover:shadow-md transition-shadow h-full flex flex-col justify-center">
-                        <div className="relative z-10">
-                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2">
-                                <img
-                                    src="/flags/pl-w40.png"
-                                    alt="PL"
-                                    className="w-5 h-auto rounded-sm"
-                                />
-                            </div>
-                            <div className="text-4xl font-extrabold text-red-600 mb-1 tabular-nums">
-                                {animatedPolishPct}%
-                            </div>
-                            <p className="text-sm font-medium text-slate-700">
-                                firm w bazie to <strong>polskie firmy</strong>
-                            </p>
-                            <p className="text-xs text-slate-400 mt-1">
-                                {stats.polishCount} z {stats.total} zweryfikowanych
-                            </p>
+                <div className="grid lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-10 items-start">
+                    {/* Udział polskiego kapitału + koszyk */}
+                    <div className="bg-card border-[1.5px] border-line rounded-[20px] p-5 sm:p-6">
+                        <div className="text-[56px] sm:text-[68px] font-extrabold tracking-[-0.04em] leading-none text-brand tabular-nums">
+                            {pct}%
                         </div>
+                        <p className="mt-1.5 text-[15px] text-ink-2">
+                            firm w bazie to <strong className="text-ink">polskie firmy</strong> — {stats.polishCount} z {stats.total} zweryfikowanych.
+                        </p>
+
+                        {waffle && (
+                            <>
+                                <p className="mt-5 text-[12.5px] font-extrabold uppercase tracking-[0.06em] text-ink-2">
+                                    Koszyk {stats.total} firm: skąd pochodzi kapitał
+                                </p>
+                                <div className="mt-3 grid grid-cols-[repeat(20,minmax(0,1fr))] gap-[3px] sm:gap-1" role="img" aria-label={waffle.map((g) => `${g.label}: ${g.cells}%`).join(", ")}>
+                                    {waffle.flatMap((g) =>
+                                        Array.from({ length: g.cells }).map((_, i) => (
+                                            <i key={`${g.key}-${i}`} className={`block aspect-square rounded-[3px] ${g.cls}`} />
+                                        )),
+                                    )}
+                                </div>
+                                <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] font-semibold text-ink-2">
+                                    {waffle.map((g) => (
+                                        <li key={g.key} className="inline-flex items-center gap-1.5">
+                                            <i className={`inline-block w-[11px] h-[11px] rounded-[3px] ${g.cls}`} />
+                                            {g.label} {g.cells}%
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
                     </div>
 
-                    {/* Card 2: Most Polish category */}
-                    {stats.mostPolishCategory && (
-                        <Link
-                            href={`/kategoria/${stats.mostPolishCategory.slug}`}
-                            className="relative overflow-hidden bg-gradient-to-br from-green-50 to-white rounded-xl border border-green-100 p-3 text-center group hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col justify-center"
-                        >
-                            <div className="relative z-10">
-                                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-2">
-                                    <TrendingUp className="w-5 h-5 text-green-600" />
-                                </div>
-                                <p className="text-xs font-medium text-green-700 uppercase tracking-wider mb-1">
-                                    Najbardziej polska kategoria
-                                </p>
-                                <div className="text-xl font-bold text-slate-900 mb-0.5">
-                                    {stats.mostPolishCategory.name}
-                                </div>
-                                <p className="text-sm text-slate-600">
-                                    <span className="font-semibold text-green-600">{stats.mostPolishCategory.polishPercentage}%</span> polskich firm
-                                </p>
-                                <p className="text-xs text-slate-400 mt-1">
-                                    {stats.mostPolishCategory.polish} z {stats.mostPolishCategory.total} firm
-                                </p>
-                                <div className="mt-2 flex items-center justify-center gap-1 text-xs font-medium text-green-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Sprawdź <ChevronRight className="w-3 h-3" />
-                                </div>
-                            </div>
-                        </Link>
-                    )}
-
-                    {/* Card 3: Least Polish category */}
-                    {stats.leastPolishCategory && (
-                        <Link
-                            href={`/kategoria/${stats.leastPolishCategory.slug}`}
-                            className="relative overflow-hidden bg-gradient-to-br from-amber-50 to-white rounded-xl border border-amber-100 p-3 text-center group hover:shadow-md transition-shadow cursor-pointer h-full flex flex-col justify-center"
-                        >
-                            <div className="relative z-10">
-                                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-2">
-                                    <TrendingDown className="w-5 h-5 text-amber-600" />
-                                </div>
-                                <p className="text-xs font-medium text-amber-700 uppercase tracking-wider mb-1">
-                                    Najbardziej zagraniczna kategoria
-                                </p>
-                                <div className="text-xl font-bold text-slate-900 mb-0.5">
-                                    {stats.leastPolishCategory.name}
-                                </div>
-                                <p className="text-sm text-slate-600">
-                                    tylko <span className="font-semibold text-amber-600">{stats.leastPolishCategory.polishPercentage}%</span> polskich firm
-                                </p>
-                                <p className="text-xs text-slate-400 mt-1">
-                                    {stats.leastPolishCategory.polish} z {stats.leastPolishCategory.total} firm
-                                </p>
-                                <div className="mt-2 flex items-center justify-center gap-1 text-xs font-medium text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Sprawdź <ChevronRight className="w-3 h-3" />
-                                </div>
-                            </div>
-                        </Link>
-                    )}
+                    {/* Półki: udział polskiego kapitału w kategoriach */}
+                    <div>
+                        <p className="text-[12.5px] font-extrabold uppercase tracking-[0.06em] text-ink-2 mb-3.5">
+                            Co stoi na półce: udział polskiego kapitału w kategoriach
+                        </p>
+                        <div className="grid gap-2.5">
+                            {shelf.map((c) => c === null ? (
+                                <div key="gap" className="text-center text-ink-3 font-extrabold tracking-[0.3em] leading-none" aria-hidden="true">···</div>
+                            ) : (
+                                <Link
+                                    key={c.slug}
+                                    href={`/kategoria/${c.slug}`}
+                                    className="grid grid-cols-[minmax(0,108px)_1fr_44px] sm:grid-cols-[minmax(0,130px)_1fr_48px] gap-3 items-end text-sm font-bold text-ink group"
+                                >
+                                    <span className="truncate pb-0.5 group-hover:underline underline-offset-4">{c.name}</span>
+                                    <span className="relative h-[22px] border-b-[3px] border-ink" aria-hidden="true">
+                                        <i className="absolute bottom-0 left-0 h-[18px] rounded-t-md bg-brand" style={{ width: `${c.polishPercentage}%` }} />
+                                        <i className="absolute bottom-0 right-0 h-[18px] rounded-t-md bg-warm-2" style={{ width: `${Math.max(100 - c.polishPercentage - 1, 0)}%` }} />
+                                    </span>
+                                    <span className="text-right text-brand-ink font-extrabold tabular-nums pb-0.5">{c.polishPercentage}%</span>
+                                </Link>
+                            ))}
+                        </div>
+                        {most && least && (
+                            <p className="mt-4 text-[13px] font-semibold text-ink-2">
+                                Czerwone „towary” to firmy z polskim kapitałem. Najbardziej polska kategoria:{" "}
+                                <Link href={`/kategoria/${most.slug}`} className="text-ink underline underline-offset-4">{most.name}</Link>{" "}
+                                ({most.polish} z {most.total}). Najbardziej zagraniczna:{" "}
+                                <Link href={`/kategoria/${least.slug}`} className="text-ink underline underline-offset-4">{least.name}</Link>{" "}
+                                ({least.polish} z {least.total}).
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

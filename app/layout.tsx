@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+import { Manrope } from "next/font/google"
 import "./globals.css"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -11,16 +11,10 @@ import { serializeJsonLd } from "@/lib/json-ld"
 
 // latin-ext jest niezbędny dla polskich diakrytyków (ą, ę, ż, ó...) —
 // bez niego przeglądarka renderuje je z fontu zastępczego.
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin", "latin-ext"],
   display: "swap",
-  variable: "--font-inter",
-})
-
-const playfair = Playfair_Display({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  variable: "--font-playfair",
+  variable: "--font-manrope",
 })
 
 export const metadata: Metadata = {
@@ -106,7 +100,7 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="pl-PL" className={`${inter.variable} ${playfair.variable} antialiased`} suppressHydrationWarning>
+    <html lang="pl-PL" className={`${manrope.variable} antialiased`} suppressHydrationWarning>
       <head>
         <script defer src="https://cloud.umami.is/script.js" data-website-id="d7fcfe14-5859-4a38-9101-1ea0565f2b4e"></script>
         <script

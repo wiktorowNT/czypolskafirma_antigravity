@@ -1,0 +1,20 @@
+{
+  "slug": "grupa-kety-przejmuje-metra",
+  "tytul": "Firma z Kęt kupuje dziewięć fabryk",
+  "akcent": "dziewięć fabryk",
+  "podtytul": "Włochy, USA i Kanada za maksymalnie 450 mln euro",
+  "staty": [
+    {
+      "wartosc": "450 mln €",
+      "opis": "maksymalna cena zakupu"
+    },
+    {
+      "wartosc": "9 zakładów",
+      "opis": "Włochy, USA i Kanada"
+    },
+    {
+      "wartosc": "1400",
+      "opis": "pracowników Metry"
+    }
+  ]
+}

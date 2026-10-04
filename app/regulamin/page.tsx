@@ -10,23 +10,23 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-slate-50 py-12 sm:py-20">
+    <main className="min-h-screen bg-warm py-12 sm:py-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mb-4">
             Regulamin Serwisu
           </h1>
-          <p className="text-sm text-slate-500">Ostatnia aktualizacja: 04.05.2026</p>
+          <p className="text-sm text-ink-3">Ostatnia aktualizacja: 04.05.2026</p>
         </div>
 
         {/* Content */}
-        <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-sm border border-slate-200">
-          <div className="space-y-8 text-slate-600 leading-relaxed">
+        <div className="bg-white rounded-2xl p-8 sm:p-12 border border-line">
+          <div className="space-y-8 text-ink-2 leading-relaxed">
             
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">1. Postanowienia ogólne</h3>
+              <h3 className="text-xl font-bold text-ink mb-3">1. Postanowienia ogólne</h3>
               <p>
                 Niniejszy Regulamin określa zasady funkcjonowania i korzystania z serwisu internetowego 
                 dostępnego pod adresem CzyPolskaFirma.pl (dalej: "Serwis"). Właścicielem i Administratorem 
@@ -35,7 +35,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">2. Rodzaj i zakres świadczonych usług</h3>
+              <h3 className="text-xl font-bold text-ink mb-3">2. Rodzaj i zakres świadczonych usług</h3>
               <p>
                 Serwis CzyPolskaFirma.pl jest darmowym portalem informacyjnym, który udostępnia użytkownikom bazę danych 
                 zawierającą informacje o strukturze właścicielskiej oraz kraju pochodzenia kapitału firm operujących na polskim rynku. 
@@ -44,7 +44,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">3. Wyłączenie odpowiedzialności (Disclaimer)</h3>
+              <h3 className="text-xl font-bold text-ink mb-3">3. Wyłączenie odpowiedzialności (Disclaimer)</h3>
               <p className="mb-3">
                 Wszelkie dane prezentowane w Serwisie, w tym przypisany status "Polska Firma" oraz informacje o właścicielach, 
                 mają charakter wyłącznie informacyjny, poglądowy i edukacyjny. Zespół Serwisu dokłada wszelkich starań, aby dane były rzetelne, 
@@ -58,7 +58,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">4. Prawa autorskie i ochrona bazy danych</h3>
+              <h3 className="text-xl font-bold text-ink mb-3">4. Prawa autorskie i ochrona bazy danych</h3>
               <p>
                 Wszelkie treści udostępniane w Serwisie, włączając w to koncepcję, układ graficzny, logo oraz 
                 zgromadzoną i skompilowaną bazę danych, podlegają ochronie prawnej praw autorskich i praw pokrewnych. 
@@ -68,7 +68,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">5. Zgłaszanie błędów i weryfikacja</h3>
+              <h3 className="text-xl font-bold text-ink mb-3">5. Zgłaszanie błędów i weryfikacja</h3>
               <p>
                 W przypadku dostrzeżenia nieścisłości lub nieaktualnych informacji w profilach poszczególnych firm, 
                 Użytkownik ma możliwość zgłoszenia poprawki poprzez przycisk "Zgłoś uwagi" w profilu firmy lub mailowo na adres: 
@@ -78,7 +78,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">6. Postanowienia końcowe</h3>
+              <h3 className="text-xl font-bold text-ink mb-3">6. Postanowienia końcowe</h3>
               <p>
                 Administrator zastrzega sobie prawo do wprowadzania zmian w niniejszym Regulaminie (np. ze względu na zmiany w prawie lub rozwój Serwisu). 
                 Korzystanie z Serwisu po wprowadzeniu zmian oznacza ich akceptację. W sprawach nieuregulowanych niniejszym Regulaminem 

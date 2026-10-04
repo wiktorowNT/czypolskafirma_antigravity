@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { CalendarDays, Clock, ArrowRight, Newspaper, Sparkles } from "lucide-react"
+import { CalendarDays, Clock, ArrowRight, Newspaper } from "lucide-react"
 import { getAllPosts, type BlogPostMeta } from "@/lib/blog"
 import { getCompaniesBySlugs, type BlogCompany } from "@/lib/blog-companies"
 import { CompanyLogo } from "@/components/company-logo"
@@ -27,7 +27,7 @@ function formatDate(iso: string): string {
 
 function PostMeta({ post }: { post: BlogPostMeta }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-3">
       <span className="flex items-center gap-1.5">
         <CalendarDays className="w-4 h-4" />
         <time dateTime={post.date}>{formatDate(post.date)}</time>
@@ -56,7 +56,7 @@ function CompanyLogos({ companies }: { companies: BlogCompany[] }) {
           </div>
         ))}
       </div>
-      <span className="text-xs text-slate-500">
+      <span className="text-xs text-ink-3">
         {companies
           .slice(0, 3)
           .map((c) => c.brand)
@@ -80,58 +80,56 @@ export default async function BlogPage() {
   const [featured, ...rest] = posts
 
   return (
-    <main className="min-h-screen bg-slate-50 py-12 sm:py-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background pt-10 pb-16 sm:pt-14">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4 [font-family:var(--font-playfair)]">
+        <div className="mb-10 sm:mb-12 max-w-2xl">
+          <h1 className="text-[34px] sm:text-[46px] font-extrabold text-ink tracking-[-0.03em] leading-[1.08] mb-3">
             Blog CzyPolskaFirma
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-[17px] sm:text-lg text-ink-2">
             Przejęcia, pochodzenie kapitału znanych marek i sukcesy polskiego biznesu —
             opisane na twardych danych z naszej bazy firm.
           </p>
         </div>
 
         {posts.length === 0 ? (
-          <div className="bg-white rounded-2xl p-10 shadow-sm border border-slate-200 text-center max-w-3xl mx-auto">
-            <Newspaper className="w-10 h-10 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-600">Pierwsze wpisy już wkrótce.</p>
+          <div className="bg-warm rounded-[24px] p-10 text-center max-w-3xl mx-auto">
+            <Newspaper className="w-10 h-10 text-ink-3 mx-auto mb-4" />
+            <p className="text-ink-2">Pierwsze wpisy już wkrótce.</p>
           </div>
         ) : (
           <>
             {/* Wyróżniony najnowszy wpis */}
-            <article className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all overflow-hidden mb-8">
-              <div className="h-1.5 bg-red-600" />
+            <article className="bg-card rounded-[24px] border-[1.5px] border-line hover:border-ink transition-colors overflow-hidden mb-4">
               <Link href={`/blog/${featured.slug}`} className="block group">
                 {featured.image && (
                   <img
                     src={featured.image}
                     alt={featured.imageAlt || featured.title}
                     loading="lazy"
-                    className="w-full aspect-[2/1] object-cover border-b border-slate-200"
+                    className="w-full aspect-[1200/630] object-cover bg-warm"
                   />
                 )}
                 <div className="p-6 sm:p-10">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold uppercase tracking-wide">
-                    <Sparkles className="w-3 h-3" />
+                  <span className="inline-flex items-center h-7 px-3 rounded-full bg-warm text-ink text-xs font-extrabold uppercase tracking-[0.06em]">
                     Najnowszy
                   </span>
                   <PostMeta post={featured} />
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4 leading-tight group-hover:text-red-600 transition-colors [font-family:var(--font-playfair)]">
+                <h2 className="text-[26px] sm:text-[32px] font-extrabold tracking-tight text-ink mb-3 leading-tight group-hover:underline underline-offset-4 decoration-2">
                   {featured.title}
                 </h2>
                 {featured.description && (
-                  <p className="text-slate-600 leading-relaxed text-base mb-6 max-w-2xl">
+                  <p className="text-ink-2 leading-relaxed text-base mb-6 max-w-2xl">
                     {featured.description}
                   </p>
                 )}
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <CompanyLogos companies={companiesFor(featured)} />
-                  <span className="inline-flex items-center gap-1.5 text-sm font-bold text-red-600">
+                  <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-ink">
                     Czytaj dalej
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </span>
@@ -142,11 +140,11 @@ export default async function BlogPage() {
 
             {/* Pozostałe wpisy */}
             {rest.length > 0 && (
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {rest.map((post) => (
                   <article
                     key={post.slug}
-                    className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all overflow-hidden"
+                    className="bg-card rounded-[20px] border-[1.5px] border-line hover:border-ink transition-colors overflow-hidden"
                   >
                     <Link href={`/blog/${post.slug}`} className="flex flex-col h-full group">
                       {post.image && (
@@ -154,22 +152,22 @@ export default async function BlogPage() {
                           src={post.image}
                           alt={post.imageAlt || post.title}
                           loading="lazy"
-                          className="w-full aspect-video object-cover border-b border-slate-200"
+                          className="w-full aspect-[1200/630] object-cover bg-warm"
                         />
                       )}
-                      <div className="flex flex-col flex-1 p-6 sm:p-8">
+                      <div className="flex flex-col flex-1 p-5 sm:p-6">
                       <PostMeta post={post} />
-                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 mt-3 mb-3 leading-snug group-hover:text-red-600 transition-colors [font-family:var(--font-playfair)]">
+                      <h2 className="text-lg sm:text-xl font-bold text-ink mt-2.5 mb-2 leading-snug group-hover:underline underline-offset-4">
                         {post.title}
                       </h2>
                       {post.description && (
-                        <p className="text-slate-600 leading-relaxed text-sm mb-5">
+                        <p className="text-ink-2 leading-relaxed text-sm mb-5">
                           {post.description}
                         </p>
                       )}
                       <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
                         <CompanyLogos companies={companiesFor(post)} />
-                        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-red-600 ml-auto">
+                        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-ink ml-auto">
                           Czytaj
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                         </span>

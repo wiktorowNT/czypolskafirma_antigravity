@@ -1,32 +1,8 @@
 "use client"
 
-import { BadgeCheck, Network, Calendar, Globe, MapPin, Building2, Landmark } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
-
-// Country code to name mapping
-const countryNames: Record<string, string> = {
-    PL: "Polska",
-    FR: "Francja",
-    DE: "Niemcy",
-    US: "USA",
-    NL: "Holandia",
-    GB: "Wielka Brytania",
-    UK: "Wielka Brytania",
-    SE: "Szwecja",
-    DK: "Dania",
-    ES: "Hiszpania",
-    IT: "Włochy",
-    JP: "Japonia",
-    CH: "Szwajcaria",
-    AT: "Austria",
-    BE: "Belgia",
-    LU: "Luksemburg",
-    IE: "Irlandia",
-    PT: "Portugalia",
-    CZ: "Czechy",
-    SK: "Słowacja",
-    HU: "Węgry",
-}
+import { VerdictTag } from "@/components/verdict-tag"
+import { getCountryName } from "@/lib/company-faq"
 
 interface CompanyHeroProps {
     id: string
@@ -42,12 +18,6 @@ interface CompanyHeroProps {
     ownership_type?: string | null
     categoryName?: string | null
     website_url?: string | null
-}
-
-// Get country name from code
-function getCountryName(code?: string | null): string {
-    if (!code) return "Brak danych"
-    return countryNames[code.toUpperCase()] || code.toUpperCase()
 }
 
 // Get founding year
@@ -68,8 +38,17 @@ function formatSlugAsName(slug: string): string {
         .join(' ')
 }
 
+function Paragraphs({ text }: { text: string }) {
+    return (
+        <div className="text-[15.5px] text-ink-2 leading-relaxed space-y-2.5">
+            {text.split('\n').filter(p => p.trim()).map((para, i) => (
+                <p key={i}>{para.trim()}</p>
+            ))}
+        </div>
+    )
+}
+
 export default function CompanyHero({
-    id,
     name,
     slug,
     brandName,
@@ -88,10 +67,8 @@ export default function CompanyHero({
     const foundingYear = getFoundingYear(founded_at)
     const displayName = brandName || formatSlugAsName(slug)
 
-    // Owner display logic - narrative approach
     const ownerDisplay = owner_name || parent_company_name || "Brak danych"
 
-    // Owner label - narrative style
     const getOwnerLabel = () => {
         if (ownership_type === "Spółka Córka") {
             return "Spółka córka należąca do:"
@@ -101,173 +78,97 @@ export default function CompanyHero({
         return "Właściciel / Inwestor:"
     }
 
-    const ownerLabel = getOwnerLabel()
+    const facts: { label: string; value: string; flag?: boolean }[] = [
+        { label: "Pochodzenie kapitału", value: countryName, flag: true },
+        { label: getOwnerLabel(), value: ownerDisplay },
+        { label: "W Polsce", value: foundingYear ? `Od ${foundingYear} roku` : "Brak danych" },
+    ]
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden">
-            {/* Section 1: Identity */}
-            <div className="p-6 sm:p-8">
-                <div className="flex items-start gap-6">
-                    {/* Logo - using universal CompanyLogo component */}
-                    <CompanyLogo
-                        websiteUrl={website_url}
-                        name={displayName}
-                        size={96}
-                        priority
-                    />
+        <div className="space-y-5">
+            {/* Tożsamość: logo, nazwa, spółka, kategoria, metka */}
+            <div className="grid grid-cols-[72px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)_auto] gap-x-4 sm:gap-x-5 gap-y-4 items-center">
+                <CompanyLogo
+                    websiteUrl={website_url}
+                    name={displayName}
+                    size={72}
+                    priority
+                />
+                <div className="min-w-0">
+                    <h1 className="text-[30px] sm:text-[40px] font-extrabold tracking-tight leading-[1.1] text-ink break-words">
+                        {displayName}
+                    </h1>
+                    <p className="text-sm font-semibold text-ink-2 mt-1.5 break-words">
+                        {name}
+                    </p>
+                    {categoryName && (
+                        <span className="inline-flex items-center h-7 px-3 mt-2.5 rounded-full bg-warm text-[12.5px] font-bold text-ink-2">
+                            {categoryName}
+                        </span>
+                    )}
+                </div>
+                <div className="col-span-2 sm:col-span-1 sm:justify-self-end">
+                    <VerdictTag countryCode={country_code} size="lg" />
+                </div>
+            </div>
 
-                    {/* Header Content */}
-                    <div className="flex-1 min-w-0">
-                        {/* Name + Flag + Badge Row */}
-                        <div className="flex flex-wrap items-center gap-3 mb-2">
-                            {/* Country Flag */}
-                            {country_code && (
+            {/* Werdykt — odpowiedź dla Google i dla czytelnika */}
+            <section className="bg-warm rounded-3xl px-5 py-5 sm:px-7 sm:py-6">
+                <h2 className="text-[12.5px] font-extrabold text-ink-2 uppercase tracking-[0.06em] mb-2">
+                    Werdykt: Czy {displayName} to polska firma?
+                </h2>
+                <p className="text-2xl sm:text-[30px] font-extrabold tracking-tight leading-tight text-ink">
+                    {displayName} to{" "}
+                    {isPolish ? (
+                        <span className="text-brand">polska firma</span>
+                    ) : (
+                        <span>firma zagraniczna</span>
+                    )}
+                    .
+                </p>
+                <p className="mt-2 text-[15.5px] font-medium text-ink-2">
+                    Kraj pochodzenia: <strong className="text-ink font-bold">{countryName}</strong>
+                </p>
+            </section>
+
+            {/* Fakty */}
+            <dl className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                {facts.map((f) => (
+                    <div key={f.label} className="border-[1.5px] border-line rounded-2xl px-4 py-3 min-w-0">
+                        <dt className="text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.06em]">{f.label}</dt>
+                        <dd className="mt-1 text-[15px] font-bold text-ink flex items-center gap-2">
+                            {f.flag && country_code && (
                                 <img
-                                    src={`https://flagcdn.com/w80/${country_code.toLowerCase()}.png`}
-                                    alt={`Flaga: ${countryName} — kraj pochodzenia kapitału`}
-                                    className="h-9 w-auto rounded-sm border border-slate-200 shadow-sm"
+                                    src={`https://flagcdn.com/w40/${country_code.toLowerCase()}.png`}
+                                    alt=""
+                                    width={18}
+                                    height={13}
+                                    className="rounded-[3px] flex-shrink-0"
                                 />
                             )}
-
-                            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 uppercase tracking-wide">
-                                {displayName}
-                            </h1>
-
-                            {/* Status Badge */}
-                            {isPolish ? (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-full">
-                                    <BadgeCheck className="w-4 h-4" />
-                                    Polska Firma
-                                </span>
-                            ) : (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-medium text-slate-600 bg-slate-100 rounded-full">
-                                    <Globe className="w-3.5 h-3.5" />
-                                    Firma Zagraniczna
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Legal Name */}
-                        <p className="text-sm text-slate-500 mb-3">
-                            {name}
-                        </p>
-
-                        {/* Category Badge */}
-                        {categoryName && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium text-slate-500 bg-slate-100 rounded-md">
-                                {categoryName}
-                            </span>
-                        )}
+                            <span className="line-clamp-2 break-words">{f.value}</span>
+                        </dd>
                     </div>
-                </div>
+                ))}
+            </dl>
 
-                {/* Descriptions & Verdict */}
-                <div className="mt-6 space-y-6">
-                    {/* Verdict Section - Optimized for AI & Featured Snippets */}
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                            <BadgeCheck className={`w-4 h-4 ${isPolish ? "text-red-600" : "text-slate-400"}`} />
-                            Werdykt: Czy {displayName} to polska firma?
-                        </h2>
-                        <p className="text-lg text-slate-900 leading-tight">
-                            <span className="font-medium text-slate-500">{displayName} to </span>
-                            {isPolish ? (
-                                <span className="font-bold text-red-600">polska firma</span>
-                            ) : (
-                                <span className="font-bold text-slate-900">firma zagraniczna</span>
-                            )}
-                            <span className="text-slate-400 mx-2">|</span>
-                            <span className="text-slate-600">Kraj pochodzenia: <strong>{countryName}</strong></span>
-                        </p>
-                    </div>
-
-                    <div className="space-y-4">
-                        {/* Ownership Description */}
-                        {ownership_description && (
-                            <div className="flex gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <Landmark className="w-4 h-4 text-purple-600" />
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Struktura właścicielska</h3>
-                                    <div className="text-sm text-slate-600 leading-relaxed space-y-2">
-                                        {ownership_description.split('\n').filter(p => p.trim()).map((para, i) => (
-                                            <p key={i}>{para.trim()}</p>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
- 
-                        {/* Business Description */}
-                        {business_description && (
-                            <div className="flex gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <Building2 className="w-4 h-4 text-blue-600" />
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">O firmie</h3>
-                                    <div className="text-sm text-slate-600 leading-relaxed space-y-2">
-                                        {business_description.split('\n').filter(p => p.trim()).map((para, i) => (
-                                            <p key={i}>{para.trim()}</p>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Section 2: Insights (Bottom) */}
-            <div className="border-t border-slate-100 bg-slate-50/50">
-                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
-                    {/* Column 1: Kapitał */}
-                    <div className="flex items-center gap-4 p-5 sm:p-6">
-                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
-                            <MapPin className="w-5 h-5 text-blue-600" />
-                        </div>
+            {/* Opisy */}
+            {(ownership_description || business_description) && (
+                <div className="space-y-6 pt-3">
+                    {ownership_description && (
                         <div>
-                            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                                Pochodzenie kapitału
-                            </p>
-                            <p className="text-sm font-semibold text-slate-900 mt-0.5">
-                                {countryName}
-                            </p>
+                            <h3 className="text-lg font-bold text-ink mb-2">Struktura właścicielska</h3>
+                            <Paragraphs text={ownership_description} />
                         </div>
-                    </div>
-
-                    {/* Column 2: Właściciel */}
-                    <div className="flex items-center gap-4 p-5 sm:p-6">
-                        <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
-                            <Network className="w-5 h-5 text-purple-600" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <p className="text-xs font-medium text-slate-500 tracking-wide">
-                                {ownerLabel}
-                            </p>
-                            <p className="text-sm font-semibold text-slate-900 mt-0.5 whitespace-normal break-words leading-snug line-clamp-2">
-                                {ownerDisplay}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Column 3: Historia */}
-                    <div className="flex items-center gap-4 p-5 sm:p-6">
-                        <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-                            <Calendar className="w-5 h-5 text-green-600" />
-                        </div>
+                    )}
+                    {business_description && (
                         <div>
-                            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                                W Polsce
-                            </p>
-                            <p className="text-sm font-semibold text-slate-900 mt-0.5">
-                                {foundingYear ? `Od ${foundingYear} roku` : "Brak danych"}
-                            </p>
+                            <h3 className="text-lg font-bold text-ink mb-2">O firmie</h3>
+                            <Paragraphs text={business_description} />
                         </div>
-                    </div>
+                    )}
                 </div>
-            </div>
+            )}
         </div>
     )
 }

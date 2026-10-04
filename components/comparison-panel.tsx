@@ -148,19 +148,19 @@ export default function ComparisonPanel({
         onClick={onClose}
       />
 
-      <div className="fixed inset-x-4 top-4 bottom-4 md:inset-x-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[80vw] md:max-w-[1200px] md:h-[85vh] bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 flex flex-col animate-in slide-in-from-bottom-4 md:slide-in-from-bottom-0 md:zoom-in-95 duration-300 ease-out">
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 flex-shrink-0">
+      <div className="fixed inset-x-4 top-4 bottom-4 md:inset-x-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[80vw] md:max-w-[1200px] md:h-[85vh] bg-white rounded-2xl border border-line z-50 flex flex-col animate-in slide-in-from-bottom-4 md:slide-in-from-bottom-0 md:zoom-in-95 duration-300 ease-out">
+        <div className="flex items-center justify-between p-6 border-b border-line flex-shrink-0">
           <div className="flex items-center gap-6">
-            <h2 className="text-2xl font-bold text-slate-900">Porównanie firm ({selectedCompanies.length}/3)</h2>
+            <h2 className="text-2xl font-bold text-ink">Porównanie firm ({selectedCompanies.length}/3)</h2>
             <div className="flex items-center gap-3">
               <button
                 onClick={handleCopyLink}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm text-ink-2 hover:text-ink hover:bg-warm rounded-lg transition-colors"
               >
                 {copySuccess ? (
                   <>
-                    <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-green-600">Skopiowano!</span>
+                    <Check className="w-4 h-4 text-ink" />
+                    <span className="text-ink">Skopiowano!</span>
                   </>
                 ) : (
                   <>
@@ -174,8 +174,8 @@ export default function ComparisonPanel({
                   onClick={() => setShowDifferencesOnly(!showDifferencesOnly)}
                   className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors ${
                     showDifferencesOnly
-                      ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                      : "text-slate-600 hover:text-slate-800 hover:bg-slate-100"
+                      ? "bg-warm-2 text-ink hover:bg-blue-200"
+                      : "text-ink-2 hover:text-ink hover:bg-warm"
                   }`}
                 >
                   {showDifferencesOnly ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
@@ -184,7 +184,7 @@ export default function ComparisonPanel({
               )}
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-2 hover:bg-warm rounded-lg transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -192,16 +192,16 @@ export default function ComparisonPanel({
         <div className="flex-1 p-6 md:p-8 min-h-0">
           {selectedCompanies.length === 0 ? (
             <div className="text-center py-16">
-              <AlertCircle className="w-16 h-16 text-slate-300 mx-auto mb-6" />
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Brak firm do porównania</h3>
-              <p className="text-slate-600 text-lg">Dodaj firmy do porównania, aby zobaczyć szczegóły</p>
+              <AlertCircle className="w-16 h-16 text-ink-3 mx-auto mb-6" />
+              <h3 className="text-xl font-semibold text-ink mb-3">Brak firm do porównania</h3>
+              <p className="text-ink-2 text-lg">Dodaj firmy do porównania, aby zobaczyć szczegóły</p>
             </div>
           ) : (
             <div className="overflow-x-auto h-full">
               <table className="w-full h-full">
                 <thead>
-                  <tr className="border-b-2 border-slate-200">
-                    <th className="text-left py-4 pr-8 font-semibold text-slate-900 text-lg w-64 sticky left-0 bg-white">
+                  <tr className="border-b-2 border-line">
+                    <th className="text-left py-4 pr-8 font-semibold text-ink text-lg w-64 sticky left-0 bg-white">
                       Kryterium
                     </th>
                     {selectedCompanies.map((company) => (
@@ -218,12 +218,12 @@ export default function ComparisonPanel({
                             priority={false}
                           />
                           <div className="text-center">
-                            <div className="font-semibold text-slate-900 text-base">{company.brand}</div>
-                            <div className="text-sm text-slate-600 mt-1">{company.company}</div>
+                            <div className="font-semibold text-ink text-base">{company.brand}</div>
+                            <div className="text-sm text-ink-2 mt-1">{company.company}</div>
                           </div>
                           <button
                             onClick={() => handleRemoveCompany(company.id)}
-                            className="mt-2 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            className="mt-2 p-1 text-ink-3 hover:text-brand hover:bg-brand-soft rounded-full transition-colors"
                             title="Usuń z porównania"
                           >
                             <X className="w-4 h-4" />
@@ -245,45 +245,45 @@ export default function ComparisonPanel({
                     return (
                       <tr
                         key={key}
-                        className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${
-                          isDifferent ? "bg-blue-50" : ""
+                        className={`border-b border-line hover:bg-warm transition-colors ${
+                          isDifferent ? "bg-warm" : ""
                         }`}
                       >
-                        <td className="py-5 pr-8 font-semibold text-slate-900 text-base sticky left-0 bg-white">
+                        <td className="py-5 pr-8 font-semibold text-ink text-base sticky left-0 bg-white">
                           {criterionData[0].label}
                         </td>
                         {criterionData.map((criterion, index) => (
                           <td key={index} className="text-center py-5 px-6">
                             {criterion.type === "percentage" ? (
                               <div
-                                className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-white font-bold text-lg bg-gradient-to-r ${getScoreColor(criterion.value as number)} shadow-lg`}
+                                className={`inline-flex items-center justify-center w-16 h-16 rounded-full text-white font-bold text-lg bg-gradient-to-r ${getScoreColor(criterion.value as number)}`}
                               >
                                 {criterion.value}
                               </div>
                             ) : criterion.type === "boolean" ? (
                               <div className="flex items-center justify-center">
                                 {criterion.value === true ? (
-                                  <div className="flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-full shadow-sm">
+                                  <div className="flex items-center justify-center w-10 h-10 bg-green-100 text-ink rounded-full">
                                     <Check className="w-6 h-6" />
                                   </div>
                                 ) : criterion.value === false ? (
-                                  <div className="flex items-center justify-center w-10 h-10 bg-red-100 text-red-600 rounded-full shadow-sm">
+                                  <div className="flex items-center justify-center w-10 h-10 bg-brand-soft text-brand-ink rounded-full">
                                     <X className="w-4 h-4" />
                                   </div>
                                 ) : (
-                                  <div className="text-slate-400 text-base font-medium">N/A</div>
+                                  <div className="text-ink-3 text-base font-medium">N/A</div>
                                 )}
                               </div>
                             ) : criterion.type === "years" ? (
-                              <div className="text-slate-900 font-semibold text-base">
+                              <div className="text-ink font-semibold text-base">
                                 {criterion.value ? (
                                   `${criterion.value} lat`
                                 ) : (
-                                  <span className="text-slate-400">N/A</span>
+                                  <span className="text-ink-3">N/A</span>
                                 )}
                               </div>
                             ) : (
-                              <div className="text-slate-400 text-base font-medium">N/A</div>
+                              <div className="text-ink-3 text-base font-medium">N/A</div>
                             )}
                           </td>
                         ))}
@@ -296,16 +296,16 @@ export default function ComparisonPanel({
           )}
         </div>
 
-        <div className="flex items-center justify-between p-6 md:p-8 border-t border-slate-200 bg-slate-50 flex-shrink-0">
+        <div className="flex items-center justify-between p-6 md:p-8 border-t border-line bg-warm flex-shrink-0">
           <button
             onClick={onClear}
-            className="px-6 py-3 text-slate-600 hover:text-slate-800 hover:bg-white rounded-lg transition-colors font-medium"
+            className="px-6 py-3 text-ink-2 hover:text-ink hover:bg-white rounded-lg transition-colors font-medium"
           >
             Wyczyść
           </button>
           <button
             onClick={onClose}
-            className="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-sm"
+            className="px-8 py-3 bg-brand text-white rounded-lg hover:bg-brand-ink transition-colors font-medium"
           >
             Zamknij
           </button>

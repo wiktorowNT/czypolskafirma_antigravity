@@ -11,15 +11,15 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-slate-50 py-12 sm:py-20">
+    <main className="min-h-screen bg-warm py-12 sm:py-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mb-4">
             Dlaczego powstał ten projekt?
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-ink-2 max-w-2xl mx-auto">
             CzyPolskaFirma.pl to niezależna inicjatywa, która zrodziła się z potrzeby budowania 
             świadomości konsumenckiej oraz wspierania polskiej gospodarki.
           </p>
@@ -29,14 +29,14 @@ export default function AboutPage() {
         <div className="space-y-8 sm:space-y-12">
           
           {/* Block 1 */}
-          <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-slate-200">
+          <div className="bg-white rounded-2xl p-8 sm:p-10 border border-line">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
-                <Search className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-full bg-warm flex items-center justify-center flex-shrink-0">
+                <Search className="w-6 h-6 text-ink" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Świadome zakupy</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-ink">Świadome zakupy</h2>
             </div>
-            <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+            <p className="text-ink-2 leading-relaxed text-sm sm:text-base">
               Codziennie robimy zakupy i wybieramy usługi, rzadko zastanawiając się, 
               dokąd finalnie trafiają nasze pieniądze. Wiele znanych i lubianych marek, 
               które od lat są obecne na polskim rynku i kojarzą się z rodzimą produkcją, 
@@ -47,14 +47,14 @@ export default function AboutPage() {
           </div>
 
           {/* Block 2 */}
-          <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-slate-200">
+          <div className="bg-white rounded-2xl p-8 sm:p-10 border border-line">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
-                <TrendingUp className="w-6 h-6 text-red-600" />
+              <div className="w-12 h-12 rounded-full bg-brand-soft flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-6 h-6 text-brand-ink" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Rozwój polskiej gospodarki</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-ink">Rozwój polskiej gospodarki</h2>
             </div>
-            <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+            <p className="text-ink-2 leading-relaxed text-sm sm:text-base">
               Wierzymy, że wspieranie rodzimych przedsiębiorstw ma ogromny sens ekonomiczny. 
               Polskie firmy płacą tu podatki, tworzą miejsca pracy, inwestują lokalnie 
               i budują innowacje w naszym kraju. Kiedy świadomie wybieramy ich usługi lub produkty, 
@@ -64,14 +64,14 @@ export default function AboutPage() {
           </div>
 
           {/* Block 3 */}
-          <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-sm border border-slate-200">
+          <div className="bg-white rounded-2xl p-8 sm:p-10 border border-line">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-                <Globe2 className="w-6 h-6 text-green-600" />
+                <Globe2 className="w-6 h-6 text-ink" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Wolny wybór</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-ink">Wolny wybór</h2>
             </div>
-            <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+            <p className="text-ink-2 leading-relaxed text-sm sm:text-base">
               Nikogo nie bojkotujemy – otwarta gospodarka przynosi wiele korzyści i jest motorem postępu. 
               Chcemy jedynie, by polscy konsumenci mieli pełen obraz sytuacji i świadomość 
               tego kogo wspierają. Dlatego nasza strona podpowiada również 

@@ -36,23 +36,23 @@ export default function ComparisonBar({
     .filter(Boolean) as CategoryItem[]
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-40 animate-in slide-in-from-bottom-2 duration-200">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-line z-40 animate-in slide-in-from-bottom-2 duration-200">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <span className="font-medium text-slate-900">Porównanie ({comparedCompanies.length}/3)</span>
+            <span className="font-medium text-ink">Porównanie ({comparedCompanies.length}/3)</span>
             <div className="flex items-center gap-2 overflow-x-auto">
               {selectedCompanies.map((company) => (
                 <div
                   key={company.id}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full text-sm whitespace-nowrap animate-in fade-in-0 zoom-in-95 duration-200"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-warm rounded-full text-sm whitespace-nowrap animate-in fade-in-0 zoom-in-95 duration-200"
                 >
-                  <span className="text-slate-900">{company.brand}</span>
+                  <span className="text-ink">{company.brand}</span>
                   <button
                     onClick={() => onRemove(company.id)}
-                    className="p-0.5 hover:bg-slate-200 rounded-full transition-colors"
+                    className="p-0.5 hover:bg-warm-2 rounded-full transition-colors"
                   >
-                    <X className="w-3 h-3 text-slate-500" />
+                    <X className="w-3 h-3 text-ink-3" />
                   </button>
                 </div>
               ))}
@@ -61,14 +61,14 @@ export default function ComparisonBar({
           <div className="flex gap-2">
             <button
               onClick={onClear}
-              className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800 transition-colors"
+              className="px-3 py-2 text-sm text-ink-2 hover:text-ink transition-colors"
             >
               Wyczyść
             </button>
             <button
               onClick={onCompare}
               disabled={comparedCompanies.length < 2}
-              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-brand text-white text-sm rounded-lg hover:bg-brand-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Porównaj ({comparedCompanies.length})
             </button>

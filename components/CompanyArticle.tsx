@@ -118,11 +118,11 @@ export default function CompanyArticle({
     if (paragraphs.length <= 1) return null
 
     return (
-        <section className="mt-4 pt-4 border-t border-slate-100">
-            <h2 className="text-sm font-medium text-slate-400 mb-2">
+        <section>
+            <h2 className="text-xl font-extrabold tracking-tight text-ink mb-2.5">
                 {name} — podsumowanie
             </h2>
-            <div className="text-xs text-slate-400 leading-relaxed space-y-2">
+            <div className="text-[15px] text-ink-2 leading-relaxed space-y-2.5">
                 {paragraphs.map((para, index) => (
                     <p key={index}>{para}</p>
                 ))}

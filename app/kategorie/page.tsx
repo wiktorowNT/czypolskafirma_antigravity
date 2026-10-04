@@ -127,9 +127,9 @@ export default async function KategoriePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center space-x-2 text-sm text-slate-500">
+          <ol className="flex items-center space-x-2 text-sm text-ink-3">
             <li>
-              <Link href="/" className="hover:text-slate-900 transition-colors">
+              <Link href="/" className="hover:text-ink transition-colors">
                 Strona główna
               </Link>
             </li>
@@ -137,21 +137,21 @@ export default async function KategoriePage() {
               <ChevronRight className="w-4 h-4" />
             </li>
             <li>
-              <span className="text-slate-900 font-medium">Kategorie</span>
+              <span className="text-ink font-medium">Kategorie</span>
             </li>
           </ol>
         </nav>
 
         {/* Hero */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Kategorie firm</h1>
-          <p className="text-slate-500 text-sm">
+          <h1 className="text-3xl font-bold text-ink mb-2">Kategorie firm</h1>
+          <p className="text-ink-3 text-sm">
             Wybierz branżę i sprawdź, które marki mają polski kapitał, a które należą do zagranicznych właścicieli.
           </p>
         </div>
 
         {categories.length === 0 ? (
-          <p className="text-slate-500">Brak kategorii do wyświetlenia.</p>
+          <p className="text-ink-3">Brak kategorii do wyświetlenia.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {categories.map((category) => {
@@ -160,17 +160,17 @@ export default async function KategoriePage() {
                 <Link
                   key={category.slug}
                   href={`/kategoria/${encodeURIComponent(category.slug)}`}
-                  className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-red-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                  className="group flex items-center gap-4 rounded-xl border border-line bg-white p-5 transition-colors hover:border-brand/30 focus:outline-none focus:ring-2 focus:ring-ink focus:ring-offset-2"
                 >
-                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-700 transition-colors group-hover:bg-red-50 group-hover:text-red-600">
+                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-warm text-ink-2 transition-colors group-hover:bg-brand-soft group-hover:text-brand-ink">
                     <IconComponent className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-semibold text-slate-900 group-hover:text-red-600 transition-colors">
+                    <span className="block font-semibold text-ink group-hover:text-brand-ink transition-colors">
                       {category.name}
                     </span>
                     {category.count != null && (
-                      <span className="block text-sm text-slate-500">
+                      <span className="block text-sm text-ink-3">
                         {category.count} {category.count === 1 ? "firma" : "firm"}
                       </span>
                     )}

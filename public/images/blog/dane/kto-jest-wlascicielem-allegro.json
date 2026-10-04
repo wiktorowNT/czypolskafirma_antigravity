@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-allegro",
+  "tytul": "Kto jest właścicielem Allegro",
+  "akcent": "Allegro",
+  "podtytul": "Od 75 tysięcy dolarów do 69 miliardów obrotu rocznie",
+  "staty": [
+    {
+      "wartosc": "75 tys. USD",
+      "opis": "cena serwisu w 2000 roku"
+    },
+    {
+      "wartosc": "3,25 mld USD",
+      "opis": "cena Allegro w 2016 roku"
+    },
+    {
+      "wartosc": "69,2 mld zł",
+      "opis": "sprzedaż platformy w 2025"
+    }
+  ]
+}

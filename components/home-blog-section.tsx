@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { CalendarDays, Clock, ArrowRight } from "lucide-react"
 import { getAllPosts } from "@/lib/blog"
 
 function formatDate(iso: string): string {
@@ -19,22 +18,25 @@ export function HomeBlogSection() {
   if (posts.length === 0) return null
 
   return (
-    <section className="py-20 bg-slate-50 border-y border-slate-100">
+    <section className="bg-warm py-14 sm:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4 [font-family:var(--font-playfair)]">
-            Z bloga
-          </h2>
-          <p className="text-lg text-slate-600">
-            Przejęcia, pochodzenie kapitału i sukcesy polskiego biznesu — na twardych danych
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1.5 mb-6">
+          <div>
+            <h2 className="text-[26px] sm:text-[28px] font-extrabold tracking-tight text-ink">Z bloga</h2>
+            <p className="text-[15px] text-ink-2 mt-1">
+              Przejęcia, pochodzenie kapitału i sukcesy polskiego biznesu — na twardych danych
+            </p>
+          </div>
+          <Link href="/blog" className="text-sm font-bold text-brand-ink hover:underline underline-offset-4 whitespace-nowrap">
+            Zobacz wszystkie wpisy →
+          </Link>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-3.5 md:grid-cols-3">
           {posts.map((post) => (
             <article
               key={post.slug}
-              className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all overflow-hidden"
+              className="bg-card rounded-[20px] border-[1.5px] border-line hover:border-ink transition-colors overflow-hidden"
             >
               <Link href={`/blog/${post.slug}`} className="flex flex-col h-full group">
                 {post.image && (
@@ -42,44 +44,23 @@ export function HomeBlogSection() {
                     src={post.image}
                     alt={post.imageAlt || post.title}
                     loading="lazy"
-                    className="w-full aspect-video object-cover border-b border-slate-200"
+                    className="w-full aspect-[1200/630] object-cover bg-warm"
                   />
                 )}
-                <div className="flex flex-col flex-1 p-5 sm:p-6">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 mb-2.5">
-                    <span className="flex items-center gap-1">
-                      <CalendarDays className="w-3.5 h-3.5" />
-                      <time dateTime={post.date}>{formatDate(post.date)}</time>
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {post.readingTimeMinutes} min
-                    </span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-2 group-hover:text-red-600 transition-colors [font-family:var(--font-playfair)]">
+                <div className="flex flex-col flex-1 p-4 sm:p-5">
+                  <p className="text-[12.5px] font-bold text-ink-3 mb-2 tabular-nums">
+                    <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingTimeMinutes} min
+                  </p>
+                  <h3 className="text-[17px] font-bold text-ink leading-snug group-hover:underline underline-offset-4">
                     {post.title}
                   </h3>
                   {post.description && (
-                    <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">{post.description}</p>
+                    <p className="text-[14.5px] text-ink-2 leading-relaxed line-clamp-3 mt-2">{post.description}</p>
                   )}
-                  <span className="mt-auto pt-3 inline-flex items-center gap-1.5 text-sm font-medium text-red-600">
-                    Czytaj
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </span>
                 </div>
               </Link>
             </article>
           ))}
-        </div>
-
-        <div className="text-center mt-10">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold transition-colors"
-          >
-            Zobacz wszystkie wpisy
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </div>
     </section>
