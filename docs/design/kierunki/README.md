@@ -1,6 +1,22 @@
 # Nowy wygląd CzyPolskaFirma — Etap 1: diagnoza i trzy kierunki
 
-Stan: **czekam na wybór kierunku** (albo połączenia kilku). Kod aplikacji nie był ruszany.
+Stan (04.10.2026): **wybrany kierunek C „Półka”** z kartą „Przykładowy wynik” przeniesioną z A
+(Żabka z rozpisaną ścieżką właściciela: CVC → pośrednik w Luksemburgu, pomijany → Żabka Polska, plus
+trzy zaskakujące marki). Kierunek B odrzucony 27.09; A i A+C zostają w folderze tylko do porównania.
+Kod aplikacji nie był jeszcze ruszany — Etap 2 czeka na akceptację planu.
+
+### A+C · „Kartoteka z metką” (nowy wariant do porównania)
+
+- **Baza z A:** biel, linie 1 px zamiast cieni, Inter Tight + Inter + Geist Mono, lista kategorii
+  z paskiem udziału PL, słupki kategorii, profil z tabelą faktów i diagramem-rejestrem, w którym
+  spółka w raju podatkowym jest kropkowanym węzłem „pomijana”.
+- **Z C:** werdykt jako metka (grafit = zagraniczna, cegła `#b42318` = polska) w nagłówku profilu
+  i na górze strony głównej; okrągła wyszukiwarka z przyciskiem w środku; okrągłe pigułki firm,
+  na telefonie przewijane w poziomie; waffle „koszyk 750 firm”; rodzina marek z logami na profilu;
+  metka kraju na okładkach bloga.
+- **Świadomie nie z C:** Manrope, ciepłe tła i pigułki „xx% PL” — zostaje chłodniejszy, bardziej
+  rejestrowy charakter A. Na liście alternatyw nie ma metek, żeby nie robić czerwonej ściany.
+- Pliki: `ac-strona-glowna.html`, `ac-profil.html`, `ac-kartoteka-metka.css`.
 
 ## Jak oglądać
 
@@ -13,6 +29,8 @@ Stan: **czekam na wybór kierunku** (albo połączenia kilku). Kod aplikacji nie
   i `c-*`. Każda makieta jest responsywna — ta sama strona pokazuje wersję desktop i mobile (375 px).
 - `zrzuty/` — gotowe PNG (desktop 1280 px i mobile 375 px, pełna wysokość), wyrenderowane
   skryptem `tools/render-makiety.mjs`.
+
+Makiety nie zakładają żadnych własnych ilustracji ani zdjęć (patrz punkt 4).
 
 Makiety są na prawdziwych danych z bazy (stan 17.09.2026): 750 firm, 350 polskich (47%),
 36 krajów, udziały per kategoria z `/api/stats`, rozkład krajów z `/api/companies`,
@@ -89,11 +107,11 @@ opis → diagram → dane rejestrowe → alternatywy → FAQ), hierarchia nagł�
 
 Bierzemy zasady: czysta biel lub papier, tekst prawie czarny (nie szary), **linie 1 px i szare
 wypełnienia zamiast cieni**, jeden kolor akcentu używany rzadko, duże, ciasno złożone tytuły,
-dużo światła, pigułki w szarości, listy z separatorami zamiast siatek kart, ilustracje z kreski
-z jedną plamą koloru, serif jako akcent redakcyjny (Notion robi to w tytule bloga „Tools & Craft”
+dużo światła, pigułki w szarości, listy z separatorami zamiast siatek kart,
+serif jako akcent redakcyjny (Notion robi to w tytule bloga „Tools & Craft”
 i w cytacie w stopce). Notion prawie nie używa cieni, gradientów ani ikon w kółkach.
 
-Nie bierzemy: niebieskiego akcentu, ich postaci-ludzików, układów 1:1, karuzel logotypów.
+Nie bierzemy: niebieskiego akcentu, ilustracji i postaci-ludzików (nie będzie własnych rysunków), układów 1:1, karuzel logotypów.
 
 ---
 
@@ -112,14 +130,15 @@ lucide zostaje w drobnych elementach; kontrast AA (akcenty dobrane tak, by na tl
   przycisku). Zagraniczna = atrament, nie kolor.
 - **Fonty:** Inter Tight (tytuły, ciasne), Inter (tekst), Geist Mono (NIP/KRS, etykiety, daty).
   Uwaga: `geist` jest już w `package.json`.
-- **Układ:** hero wyrównany do lewej z ilustracją po prawej; kategorie jako **lista z separatorami
+- **Układ:** hero wyrównany do lewej z przykładowym wynikiem po prawej; kategorie jako **lista z separatorami
   i paskiem udziału PL** zamiast pigułek; statystyki jako słupek krajów + poziome słupki kategorii;
   profil dwukolumnowy z tabelą faktów po prawej (na mobile tabela idzie nad tekst).
 - **Diagram właścicielski:** pionowy rejestr z numerowanymi węzłami, kraj i udział po prawej,
   **spółka pośrednicząca w raju podatkowym jako węzeł kropkowany „pomijana”** — czyli zasada 1
   widoczna w grafice (Żabka: CVC → Heket Topco Luksemburg → Żabka Group → Żabka).
-- **Ilustracje:** kreska 1,5 px + jedna plama czerwieni, przedmioty (karty, szuflady, lupa, pieczątki),
-  bez postaci.
+- **Zamiast ilustracji:** w hero „Przykładowy wynik” — karta Żabki ze ścieżką kapitału (CVC →
+  pośrednik w Luksemburgu → Żabka) i trzy zaskakujące marki. Okładki bloga typograficzne: etykieta,
+  tytuł, kraj i jedna liczba.
 - **Czym się różni:** najgęstszy i najbardziej „narzędziowy”; najmniej ryzykowny; najbliżej
   Notion; najłatwiejszy do wdrożenia na obecnych komponentach Radix.
 
@@ -139,8 +158,8 @@ lucide zostaje w drobnych elementach; kontrast AA (akcenty dobrane tak, by na tl
 - **Diagram właścicielski:** „Od półki do właściciela” w liniach włosowych + **oś czasu
   właścicieli marki** (Wedel: 1851 → 1949 → 1991 PepsiCo → 1999 Cadbury → 2010 LOTTE) — zasada
   złotej klatki jako grafika. Lata przejęć w makiecie do potwierdzenia przed wdrożeniem.
-- **Ilustracje:** dwubarwny linoryt (atrament + karmin, kreskowanie kolorem papieru), przedmioty
-  codzienne: koszyk, produkt, witryna, metka.
+- **Zamiast ilustracji:** gazetowa tabela „Z kartoteki” — sześć marek, właściciel, kraj, werdykt
+  kursywą. Okładka bloga jak czołówka gazety: duży serifowy tytuł na papierze i pasek liczb.
 - **Czym się różni:** najbardziej „własny” i najdalszy od szablonów AI; jedyny z serifem i papierem;
   najwięcej tekstu na ekranie, więc wymaga dyscypliny na mobile; najlepiej pasuje do bloga i
   do okładek.
@@ -159,7 +178,8 @@ lucide zostaje w drobnych elementach; kontrast AA (akcenty dobrane tak, by na tl
   **półki** (czerwony towar = polski kapitał); profil z werdyktem-metką i rzędem faktów.
 - **Diagram właścicielski:** łańcuch metek na sznurku (Reserved → LPP S.A. → Fundacja Semper Simul,
   31,2% kapitału / 60,8% głosów) — zasada efektywnej kontroli jako grafika; rodzina marek LPP z logami.
-- **Ilustracje:** płaskie naklejki (dwa wypełnienia + kontur 2 px): produkty z półki, metki, koszyk.
+- **Zamiast ilustracji:** „Tak wygląda wynik” — stos metek z logami (Allegro, Żabka, Wedel, ORLEN)
+  i werdyktem. Okładki bloga na ciepłym tle z metką kraju i jedną liczbą.
 - **Czym się różni:** najbardziej mobilny i konsumencki; najwięcej koloru (wciąż tylko 1 akcent +
   1 dodatek); najbardziej odległy od „rejestru”, najbliższy social mediom; ryzyko: przy nadmiarze
   pigułek wraca wrażenie „aplikacji z generatora”, więc trzeba trzymać dyscyplinę.
@@ -170,74 +190,36 @@ A z diagramem „metek” z C.
 
 ---
 
-## 4. Ilustracje: uczciwa ocena SVG z kodu
+## 4. Bez własnych rysunków: z czego budujemy tożsamość
 
-W każdej makiecie jest jedna próbka SVG narysowana kodem (hero). Ocena:
+Założenie po uwagach właściciela (27.09.2026): **nie będzie ilustracji ani zdjęć** — ani od
+ilustratora, ani własnych. Żaden z kierunków nie ma więc miejsc „na obrazek”. Wszystko, co widać,
+powstaje automatycznie z bazy, z logotypów w `public/logos/` i z typografii.
 
-- **Przedmioty i ikony-spoty** (karta w kartotece, koszyk, produkty na półce, metka) — kodem da się
-  zrobić poziom „czysty, rozpoznawalny, spójny”, wystarczający na spoty 80–200 px, nagłówki
-  kategorii, puste stany, 404. To widać w makietach: nie wstydzą się, ale nie udają ręki.
-- **Postacie, dłonie, sceny, faktura ręcznej kreski** — kodem wychodzą sztywno i to jest widoczne
-  natychmiast. Nie wstawiam ich. Duże ilustracje przewodnie (hero strony głównej, „O projekcie”,
-  okładki cykli na blogu) powinny być **narysowane ręcznie** (Ty albo ilustrator) według
-  poniższego przewodnika. W makietach miejsca na nie są oznaczone jako `figure.ill` / `figure.plate`
-  z podpisem „szkic SVG”.
-- Grafiki z danych (diagramy właścicielskie, słupki, waffle, oś czasu) — to nasza najmocniejsza
-  i najbardziej autentyczna warstwa wizualna, bo nikt inny nie ma tych danych. Robimy je kodem,
-  w React, z danych z Supabase. Wszystkie trzy w makietach są gotowe do przeniesienia.
+Pierwsza wersja makiet miała w hero próbki rysunków SVG i puste pola na okładki. Zostały usunięte
+i zastąpione elementami z danych:
 
-### Przewodnik po stylu ilustracji (wspólny, z wariantami per kierunek)
+| Miejsce | A · Kartoteka | B · Redakcja | C · Półka |
+|---------|---------------|--------------|-----------|
+| Hero, prawa strona / pod wyszukiwarką | karta „Przykładowy wynik” ze ścieżką kapitału | tabela „Z kartoteki” (6 marek) | stos metek z logami |
+| Okładki bloga | typograficzne: etykieta, tytuł, kraj, liczba | czołówka gazety na papierze | ciepłe tło, metka kraju, liczba |
+| Statystyki | słupek krajów + słupki kategorii | duże numerały + słupki | waffle „koszyk 750 firm” + półki |
+| Profil firmy | diagram-rejestr z pomijanym rajem | ścieżka + oś czasu właścicieli | łańcuch metek + rodzina marek z logami |
 
-- **Kreska:** jedna grubość na ilustrację (A: 1,5 px atrament; B: bez konturu, bryły i
-  kreskowanie; C: kontur 2 px). Zaokrąglone końce i łączenia. Bez gradientów, bez cieni.
-- **Kolor:** maks. 3: atrament, tło (biel/papier/ciepła szarość) i jeden akcent (czerwień
-  kierunku). W C dopuszczalna żółć naklejki jako czwarty w 5% powierzchni.
-- **Motywy:** przedmioty codzienne i „śledcze”: półka, koszyk, produkty (mleko, czekolada, butelka,
-  wieszak, dystrybutor), metki, paragony, pieczątki, teczki, lupa, mapa z pinezką, łańcuch/sznurek.
-  **Bez** orłów, flag jako motywu, konturu Polski, biało-czerwonych pasów. Polskość pokazujemy
-  danymi (werdykt, kraj), nie symbolami.
-- **Proporcje:** kadr 4:3 lub 3:2, obiekt zajmuje 60–70% kadru, linia podłogi/półki jako jedyny
-  element sceny. Perspektywa płaska (frontalna lub lekki izometr), bez punktów zbiegu.
-- **Postacie (tylko ręcznie):** bez twarzy lub z dwoma kropkami, prosta sylwetka, jedna plama koloru
-  na ubraniu; zawsze w relacji z produktem (trzyma, ogląda, odwraca metkę).
-- **Format dostawy:** SVG (ścieżki, bez rastrów) lub PNG 2× z przezroczystym tłem; skan ręcznego
-  rysunku 300 dpi, czarny tusz na białym, później wektoryzacja.
+Dlaczego to wystarczy: wartością serwisu są dane, których nikt inny nie ma. Wykres udziału
+polskiego kapitału, ścieżka właścicielska i metka z werdyktem są rozpoznawalne i nie da się ich
+pomylić z szablonem, bo szablon nie ma tych danych. Typografia i jeden kolor akcentu robią resztę,
+tak jak w Notion.
 
-### Lista potrzebnych ilustracji
+Co w aplikacji będzie generowane z bazy:
 
-| # | Miejsce | Co przedstawia | Format |
-|---|---------|----------------|--------|
-| 1 | Hero strony głównej | Ktoś odwraca produkt / metkę, żeby zobaczyć, kto za nim stoi | 4:3, duża |
-| 2 | Hero „O projekcie” | Biurko z rejestrami, lupą i notesem — praca śledcza | 3:2, duża |
-| 3 | Metodologia — 3 zasady | (1) piramida/schody do szczytu, (2) waga z pakietem 51%, (3) złota klatka z marką w środku | 3 spoty 1:1 |
-| 4 | „Jak to działa” — 3 kroki | Wpisujesz nazwę, dostajesz metkę, sięgasz po alternatywę z półki | 3 spoty 1:1 |
-| 5 | Nagłówki 19 kategorii | Po jednym przedmiocie na kategorię (bochenek, wieszak, cegła, pigułka, wtyczka…) | 19 spotów 1:1 |
-| 6 | Pusty stan wyszukiwania / 404 | Pusta półka z metką „?” | 1:1 |
-| 7 | „Zgłoś firmę” | Koperta lub paragon z długopisem | 1:1 |
-| 8 | Wsparcie projektu | Kubek kawy na stosie rejestrów (spokojnie, bez serduszek) | 1:1 |
-| 9 | Werdykt (2 warianty) | Metka „polska” i metka „zagraniczna” — jako element systemu, nie ilustracja | SVG systemowe |
-| 10 | Blog — domyślna okładka cyklu | Motyw kierunku (koszyk / kartoteka / półka) w wersji 1200×630 | 1200×630 |
-
-### Gdzie Twoje własne materiały dadzą najwięcej
-
-Brief (wszystko na telefon w dobrym świetle, bez filtrów, poziomo, min. 3000 px dłuższy bok):
-
-1. **Półki sklepowe** — 15–20 zdjęć półek z widocznymi markami z jednej kategorii (ketchupy,
-   czekolady, mleko, piwo, proszki). Frontalnie, bez ludzi, bez cen jeśli się da. Użycie: okładki
-   bloga i grafiki social (szablony „półka”, „vs”), hero kategorii, sekcja „Co stoi na półce”.
-2. **Produkt na białym** — 30 produktów polskich i zagranicznych „bliźniaków” (Wedel vs Wawel,
-   Żabka vs Dino torba, Tymbark vs Hortex): na białej kartce, światło z okna, z góry i z przodu.
-   Użycie: porównania w blogu, karty „alternatywy”, kierunek C.
-3. **Ręczne szkice** — Twoje szkice diagramów właścicielskich w notesie (strzałki, procenty,
-   przekreślony raj podatkowy). Skan 300 dpi. Użycie: „O projekcie”, metodologia, okładki bloga
-   jako tło; to najsilniejszy sygnał „to robi człowiek”.
-4. **Warsztat** — 3–5 zdjęć biurka z otwartymi rejestrami (KRS na ekranie, wydruki, notes),
-   bez twarzy. Użycie: „O projekcie”, sekcja wsparcia.
-5. **Zdjęcia z ulicy** — szyldy i witryny znanych marek (Żabka, Wedel, Rossmann) w polskim
-   kontekście. Użycie: okładki newsów o przejęciach.
-
-Format dostawy: JPG oryginały do `docs/design/foto/` (poza repo, np. Drive — patrz
-`BACKUP_STRATEGY.md`), do strony trafiają wersje WebP ≤ 200 KB.
+- **Przykładowy wynik / tabela / metki w hero** — top odsłon z `get_popular_companies` (już
+  pobierane w `app/page.tsx`), z właścicielem i krajem.
+- **Okładki bloga** — obecny `tools/render-blog-cover.mjs` renderuje HTML przez puppeteer, więc
+  wystarczy nowy `tools/okladka-szablon.html` w stylu wybranego kierunku. Dane (tytuł, kraj, liczby)
+  już przekazuje `okladka-wpisu.mjs`.
+- **Obrazki OG profili** (`app/firma/[slug]/opengraph-image.tsx`) — ta sama metka z werdyktem.
+- **Spoty ikon** zostają z lucide, w jednym kolorze tekstu, bez kolorowych kółek.
 
 ---
 
@@ -247,7 +229,7 @@ Format dostawy: JPG oryginały do `docs/design/foto/` (poza repo, np. Drive — 
   szablony w `docs/szablony/` (tailwind, karty z cieniami, zielone „Polska”) są w **innej
   estetyce** niż wszystkie trzy kierunki. Po wyborze kierunku proponuję: okładka na tle
   kierunku (biel / papier / ciepła szarość), tytuł w foncie kierunku, jeden pasek akcentu, rząd
-  3 liczb w mono/serif, miejsce na Twoje zdjęcie półki po prawej (1200×630, sekcja 40%).
+  3 liczb w mono/serif. Bez zdjęć — przykłady widać w sekcji bloga na makietach stron głównych.
   Zmiana dotyczy tylko CSS w szablonie; `render-blog-cover.mjs` bez zmian.
 - Szablony social: ten sam zestaw tokenów (kolory, font, metka werdyktu), bez cieni, werdykt
   zawsze tą samą metką co na stronie. To zamknie pętlę: to, co ktoś widzi na X, wygląda jak

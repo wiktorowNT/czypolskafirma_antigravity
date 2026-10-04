@@ -77,10 +77,22 @@ p { margin: 0; }
 .chip img.logo, .chip .ini { width: 28px; height: 28px; border-radius: 50%; object-fit: contain; border: 1px solid var(--line); background: #fff; }
 .chip .ini { display: grid; place-items: center; font-size: 12px; color: var(--ink-2); background: var(--warm); }
 .chip img.flag { width: 16px; border-radius: 3px; }
-.ill { background: var(--warm); border-radius: 24px; padding: 20px; position: relative; }
-.ill .tag { position: absolute; top: 12px; left: 16px; font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
-.ill svg { width: 100%; height: auto; display: block; }
-.ill .cap { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; }
+.tagstack { background: var(--warm); border-radius: 24px; padding: 20px; display: grid; gap: 8px; }
+.tagstack h4 { margin-bottom: 4px; }
+.tagcard { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r); padding: 10px 12px; }
+.tagcard:hover { border-color: var(--ink); }
+.tagcard .lg { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); object-fit: contain; padding: 4px; background: #fff; }
+.tagcard b { display: block; font-size: 16px; font-weight: 800; }
+.tagcard small { display: block; font-size: 12.5px; color: var(--ink-2); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tagcard .metka { font-size: 11px; padding: 8px 12px 8px 26px; }
+.tagcard .metka::before { left: 11px; width: 6px; height: 6px; }
+.tagstack .cap { font-size: 12.5px; color: var(--ink-2); font-weight: 600; margin-top: 4px; }
+.tcover { aspect-ratio: 1200/630; background: var(--warm); display: flex; flex-direction: column; justify-content: space-between; padding: 14px 16px; }
+.tc-tag { align-self: flex-start; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; background: #fff; border-radius: 999px; padding: 4px 10px; color: var(--accent-ink); }
+.tc-title { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+.tc-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tc-num { font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; }
+.tc-logo { width: 30px; height: 30px; border-radius: 50%; background: #fff; border: 1px solid var(--line); object-fit: contain; padding: 3px; }
 
 /* Kategorie: kafelki */
 .cat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
@@ -232,4 +244,57 @@ p { margin: 0; }
   .tagnode { grid-template-columns: 1fr; }
   .tagnode .stake { text-align: left; }
   .family { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Mała metka na okładkach bloga */
+.metka.sm { font-size: 10.5px; padding: 6px 10px 6px 24px; }
+.metka.sm::before { left: 10px; width: 6px; height: 6px; }
+
+/* Telefon: metka pod nazwą, pigułka kategorii pod nazwą, pigułki firm w jednej linii */
+@media (max-width: 860px) {
+  .chip { flex-shrink: 0; white-space: nowrap; }
+  .tagcard { grid-template-columns: 40px minmax(0, 1fr); row-gap: 8px; }
+  .tagcard .metka { grid-column: 2; justify-self: start; }
+  .cat { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+
+/* =====================================================================
+   Przykładowy wynik w hero (pomysł z A, styl C) — 04.10.2026
+   ===================================================================== */
+.sample { background: #fff; border: 1.5px solid var(--line); border-radius: 24px; padding: 18px; display: grid; gap: 14px; }
+.sample-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.sample .mini { height: 26px; font-size: 12px; }
+.sample .lg { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); object-fit: contain; padding: 5px; background: #fff; }
+.sample-id { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.sample-id b { display: block; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.sample-id small { display: block; font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.sample-id .metka { font-size: 12px; padding: 10px 14px 10px 28px; }
+.sample-id .metka::before { left: 12px; width: 6px; height: 6px; }
+.sample-chain { background: var(--warm); border-radius: 18px; padding: 12px; }
+.sc { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 9px 12px; }
+.sc small { display: block; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+.sc b { display: block; font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc .ctry { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.sc .ctry img { width: 18px; border-radius: 3px; }
+.sc.owner { border-color: var(--accent); background: var(--accent-soft); }
+.sc.owner small { color: var(--accent-ink); }
+.sc.skip { border-style: dashed; background: transparent; }
+.sc.skip b, .sc.skip .ctry { color: var(--ink-3); }
+.sc-string { height: 22px; margin-left: 22px; border-left: 2px dashed var(--ink-3); position: relative; }
+.sc-string span { position: absolute; left: 10px; top: 3px; font-size: 11.5px; font-weight: 700; color: var(--ink-2); }
+.sample-more { display: grid; gap: 2px; }
+.sample-more h4 { margin-bottom: 4px; }
+.sm-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); }
+.sm-row:first-of-type { border-top: 0; }
+.sm-row .lg { width: 32px; height: 32px; padding: 3px; }
+.sm-row b { display: block; font-size: 14.5px; font-weight: 700; }
+.sm-row small { display: block; font-size: 12px; color: var(--ink-2); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sample-cta { width: 100%; }
+@media (max-width: 860px) {
+  .sample { padding: 14px; border-radius: 20px; }
+  .sample .d-only { display: none; }
+  .sample-top h4, .sample .mini { white-space: nowrap; }
+  .sample-id { grid-template-columns: 48px minmax(0, 1fr); row-gap: 10px; }
+  .sample-id .metka { grid-column: 2; justify-self: start; }
 }

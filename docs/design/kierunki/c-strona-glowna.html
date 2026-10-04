@@ -50,7 +50,7 @@
         <div class="shelf">
           <h4>Ostatnio dodane</h4>
           <div class="chips scroll">
-            <a class="chip" href="#"><img class="logo" src="../../../public/logos/fakt.pl.png" alt="">Fakt<img class="flag" src="https://flagcdn.com/w40/ch.png" alt="Szwajcaria"></a>
+            <a class="chip" href="#"><img class="logo" src="../../../public/logos/fakt.pl.svg" alt="">Fakt<img class="flag" src="https://flagcdn.com/w40/ch.png" alt="Szwajcaria"></a>
             <a class="chip" href="#"><img class="logo" src="../../../public/logos/browar-amber.pl.webp" alt="">Browar Amber<img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
             <a class="chip" href="#"><span class="ini">T</span>Tubądzin<img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
             <a class="chip" href="#"><span class="ini">K</span>Koleje Dolnośląskie<img class="flag" src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
@@ -58,38 +58,30 @@
         </div>
       </div>
 
-      <!-- Ilustracja C: płaska „naklejka” — dwa wypełnienia + kontur 2 px. Przedmioty z półki. -->
-      <figure class="ill" aria-label="Ilustracja: półka sklepowa z produktami i metką">
-        <span class="tag">Ilustracja C · szkic SVG · naklejka</span>
-        <svg viewBox="0 0 420 300" fill="none" stroke="#1f1d1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-          <!-- półka -->
-          <rect x="30" y="214" width="360" height="14" rx="4" fill="#1f1d1a"/>
-          <path d="M60 228v40M360 228v40" stroke-width="6"/>
-          <!-- karton mleka -->
-          <path d="M92 214v-96l16-26h44l16 26v96z" fill="#fff"/>
-          <path d="M108 92h44l16 26h-76z" fill="#ece7df"/>
-          <path d="M92 118h76" />
-          <rect x="106" y="140" width="48" height="34" rx="6" fill="#c2381f" stroke="none"/>
-          <path d="M130 92v-14a8 8 0 0 1 8-8" />
-          <!-- czekolada -->
-          <rect x="196" y="126" width="98" height="88" rx="8" fill="#ece7df"/>
-          <rect x="196" y="126" width="98" height="26" rx="8" fill="#c2381f" stroke="none"/>
-          <rect x="196" y="126" width="98" height="88" rx="8"/>
-          <path d="M228 152v62M262 152v62M196 183h98" stroke="#1f1d1a" stroke-opacity="0.35"/>
-          <!-- butelka -->
-          <path d="M330 214v-76c0-10-8-14-8-24v-30h20v30c0 10-8 14-8 24v76z" fill="#fff"/>
-          <rect x="318" y="72" width="28" height="12" rx="3" fill="#1f1d1a"/>
-          <rect x="316" y="158" width="32" height="40" rx="6" fill="#f2c14e" stroke="none"/>
-          <!-- metka z werdyktem, na sznurku -->
-          <path d="M254 126c10-30 60-46 96-42" stroke-dasharray="5 6"/>
-          <g transform="rotate(-10 348 78)">
-            <path d="M318 62h60a10 10 0 0 1 10 10v30a10 10 0 0 1-10 10h-60l-16-25z" fill="#c2381f" stroke="#1f1d1a"/>
-            <circle cx="316" cy="87" r="4" fill="#fff" stroke="none"/>
-            <text x="334" y="93" font-family="Manrope, sans-serif" font-size="16" font-weight="800" fill="#fff" stroke="none">PL?</text>
-          </g>
-        </svg>
-        <figcaption class="cap">Styl C: płaskie wypełnienia (ciepła szarość, cegła, żółć naklejki) i gruby kontur. Produkty z półki, metka z pytaniem.</figcaption>
-      </figure>
+      <!-- Przykładowy wynik (pomysł z kierunku A w stylu C). W aplikacji: firma z największą liczbą odsłon
+           z get_popular_companies, z łańcuchem właścicielskim; „Też zaskakują” = kolejne zagraniczne marki z listy. -->
+      <div class="sample" aria-label="Przykładowy wynik z bazy">
+        <div class="sample-top"><h4>Przykładowy wynik</h4><span class="mini"><span class="d-only">Weryfikacja&nbsp;</span>26.04.2026</span></div>
+        <div class="sample-id">
+          <img class="lg" src="../../../public/logos/zabkagroup.com.svg" alt="">
+          <div class="nm"><b>Żabka</b><small>Handel · Poznań</small></div>
+          <span class="metka"><img src="https://flagcdn.com/w40/gb.png" alt="">Zagraniczna</span>
+        </div>
+        <div class="sample-chain">
+          <div class="sc owner"><div><small>Ostateczny właściciel</small><b>CVC Capital Partners</b></div><span class="ctry"><img src="https://flagcdn.com/w40/gb.png" alt="">37,62%</span></div>
+          <div class="sc-string"><span>przez</span></div>
+          <div class="sc skip"><div><small>Pośrednik w Luksemburgu · pomijany</small><b>Heket Topco S.à r.l.</b></div><span class="ctry"><img src="https://flagcdn.com/w40/lu.png" alt="">LU</span></div>
+          <div class="sc-string"><span>kontroluje</span></div>
+          <div class="sc"><div><small>Marka na półce</small><b>Żabka Polska sp. z o.o.</b></div><span class="ctry"><img src="https://flagcdn.com/w40/pl.png" alt="">PL</span></div>
+        </div>
+        <div class="sample-more">
+          <h4>Też zaskakują</h4>
+          <a class="sm-row" href="#"><img class="lg" src="../../../public/logos/wedel.pl.png" alt=""><span class="nm"><b>E. Wedel</b><small>LOTTE Group</small></span><span class="metka sm"><img src="https://flagcdn.com/w40/kr.png" alt="">Korea Płd.</span></a>
+          <a class="sm-row" href="#"><img class="lg" src="../../../public/logos/inpost.pl.webp" alt=""><span class="nm"><b>InPost</b><small>PPF Group</small></span><span class="metka sm"><img src="https://flagcdn.com/w40/cz.png" alt="">Czechy</span></a>
+          <a class="sm-row" href="#"><img class="lg" src="../../../public/logos/pepco.com.webp" alt=""><span class="nm"><b>Pepco</b><small>Ibex Investor</small></span><span class="metka sm"><img src="https://flagcdn.com/w40/za.png" alt="">RPA</span></a>
+        </div>
+        <a class="btn sample-cta" href="#">Zobacz pełny profil Żabki →</a>
+      </div>
     </div>
   </section>
 
@@ -164,9 +156,9 @@
     <div class="wrap">
       <div class="section-head"><div><h2>Z bloga: kto stoi za marką</h2><p>Przejęcia, pochodzenie kapitału i sukcesy polskiego biznesu — na twardych danych.</p></div><a class="more" href="#">Wszystkie wpisy →</a></div>
       <div class="cards3">
-        <a class="post" href="#"><div class="cover">Okładka — nowy szablon, jasny</div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>Duński Bestseller wchodzi do polskich galerii. Kto stoi za marką Vila</h3><p>Vila otworzyła pierwszy sklep w Polsce. Stoi za nią duński dom mody, który od 1975 roku należy do jednej rodziny.</p></div></a>
-        <a class="post" href="#"><div class="cover">Okładka — nowy szablon, jasny</div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>Co się dzieje z polską marką po przejęciu. Lekcja z branży meblowej</h3><p>Black Red White, Agnella i Bydgoskie Meble zmieniały właścicieli, a szyldy zostały na miejscu.</p></div></a>
-        <a class="post" href="#"><div class="cover">Okładka — nowy szablon, jasny</div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>InPost zmienia właściciela. Kto przejmuje paczkomaty Rafała Brzoski</h3><p>Ostatnia zgoda regulatora otworzyła drogę do przejęcia InPostu za 7,8 mld euro.</p></div></a>
+        <a class="post" href="#"><div class="tcover"><span class="tc-tag">Kto stoi za marką</span><b class="tc-title">Vila</b><span class="tc-foot"><span class="metka sm"><img src="https://flagcdn.com/w40/dk.png" alt="">Dania</span><span class="tc-num">38,1 mld DKK</span></span></div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>Duński Bestseller wchodzi do polskich galerii. Kto stoi za marką Vila</h3><p>Vila otworzyła pierwszy sklep w Polsce. Stoi za nią duński dom mody, który od 1975 roku należy do jednej rodziny.</p></div></a>
+        <a class="post" href="#"><div class="tcover"><span class="tc-tag">Po przejęciu</span><b class="tc-title">Szyld zostaje, właściciel się zmienia</b><span class="tc-foot"><img class="tc-logo" src="../../../public/logos/brw.pl.svg" alt=""><span class="tc-num">3 marki meblowe</span></span></div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>Co się dzieje z polską marką po przejęciu. Lekcja z branży meblowej</h3><p>Black Red White, Agnella i Bydgoskie Meble zmieniały właścicieli, a szyldy zostały na miejscu.</p></div></a>
+        <a class="post" href="#"><div class="tcover"><span class="tc-tag">Przejęcie</span><b class="tc-title">InPost → PPF</b><span class="tc-foot"><span class="metka sm"><img src="https://flagcdn.com/w40/cz.png" alt="">Czechy</span><span class="tc-num">7,8 mld €</span></span></div><div class="body"><div class="date">16 września 2026 · 3 min</div><h3>InPost zmienia właściciela. Kto przejmuje paczkomaty Rafała Brzoski</h3><p>Ostatnia zgoda regulatora otworzyła drogę do przejęcia InPostu za 7,8 mld euro.</p></div></a>
       </div>
     </div>
   </section>

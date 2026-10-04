@@ -50,46 +50,21 @@
         <a href="#">Koleje Dolnośląskie<img src="https://flagcdn.com/w40/pl.png" alt="Polska"></a>
       </p>
 
-      <!-- Ilustracja przewodnia w stylu B: dwubarwny „linoryt” (atrament + karmin), kreskowanie kolorem papieru -->
-      <figure class="plate">
-        <span class="tag">Ilustracja B · szkic SVG · linoryt dwubarwny</span>
-        <svg viewBox="0 0 560 300" aria-label="Koszyk zakupowy z produktami">
-          <defs>
-            <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
-              <rect width="7" height="7" fill="#14130f"/><rect width="1.6" height="7" fill="#fbfaf6"/>
-            </pattern>
-            <pattern id="hatch2" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(55)">
-              <rect width="6" height="6" fill="#a61b2b"/><rect width="1.3" height="6" fill="#fbfaf6"/>
-            </pattern>
-          </defs>
-          <!-- cień/podłoga -->
-          <path d="M90 272h380" stroke="#14130f" stroke-width="2"/>
-          <!-- produkty w koszu -->
-          <rect x="195" y="70" width="36" height="90" rx="4" fill="#a61b2b"/>
-          <rect x="203" y="58" width="20" height="16" fill="#14130f"/>
-          <rect x="206" y="92" width="14" height="40" fill="#fbfaf6"/>
-          <path d="M250 96h90v64h-90z" fill="url(#hatch)"/>
-          <path d="M250 96l12-16h90l-12 16z" fill="#14130f"/>
-          <path d="M340 96l12-16v64l-12 16z" fill="#14130f"/>
-          <ellipse cx="380" cy="130" rx="52" ry="30" fill="url(#hatch2)"/>
-          <path d="M340 120c14-10 66-10 80 0" stroke="#fbfaf6" stroke-width="2.5" fill="none"/>
-          <!-- kosz: bryła + kreskowanie -->
-          <path d="M120 150h320l-30 122H150z" fill="url(#hatch)"/>
-          <path d="M120 150h320l-8 32H128z" fill="#14130f"/>
-          <path d="M150 272l-30-122" stroke="#14130f" stroke-width="6"/>
-          <path d="M410 272l30-122" stroke="#14130f" stroke-width="6"/>
-          <path d="M136 208h288M144 240h272" stroke="#fbfaf6" stroke-width="2"/>
-          <!-- pałąk -->
-          <path d="M175 150C175 60 385 60 385 150" stroke="#14130f" stroke-width="11" fill="none" stroke-linecap="round"/>
-          <path d="M175 150C175 66 385 66 385 150" stroke="#fbfaf6" stroke-width="1.5" fill="none" stroke-dasharray="6 5"/>
-          <!-- metka z werdyktem -->
-          <g transform="rotate(12 470 210)">
-            <path d="M440 190h58l14 14-14 14h-58z" fill="#a61b2b"/>
-            <circle cx="498" cy="204" r="3" fill="#fbfaf6"/>
-            <text x="447" y="209" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="#fbfaf6">KTO?</text>
-          </g>
-        </svg>
-        <figcaption>Styl B: kontrast atramentu i papieru, kreskowanie jak w linorycie, jedna plama karminu. Przedmioty codzienne — koszyk, produkty, metka.</figcaption>
+      <!-- Zamiast ilustracji: tabela z danych. W aplikacji: 6 najczęściej sprawdzanych marek z bazy. -->
+      <figure class="ledger">
+        <figcaption class="sc">Z kartoteki · marki, które najczęściej sprawdzacie</figcaption>
+        <table>
+          <thead><tr><th>Marka</th><th>Ostateczny właściciel</th><th>Kapitał</th><th>Werdykt</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">E. Wedel</th><td>LOTTE Group</td><td><span class="ctry"><img src="https://flagcdn.com/w40/kr.png" alt="">Korea Płd.</span></td><td class="v-fr">zagraniczna</td></tr>
+            <tr><th scope="row">Żabka</th><td>CVC Capital Partners</td><td><span class="ctry"><img src="https://flagcdn.com/w40/gb.png" alt="">Wielka Brytania</span></td><td class="v-fr">zagraniczna</td></tr>
+            <tr><th scope="row">InPost</th><td>PPF Group</td><td><span class="ctry"><img src="https://flagcdn.com/w40/cz.png" alt="">Czechy</span></td><td class="v-fr">zagraniczna</td></tr>
+            <tr><th scope="row">Pepco</th><td>Ibex Investor</td><td><span class="ctry"><img src="https://flagcdn.com/w40/za.png" alt="">RPA</span></td><td class="v-fr">zagraniczna</td></tr>
+            <tr><th scope="row">Reserved</th><td>Fundacja Semper Simul</td><td><span class="ctry"><img src="https://flagcdn.com/w40/pl.png" alt="">Polska</span></td><td class="v-pl">polska</td></tr>
+            <tr><th scope="row">ORLEN</th><td>Skarb Państwa</td><td><span class="ctry"><img src="https://flagcdn.com/w40/pl.png" alt="">Polska</span></td><td class="v-pl">polska</td></tr>
+          </tbody>
+        </table>
+        <p class="ledger-note">Wybór z 750 profili, stan na 17 września 2026. Kraj ostatecznego właściciela, nie siedziby spółki.</p>
       </figure>
     </div>
   </section>
@@ -182,7 +157,7 @@
       </div>
       <div class="issue">
         <a class="lead-story" href="#">
-          <div class="cover">Okładka — nowy szablon na papierze</div>
+          <div class="tcover"><span class="tc-tag">Kto stoi za marką</span><b class="tc-title">Vila należy do duńskiej rodziny od 1975 roku</b><span class="tc-foot"><span><img src="https://flagcdn.com/w40/dk.png" alt="">Bestseller · Dania</span><span>115 m² · 38,1 mld DKK · 1 właściciel</span></span></div>
           <span class="date">16 września 2026 · 3 min czytania</span>
           <h3>Duński Bestseller wchodzi do polskich galerii. Kto stoi za marką Vila</h3>
           <p>Vila otworzyła pierwszy sklep w Polsce, w poznańskiej Posnanii. Stoi za nią duński dom mody Bestseller, który od 1975 roku należy do jednej rodziny.</p>
