@@ -35,6 +35,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | 2026-09-27 | cropp, house, mohito, sinsay, 4f, martes-sport, decathlon, tk-maxx, black-red-white, leroy-merlin, castorama (11) | `jysk` i `agata-meble` były już w indeksie — pominięte bez zużywania limitu. Limit wyczerpany na 12. URL-u (obi odbił się o limit — pierwszy na jutro). |
 | 2026-09-30 | obi, selgros, makro, play, plus, orange, t-mobile, heyah, virgin-mobile, dpd, dhl (11) | `bricomarche` było już w indeksie — pominięte. Limit wyczerpany na 12. URL-u (poczta-polska odbiła się o limit — pierwsza na następną partię). |
 | 2026-10-02 | poczta-polska, apart, yes, apple, xiaomi, hortex, wawel, mieszko, danone, mlekovita (10) | `w-kruk`, `samsung`, `zott`, `mlekpol` były już w indeksie — pominięte. `apart` zgłoszony dwukrotnie (pierwsze potwierdzenie się nie wczytało), więc limit skończył się na 10 firmach — piatnica odbiła się o limit, pierwsza na następną partię. |
+| 2026-10-04 | piatnica, animex-foods, sokolow, tarczynski, indykpol, kompania-piwowarska, coca-cola, zywiec-zdroj, naleczowianka, cd-projekt-red, 11-bit-studios (11) | `muszynianka` była już w indeksie — pominięta. Limit wyczerpany na 12. URL-u (techland odbił się o limit — pierwszy na następną partię). |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -119,18 +120,18 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `zott`  — już w indeksie 2026-10-02 (bez zgłoszenia)
 - [x] `mlekovita`  — zgłoszone 2026-10-02
 - [x] `mlekpol`  — już w indeksie 2026-10-02 (bez zgłoszenia)
-- [ ] `piatnica`
-- [ ] `animex-foods`
-- [ ] `sokolow`
-- [ ] `tarczynski`
-- [ ] `indykpol`
-- [ ] `kompania-piwowarska`
-- [ ] `coca-cola`
-- [ ] `zywiec-zdroj`
-- [ ] `muszynianka`
-- [ ] `naleczowianka`
-- [ ] `cd-projekt-red`
-- [ ] `11-bit-studios`
+- [x] `piatnica`  — zgłoszone 2026-10-04
+- [x] `animex-foods`  — zgłoszone 2026-10-04
+- [x] `sokolow`  — zgłoszone 2026-10-04
+- [x] `tarczynski`  — zgłoszone 2026-10-04
+- [x] `indykpol`  — zgłoszone 2026-10-04
+- [x] `kompania-piwowarska`  — zgłoszone 2026-10-04
+- [x] `coca-cola`  — zgłoszone 2026-10-04
+- [x] `zywiec-zdroj`  — zgłoszone 2026-10-04
+- [x] `muszynianka`  — już w indeksie 2026-10-04 (bez zgłoszenia)
+- [x] `naleczowianka`  — zgłoszone 2026-10-04
+- [x] `cd-projekt-red`  — zgłoszone 2026-10-04
+- [x] `11-bit-studios`  — zgłoszone 2026-10-04
 - [ ] `techland`
 - [ ] `people-can-fly`
 - [ ] `adidas`
