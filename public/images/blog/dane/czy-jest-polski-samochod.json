@@ -1,0 +1,20 @@
+{
+  "slug": "czy-jest-polski-samochod",
+  "tytul": "Czy jest polski samochód?",
+  "akcent": "polski samochód",
+  "podtytul": "Polski kapitał w motoryzacji siedzi w częściach i oponach",
+  "staty": [
+    {
+      "wartosc": "6 z 58",
+      "opis": "marek z polskim kapitałem"
+    },
+    {
+      "wartosc": "4,5 mld zł",
+      "opis": "z KPO na fabrykę Izery"
+    },
+    {
+      "wartosc": "78,7%",
+      "opis": "Volvo w rękach Geely"
+    }
+  ]
+}
