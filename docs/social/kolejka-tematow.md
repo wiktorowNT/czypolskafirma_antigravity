@@ -62,7 +62,10 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
 - [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+  - pominięty 2026-09-28: bohaterami takiego zestawienia byłyby Ursus, Solaris, Kross
+    i Romet, czyli marki z paczek z 24, 25 i 27 września, objęte 14-dniową karencją.
+    Temat wraca po 11 października 2026
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
 - [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
