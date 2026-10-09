@@ -13,6 +13,11 @@ Zasady:
 - Możesz dopisywać tematy ręcznie w dowolnym miejscu listy. Kolejność ma znaczenie:
   automat idzie od góry.
 
+> Porządki 2026-10-06: tematy z paczek z 27, 28, 29 i 30 września oraz 1 i 5 października
+> zostały odhaczone z datą paczki. Wcześniej zostały w kolejce jako nieodhaczone, mimo że
+> automat już je opisał, więc groziło ich powtórzenie. Odhaczenie wynika z listy tematów
+> zużytych, a nie z plików w repozytorium (treści tych paczek nie ma w `content/blog`).
+
 ## Priorytet: marki z potwierdzonym popytem w wyszukiwarce
 
 Kolejność w tej sekcji nie jest przypadkowa — to marki, których profile zbierają
@@ -60,19 +65,24 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-10-06: Orange był bohaterem paczki z 2026-10-03 (karencja marki 14 dni),
+    a bez Orange tematu nie da się opowiedzieć. Wraca po 2026-10-17
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+  - pominięty 2026-10-06: te same marki i ten sam wniosek co paczka z 2026-09-09
+    („co zostaje z marki po przejęciu, na przykładzie mebli"). Do decyzji właściciela,
+    czy zostaje w kolejce, czy wypada jako temat już opisany
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
 - [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
 - [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
 - [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
 - [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom

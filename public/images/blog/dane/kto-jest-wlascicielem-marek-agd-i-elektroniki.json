@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-marek-agd-i-elektroniki",
+  "tytul": "Kto jest właścicielem marek AGD z gazetki",
+  "akcent": "marek AGD",
+  "podtytul": "Sklep zwykle polski, marka na pudełku prawie nigdy",
+  "staty": [
+    {
+      "wartosc": "4 z 17",
+      "opis": "polskie marki w AGD"
+    },
+    {
+      "wartosc": "15 z 38",
+      "opis": "polskie marki w elektronice"
+    },
+    {
+      "wartosc": "75%",
+      "opis": "Arçelik w Beko Europe"
+    }
+  ]
+}
