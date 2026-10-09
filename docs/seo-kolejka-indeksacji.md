@@ -36,6 +36,7 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 | 2026-09-30 | obi, selgros, makro, play, plus, orange, t-mobile, heyah, virgin-mobile, dpd, dhl (11) | `bricomarche` było już w indeksie — pominięte. Limit wyczerpany na 12. URL-u (poczta-polska odbiła się o limit — pierwsza na następną partię). |
 | 2026-10-02 | poczta-polska, apart, yes, apple, xiaomi, hortex, wawel, mieszko, danone, mlekovita (10) | `w-kruk`, `samsung`, `zott`, `mlekpol` były już w indeksie — pominięte. `apart` zgłoszony dwukrotnie (pierwsze potwierdzenie się nie wczytało), więc limit skończył się na 10 firmach — piatnica odbiła się o limit, pierwsza na następną partię. |
 | 2026-10-04 | piatnica, animex-foods, sokolow, tarczynski, indykpol, kompania-piwowarska, coca-cola, zywiec-zdroj, naleczowianka, cd-projekt-red, 11-bit-studios (11) | `muszynianka` była już w indeksie — pominięta. Limit wyczerpany na 12. URL-u (techland odbił się o limit — pierwszy na następną partię). |
+| 2026-10-09 | techland, people-can-fly, adidas, nike, vistula, wolczanka, bytom, local-heroes, medicine, diverse, big-star (11) | Limit wyczerpany na 12. URL-u (ponowna próba `diverse`, której potwierdzenie się nie wczytało — „Przekroczono limit" potwierdza, że pierwsza prośba przeszła). **`bytom`: „Duplikat, użytkownik nie oznaczył strony kanonicznej", Google wybrał jako kanoniczny `https://www.747live.bet/`** (skan 9.10 18:09). Strona ma poprawny `rel=canonical` (sprawdzone też z UA Googlebota), a serwis .bet nie kopiuje naszej treści — wygląda na błąd klastrowania po stronie Google. Sprawdzić bytom ponownie za kilka dni. W kolejce został tylko `wrangler`. |
 
 ## Kolejka (priorytet: marki rozpoznawalne)
 
@@ -132,16 +133,16 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `naleczowianka`  — zgłoszone 2026-10-04
 - [x] `cd-projekt-red`  — zgłoszone 2026-10-04
 - [x] `11-bit-studios`  — zgłoszone 2026-10-04
-- [ ] `techland`
-- [ ] `people-can-fly`
-- [ ] `adidas`
-- [ ] `nike`
-- [ ] `vistula`
-- [ ] `wolczanka`
-- [ ] `bytom`
-- [ ] `local-heroes`
-- [ ] `medicine`
-- [ ] `diverse`
-- [ ] `big-star`
+- [x] `techland`  — zgłoszone 2026-10-09
+- [x] `people-can-fly`  — zgłoszone 2026-10-09
+- [x] `adidas`  — zgłoszone 2026-10-09
+- [x] `nike`  — zgłoszone 2026-10-09
+- [x] `vistula`  — zgłoszone 2026-10-09
+- [x] `wolczanka`  — zgłoszone 2026-10-09
+- [x] `bytom`  — zgłoszone 2026-10-09
+- [x] `local-heroes`  — zgłoszone 2026-10-09
+- [x] `medicine`  — zgłoszone 2026-10-09
+- [x] `diverse`  — zgłoszone 2026-10-09
+- [x] `big-star`  — zgłoszone 2026-10-09
 - [ ] `wrangler`
 - [x] `zara`  — zgłoszone 2026-09-25
