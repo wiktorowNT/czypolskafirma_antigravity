@@ -64,7 +64,13 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
 - [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-10-09: Orange był bohaterem paczki z 2026-10-03 (przejęcie Nexery),
+    czyli jest w karencji 14 dni, a bez Orange zestawienie sieci komórkowych nie ma sensu.
+    Do wzięcia po 2026-10-17
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
+  - pominięty 2026-10-09: paczka z 2026-09-09 opowiedziała kategorię meblową (Black Red
+    White, Agnella, Profim, Bydgoskie Meble, Fameg). To ten sam temat w innym ujęciu.
+    Do decyzji właściciela, czy pozycja zostaje w kolejce
 - [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
 - [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
 - [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
@@ -73,7 +79,7 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
 - [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
 - [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
 - [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
 - [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
