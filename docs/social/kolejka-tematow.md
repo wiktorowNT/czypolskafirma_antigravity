@@ -12,6 +12,12 @@ Zasady:
 - Gdy zostanie mniej niż 5 nieodhaczonych pozycji, automat dopisuje 10 nowych.
 - Możesz dopisywać tematy ręcznie w dowolnym miejscu listy. Kolejność ma znaczenie:
   automat idzie od góry.
+- Odhaczenia zapisuje tylko ten dzień, w którym temat faktycznie powstał. Jeżeli paczka
+  z danym tematem nie została jeszcze scalona do `develop`, jego pozycja zostaje tu
+  nieodhaczona, a automat i tak go pomija, bo blokadę daje lista tematów zużytych
+  z wiadomości uruchomieniowej. Dotyczyło to 2026-10-08 pozycji o Krossie i Romecie,
+  motoryzacji, Polpharmie, meblach, ubezpieczeniach, gastronomii z galerii, elektronice
+  i AGD oraz chemii domowej.
 
 ## Priorytet: marki z potwierdzonym popytem w wyszukiwarce
 
@@ -64,6 +70,9 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
 - [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-10-08: Orange był bohaterem paczki z 2026-10-03 (zakup Nexery razem
+    z APG), a zestawienia sieci komórkowych nie da się zrobić bez Orange. Wraca po
+    2026-10-17, gdy minie karencja marki
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
 - [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
 - [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
@@ -71,7 +80,7 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
 - [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
 - [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
 - [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
