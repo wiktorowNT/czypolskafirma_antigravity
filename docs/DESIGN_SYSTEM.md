@@ -55,6 +55,10 @@ Wagi: 500 tekst, 600–700 etykiety i nazwy, 800 nagłówki i liczby.
 
 Nazw firm **nie** zapisuj wielkimi literami (`uppercase`) — tak jak w bazie.
 
+W kartach, listach i diagramach używaj **potocznej nazwy marki** (`display_name`, np. „Pepco”,
+„Żabka”), a nie pełnej nazwy spółki z KRS („PEPCO POLAND SPÓŁKA Z O.O.”). Pełna nazwa prawna
+pojawia się tylko na profilu firmy, jako drobny podpis pod nazwą marki.
+
 ## 3. Kształt
 
 - Obramowanie zawsze `border-[1.5px] border-line`; hover: `hover:border-ink`.

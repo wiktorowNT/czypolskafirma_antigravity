@@ -94,7 +94,8 @@ export function SampleResult({ sample, surprises }: { sample: SampleCompany; sur
                         <Connector text="posiada" />
                     </>
                 )}
-                <ChainNode label="Marka na polskim rynku" title={sample.legalName || sample.displayName} />
+                {/* Potoczna nazwa marki („Pepco”), nie pełna nazwa spółki z KRS — ta jest na profilu */}
+                <ChainNode label="Marka na polskim rynku" title={sample.displayName} />
             </div>
 
             {surprises.length > 0 && (
