@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils"
  * Metka z werdyktem — podstawowy element systemu „Półka” (docs/DESIGN_SYSTEM.md).
  * Cegła = polski kapitał, grafit = zagraniczny. Style: .metka w app/globals.css.
  *
- * Domyślna etykieta: „Polska firma” / „Firma zagraniczna”. Do metki kraju
- * (np. na okładkach albo przy „Też zaskakują”) podaj label={nazwa kraju}.
+ * Domyślna etykieta to nazwa kraju pochodzenia kapitału („Polska”, „Wielka Brytania”);
+ * kolor metki niesie werdykt. Bez kodu kraju: „Firma zagraniczna”. Inny tekst: label={...}.
  */
 export function VerdictTag({
     countryCode,
@@ -22,7 +22,7 @@ export function VerdictTag({
     const code = countryCode?.toUpperCase() || null
     const isPolish = code === "PL"
     const countryName = code ? getCountryName(code) : null
-    const text = label ?? (isPolish ? "Polska firma" : "Firma zagraniczna")
+    const text = label ?? countryName ?? "Firma zagraniczna"
 
     return (
         <span

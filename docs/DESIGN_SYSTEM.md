@@ -74,7 +74,7 @@ pojawia się tylko na profilu firmy, jako drobny podpis pod nazwą marki.
 
 | Komponent | Plik | Kiedy |
 |---|---|---|
-| Metka z werdyktem | `components/verdict-tag.tsx` (`<VerdictTag countryCode size label>`) | werdykt na profilu, karta „Przykładowy wynik”, „Też zaskakują” (`label` = nazwa kraju). Nie na listach — tam status tekstem |
+| Metka z werdyktem | `components/verdict-tag.tsx` (`<VerdictTag countryCode size>`) | werdykt na profilu, karta „Przykładowy wynik”, „Też zaskakują”. Napis = nazwa kraju kapitału („Polska”, „Wielka Brytania”), kolor = werdykt. Nie na listach — tam status tekstem |
 | Przykładowy wynik | `components/sample-result.tsx` | strona główna; dane z `lib/home-data.ts` |
 | Ścieżka właściciela | `components/OwnershipDiagram.tsx` | profil; węzły `rounded-2xl`, łącznik `border-l-2 border-dashed border-ink-3` |
 | Wiersz firmy | `components/CompanyCard.tsx` | listy: kategoria, wyszukiwarka, ulubione, wpis na blogu |

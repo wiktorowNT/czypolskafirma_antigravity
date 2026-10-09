@@ -68,7 +68,7 @@ export function SampleResult({ sample, surprises }: { sample: SampleCompany; sur
                     {sample.categoryName && <span className="text-[13px] font-semibold text-ink-2">{sample.categoryName}</span>}
                 </div>
                 <div className="col-start-2 sm:col-start-3 justify-self-start sm:justify-self-end">
-                    <VerdictTag countryCode={code} label={isPl ? "Polska firma" : "Zagraniczna"} />
+                    <VerdictTag countryCode={code} />
                 </div>
             </div>
 
@@ -114,7 +114,7 @@ export function SampleResult({ sample, surprises }: { sample: SampleCompany; sur
                                     <b className="block text-[14.5px] font-bold text-ink truncate group-hover:underline underline-offset-4">{s.displayName}</b>
                                     <small className="block text-xs font-semibold text-ink-2 truncate">{s.ownerName}</small>
                                 </span>
-                                {sc && <VerdictTag countryCode={sc} label={getCountryName(sc)} size="sm" />}
+                                {sc && <VerdictTag countryCode={sc} size="sm" />}
                             </Link>
                         )
                     })}
