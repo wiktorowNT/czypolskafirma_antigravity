@@ -60,13 +60,22 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+  - pominięty 2026-09-30: z sześciu polskich marek tej kategorii cztery (Ursus, Solaris,
+    Kross, Romet) były bohaterami paczek z 24, 25 i 27 września, więc zestawienie
+    wpadałoby w karencję marki i powtarzało trzy ostatnie wpisy. Temat zostaje
+    w kolejce, wraca po 11 października 2026
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-09-30: Plus i Polsat Box były bohaterami paczki z 2026-09-17, czyli
+    13 dni temu. Temat jest gotowy do wzięcia od 2026-10-01
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
+  - pominięty 2026-09-30: branża meblowa była osią paczki z 2026-09-09 (Black Red White,
+    Agnella, Profim, Bydgoskie Meble, Fameg). Do wzięcia, gdy ujęcie odejdzie od
+    „co zostaje z marki po przejęciu" w stronę czystego zestawienia kategorii
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30, ujęcie: „Kto jest właścicielem KFC, Pizza Hut i Starbucks w Polsce")
 - [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
