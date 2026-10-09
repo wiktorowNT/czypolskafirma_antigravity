@@ -36,10 +36,10 @@ export function VerdictTag({
         >
             {code && (
                 <img
-                    src={`https://flagcdn.com/w40/${code === "UK" ? "gb" : code.toLowerCase()}.png`}
+                    src={`https://flagcdn.com/w80/${code === "UK" ? "gb" : code.toLowerCase()}.png`}
                     alt={`Flaga: ${countryName} — kraj pochodzenia kapitału`}
-                    width={20}
-                    height={15}
+                    width={26}
+                    height={20}
                 />
             )}
             {text}
