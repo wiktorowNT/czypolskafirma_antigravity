@@ -60,21 +60,44 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-10-10: Orange był bohaterem paczki z 2026-10-03 (przejęcie Nexery razem
+    z APG), a karencja marki wynosi 14 dni. Temat wraca od 2026-10-18
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+  - pominięty 2026-10-10: paczka z 2026-09-09 opowiadała o marce po przejęciu właśnie na
+    przykładzie mebli (Black Red White, Agnella, Profim, Bydgoskie Meble, Fameg), więc
+    zestawienie kategorii wracałoby do tych samych bohaterów. Do decyzji właściciela, czy
+    temat zostaje w kolejce, czy zmienia ujęcie na marki, których tamta paczka nie ruszała
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
 - [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
 - [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
 - [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+
+## Dopisane 2026-10-10
+
+Po odhaczeniu tematów zrealizowanych od 2026-09-27 w kolejce zostały trzy pozycje gotowe
+do wzięcia od ręki (reszta nieodhaczonych czeka na decyzję właściciela), więc automat
+dopisał dziesięć nowych na podstawie kategorii z `czypolskafirma.pl/kategorie`.
+
+- [ ] Napoje i alkohole: kto jest właścicielem polskich marek piwa, wódki i cydru
+- [ ] Gry wideo: które polskie studia zostały przy polskim kapitale, a które kupili wydawcy
+- [ ] Energia: czyj kapitał stoi za sprzedawcami prądu i gazu dla gospodarstw domowych
+- [ ] Fintech i płatności: właściciele BLIK-a, terminali płatniczych i portfeli w telefonie
+- [ ] Dzieci i zabawki: kto jest właścicielem marek z działu dziecięcego
+- [ ] Sport i fitness: właściciele sieci klubów i marek sprzętu z polskich sklepów
+- [ ] Turystyka: kto jest właścicielem biur podróży, z których Polacy jeżdżą na wakacje
+- [ ] Nabiał i wędliny: czyje są marki z lodówki w polskim sklepie
+- [ ] Transport i kurierzy: kto jest właścicielem firm dowożących paczki
+- [ ] Media i rozrywka: właściciele radia, prasy i portali informacyjnych w Polsce
