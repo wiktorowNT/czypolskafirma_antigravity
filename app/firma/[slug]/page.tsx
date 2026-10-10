@@ -47,6 +47,8 @@ interface CompanyDetail {
   lastVerified: string
   brandAliases?: string[]
   brands?: CompanyBrand[]
+  /** Nazwa marki -> kanoniczny slug jej własnego profilu (gdy marka ma profil w bazie). */
+  brandLinks?: Record<string, string>
 }
 
 export interface CompanyBrand {
@@ -294,6 +296,66 @@ async function getBrandData(companyId: string): Promise<{ aliases: string[]; bra
   }
 }
 
+// Klucz porównania nazw marek: bez wielkości liter, polskich znaków i separatorów
+// ("ORLEN Paczka" == "orlen-paczka" == "Orlen paczka").
+function brandKey(name: string | null | undefined): string {
+  return slugify(name || "").replace(/-/g, "")
+}
+
+// Marki firmy, które mają własny profil w bazie -> link do tego profilu.
+// Jedno zapytanie z warunkami OR (ilike bez wildcardów = porównanie bez
+// wielkości liter), potem dokładne dopasowanie po brandKey w JS. Marka
+// będąca samą firmą (Orlen na profilu ORLEN) nie dostaje linku do siebie.
+async function getBrandLinks(
+  names: string[],
+  self: { id: string; canonicalSlug: string },
+): Promise<Record<string, string>> {
+  const unique = Array.from(new Set(names.map((n) => n.trim()).filter(Boolean)))
+  if (unique.length === 0) return {}
+  try {
+    const conditions: string[] = []
+    for (const n of unique) {
+      // Cudzysłów/backslash psułyby składnię filtra PostgREST; %, _ i * to
+      // wildcardy ilike — zamieniamy na "_" (dokładność zapewnia brandKey niżej).
+      if (/["\\]/.test(n)) continue
+      const pattern = n.replace(/[%_*]/g, "_")
+      conditions.push(`display_name.ilike."${pattern}"`, `name.ilike."${pattern}"`, `slug.ilike."${pattern}"`)
+      const s = slugify(n)
+      if (s) conditions.push(`slug.eq."${s}"`)
+    }
+    if (conditions.length === 0) return {}
+
+    const supabase = await getSupabaseServerClient()
+    const { data, error } = await supabase
+      .from("companies")
+      .select("id, slug, name, display_name")
+      .or(conditions.join(","))
+      .order("slug", { ascending: true })
+      .limit(200)
+    if (error || !data) return {}
+
+    const byKey = new Map<string, string>()
+    for (const c of data as any[]) {
+      if (c.id === self.id) continue
+      const canonical = slugify(c.slug || "")
+      if (!canonical || canonical === self.canonicalSlug) continue
+      for (const k of [c.display_name, c.name, c.slug, resolveDisplayName(c.display_name, c.slug, c.name)]) {
+        const key = brandKey(k)
+        if (key && !byKey.has(key)) byKey.set(key, canonical)
+      }
+    }
+
+    const links: Record<string, string> = {}
+    for (const n of unique) {
+      const target = byKey.get(brandKey(n))
+      if (target) links[n] = target
+    }
+    return links
+  } catch {
+    return {}
+  }
+}
+
 async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompany[]> {
   if (!company.categoryId) return []
   try {
@@ -428,6 +490,10 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
   ])
   company.brandAliases = brandData.aliases
   company.brands = brandData.brands
+  company.brandLinks = await getBrandLinks(
+    brandData.brands.length > 0 ? brandData.brands.map((b) => b.name) : brandData.aliases,
+    { id: company.id, canonicalSlug: company.canonicalSlug },
+  )
 
   const isPolish = company.country_code?.toUpperCase() === "PL"
   const brand = company.brandName

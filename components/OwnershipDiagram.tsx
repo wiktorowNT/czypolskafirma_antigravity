@@ -1,4 +1,6 @@
 import type { ReactNode } from "react"
+import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
 import { getCountryName } from "@/lib/company-faq"
 import { CompanyLogo } from "@/components/company-logo"
 
@@ -18,6 +20,8 @@ interface OwnershipDiagramProps {
     brandAliases?: string[]
     /** Marki z domenami (kolumna brands) — wyświetlane z logotypami. */
     brands?: DiagramBrand[]
+    /** Nazwa marki -> slug jej własnego profilu; marki z profilem są klikalne. */
+    brandLinks?: Record<string, string>
 }
 
 function Flag({ code }: { code: string }) {
@@ -85,6 +89,7 @@ export default function OwnershipDiagram({
     countryCode,
     brandAliases,
     brands,
+    brandLinks,
 }: OwnershipDiagramProps) {
     const hasBrands = Boolean(brands && brands.length > 0)
     const hasAliases = Boolean(brandAliases && brandAliases.length > 0)
@@ -145,30 +150,61 @@ export default function OwnershipDiagram({
                     </div>
                     {hasBrands ? (
                         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                            {brands!.map((b) => (
-                                <div
-                                    key={b.name}
-                                    className="flex flex-col items-center gap-2 rounded-2xl border-[1.5px] border-line px-2 py-3 text-center min-w-0"
-                                >
-                                    <CompanyLogo
-                                        websiteUrl={b.domain ? `https://${b.domain}` : undefined}
-                                        name={b.name}
-                                        size={44}
-                                    />
-                                    <span className="text-[13.5px] font-bold text-ink w-full truncate">{b.name}</span>
-                                </div>
-                            ))}
+                            {brands!.map((b) => {
+                                const href = brandLinks?.[b.name] ? `/firma/${brandLinks[b.name]}` : undefined
+                                const content = (
+                                    <>
+                                        <CompanyLogo
+                                            websiteUrl={b.domain ? `https://${b.domain}` : undefined}
+                                            name={b.name}
+                                            size={44}
+                                        />
+                                        <span className="text-[13.5px] font-bold text-ink w-full truncate">{b.name}</span>
+                                    </>
+                                )
+                                const tileClass =
+                                    "relative flex flex-col items-center gap-2 rounded-2xl border-[1.5px] border-line px-2 py-3 text-center min-w-0"
+                                return href ? (
+                                    <Link
+                                        key={b.name}
+                                        href={href}
+                                        title={`Sprawdź profil: ${b.name}`}
+                                        className={`${tileClass} group bg-card transition-colors hover:border-ink-3 hover:bg-warm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand`}
+                                    >
+                                        <ArrowUpRight
+                                            className="absolute top-2 right-2 w-3.5 h-3.5 text-ink-3 group-hover:text-ink"
+                                            aria-hidden="true"
+                                        />
+                                        {content}
+                                    </Link>
+                                ) : (
+                                    <div key={b.name} className={tileClass}>
+                                        {content}
+                                    </div>
+                                )
+                            })}
                         </div>
                     ) : (
                         <div className="flex flex-wrap gap-2">
-                            {brandAliases!.map((alias) => (
-                                <span
-                                    key={alias}
-                                    className="inline-flex items-center h-8 px-3.5 rounded-full border-[1.5px] border-line text-[13.5px] font-bold text-ink"
-                                >
-                                    {alias}
-                                </span>
-                            ))}
+                            {brandAliases!.map((alias) => {
+                                const pillClass =
+                                    "inline-flex items-center gap-1 h-8 px-3.5 rounded-full border-[1.5px] border-line text-[13.5px] font-bold text-ink"
+                                return brandLinks?.[alias] ? (
+                                    <Link
+                                        key={alias}
+                                        href={`/firma/${brandLinks[alias]}`}
+                                        title={`Sprawdź profil: ${alias}`}
+                                        className={`${pillClass} transition-colors hover:border-ink-3 hover:bg-warm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand`}
+                                    >
+                                        {alias}
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-ink-3" aria-hidden="true" />
+                                    </Link>
+                                ) : (
+                                    <span key={alias} className={pillClass}>
+                                        {alias}
+                                    </span>
+                                )
+                            })}
                         </div>
                     )}
                 </div>
