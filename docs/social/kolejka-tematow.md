@@ -64,7 +64,12 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
 - [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+  - pominięty 2026-10-11: Orange był bohaterem paczki z 2026-10-03 (Nexera), więc marka
+    jest w czternastodniowej karencji. Temat wraca po 2026-10-17
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
+  - pominięty 2026-10-11: paczka z 2026-09-09 opowiedziała branżę meblową (Black Red
+    White, Agnella, Profim, Bydgoskie Meble, Fameg). Zestawienie kategorii byłoby tym
+    samym tematem w innym ujęciu. Do decyzji właściciela, czy zostaje w kolejce
 - [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
 - [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
 - [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
@@ -75,6 +80,22 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
 - [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
 - [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
 - [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
 - [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+
+## Dopisane 2026-10-11
+
+Kategorie i liczebności z `czypolskafirma.pl/kategorie` (stan na 2026-10-11). Tematy
+dobrane tak, żeby nie powtarzały kategorii opisanych w paczkach od lipca 2026.
+
+- [ ] Gry wideo: najmniejsza kategoria w serwisie (8 firm), a marki rozpoznawalne na całym świecie
+- [ ] Fintech i płatności: czyje są systemy, którymi płacimy w sklepie i w internecie
+- [ ] Energia: kto jest właścicielem firm, od których kupujemy prąd i gaz
+- [ ] Transport i kurierzy: czyj kapitał dowozi paczki pod polskie drzwi
+- [ ] Turystyka i podróże: biura podróży i serwisy rezerwacyjne według pochodzenia kapitału
+- [ ] Media i rozrywka: kina, radio i wydawnictwa oraz ich ostateczni właściciele
+- [ ] Sport i fitness: sieci siłowni i marki sprzętu, czyli kategoria bez oczywistego lidera
+- [ ] Dzieci i zabawki: dziewięć marek z bazy i kapitał, który za nimi stoi
+- [ ] Dom i ogród: marki sprzętu ogrodniczego i wyposażenia domu oraz ich właściciele
+- [ ] Żywność: 109 marek, czyli największa kategoria serwisu i jej bilans kapitału
