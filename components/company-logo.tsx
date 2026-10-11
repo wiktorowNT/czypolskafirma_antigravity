@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { cn } from "@/lib/utils"
+import logoPodstron from "@/data/logo-podstrony.json"
 
 /**
  * =============================================
@@ -15,6 +16,12 @@ import { cn } from "@/lib/utils"
  *   1. Lokalne logo: /logos/{domena}.png (lub .svg, .jpg, .webp)
  *   2. Brandfetch CDN: https://cdn.brandfetch.io/domain/{domena}
  *   3. Letter avatar (pierwsza litera nazwy firmy)
+ *
+ * Logo podstrony (marka bez własnej domeny, np. Cin&Cin na stronie Ambry):
+ *   data/logo-podstrony.json mapuje klucz "domena~sciezka" na plik w /logos/. Gdy adres
+ *   firmy jest na liście, ten plik idzie przed logo domeny. Lista jest wbudowana w stronę,
+ *   więc adresy z podstronami językowymi (/pl-pl) nie generują zapytań o nieistniejące pliki.
+ *   Wpisy dopisuje Panel projektu (krok 8 / Logotypy firm). Klucz liczy też tools/firmy/panel.mjs.
  *
  * Aby dodać/zaktualizować logo:
  *   - Wrzuć plik {domena}.png do /public/logos/
@@ -38,6 +45,22 @@ function getDomainFromUrl(url?: string | null): string | null {
     const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
     const urlObj = new URL(urlWithProtocol)
     return urlObj.hostname.replace(/^www\./, '')
+  } catch {
+    return null
+  }
+}
+
+const LOGO_PODSTRON = logoPodstron as Record<string, string>
+
+// Klucz logo podstrony: "domena~sciezka" (ścieżka małymi literami, inne znaki -> "-").
+// Ta sama funkcja jest w tools/firmy/panel.mjs (kluczPodstrony) — zmieniaj obie naraz.
+function getSubpageKey(url?: string | null): string | null {
+  if (!url) return null
+  try {
+    const u = new URL(url.startsWith('http') ? url : `https://${url}`)
+    const host = u.hostname.replace(/^www\./, '').toLowerCase()
+    const sciezka = decodeURIComponent(u.pathname).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+    return sciezka ? `${host}~${sciezka}` : null
   } catch {
     return null
   }
@@ -88,6 +111,12 @@ export function CompanyLogo({
   const urlCandidates = useMemo(() => {
     const candidates: string[] = []
 
+    // Priority 0: własne logo podstrony (marka na stronie grupy), gdy jest na liście
+    const subpageKey = getSubpageKey(websiteUrl)
+    if (subpageKey && LOGO_PODSTRON[subpageKey]) {
+      candidates.push(`/logos/${LOGO_PODSTRON[subpageKey]}`)
+    }
+
     // Priority 1: Local logo files (multiple extensions)
     if (domain) {
       candidates.push(...getLocalLogoCandidates(domain))
@@ -104,7 +133,7 @@ export function CompanyLogo({
     }
 
     return candidates
-  }, [domain, logoUrl])
+  }, [domain, logoUrl, websiteUrl])
 
   const [candidateIndex, setCandidateIndex] = useState(0)
   const [imageLoading, setImageLoading] = useState(true)
