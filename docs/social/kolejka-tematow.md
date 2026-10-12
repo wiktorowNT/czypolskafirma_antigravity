@@ -60,21 +60,39 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
 - [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
 - [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
 - [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+
+## Dopisane 2026-10-12
+
+Po odhaczeniu pozycji zrealizowanych w paczkach z 27 września i 1-11 października
+w kolejce zostały cztery tematy do wzięcia (dwa dalsze są wstrzymane do decyzji
+właściciela). Dziesięć nowych pozycji ułożonych na podstawie kategorii z
+`czypolskafirma.pl/kategorie`, bez powtarzania tematów już opisanych.
+
+- [ ] Kto jest właścicielem Rossmanna i Hebe: dwie największe sieci drogerii w Polsce
+- [ ] Gry wideo: osiem marek z bazy i polskie studia, które zostały niezależne
+- [ ] Kto jest właścicielem Pesy i Newagu: polskie pociągi i tramwaje
+- [ ] Browary i wódki: kto jest właścicielem marek alkoholowych z polskich półek
+- [ ] Fintech i płatności: kto jest właścicielem Przelewów24, PayU i BLIKA
+- [ ] Energia: czyj kapitał stoi za markami, od których kupujemy prąd i gaz
+- [ ] Dzieci i zabawki: dziewięć marek z bazy i ich ostateczni właściciele
+- [ ] Turystyka: kto jest właścicielem biur podróży i sieci hoteli działających w Polsce
+- [ ] Sport i fitness: czyj kapitał stoi za siłowniami i polskimi markami sportowymi
+- [ ] Kto jest właścicielem sieci kin: Cinema City, Multikino i Helios
