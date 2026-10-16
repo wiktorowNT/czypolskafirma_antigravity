@@ -2,7 +2,7 @@
 
 import { CompanyLogo } from "@/components/company-logo"
 import { VerdictTag } from "@/components/verdict-tag"
-import { getCountryName } from "@/lib/company-faq"
+import { getCountryCodes, getCountryLabel } from "@/lib/company-faq"
 
 interface CompanyHeroProps {
     id: string
@@ -12,6 +12,8 @@ interface CompanyHeroProps {
     business_description?: string | null
     ownership_description?: string | null
     country_code?: string | null
+    /** Drugi kraj przy wspólnej kontroli 50/50 (reguła B5). */
+    country_code_2?: string | null
     founded_at?: string | null
     parent_company_name?: string | null
     owner_name?: string | null
@@ -55,6 +57,7 @@ export default function CompanyHero({
     business_description,
     ownership_description,
     country_code,
+    country_code_2,
     founded_at,
     parent_company_name,
     owner_name,
@@ -63,7 +66,11 @@ export default function CompanyHero({
     website_url
 }: CompanyHeroProps) {
     const isPolish = country_code?.toUpperCase() === "PL"
-    const countryName = getCountryName(country_code)
+    const countryCodes = getCountryCodes(country_code, country_code_2)
+    const isJoint = countryCodes.length > 1
+    const countryName = getCountryLabel(country_code, country_code_2)
+    // JV 50/50 z udziałem Polski: werdykt „zagraniczna” (brak polskiej kontroli) — wyjaśniamy dlaczego.
+    const jointWithPoland = isJoint && countryCodes.includes("PL")
     const foundingYear = getFoundingYear(founded_at)
     const displayName = brandName || formatSlugAsName(slug)
 
@@ -79,7 +86,7 @@ export default function CompanyHero({
     }
 
     const facts: { label: string; value: string; flag?: boolean }[] = [
-        { label: "Pochodzenie kapitału", value: countryName, flag: true },
+        { label: isJoint ? "Pochodzenie kapitału (50/50)" : "Pochodzenie kapitału", value: countryName, flag: true },
         { label: getOwnerLabel(), value: ownerDisplay },
         { label: "W Polsce", value: foundingYear ? `Od ${foundingYear} roku` : "Brak danych" },
     ]
@@ -108,7 +115,7 @@ export default function CompanyHero({
                     )}
                 </div>
                 <div className="col-span-2 sm:col-span-1 sm:justify-self-end">
-                    <VerdictTag countryCode={country_code} size="lg" />
+                    <VerdictTag countryCode={country_code} countryCode2={country_code_2} size="lg" />
                 </div>
             </div>
 
@@ -127,8 +134,15 @@ export default function CompanyHero({
                     .
                 </p>
                 <p className="mt-2 text-[15.5px] font-medium text-ink-2">
-                    Kraj pochodzenia: <strong className="text-ink font-bold">{countryName}</strong>
+                    {isJoint ? "Kraje pochodzenia" : "Kraj pochodzenia"}: <strong className="text-ink font-bold">{countryName}</strong>
                 </p>
+                {isJoint && (
+                    <p className="mt-1.5 text-[14.5px] text-ink-2">
+                        {jointWithPoland
+                            ? "Wspólna kontrola 50/50: polski kapitał ma połowę udziałów, ale nie kontroluje firmy samodzielnie — dlatego nie liczymy jej jako polskiej."
+                            : "Wspólna kontrola 50/50: żaden z dwóch krajów nie ma przewagi, więc pokazujemy oba."}
+                    </p>
+                )}
             </section>
 
             {/* Fakty */}
@@ -137,14 +151,19 @@ export default function CompanyHero({
                     <div key={f.label} className="border-[1.5px] border-line rounded-2xl px-4 py-3 min-w-0">
                         <dt className="text-[11px] font-extrabold text-ink-3 uppercase tracking-[0.06em]">{f.label}</dt>
                         <dd className="mt-1 text-[15px] font-bold text-ink flex items-center gap-2">
-                            {f.flag && country_code && (
-                                <img
-                                    src={`https://flagcdn.com/w40/${country_code.toLowerCase()}.png`}
-                                    alt=""
-                                    width={18}
-                                    height={13}
-                                    className="rounded-[3px] flex-shrink-0"
-                                />
+                            {f.flag && countryCodes.length > 0 && (
+                                <span className="inline-flex items-center gap-1 flex-shrink-0">
+                                    {countryCodes.map((code) => (
+                                        <img
+                                            key={code}
+                                            src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+                                            alt=""
+                                            width={18}
+                                            height={13}
+                                            className="rounded-[3px]"
+                                        />
+                                    ))}
+                                </span>
                             )}
                             <span className="line-clamp-2 break-words">{f.value}</span>
                         </dd>

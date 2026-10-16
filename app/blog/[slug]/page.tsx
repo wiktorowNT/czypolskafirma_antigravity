@@ -188,6 +188,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   brand={company.brand}
                   websiteUrl={company.website_url}
                   countryCode={company.country_code}
+                  countryCode2={company.country_code_2}
                   isPolish={company.country_code?.toUpperCase() === "PL"}
                 />
               ))}

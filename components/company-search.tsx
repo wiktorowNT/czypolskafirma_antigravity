@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react"
 import { Search, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { CompanyLogo } from "@/components/company-logo"
+import { getCountryCodes } from "@/lib/company-faq"
 
 interface Company {
   id: string
@@ -16,6 +17,7 @@ interface Company {
   categorySlug: string
   website_url?: string
   country_code?: string
+  country_code_2?: string
   /** Marka, przez którą firma pasuje do zapytania (np. "Lech" -> Kompania Piwowarska). */
   matchedBrand?: string
 }
@@ -278,13 +280,14 @@ export function CompanySearch({
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-ink truncate flex items-center gap-2">
                     {company.brand}
-                    {company.country_code && (
+                    {getCountryCodes(company.country_code, company.country_code_2).map((code) => (
                       <img
-                        src={`https://flagcdn.com/w40/${company.country_code.toLowerCase()}.png`}
-                        alt={company.country_code}
+                        key={code}
+                        src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+                        alt={code}
                         className="w-5 h-auto rounded-[2px] border border-line flex-shrink-0"
                       />
-                    )}
+                    ))}
                   </div>
                   <div className="text-sm text-ink-3 truncate">{company.company}</div>
                   <div className="text-xs text-ink-3 mt-0.5">

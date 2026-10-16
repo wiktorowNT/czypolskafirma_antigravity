@@ -44,6 +44,7 @@ interface CategoryItem {
   logoDarkUrl?: string
   brandColor?: string
   country_code?: string
+  country_code_2?: string
   website_url?: string
 }
 

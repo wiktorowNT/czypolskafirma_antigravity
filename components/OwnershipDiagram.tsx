@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
-import { getCountryName } from "@/lib/company-faq"
+import { getCountryCodes, getCountryLabel, getCountryName } from "@/lib/company-faq"
 import { CompanyLogo } from "@/components/company-logo"
 
 export interface DiagramBrand {
@@ -16,6 +16,8 @@ interface OwnershipDiagramProps {
     parentCompanyName?: string
     ownerName?: string
     countryCode?: string
+    /** Drugi kraj przy wspólnej kontroli 50/50. */
+    countryCode2?: string
     /** Marki należące do firmy (kolumna brand_aliases) — fallback tekstowy. */
     brandAliases?: string[]
     /** Marki z domenami (kolumna brands) — wyświetlane z logotypami. */
@@ -87,6 +89,7 @@ export default function OwnershipDiagram({
     parentCompanyName,
     ownerName,
     countryCode,
+    countryCode2,
     brandAliases,
     brands,
     brandLinks,
@@ -96,7 +99,8 @@ export default function OwnershipDiagram({
     if (!ownerName && !parentCompanyName && !hasBrands && !hasAliases) return null
 
     const isPolish = countryCode?.toUpperCase() === "PL"
-    const countryName = countryCode ? getCountryName(countryCode) : null
+    const countryCodes = getCountryCodes(countryCode, countryCode2)
+    const countryName = countryCode ? getCountryLabel(countryCode, countryCode2) : null
 
     return (
         <section>
@@ -110,15 +114,15 @@ export default function OwnershipDiagram({
                     {ownerName && (
                         <>
                             <Node
-                                label="Ostateczny właściciel"
+                                label={countryCodes.length > 1 ? "Ostateczni właściciele (50/50)" : "Ostateczny właściciel"}
                                 title={ownerName}
                                 tone={isPolish ? "owner-pl" : "owner-foreign"}
                                 right={
                                     countryCode ? (
                                         <span className="inline-flex items-center gap-1.5 text-[13px] font-extrabold text-ink">
-                                            <Flag code={countryCode} />
+                                            {countryCodes.map((c) => <Flag key={c} code={c} />)}
                                             <span className="hidden sm:inline">{countryName || countryCode}</span>
-                                            <span className="sm:hidden">{countryCode.toUpperCase()}</span>
+                                            <span className="sm:hidden">{countryCodes.join("/")}</span>
                                         </span>
                                     ) : null
                                 }

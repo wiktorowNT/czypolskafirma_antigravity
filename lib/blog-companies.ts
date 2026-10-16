@@ -11,6 +11,7 @@ export interface BlogCompany {
   brand: string
   website_url?: string
   country_code?: string
+  country_code_2?: string
 }
 
 /**
@@ -23,7 +24,7 @@ export async function getCompaniesBySlugs(companySlugs: string[]): Promise<BlogC
     const supabase = await getSupabaseServerClient()
     const { data, error } = await supabase
       .from("companies")
-      .select("id, slug, name, display_name, website_url, country_code")
+      .select("id, slug, name, display_name, website_url, country_code, country_code_2")
 
     if (error || !data) return []
 
@@ -36,6 +37,7 @@ export async function getCompaniesBySlugs(companySlugs: string[]): Promise<BlogC
         brand: resolveDisplayName(c.display_name, c.slug, c.name),
         website_url: c.website_url || undefined,
         country_code: c.country_code || undefined,
+        country_code_2: c.country_code_2 || undefined,
       }))
       .sort((a, b) => (wanted.get(a.slug) ?? 0) - (wanted.get(b.slug) ?? 0))
   } catch (err) {

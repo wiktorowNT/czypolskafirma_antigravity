@@ -46,6 +46,7 @@ function mapCompanyToItem(company: any) {
     vat_czynny: company.vat_czynny,
     founded_at: company.founded_at,
     country_code: company.country_code,
+    country_code_2: company.country_code_2,
     website_url: company.website_url,
   }
 }
@@ -92,6 +93,7 @@ export async function getCachedCategoryData(categorySlug: string) {
         vat_czynny,
 
         country_code,
+        country_code_2,
         website_url,
         categories (
           name,

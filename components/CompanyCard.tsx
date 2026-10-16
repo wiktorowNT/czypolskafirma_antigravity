@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Heart } from "lucide-react"
 import { CompanyLogo } from "@/components/company-logo"
 import { useBookmarks } from "@/hooks/use-bookmarks"
-import { countryNames } from "@/lib/countries"
+import { getCountryCodes, getCountryName } from "@/lib/company-faq"
 
 export interface CompanyCardProps {
     id: string
@@ -13,6 +13,8 @@ export interface CompanyCardProps {
     logoUrl?: string
     websiteUrl?: string
     countryCode?: string
+    /** Drugi kraj przy wspólnej kontroli 50/50 — druga flaga. */
+    countryCode2?: string
     isPolish: boolean
     headquartersInPL?: boolean
     vatActive?: boolean
@@ -30,6 +32,7 @@ export function CompanyCard({
     logoUrl,
     websiteUrl,
     countryCode,
+    countryCode2,
     isPolish,
     headquartersInPL,
     vatActive,
@@ -37,8 +40,8 @@ export function CompanyCard({
     const profileUrl = `/firma/${slug || id}`
     const { isBookmarked, toggleBookmark } = useBookmarks()
     const bookmarked = isBookmarked(id)
-    const code = countryCode?.toUpperCase()
-    const countryName = code ? countryNames[code] || code : null
+    const codes = getCountryCodes(countryCode, countryCode2)
+    const isJoint = codes.length > 1
 
     return (
         <div className="group relative flex items-center gap-3 rounded-2xl border-[1.5px] border-line bg-card pl-2.5 pr-2 py-2.5 hover:border-ink transition-colors">
@@ -50,17 +53,18 @@ export function CompanyCard({
                 <h3 className="text-[15.5px] font-bold text-ink truncate">{brand}</h3>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
                     <span className={`inline-flex items-center gap-1.5 text-[12.5px] font-bold ${isPolish ? "text-brand-ink" : "text-ink-2"}`}>
-                        {code && (
+                        {codes.map((code) => (
                             <img
+                                key={code}
                                 src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
-                                alt={`Flaga: ${countryName} — kraj pochodzenia kapitału`}
+                                alt={`Flaga: ${getCountryName(code)} — kraj pochodzenia kapitału`}
                                 width={16}
                                 height={12}
                                 className="rounded-[2px]"
                                 loading="lazy"
                             />
-                        )}
-                        {isPolish ? "Polska firma" : "Zagraniczna"}
+                        ))}
+                        {isPolish ? "Polska firma" : isJoint ? "Zagraniczna · 50/50" : "Zagraniczna"}
                     </span>
                     {headquartersInPL && (
                         <span className="inline-flex items-center h-5 px-2 rounded-full bg-warm text-[10.5px] font-bold text-ink-2">HQ PL</span>

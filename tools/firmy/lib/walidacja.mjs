@@ -38,6 +38,12 @@ export function walidujRekord(rekord, kategorie) {
   if (!r.slug || r.slug !== slugify(r.slug)) bledy.push(`slug niekanoniczny: ${r.slug}`);
   if (!r.country_code) bledy.push("brak country_code");
   else if (!kody[r.country_code]) bledy.push(`country_code ${r.country_code} spoza słownika lib/countries.ts`);
+  // Wspólna kontrola 50/50 (reguła B5 metodologii): opcjonalny drugi kraj.
+  if (r.country_code_2) {
+    if (!kody[r.country_code_2]) bledy.push(`country_code_2 ${r.country_code_2} spoza słownika lib/countries.ts`);
+    else if (r.country_code_2 === r.country_code) bledy.push("country_code_2 taki sam jak country_code");
+    else if (r.country_code === "PL") bledy.push("JV 50/50 z Polską: country_code = kraj zagraniczny, country_code_2 = PL (reguła B5)");
+  }
   if (!r.owner_name) bledy.push("brak owner_name");
   const od = String(r.ownership_description || "");
   if (od.length < 150) bledy.push(`ownership_description za krótki (${od.length} zn.)`);

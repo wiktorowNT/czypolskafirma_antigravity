@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Heart, ChevronRight, Trash2, Home, Share2, Check, BookmarkX } from "lucide-react"
 import { useBookmarks } from "@/hooks/use-bookmarks"
 import { CompanyLogo } from "@/components/company-logo"
+import { getCountryCodes } from "@/lib/company-faq"
 
 interface BookmarkedCompany {
     id: string
@@ -15,6 +16,7 @@ interface BookmarkedCompany {
     categorySlug: string
     website_url?: string
     country_code?: string
+    country_code_2?: string
 }
 
 export default function BookmarksClient() {
@@ -197,13 +199,14 @@ export default function BookmarksClient() {
                                             <h3 className="font-bold text-ink uppercase tracking-wide text-sm group-hover:text-brand-ink transition-colors truncate">
                                                 {company.brand}
                                             </h3>
-                                            {company.country_code && (
+                                            {getCountryCodes(company.country_code, company.country_code_2).map((code) => (
                                                 <img
-                                                    src={`https://flagcdn.com/w40/${company.country_code.toLowerCase()}.png`}
-                                                    alt={company.country_code}
+                                                    key={code}
+                                                    src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+                                                    alt={code}
                                                     className="w-5 h-auto rounded-[2px] border border-line flex-shrink-0"
                                                 />
-                                            )}
+                                            ))}
                                         </div>
                                         <p className="text-xs text-ink-3 truncate">{company.company}</p>
                                         <p className="text-xs text-ink-3 mt-0.5">{company.category}</p>

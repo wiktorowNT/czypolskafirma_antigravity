@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     try {
         // Use PostgREST 'in' filter
         const filter = `id=in.(${cappedIds.map(id => encodeURIComponent(id)).join(",")})`
-        const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,siedziba_pl,vat_czynny,categories(name,slug)&${filter}`
+        const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,country_code_2,siedziba_pl,vat_czynny,categories(name,slug)&${filter}`
 
         const res = await fetch(url, {
             headers: {
@@ -55,6 +55,7 @@ export async function GET(request: Request) {
             categorySlug: company.categories?.slug || "inne",
             website_url: company.website_url,
             country_code: company.country_code,
+            country_code_2: company.country_code_2,
             siedziba_pl: company.siedziba_pl,
             vat_czynny: company.vat_czynny,
         }))

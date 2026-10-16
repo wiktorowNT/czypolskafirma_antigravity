@@ -3,7 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation"
 import CompanyProfileClient from "./CompanyProfileClient"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName, cleanAddress } from "@/lib/slug-utils"
-import { buildCompanyFaqItems, getCountryName } from "@/lib/company-faq"
+import { buildCompanyFaqItems, getCountryLabel } from "@/lib/company-faq"
 import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 3600 // ISR: revalidate every hour
@@ -42,6 +42,8 @@ interface CompanyDetail {
   ownership_description?: string
   logoUrl?: string
   country_code?: string
+  /** Drugi kraj przy wspólnej kontroli 50/50 (reguła B5). */
+  country_code_2?: string
   website_url?: string
   registry_url?: string
   lastVerified: string
@@ -81,6 +83,7 @@ interface SupabaseCompany {
   business_description: string | null
   ownership_description: string | null
   country_code: string | null
+  country_code_2: string | null
   website_url: string | null
   registry_url: string | null
   category_id: string | null
@@ -110,6 +113,7 @@ const COMPANY_SELECT = `
   business_description,
   ownership_description,
   country_code,
+  country_code_2,
   website_url,
   registry_url,
   category_id,
@@ -163,6 +167,7 @@ function mapCompany(data: SupabaseCompany): CompanyDetail {
     business_description: company.business_description || undefined,
     ownership_description: company.ownership_description || undefined,
     country_code: company.country_code || undefined,
+    country_code_2: company.country_code_2 || undefined,
     website_url: company.website_url || undefined,
     registry_url: company.registry_url || undefined,
     // Data "Weryfikacja" na profilu. Kolejność: verified_at -> created_at (data dodania
@@ -401,7 +406,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   const brand = company.brandName
-  const countryName = getCountryName(company.country_code)
+  const countryName = getCountryLabel(company.country_code, company.country_code_2)
   const owner = company.owner_name || company.parent_company_name
 
   const isPolish = company.country_code?.toUpperCase() === "PL"
@@ -427,7 +432,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const verdictSentence = isPolish
     ? `${brand} to firma z polskim kapitałem.`
     : hasCountry
-      ? `${brand} to firma z kapitałem zagranicznym — kraj pochodzenia: ${countryName}.`
+      ? `${brand} to firma z kapitałem zagranicznym — ${company.country_code_2 ? "kraje pochodzenia (wspólna kontrola 50/50)" : "kraj pochodzenia"}: ${countryName}.`
       : `${brand} to firma z kapitałem zagranicznym.`
   const ownerPart = owner ? ` Właściciel: ${owner}.` : ""
   const description = `${verdictSentence}${ownerPart} Struktura kapitału, siedziba i dane rejestrowe.`
@@ -503,6 +508,7 @@ export default async function CompanyProfilePage({ params }: { params: { slug: s
   const faqItems = buildCompanyFaqItems({
     brandName: brand,
     country_code: company.country_code,
+    country_code_2: company.country_code_2,
     ownership_description: company.ownership_description,
     owner_name: company.owner_name,
     parent_company_name: company.parent_company_name,

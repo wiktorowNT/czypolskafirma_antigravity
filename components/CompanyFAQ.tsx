@@ -20,6 +20,7 @@ interface CompanyFAQProps {
     slug: string
     brandName?: string
     country_code?: string | null
+    country_code_2?: string | null
     ownership_description?: string | null
     owner_name?: string | null
     parent_company_name?: string | null
@@ -35,6 +36,7 @@ export default function CompanyFAQ({
     slug,
     brandName,
     country_code,
+    country_code_2,
     ownership_description,
     owner_name,
     parent_company_name,
@@ -52,6 +54,7 @@ export default function CompanyFAQ({
     const faqItems = buildCompanyFaqItems({
         brandName: name,
         country_code,
+        country_code_2,
         ownership_description,
         owner_name,
         parent_company_name,

@@ -87,6 +87,7 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
     nip: t.nip || null,
     krs: t.krs || null,
     country_code: s.country_code || null,
+    country_code_2: s.country_code_2 || null,
     owner_name: s.ostateczny_wlasciciel || null,
     ownership_description: usunMyslniki(o.ownership_description || ""),
     business_description: usunMyslniki(o.business_description || ""),

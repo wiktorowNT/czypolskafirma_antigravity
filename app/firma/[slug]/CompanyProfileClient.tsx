@@ -39,6 +39,7 @@ interface CompanyDetail {
     ownership_description?: string
     logoUrl?: string
     country_code?: string
+    country_code_2?: string
     website_url?: string
     registry_url?: string
     lastVerified: string
@@ -144,6 +145,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     business_description={company.business_description}
                     ownership_description={company.ownership_description}
                     country_code={company.country_code}
+                    country_code_2={company.country_code_2}
                     founded_at={company.founded_at}
                     parent_company_name={company.parent_company_name}
                     owner_name={company.owner_name}
@@ -159,6 +161,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     parentCompanyName={company.parent_company_name}
                     ownerName={company.owner_name}
                     countryCode={company.country_code}
+                    countryCode2={company.country_code_2}
                     brandAliases={company.brandAliases}
                     brands={company.brands}
                     brandLinks={company.brandLinks}
@@ -201,6 +204,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     slug={company.slug}
                     brandName={company.brandName}
                     country_code={company.country_code}
+                    country_code_2={company.country_code_2}
                     ownership_description={company.ownership_description}
                     owner_name={company.owner_name}
                     parent_company_name={company.parent_company_name}
@@ -216,6 +220,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     slug={company.slug}
                     brandName={company.brandName}
                     country_code={company.country_code}
+                    country_code_2={company.country_code_2}
                     ownership_description={company.ownership_description}
                     owner_name={company.owner_name}
                     parent_company_name={company.parent_company_name}

@@ -104,7 +104,7 @@ Ton: dla przypadkowego czytelnika, bez „my” i bez metodologii. O markach, ni
 3. **Rejestry:** panel sam pobiera KRS, historię wspólników i CRBR.
 4. **Śledztwo w czatach:** jeden prompt do kilku czatów (Gemini, ChatGPT, Claude.ai) z wyszukiwaniem, odpowiedzi wklejasz z powrotem.
 5. **Rozstrzygnięcie w Claude:** panel robi pliki, Claude Code rozstrzyga z internetem, wyniki wczytują się same.
-6. **Przegląd:** zatwierdzasz albo poprawiasz każdą firmę.
+6. **Przegląd:** zatwierdzasz albo poprawiasz każdą firmę. Wspólna kontrola 50/50: wpisz drugi kraj w polu „Drugi kraj” (JV z Polską: kraj kapitału = zagraniczny, drugi kraj = PL).
 7. **Import:** najpierw „Pokaż, co się zmieni”, potem „Zapisz do bazy” (robi backup przed zapisem). Nowe firmy widać wtedy tylko na podglądzie, aktualizacje czekają.
 8. **Logotypy i publikacja:** karta niżej. Na czypolskafirma.pl firmy trafiają dopiero po kliknięciu „Opublikuj” na końcu kroku 8.
 

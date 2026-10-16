@@ -25,6 +25,7 @@ interface CompanyArticleProps {
     slug: string
     brandName?: string
     country_code?: string | null
+    country_code_2?: string | null
     ownership_description?: string | null
     owner_name?: string | null
     parent_company_name?: string | null
@@ -41,6 +42,7 @@ export default function CompanyArticle({
     slug,
     brandName,
     country_code,
+    country_code_2,
     ownership_description,
     owner_name,
     parent_company_name,
@@ -55,6 +57,7 @@ export default function CompanyArticle({
     const name = brandName || formatSlugAsName(slug)
     const isPolish = country_code?.toUpperCase() === "PL"
     const countryName = getCountryName(country_code)
+    const secondCode = country_code_2 && country_code_2.toUpperCase() !== country_code?.toUpperCase() ? country_code_2 : null
     const ownerDisplay = owner_name || parent_company_name
 
     // Build article paragraphs from available data
@@ -64,7 +67,9 @@ export default function CompanyArticle({
     const statusText = isPolish ? "polska firma" : "firma zagraniczna"
     let opening = `${name} to ${statusText}`
     if (!isPolish && countryName !== "Brak danych") {
-        opening += `, której kapitał pochodzi z kraju: ${countryName}`
+        opening += secondCode
+            ? `, którą wspólnie (50/50) kontroluje kapitał z dwóch krajów: ${countryName} i ${getCountryName(secondCode)}`
+            : `, której kapitał pochodzi z kraju: ${countryName}`
     }
     if (siedziba_pl) {
         opening += `. Firma posiada zarejestrowaną siedzibę w Polsce`

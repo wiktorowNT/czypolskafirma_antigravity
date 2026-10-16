@@ -7,6 +7,7 @@ import { countryNames } from "@/lib/countries"
 export interface CompanyFaqInput {
   brandName: string
   country_code?: string | null
+  country_code_2?: string | null
   ownership_description?: string | null
   owner_name?: string | null
   parent_company_name?: string | null
@@ -30,9 +31,30 @@ export function getCountryName(code?: string | null): string {
   return countryNames[upper] || upper
 }
 
+// Wspólna kontrola 50/50 (kolumna country_code_2): drugi kraj kapitału obok głównego.
+// country_code zostaje krajem „głównym” (werdykt, statystyki, filtry) — reguła B5 metodologii.
+export function getCountryCodes(code?: string | null, code2?: string | null): string[] {
+  const first = code?.trim().toUpperCase()
+  if (!first) return []
+  const second = code2?.trim().toUpperCase()
+  return second && second !== first ? [first, second] : [first]
+}
+
+// "Niemcy" albo "Niemcy i Szwajcaria" (mianownik, bez odmiany).
+export function getCountryLabel(code?: string | null, code2?: string | null): string {
+  const codes = getCountryCodes(code, code2)
+  if (codes.length === 0) return "Brak danych"
+  return codes.map((c) => getCountryName(c)).join(" i ")
+}
+
+export function isJointControl(code?: string | null, code2?: string | null): boolean {
+  return getCountryCodes(code, code2).length > 1
+}
+
 export function buildCompanyFaqItems({
   brandName,
   country_code,
+  country_code_2,
   ownership_description,
   owner_name,
   parent_company_name,
@@ -46,6 +68,8 @@ export function buildCompanyFaqItems({
   const name = brandName
   const isPolish = country_code?.toUpperCase() === "PL"
   const countryName = getCountryName(country_code)
+  const joint = isJointControl(country_code, country_code_2)
+  const countryLabel = getCountryLabel(country_code, country_code_2)
   const ownerDisplay = owner_name || parent_company_name
 
   const faqItems: CompanyFaqItem[] = []
@@ -53,7 +77,9 @@ export function buildCompanyFaqItems({
   // Q1: Czy to polska firma?
   const originText = isPolish
     ? `Tak, ${name} to polska firma. Kapitał firmy pochodzi z Polski.`
-    : `Nie, ${name} to firma zagraniczna. Kapitał firmy pochodzi z kraju: ${countryName}.`
+    : joint
+      ? `Nie, ${name} to firma zagraniczna. Kontrolę sprawuje wspólnie kapitał z dwóch krajów (50/50): ${countryLabel}.`
+      : `Nie, ${name} to firma zagraniczna. Kapitał firmy pochodzi z kraju: ${countryName}.`
   const ownershipSuffix = ownership_description ? ` ${ownership_description}` : ""
   faqItems.push({
     question: `Czy ${name} to polska firma?`,

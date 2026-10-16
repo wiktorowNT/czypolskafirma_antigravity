@@ -115,6 +115,7 @@ Kluczowe pola przechowywane dla każdej firmy:
 - `nip` — numer NIP głównej spółki zarejestrowanej w Polsce
 - `owner_name` — ostateczny właściciel (szczyt piramidy); w starszych dokumentach nazywany `ultimate_owner`
 - `country_code` — kod kraju pochodzenia kapitału
+- `country_code_2` — drugi kraj tylko przy wspólnej kontroli 50/50 (reguła B5); werdykt liczy się po `country_code`
 - `ownership_description` — uzasadnienie struktury właścicielskiej
 - `business_description` — neutralny opis działalności firmy
 

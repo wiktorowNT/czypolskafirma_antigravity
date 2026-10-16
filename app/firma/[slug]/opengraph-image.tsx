@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
-import { getCountryName } from "@/lib/company-faq"
+import { getCountryLabel } from "@/lib/company-faq"
 import {
   OG_SIZE,
   OG_COLORS,
@@ -26,6 +26,7 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 interface OgCompany {
   brand: string
   country_code: string | null
+  country_code_2: string | null
   website_url: string | null
 }
 
@@ -36,7 +37,7 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
     Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
     Accept: "application/json",
   }
-  const select = "id,name,slug,display_name,country_code,website_url"
+  const select = "id,name,slug,display_name,country_code,country_code_2,website_url"
   const decoded = decodeURIComponent(slugOrId)
   const normalized = decoded.toLowerCase().trim().replace(/\s+/g, "-")
 
@@ -82,6 +83,7 @@ function mapRow(row: any): OgCompany {
   return {
     brand: resolveDisplayName(row.display_name, row.slug, row.name),
     country_code: row.country_code || null,
+    country_code_2: row.country_code_2 || null,
     website_url: row.website_url || null,
   }
 }
@@ -112,15 +114,20 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const brand = company?.brand || "Sprawdź, czy to polska firma"
   const code = company?.country_code || null
   const isPolish = code?.toUpperCase() === "PL"
-  const countryName = getCountryName(code)
+  const countryName = getCountryLabel(code, company?.country_code_2)
 
   const base = getOgBaseUrl()
   const domain = getDomainFromUrl(company?.website_url)
   const flagCode = found ? getFlagCode(code) : null
+  // Wspólna kontrola 50/50: druga flaga w metce werdyktu.
+  const flagCode2 = found && company?.country_code_2 && company.country_code_2.toUpperCase() !== code?.toUpperCase()
+    ? getFlagCode(company.country_code_2)
+    : null
 
-  const [logo, verdictFlag] = await Promise.all([
+  const [logo, verdictFlag, verdictFlag2] = await Promise.all([
     domain ? loadLogoDataUri(domain, base) : Promise.resolve(null),
     flagCode ? loadFlagDataUri(flagCode, base) : Promise.resolve(null),
+    flagCode2 ? loadFlagDataUri(flagCode2, base) : Promise.resolve(null),
   ])
 
   // Kolorystyka werdyktu (neutralna czerwień marki, gdy brak danych firmy).
@@ -208,6 +215,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
                       src={verdictFlag}
                       width={48}
                       alt=""
+                      style={{ borderRadius: 5, marginRight: verdictFlag2 ? 10 : 20 }}
+                    />
+                  )}
+                  {verdictFlag2 && (
+                    <img
+                      src={verdictFlag2}
+                      width={48}
+                      alt=""
                       style={{ borderRadius: 5, marginRight: 20 }}
                     />
                   )}
@@ -239,7 +254,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     marginTop: 22,
                   }}
                 >
-                  Kapitał: {countryName}
+                  Kapitał: {countryName}{company?.country_code_2 ? " (50/50)" : ""}
                 </div>
               )}
             </div>

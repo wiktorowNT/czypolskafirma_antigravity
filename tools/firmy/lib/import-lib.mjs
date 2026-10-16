@@ -12,14 +12,15 @@ export const POLA_INSERT = ["name", "slug", "display_name", "nip", "krs", "count
 export const POLA_UPDATE = ["country_code", "owner_name", "ownership_description", "business_description", "verified_at", "krs", "registry_url", "ownership_type", "parent_company_name"];
 
 export async function kontekstImportu() {
-  const [kategorie, indeks, maSources, maConfidence, maPublished] = await Promise.all([
+  const [kategorie, indeks, maSources, maConfidence, maPublished, maKraj2] = await Promise.all([
     pobierzKategorie(),
     indeksFirm(),
     kolumnaIstnieje("companies", "sources"),
     kolumnaIstnieje("companies", "confidence"),
     kolumnaIstnieje("companies", "published"),
+    kolumnaIstnieje("companies", "country_code_2"),
   ]);
-  return { kategorie, indeks, maSources, maConfidence, maPublished };
+  return { kategorie, indeks, maSources, maConfidence, maPublished, maKraj2 };
 }
 
 // Jedna spółka może prowadzić kilka marek (np. Sweet Gallery: Lodolandia, Bafra Kebab,
@@ -47,7 +48,7 @@ function znajdzWBazie(r, f, indeks) {
 // Z kolumną published import nie pokazuje niczego na czypolskafirma.pl: nowe firmy trafiają do
 // bazy jako nieopublikowane (widać je na podglądzie), a aktualizacje istniejących czekają w pliku
 // partii. Jedno i drugie wchodzi na stronę dopiero przez opublikuj() (przycisk w kroku 8 panelu).
-export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence, maPublished }) {
+export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence, maPublished, maKraj2 }) {
   const plan = [];
   for (const f of partia.firmy) {
     if (f.decyzja !== "zatwierdzony" || !f.rekord) continue;
@@ -63,6 +64,9 @@ export function zbudujPlan(partia, { kategorie, indeks, maSources, maConfidence,
     if (!istnieje && !wiersz.category_id) w.bledy.push("brak category_id (wybierz kategorię w przeglądzie)");
     if (maSources) wiersz.sources = r.sources || [];
     if (maConfidence) wiersz.confidence = r.confidence || f.status || null;
+    // Drugi kraj (wspólna kontrola 50/50). Przy UPDATE też zapisujemy null, żeby dało się go usunąć.
+    if (maKraj2) wiersz.country_code_2 = r.country_code_2 || null;
+    else if (r.country_code_2) w.bledy.push("country_code_2 ustawiony, a w bazie brak kolumny — uruchom tools/sql/2026-10-16-country-code-2.sql");
     if (istnieje && !istnieje.display_name && r.display_name) wiersz.display_name = r.display_name;
     if (istnieje && !istnieje.brand_aliases && r.brand_aliases) { wiersz.brand_aliases = r.brand_aliases; wiersz.brands = r.brands; }
     if (!istnieje && maPublished) wiersz.published = false;

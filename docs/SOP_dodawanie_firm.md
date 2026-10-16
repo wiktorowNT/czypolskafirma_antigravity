@@ -114,6 +114,12 @@ ze złym numerem. Przystanek można wyłączyć przy zakładaniu partii.
 Potem kod waliduje rekord (kody krajów ze słownika, długości, em-dashe, slug, duplikaty)
 i wylicza pewność:
 
+> **Wspólna kontrola 50/50 (reguła B5):** w przeglądzie partii wpisz drugi kraj w polu
+> „Drugi kraj — tylko wspólna kontrola 50/50” (np. `CH`). Przy JV z Polską: kraj kapitału =
+> kraj zagraniczny, drugi kraj = `PL`. Import zapisuje go w kolumnie `country_code_2`
+> (migracja `tools/sql/2026-10-16-country-code-2.sql`). Firmy już w bazie: Supabase →
+> Table Editor → `companies` → kolumna `country_code_2`.
+
 - **WYSOKA**: każde ogniwo kontrolne (pakiet kontrolny i ostateczny właściciel) ma źródło
   poziomu 1–2 (KRS, CRBR, raport spółki, strona IR), samokontrola albo porównanie czatów
   zgodne, bez reguł B5/B10/B11/B12. Odpis KRS samej polskiej spółki nie wystarcza, gdy nad

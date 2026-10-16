@@ -22,6 +22,12 @@
 **B4. Licencja / produkcja lokalna.** Marka należąca do zagranicznego koncernu, produkowana w Polsce na licencji (napoje, piwo, nabiał) = **zagraniczna**. Fakt „produkowane w Polsce, polscy pracownicy" → do opisu, nie do statusu.
 
 **B5. Joint venture 50/50 PL–zagranica.** Nikt nie ma kontroli → z Klasyfikacji Binarnej wynika status **zagraniczna** (status „polska" wymaga polskiej kontroli). W opisie obowiązkowo pełna struktura — to przypadki najbardziej sporne.
+  **Dwa kraje w bazie (od 16.10.2026):** przy wspólnej kontroli 50/50 zapisujemy oba kraje —
+  `country_code` = kraj „główny” (przy JV z Polską zawsze kraj zagraniczny), `country_code_2` = drugi
+  kraj (przy JV z Polską: `PL`). Strona pokazuje dwie flagi i dopisek „wspólna kontrola 50/50”;
+  werdykt, statystyki i filtry liczą się po `country_code`. Analogicznie JV 50/50 dwóch krajów
+  zagranicznych (np. DE + CH): oba kraje, status zagraniczna. Gdy któraś strona ma przewagę
+  głosów (np. 50% + 1 głos, prezes z decydującym głosem), to nie jest 50/50 — jeden kraj wg reguły 1–2.
 
 **B6. Dual-class shares / uprzywilejowanie głosowe.** Liczy się % **głosów na WZA**, nie % kapitału. Założyciel z 30% kapitału i 55% głosów = kontrola założyciela.
 

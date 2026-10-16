@@ -17,6 +17,7 @@ interface SearchResult {
     categorySlug: string
     website_url?: string
     country_code?: string
+    country_code_2?: string
 }
 
 export default function SearchResultsClient() {
@@ -291,7 +292,8 @@ export default function SearchResultsClient() {
                                     id: r.id,
                                     brand: r.brand,
                                     website_url: r.website_url,
-                                    country_code: r.country_code
+                                    country_code: r.country_code,
+                                    country_code_2: r.country_code_2
                                 }))}
                                 searchTerm={searchTerm}
                                 onClearFilters={clearFilters}
