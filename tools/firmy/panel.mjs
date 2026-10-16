@@ -1201,7 +1201,8 @@ const serwer = http.createServer(async (req, res) => {
     // Plik logo do podglądu (tylko z public/logos, bez wychodzenia poza folder).
     if (req.method === "GET" && p.startsWith("/logo-plik/")) {
       const nazwaPliku = decodeURIComponent(p.slice("/logo-plik/".length));
-      if (!/^[\w.-]+$/.test(nazwaPliku)) { res.writeHead(400); return res.end(); }
+      // "~" oddziela podstronę marki (bros.pl~marki-bopon.jpg); kropka na początku = wyjście z folderu.
+      if (!/^[\w][\w.~-]*$/.test(nazwaPliku)) { res.writeHead(400); return res.end(); }
       const sciezka = path.join(KATALOG_LOGO, nazwaPliku);
       if (!fs.existsSync(sciezka)) { res.writeHead(404); return res.end(); }
       const typ = { png: "image/png", jpg: "image/jpeg", webp: "image/webp", svg: "image/svg+xml", ico: "image/x-icon" }[formatPliku(naglowekPliku(sciezka))] || "application/octet-stream";
