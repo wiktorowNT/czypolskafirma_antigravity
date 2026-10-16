@@ -268,6 +268,7 @@
       <div class="nav-grupa">Firmy</div>
       <a data-e="start"><i class="nr">·</i> Firmy: start</a>
       <a data-e="partie"><i class="nr">·</i> Moje partie</a>
+      <a data-e="logobaza"><i class="nr">·</i> Logotypy firm</a>
       <div class="nav-grupa">Dodawanie firm, krok po kroku</div>
       <a data-e="nowa"><i class="nr">1</i> Lista firm i NIP-y</a>
       <a data-e="nip"><i class="nr">2</i> Sprawdzenie NIP-ów</a>
@@ -817,13 +818,6 @@
         <div class="pomoc-tresc" id="pomoc-logopodglad" hidden><p>Tak logo będzie wyglądać na stronie (na białym tle). Pod obrazkiem: format, rozmiar w pikselach i ocena:</p><ul><li><b>✓ w porządku</b>: prawdziwe logo.</li><li><b>ikonka zamiast logo</b>: pobrała się ikonka strony (favicon), wygląda słabo. Do podmiany.</li><li><b>białe</b>: logo w wersji na ciemne tło, na stronie (białe tło) go nie widać. Do podmiany.</li><li><b>małe</b>: obrazek mniejszy niż 100 px, może być nieostry.</li><li><b>zła końcówka nazwy</b>: obrazek jest dobry, tylko plik ma inną końcówkę niż format.</li><li><b>brak logo</b>: automat nic nie znalazł.</li></ul><p><b>Inne źródła</b> szuka logo na stronie firmy, w Wikipedii i w serwisach z ikonkami i pokazuje wszystko, co znajdzie. Klikasz „Użyj” przy najlepszym. Gdy nic nie pasuje, w oknie jest link do Google Grafika.</p><p><b>Najszybciej:</b> otwórz stronę firmy (albo Google Grafika) obok panelu i przeciągnij obrazek logo myszką prosto na kartę firmy. Panel sam pobierze plik i podmieni logo, bez zapisywania na dysk.</p><p>Żeby podmienić z pliku: kliknij „Podmień” i wybierz plik albo przeciągnij plik z dysku na kartę (PNG, JPG, WebP, SVG, najlepiej z przezroczystym albo białym tłem). „Strona firmy” otwiera stronę, z której zwykle da się pobrać logo. Po sprawdzeniu wyślij zmiany przyciskiem „Wyślij” niżej.</p></div>
         <div id="logoPodsumowanie" class="uwagi" style="margin:0 0 10px"></div>
         <div id="logoSiatka" class="logo-siatka"><span class="pusto">Wczytuję…</span></div>
-        <dialog class="logo-zrodla" id="logoZrodla">
-          <div class="rozdziel"><h2 id="lzTytul" style="margin:0">Inne źródła</h2><button id="lzZamknij">Zamknij</button></div>
-          <p class="uwagi" id="lzOpis"></p>
-          <div id="lzSiatka" class="logo-siatka"></div>
-          <p class="uwagi" id="lzLinki"></p>
-        </dialog>
-        <input type="file" id="logoPlik" accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml" hidden>
       </div>
       <div class="karta">
         <div class="rozdziel">
@@ -845,6 +839,39 @@
       <pre class="log" id="logoLog" style="display:none"></pre>
     </section>
 
+    <!-- LOGOTYPY FIRM (cała baza) -->
+    <section class="ekran" id="e-logobaza">
+      <div class="rozdziel" style="align-items:flex-start">
+        <div><h1>Logotypy firm</h1><p class="podtytul">Wszystkie firmy z bazy. Znajdź firmę i podmień logo w minutę albo przejrzyj, które wyglądają źle.</p></div>
+        <button id="btnLbOdswiez" title="Czyta firmy z bazy od nowa (np. po imporcie)">Odśwież z bazy</button>
+      </div>
+      <div class="karta">
+        <div class="rzad" style="gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <input type="search" id="lbSzukaj" placeholder="Szukaj firmy: nazwa, marka, slug albo domena…" style="flex:1;min-width:240px;max-width:520px" autocomplete="off">
+          <select id="lbFiltr" style="width:auto"></select>
+          <select id="lbSort" style="width:auto">
+            <option value="problemy">Najpierw z problemem</option>
+            <option value="nazwa">Alfabetycznie</option>
+            <option value="zmiana">Ostatnio zmienione</option>
+          </select>
+          <i class="pomoc" data-pomoc="logobaza" title="Wyjaśnienie">?</i>
+        </div>
+        <div class="pomoc-tresc" id="pomoc-logobaza" hidden><p>Ta zakładka działa bez partii: pokazuje każdą firmę z bazy i jej logo tak, jak wygląda na stronie (na białym tle). Oceny są te same co w kroku 8: <b>ikonka zamiast logo</b>, <b>białe</b> i <b>brak logo</b> to „do podmiany”, <b>małe</b> i <b>zła końcówka nazwy</b> to „do sprawdzenia”.</p><p><b>Szybka podmiana:</b> wpisz nazwę firmy, otwórz jej stronę (albo Google Grafika) obok panelu i przeciągnij obrazek logo prosto na kartę. Działa też „Podmień” (plik z dysku) i „Inne źródła” (panel sam szuka logo i pokazuje kandydatów).</p><p>Plik logo nazywa się od domeny strony firmy, więc firma bez adresu strony nie ma logo. Adres uzupełnij w bazie.</p><p>Zmiany są najpierw tylko na Twoim komputerze. Wyślij je przyciskiem „Wyślij” niżej (gałąź develop, strona podglądu), a na czypolskafirma.pl trafią po „Opublikuj” w kroku 8.</p></div>
+        <div id="lbPodsumowanie" class="uwagi" style="margin:0 0 10px">Wczytuję firmy i sprawdzam logotypy… (pierwszy raz do pół minuty)</div>
+        <div id="lbSiatka" class="logo-siatka"></div>
+        <div style="text-align:center;margin-top:12px"><button id="btnLbWiecej" hidden>Pokaż więcej</button></div>
+      </div>
+      <div class="karta">
+        <div class="rozdziel">
+          <div><h2 style="margin-bottom:2px">Wyślij logotypy na podgląd</h2>
+            <span style="font-size:13.5px;color:var(--slaby)" id="lbGitOpis">Sprawdzam…</span></div>
+          <button class="glowny duzy" id="btnLbWyslij" disabled>Wyślij</button>
+        </div>
+        <p class="uwagi">Na czypolskafirma.pl logotypy trafią po kliknięciu „Opublikuj” na dole <a data-idz="logo" style="cursor:pointer;text-decoration:underline">kroku 8</a>. <a href="https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app/" target="_blank" rel="noopener">Otwórz stronę podglądu ↗</a></p>
+      </div>
+      <pre class="log" id="lbLog" style="display:none"></pre>
+    </section>
+
     <!-- 7. BACKUP -->
     <section class="ekran" id="e-backup">
       <h1>Backup bazy</h1>
@@ -856,6 +883,14 @@
       </div>
       <pre class="log" id="backupLog" style="display:none"></pre>
     </section>
+    <!-- wspólne dla kroku 8 i „Logotypy firm” (poza sekcjami, żeby okno działało z obu ekranów) -->
+    <dialog class="logo-zrodla" id="logoZrodla">
+      <div class="rozdziel"><h2 id="lzTytul" style="margin:0">Inne źródła</h2><button id="lzZamknij">Zamknij</button></div>
+      <p class="uwagi" id="lzOpis"></p>
+      <div id="lzSiatka" class="logo-siatka"></div>
+      <p class="uwagi" id="lzLinki"></p>
+    </dialog>
+    <input type="file" id="logoPlik" accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml" hidden>
   </main>
 </div>
 
@@ -929,6 +964,7 @@ function odswiezEkran() {
   if (STAN.ekran === "konsylium") ekranKonsylium();
   if (STAN.ekran === "import") ekranImport();
   if (STAN.ekran === "logo") ekranLogo();
+  if (STAN.ekran === "logobaza") ekranLogoBaza();
   if (STAN.ekran === "backup") ekranBackup();
   rysujSciezke();
 }
@@ -1926,7 +1962,56 @@ const OPIS_RODZAJU = {
   male: ['<span class="plakietka p-uwaga">małe, może być nieostre</span>', "uwaga"],
   rozszerzenie: ['<span class="plakietka p-uwaga">zła końcówka nazwy</span>', "uwaga"],
 };
+// Karta firmy z logo (krok 8 i „Logotypy firm”). i = numer pozycji na liście ekranu.
+// wspolna = inne firmy z tą samą domeną: dzielą jeden plik logo, więc karta ostrzega i daje pole
+// na własny adres marki (wtedy logo zapisze się pod nową domeną).
+// Klucz logo "domena~sciezka" = osobny plik dla podstrony marki na stronie grupy (Cin&Cin u Ambry).
+const etykietaLogo = (k) => !k ? "" : k.includes("~") ? `${k.split("~")[0]} (podstrona)` : k;
+function kartaLogo(x, i) {
+  const wspolna = x.wspolna || [];
+  const kto = x.firma ? `data-www-zapisz="${esc(x.firma)}"` : x.slug ? `data-www-slug="${esc(x.slug)}"` : "";
+  const poleWww = kto && (!x.domena || wspolna.length)
+    ? `<div class="rzad" style="gap:6px;margin:4px 0"><input data-www-pole placeholder="${x.domena ? "strona marki albo jej podstrona u grupy" : "adres strony firmy"}" style="flex:1;min-width:0;font-size:13px;padding:5px 8px"><button ${kto} data-wbazie="${x.wBazie ? 1 : ""}" style="font-size:12.5px;padding:5px 9px">${x.domena ? "Zmień adres" : "Zapisz"}</button></div>` : "";
+  const ostrzezenie = wspolna.length
+    ? `<div class="male" style="color:var(--bursztyn);font-size:12.5px;margin:4px 0">Ten sam adres (${esc(etykietaLogo(x.domena))}) ma${wspolna.length > 1 ? "ją" : ""} też: <b>${esc(wspolna.slice(0, 6).join(", "))}${wspolna.length > 6 ? ` i ${wspolna.length - 6} innych` : ""}</b>. Podmiana logo zmieni je wszystkim. Wpisz niżej własną stronę marki, a gdy jej nie ma: adres podstrony marki na stronie grupy (logo zapisze się wtedy osobno).</div>` : "";
+  const podstrona = x.domena && x.domena.includes("~") && x.odczyt !== x.domena
+    ? `<div class="male" style="color:var(--slaby);font-size:12.5px;margin:4px 0">Adres to podstrona marki: nowe logo zapisze się osobno, logo ${esc(etykietaLogo(x.odczyt))} zostanie bez zmian. Teraz widać logo ${esc(etykietaLogo(x.odczyt))}.</div>` : "";
+  return `<div class="logo-karta ${OPIS_RODZAJU[x.rodzaj]?.[1] || ""}" data-domena="${esc(x.domena || "")}" data-wspolna="${esc(wspolna.join(", "))}"${i == null ? "" : ` data-i="${i}"`}>
+      <div class="logo-okno ${x.plik ? "" : "brak"}">${x.plik ? `<img src="/logo-plik/${encodeURIComponent(x.plik)}?t=${Math.round(x.zmieniono || 0)}" alt="${esc(x.nazwa)}" loading="lazy">` : "brak pliku"}</div>
+      <b>${esc(x.nazwa)}</b>${x.spolka && x.spolka !== x.nazwa ? `<span class="male" style="color:var(--slaby);font-size:12px">${esc(x.spolka)}</span>` : ""}
+      ${ostrzezenie}${podstrona}${poleWww}<span class="male">${esc(etykietaLogo(x.domena) || (kto ? "brak adresu strony: wpisz go, wtedy przeciągnięcie zadziała" : "brak adresu strony"))}${x.plik ? `<br>${esc(x.format)} · ${x.szer && x.wys ? `${x.szer}×${x.wys} px` : "rozmiar ?"} · ${Math.round((x.bajtow || 0) / 1024)} KB` : ""}</span>
+      <div>${OPIS_RODZAJU[x.rodzaj]?.[0] || ""}</div>
+      <div class="rzad" style="gap:6px">${x.domena ? `<button data-zrodla="${esc(x.domena)}" data-nazwa="${esc(x.nazwa)}" data-www="${esc(x.www || "")}" style="font-size:12.5px;padding:5px 9px">Inne źródła</button><button data-podmien="${esc(x.domena)}" style="font-size:12.5px;padding:5px 9px">Podmień</button><a href="${esc(x.www && /^https?:/.test(x.www) ? x.www : "https://" + x.domena)}" target="_blank" rel="noopener" style="font-size:12.5px">strona firmy ↗</a>` : ""}${x.wBazie && x.slug ? `<a href="https://czypolskafirma.pl/firma/${encodeURIComponent(x.slug)}" target="_blank" rel="noopener" style="font-size:12.5px">profil ↗</a>` : ""}</div>
+    </div>`;
+}
+// Podmiana pliku na domenie, z której korzysta kilka firm, zmienia logo wszystkim: pytamy.
+function zgodaNaWspolne(karta) {
+  const inne = karta?.dataset.wspolna;
+  return !inne || confirm(`Logo ${etykietaLogo(karta.dataset.domena)} mają też: ${inne}.
+Podmiana zmieni logo wszystkim tym firmom. Jeśli to osobna marka z własną stroną, anuluj i wpisz jej adres w polu „Zmień adres”.
+
+Podmienić mimo to?`);
+}
+// Obsługa kart w siatce (raz na siatkę, przez delegację): Podmień, Inne źródła, adres strony
+// i przeciąganie. poZmianie(domena, opis) odświeża ekran po podmianie pliku.
 let LOGO_CEL = null;
+function siatkaLogo(el, poZmianie) {
+  el.poZmianie = poZmianie;
+  el.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    const karta = b.closest(".logo-karta");
+    if (b.dataset.wwwZapisz !== undefined || b.dataset.wwwSlug !== undefined) zapiszWww(b);
+    else if (b.dataset.podmien) { if (!zgodaNaWspolne(karta)) return; LOGO_CEL = { el, domena: b.dataset.podmien }; $("#logoPlik").value = ""; $("#logoPlik").click(); }
+    else if (b.dataset.zrodla) inneZrodla(el, b.dataset.zrodla, b.dataset.nazwa, b.dataset.www);
+  });
+  el.addEventListener("keydown", (e) => { const p = e.target.closest("[data-www-pole]"); if (p && e.key === "Enter") zapiszWww(p.nextElementSibling); });
+  el.addEventListener("dragover", (e) => { const k = e.target.closest(".logo-karta[data-domena]"); if (!k) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; k.classList.add("nad"); });
+  el.addEventListener("dragleave", (e) => { const k = e.target.closest(".logo-karta"); if (k && !k.contains(e.relatedTarget)) k.classList.remove("nad"); });
+  el.addEventListener("drop", (e) => { const k = e.target.closest(".logo-karta[data-domena]"); if (!k) return; e.preventDefault(); k.classList.remove("nad"); upuszczoneLogo(el, k, e.dataTransfer); });
+}
+siatkaLogo($("#logoSiatka"), async () => { await podgladLogo(); ekranLogoStan(); });
+
 async function podgladLogo() {
   const zakres = $("#logoZakres").value;
   if (zakres === "partia" && !STAN.partia) { $("#logoSiatka").innerHTML = '<span class="pusto">Nie wybrano partii.</span>'; return; }
@@ -1937,22 +2022,7 @@ async function podgladLogo() {
   $("#logoPodsumowanie").innerHTML = `${j.pozycje.length} firm · <b style="color:var(--czerwony)">${zle} do podmiany</b> · <b style="color:var(--bursztyn)">${uwaga} do sprawdzenia</b> · ${j.pozycje.length - zle - uwaga} w porządku. Najpierw pokazane te z problemem.<br><span style="font-size:13px;color:var(--slaby)">Logo możesz przeciągnąć myszką prosto ze strony firmy na jej kartę: panel sam je pobierze.</span>`;
   const waga = (x) => ({ zle: 0, uwaga: 1 }[OPIS_RODZAJU[x.rodzaj]?.[1]] ?? 2);
   j.pozycje.sort((a, b) => waga(a) - waga(b) || a.nazwa.localeCompare(b.nazwa, "pl"));
-  $("#logoSiatka").innerHTML = j.pozycje.map((x) => `<div class="logo-karta ${OPIS_RODZAJU[x.rodzaj]?.[1] || ""}" data-domena="${esc(x.domena || "")}">
-      <div class="logo-okno ${x.plik ? "" : "brak"}">${x.plik ? `<img src="/logo-plik/${encodeURIComponent(x.plik)}?t=${Math.round(x.zmieniono || 0)}" alt="${esc(x.nazwa)}">` : "brak pliku"}</div>
-      <b>${esc(x.nazwa)}</b>
-      ${x.domena || !x.firma ? "" : `<div class="rzad" style="gap:6px;margin:4px 0"><input data-www-pole="${esc(x.firma)}" placeholder="adres strony firmy" style="flex:1;min-width:0;font-size:13px;padding:5px 8px"><button data-www-zapisz="${esc(x.firma)}" data-wbazie="${x.wBazie ? 1 : ""}" style="font-size:12.5px;padding:5px 9px">Zapisz</button></div>`}<span class="male">${esc(x.domena || (x.firma ? "brak adresu strony: wpisz go, wtedy przeciągnięcie zadziała" : "brak adresu strony"))}${x.plik ? `<br>${esc(x.format)} · ${x.szer && x.wys ? `${x.szer}×${x.wys} px` : "rozmiar ?"} · ${Math.round((x.bajtow || 0) / 1024)} KB` : ""}</span>
-      <div>${OPIS_RODZAJU[x.rodzaj]?.[0] || ""}</div>
-      <div class="rzad" style="gap:6px">${x.domena ? `<button data-zrodla="${esc(x.domena)}" data-nazwa="${esc(x.nazwa)}" data-www="${esc(x.www || "")}" style="font-size:12.5px;padding:5px 9px">Inne źródła</button><button data-podmien="${esc(x.domena)}" style="font-size:12.5px;padding:5px 9px">Podmień</button><a href="${esc(x.www && /^https?:/.test(x.www) ? x.www : "https://" + x.domena)}" target="_blank" rel="noopener" style="font-size:12.5px">strona firmy ↗</a>` : ""}</div>
-    </div>`).join("") || '<span class="pusto">Brak firm do pokazania.</span>';
-  $("#logoSiatka").querySelectorAll("[data-www-zapisz]").forEach((b) => b.addEventListener("click", () => zapiszWww(b)));
-  $("#logoSiatka").querySelectorAll("[data-www-pole]").forEach((p) => p.addEventListener("keydown", (e) => { if (e.key === "Enter") zapiszWww(p.nextElementSibling); }));
-  $("#logoSiatka").querySelectorAll("[data-podmien]").forEach((b) => b.addEventListener("click", () => { LOGO_CEL = b.dataset.podmien; $("#logoPlik").value = ""; $("#logoPlik").click(); }));
-  $("#logoSiatka").querySelectorAll("[data-zrodla]").forEach((b) => b.addEventListener("click", () => inneZrodla(b.dataset.zrodla, b.dataset.nazwa, b.dataset.www)));
-  $("#logoSiatka").querySelectorAll(".logo-karta[data-domena]").forEach((k) => {
-    k.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; k.classList.add("nad"); });
-    k.addEventListener("dragleave", (e) => { if (!k.contains(e.relatedTarget)) k.classList.remove("nad"); });
-    k.addEventListener("drop", (e) => { e.preventDefault(); k.classList.remove("nad"); upuszczoneLogo(k, e.dataTransfer); });
-  });
+  $("#logoSiatka").innerHTML = j.pozycje.map((x) => kartaLogo(x)).join("") || '<span class="pusto">Brak firm do pokazania.</span>';
 }
 // Upuszczenie na kartę: plik z dysku albo obrazek przeciągnięty prosto ze strony internetowej.
 // Ze strony przeglądarka daje kod HTML z <img> i adres; obrazek w linku ma w adresie link do
@@ -1976,23 +2046,29 @@ function adresZPrzeciagniecia(dt) {
   return /^(https?:|data:image\/)\S+$/i.test(tekst) ? tekst : null;
 }
 
-// Adres strony dla firmy bez niego: zapis w partii, a dla firmy już zaimportowanej także w bazie.
+// Adres strony (brak adresu albo własna strona marki zamiast wspólnej strony firmy-matki): zapis
+// w partii, a dla firmy już w bazie także w bazie. Z „Logotypy firm” (data-www-slug) tylko w bazie.
 async function zapiszWww(b) {
   const www = b.previousElementSibling.value.trim();
-  if (!www) return alert("Wpisz adres strony firmy, np. https://ingridcosmetics.com");
-  if (b.dataset.wbazie && !confirm(`Firma jest już w bazie. Zapisać adres ${www} także w bazie (pole website_url)?`)) return;
+  if (!www) return alert("Wpisz adres strony, np. https://cincin.pl");
+  const zSlugiem = b.dataset.wwwSlug !== undefined;
+  if (!zSlugiem && b.dataset.wbazie && !confirm(`Firma jest już w bazie. Zapisać adres ${www} także w bazie (pole website_url)?`)) return;
+  const dane = zSlugiem ? { slug: b.dataset.wwwSlug, www } : { partia: STAN.partia, firma: b.dataset.wwwZapisz, www };
   b.disabled = true;
-  const j = await wyslij("/api/panel/firma-www", { partia: STAN.partia, firma: b.dataset.wwwZapisz, www });
+  let j = await wyslij("/api/panel/firma-www", dane);
+  if (j.pytanie) j = confirm(j.pytanie) ? await wyslij("/api/panel/firma-www", { ...dane, nadpisz: true }) : { anulowano: true };
   b.disabled = false;
-  if (j.blad) return alert(j.blad);
-  await podgladLogo();
+  if (j.anulowano) return;
+  if (j.pytanie || j.blad) return alert(j.pytanie || j.blad);
+  if (zSlugiem) await ekranLogoBaza(true); else await podgladLogo();
 }
 
-async function upuszczoneLogo(karta, dt) {
+async function upuszczoneLogo(siatka, karta, dt) {
   const domena = karta.dataset.domena;
   if (!domena) return alert("Ta firma nie ma adresu strony, a plik logo nazywa się od domeny. Wpisz adres na karcie i kliknij „Zapisz”, potem przeciągnij logo jeszcze raz.");
+  if (!zgodaNaWspolne(karta)) return;
   const plik = [...(dt.files || [])].find((f) => f.type.startsWith("image/") || /\.(png|jpe?g|webp|svg)$/i.test(f.name));
-  if (plik) return podmienLogo(domena, plik);
+  if (plik) return podmienLogo(siatka, domena, plik);
   const adres = adresZPrzeciagniecia(dt);
   if (!adres) return alert("Nie rozpoznałem obrazka. Przeciągnij samo logo (obrazek) ze strony albo plik z dysku.");
   karta.classList.add("laduje");
@@ -2001,26 +2077,24 @@ async function upuszczoneLogo(karta, dt) {
       ? await wyslij("/api/panel/logo-podmien", { domena, dane: adres.split(",")[1] || "" })
       : await wyslij("/api/panel/logo-z-adresu", { domena, adres });
     if (j.blad) return alert(`Nie podmieniono logo ${domena}: ${j.blad}`);
-    await podgladLogo();
-    ekranLogoStan();
+    await siatka.poZmianie(domena, j);
   } finally { karta.classList.remove("laduje"); }
 }
 
-async function podmienLogo(domena, plik) {
+async function podmienLogo(siatka, domena, plik) {
   if (plik.size > 5 * 1024 * 1024) return alert("Plik większy niż 5 MB.");
   const dane = await new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.readAsDataURL(plik); });
   const j = await wyslij("/api/panel/logo-podmien", { domena, dane });
   if (j.blad) return alert(`Nie podmieniono logo ${domena}: ${j.blad}`);
-  await podgladLogo();
-  ekranLogoStan();
+  await siatka.poZmianie(domena, j);
 }
 // „Inne źródła”: kandydaci ze strony firmy, Wikipedii i serwisów z ikonkami; „Użyj” podmienia plik.
 const RODZAJ_KANDYDATA = { logo: '<span class="plakietka p-ok">logo</span>', obrazek: '<span class="plakietka p-uwaga">obrazek ze strony</span>', ikonka: '<span class="plakietka p-zle">ikonka</span>' };
-async function inneZrodla(domena, nazwa, www) {
+async function inneZrodla(siatka, domena, nazwa, www) {
   const okno = $("#logoZrodla");
-  $("#lzTytul").textContent = `Logo: ${nazwa} (${domena})`;
+  $("#lzTytul").textContent = `Logo: ${nazwa} (${etykietaLogo(domena)})`;
   $("#lzOpis").textContent = "Szukam na stronie firmy, w Wikipedii i w serwisach z ikonkami… (do pół minuty)";
-  const obecne = document.querySelector(`#logoSiatka .logo-karta[data-domena="${CSS.escape(domena)}"] .logo-okno`)?.innerHTML || "brak pliku";
+  const obecne = siatka.querySelector(`.logo-karta[data-domena="${CSS.escape(domena)}"] .logo-okno`)?.innerHTML || "brak pliku";
   $("#lzSiatka").innerHTML = `<div class="logo-karta teraz"><div class="logo-okno">${obecne}</div><div class="logo-okno ciemne">${obecne}</div><b>Teraz na stronie</b></div>`;
   const google = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(`${nazwa} logo`)}`;
   $("#lzLinki").innerHTML = `Nic nie pasuje? <a href="${google}" target="_blank" rel="noopener">Szukaj logo w Google Grafika ↗</a> · <a href="${esc(www && /^https?:/.test(www) ? www : "https://" + domena)}" target="_blank" rel="noopener">strona firmy ↗</a>. Logo z otwartej strony przeciągnij prosto na kartę firmy (bez zapisywania), albo użyj „Podmień”.`;
@@ -2038,17 +2112,17 @@ async function inneZrodla(domena, nazwa, www) {
       <div class="rzad" style="gap:6px"><button class="glowny" data-uzyj="${k.id}" style="font-size:12.5px;padding:5px 11px">Użyj</button>${k.url ? `<a href="${esc(k.url)}" target="_blank" rel="noopener" style="font-size:12.5px">źródło ↗</a>` : ""}</div>
     </div>`).join(""));
   $("#lzSiatka").querySelectorAll("[data-uzyj]").forEach((b) => b.addEventListener("click", async () => {
+    if (!zgodaNaWspolne(siatka.querySelector(`.logo-karta[data-domena="${CSS.escape(domena)}"]`))) return;
     b.disabled = true;
     const w = await wyslij("/api/panel/logo-uzyj", { domena, id: b.dataset.uzyj });
     if (w.blad) { b.disabled = false; return alert(`Nie podmieniono logo: ${w.blad}`); }
     okno.close();
-    await podgladLogo();
-    ekranLogoStan();
+    await siatka.poZmianie(domena, w);
   }));
 }
 $("#lzZamknij").onclick = () => $("#logoZrodla").close();
 
-$("#logoPlik").onchange = (e) => { const f = e.target.files[0]; if (f && LOGO_CEL) podmienLogo(LOGO_CEL, f); };
+$("#logoPlik").onchange = (e) => { const f = e.target.files[0]; if (f && LOGO_CEL) podmienLogo(LOGO_CEL.el, LOGO_CEL.domena, f); };
 $("#logoZakres").onchange = () => podgladLogo();
 $("#btnLogoOdswiez").onclick = () => podgladLogo();
 
@@ -2058,6 +2132,80 @@ $("#btnWyslijLogo").onclick = async () => {
   if (z.blad) return alert(z.blad);
   $("#logoLog").style.display = "";
   sledzZadanie(z.zadanie, "#logoLog", ekranLogo);
+};
+
+// ---------- Logotypy firm (cała baza) ----------
+// Lista przychodzi raz (ok. 1000 firm), szukanie, filtr i „Pokaż więcej” działają w przeglądarce.
+const LB = { pozycje: [], widac: 60 };
+const LB_NA_STRONE = 60;
+const bezOgonkow = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ł/g, "l");
+// „do podmiany” bez firm bez adresu strony: tych nie naprawi się nowym plikiem, mają własny filtr
+const grupaLb = (x) => x.rodzaj === "bez-strony" ? "bez-strony" : OPIS_RODZAJU[x.rodzaj]?.[1] || "ok";
+const LB_FILTRY = [["wszystkie", "Wszystkie"], ["zle", "Do podmiany"], ["uwaga", "Do sprawdzenia"], ["ok", "W porządku"], ["bez-strony", "Bez adresu strony"]];
+async function ekranLogoBaza(odswiez) {
+  lbGit();
+  if (!LB.pozycje.length) $("#lbPodsumowanie").textContent = "Wczytuję firmy i sprawdzam logotypy… (pierwszy raz do pół minuty)";
+  $("#btnLbOdswiez").disabled = true;
+  const j = await pobierz("/api/panel/logo-baza" + (odswiez ? "?odswiez=1" : ""));
+  $("#btnLbOdswiez").disabled = false;
+  if (j.blad) { $("#lbPodsumowanie").textContent = j.blad; return; }
+  j.pozycje.forEach((x) => { x.wBazie = true; x._szukaj = bezOgonkow([x.nazwa, x.spolka, x.slug, x.domena, x.aliasy].join(" ")); });
+  LB.pozycje = j.pozycje;
+  rysujLogoBaza(false);
+}
+function rysujFiltryLb() {
+  const ile = (f) => f === "wszystkie" ? LB.pozycje.length : LB.pozycje.filter((x) => grupaLb(x) === f).length;
+  const wybrany = $("#lbFiltr").value || "wszystkie";
+  $("#lbFiltr").innerHTML = LB_FILTRY.map(([f, n]) => `<option value="${f}" ${f === wybrany ? "selected" : ""}>${n} (${ile(f)})</option>`).join("");
+}
+function listaLb() {
+  const q = bezOgonkow($("#lbSzukaj").value.trim()), filtr = $("#lbFiltr").value || "wszystkie", sort = $("#lbSort").value;
+  const waga = (x) => ({ zle: 0, uwaga: 1, "bez-strony": 2 }[grupaLb(x)] ?? 3);
+  return LB.pozycje.map((x, i) => [x, i])
+    .filter(([x]) => (filtr === "wszystkie" || grupaLb(x) === filtr) && (!q || x._szukaj.includes(q)))
+    .sort(([a], [b]) => (sort === "zmiana" ? (b.zmieniono || 0) - (a.zmieniono || 0) : sort === "problemy" ? waga(a) - waga(b) : 0) || a.nazwa.localeCompare(b.nazwa, "pl"));
+}
+// odNowa: nowe wyszukiwanie albo filtr (od początku listy); false zostawia liczbę pokazanych kart
+function rysujLogoBaza(odNowa = true) {
+  if (odNowa) LB.widac = LB_NA_STRONE;
+  rysujFiltryLb();
+  const lista = listaLb();
+  const zle = LB.pozycje.filter((x) => grupaLb(x) === "zle").length, uwaga = LB.pozycje.filter((x) => grupaLb(x) === "uwaga").length;
+  $("#lbPodsumowanie").innerHTML = `${LB.pozycje.length} firm w bazie · <b style="color:var(--czerwony)">${zle} do podmiany</b> · <b style="color:var(--bursztyn)">${uwaga} do sprawdzenia</b>. ${lista.length === LB.pozycje.length ? "" : `Pasuje: <b>${lista.length}</b>. `}<span style="font-size:13px;color:var(--slaby)">Logo przeciągnij myszką prosto ze strony firmy na jej kartę.</span>`;
+  $("#lbSiatka").innerHTML = lista.slice(0, LB.widac).map(([x, i]) => kartaLogo(x, i)).join("") || '<span class="pusto">Nie znalazłem takiej firmy w bazie.</span>';
+  $("#btnLbWiecej").hidden = lista.length <= LB.widac;
+  $("#btnLbWiecej").textContent = `Pokaż więcej (jeszcze ${lista.length - LB.widac})`;
+}
+// Po podmianie: karta zmienia się w miejscu (lista się nie przesuwa, nawet gdy logo przestało
+// pasować do filtra „do podmiany”), liczniki i karta wysyłki się odświeżają.
+siatkaLogo($("#lbSiatka"), async (domena, opis) => {
+  const { ok, ...nowy } = opis || {};
+  LB.pozycje.filter((x) => x.domena === domena).forEach((x) => Object.assign(x, nowy));
+  $("#lbSiatka").querySelectorAll(`.logo-karta[data-domena="${CSS.escape(domena)}"]`).forEach((k) => { k.outerHTML = kartaLogo(LB.pozycje[k.dataset.i], k.dataset.i); });
+  rysujFiltryLb();
+  lbGit();
+});
+async function lbGit() {
+  const j = await pobierz("/api/panel/logo-stan");
+  if (j.blad) { $("#lbGitOpis").textContent = j.blad; return; }
+  const g = j.git;
+  $("#lbGitOpis").innerHTML = !g.naDevelop
+    ? `Jesteś na gałęzi <b>${esc(g.galaz)}</b>. Wysyłka działa tylko z gałęzi develop.`
+    : g.plikow ? `${g.plikow} zmienionych plików czeka na wysłanie. Trafią na gałąź develop i za chwilę zobaczysz je na stronie podglądu.` : "Nie ma nowych plików do wysłania.";
+  $("#btnLbWyslij").disabled = !g.naDevelop || !g.plikow;
+}
+let lbOpoznienie;
+$("#lbSzukaj").addEventListener("input", () => { clearTimeout(lbOpoznienie); lbOpoznienie = setTimeout(() => rysujLogoBaza(), 120); });
+$("#lbFiltr").onchange = () => rysujLogoBaza();
+$("#lbSort").onchange = () => rysujLogoBaza();
+$("#btnLbWiecej").onclick = () => { LB.widac += LB_NA_STRONE; rysujLogoBaza(false); };
+$("#btnLbOdswiez").onclick = () => ekranLogoBaza(true);
+$("#btnLbWyslij").onclick = async () => {
+  if (!confirm("Wysłać logotypy na gałąź develop? Zobaczysz je na stronie podglądu, nie na czypolskafirma.pl.")) return;
+  const z = await wyslij("/api/panel/logo-wyslij");
+  if (z.blad) return alert(z.blad);
+  $("#lbLog").style.display = "";
+  sledzZadanie(z.zadanie, "#lbLog", lbGit);
 };
 
 // ---------- publikacja na produkcję ----------

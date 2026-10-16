@@ -20,6 +20,12 @@
       "port": 3010
     },
     {
+      "name": "redesign-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "../czypolskafirma_redesign", "run", "dev", "--", "-p", "3001"],
+      "port": 3001
+    },
+    {
       "name": "makiety",
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8765", "--bind", "127.0.0.1"],

@@ -115,18 +115,21 @@ Zasada: automat proponuje, Ty zatwierdzasz. Nic nie trafia do bazy bez Twojego k
 ## Logotypy po imporcie {#logotypy}
 
 - **Kiedy:** po każdym imporcie nowych firm
-- **Gdzie:** Panel projektu, krok 8; Logo Fixer na `npm run dev`
+- **Gdzie:** Panel projektu, krok 8 (nowe firmy) i Firmy → Logotypy firm (każda firma z bazy); Logo Fixer na `npm run dev`
 - **Pełny opis:** docs/SOP_logotypy.md
 - **Obszar:** Firmy i dane
 - **Prowadzi do:** publikacja (logo na develop)
 
 1. **Pobierz logotypy** (tylko firmy bez logo).
 2. Obejrzyj podgląd w panelu. Przy złym, małym albo białym logo kliknij **Inne źródła** i wybierz lepsze („Użyj”). Gdy nic nie pasuje: otwórz stronę firmy albo Google Grafika obok panelu i przeciągnij obrazek logo myszką prosto na kartę firmy (panel sam pobierze plik, bez zapisywania na dysk).
+   Karta z ostrzeżeniem „Ten sam adres ma też…” dzieli plik logo z innymi firmami (marka zapisana ze stroną firmy-matki). Nie podmieniaj tam logo: wpisz własną stronę marki w polu **Zmień adres** (np. https://cincin.pl) i dopiero wtedy wgraj logo. Marka bez własnej domeny: wpisz adres jej podstrony na stronie grupy (np. ambra.com.pl/…/cin-cin/), logo zapisze się osobno i nie zmieni logo grupy.
 3. **Przygotuj obrazki** (kopie PNG dla kart OG, bez nich karta pokaże monogram).
 4. **Wyślij logotypy na podgląd** (commit i push na `develop`).
 5. Przejrzyj nowe firmy na podglądzie (linki są w karcie publikacji) i kliknij **Opublikuj**: firmy, logotypy i kod trafią na czypolskafirma.pl razem.
 
 Nie kompresuj i nie zmniejszaj plików w `public/logos/`: jakość ponad wagę.
+
+**Podmiana logo dowolnej firmy (bez partii):** Panel projektu → Firmy → **Logotypy firm**. Wpisz nazwę marki, spółki albo domenę (polskie znaki niepotrzebne) albo przeglądaj z filtrem „Do podmiany” / „Do sprawdzenia”. Podmiana jak w kroku 8: przeciągnij logo ze strony na kartę, „Inne źródła” albo „Podmień”. Potem **Wyślij** (develop), a na czypolskafirma.pl po **Opublikuj** w kroku 8.
 
 ## Zmiana w bazie przez SQL {#sql}
 

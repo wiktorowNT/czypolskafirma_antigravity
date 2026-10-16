@@ -390,6 +390,65 @@ async function opisLogo(domena) {
   return { plik, format, szer, wys, bajtow: fs.statSync(sciezka).size, rodzaj, zmieniono: fs.statSync(sciezka).mtimeMs };
 }
 
+// Opis logo z pamięci (zakładka „Logotypy firm” pokazuje całą bazę, ok. 1000 plików): liczony
+// od nowa tylko, gdy plik tej domeny się zmienił (inna nazwa albo data zapisu).
+const pamiecOpisowLogo = new Map();
+async function opisLogoZPamieci(domena, pliki) {
+  const plik = pliki.find((x) => x.toLowerCase().startsWith(domena + ".") && /\.(png|jpe?g|webp|svg|ico)$/i.test(x) && x.slice(domena.length + 1).split(".").length === 1);
+  let klucz = "brak";
+  if (plik) try { klucz = `${plik}|${fs.statSync(path.join(KATALOG_LOGO, plik)).mtimeMs}`; } catch {}
+  const p = pamiecOpisowLogo.get(domena);
+  if (p?.klucz === klucz) return p.opis;
+  const opis = await opisLogo(domena);
+  pamiecOpisowLogo.set(domena, { klucz, opis });
+  return opis;
+}
+
+// Nazwa marki i slug w adresie tak jak na stronie (lib/slug-utils.ts: resolveDisplayName, slugify).
+function markaFirmy(f) {
+  if (f.display_name?.trim()) return f.display_name.trim();
+  const s = String(f.slug || "").trim();
+  if (!s) return f.name || "";
+  return /^[a-z0-9]+(-[a-z0-9]+)*$/.test(s) ? s.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") : s;
+}
+const slugUrl = (s) => String(s || "").trim().replace(/[łŁ]/g, "l").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+
+// ---------- klucz pliku logo ----------
+// Plik logo nazywa się od domeny (ambra.com.pl.png), więc firmy z tym samym adresem dzielą jedno
+// logo. Marka bez własnej domeny (Cin&Cin na stronie Ambry) dostaje osobny plik dla swojej
+// podstrony: klucz "domena~sciezka" (ambra.com.pl~marki-i-konsumenci-swiat-naszych-marek-cin-cin).
+// Takie pliki są wpisane w data/logo-podstrony.json, który czyta strona (components/company-logo.tsx
+// ma tę samą funkcję klucza: getSubpageKey). Logo domeny pokazuje się, gdy podstrona nie ma pliku.
+const PLIK_PODSTRON = path.join(KATALOG_REPO, "data", "logo-podstrony.json");
+const KLUCZ_LOGO = /^[a-z0-9.-]+\.[a-z]{2,}(~[a-z0-9-]+)?$/;
+function logoPodstron() {
+  try { return JSON.parse(fs.readFileSync(PLIK_PODSTRON, "utf8")) || {}; } catch { return {}; }
+}
+function kluczPodstrony(url) {
+  const host = domenaZUrl(url);
+  if (!host) return null;
+  try {
+    const u = new URL(String(url).startsWith("http") ? url : `https://${url}`);
+    const sciezka = decodeURIComponent(u.pathname).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return sciezka ? `${host}~${sciezka}` : null;
+  } catch { return null; }
+}
+// Dla listy firm ({ slug, nazwa, www }) ustala: odczyt (plik, który strona pokazuje), zapis (plik,
+// do którego trafi podmiana) i wspolna (inne firmy, którym ta podmiana też zmieni logo).
+// Zapis idzie do pliku podstrony, gdy domenę ma kilka firm, a adres tej firmy ma ścieżkę.
+function kluczeLogo(firmy) {
+  const podstrony = logoPodstron();
+  const naHoscie = new Map();
+  for (const f of firmy) { const h = domenaZUrl(f.www); if (h) naHoscie.set(h, (naHoscie.get(h) || 0) + 1); }
+  for (const f of firmy) {
+    const h = domenaZUrl(f.www), k = kluczPodstrony(f.www);
+    f.odczyt = k && podstrony[k] ? k : h;
+    f.zapis = k && (podstrony[k] || naHoscie.get(h) > 1) ? k : h;
+  }
+  for (const f of firmy) f.wspolna = f.zapis ? firmy.filter((x) => x !== f && (x.odczyt === f.zapis || x.zapis === f.zapis)).map((x) => x.nazwa) : [];
+  return firmy;
+}
+
 function stanLogotypow() {
   const katalog = path.join(KATALOG_REPO, "public", "logos");
   const pliki = fs.existsSync(katalog) ? fs.readdirSync(katalog) : [];
@@ -416,7 +475,8 @@ function stanLogotypow() {
 // Zapis logo firmy do public/logos (ręczna podmiana i wybór z „Inne źródła”). Format po bajtach,
 // ikonki .ico i SVG ze skryptami odrzucane, stare pliki tej domeny usuwane.
 async function zapiszLogo(domena, bufor) {
-  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(String(domena || ""))) return { blad: "Zła domena." };
+  domena = String(domena || "").toLowerCase();
+  if (!KLUCZ_LOGO.test(domena)) return { blad: "Zła domena." };
   if (bufor.length > 5 * 1024 * 1024) return { blad: "Plik większy niż 5 MB." };
   const format = formatPliku(bufor);
   if (format === "ico") return { blad: "To ikonka strony (.ico), a nie logo. Wybierz plik PNG, JPG, WebP albo SVG." };
@@ -424,6 +484,11 @@ async function zapiszLogo(domena, bufor) {
   if (format === "svg" && /<script|\bon[a-z]+\s*=|javascript:|<foreignObject|<iframe|<embed|<object/i.test(bufor.toString("utf8"))) return { blad: "SVG zawiera skrypty lub aktywne elementy." };
   for (const x of fs.readdirSync(KATALOG_LOGO)) if (x.toLowerCase().startsWith(domena.toLowerCase() + ".") && x.slice(domena.length + 1).split(".").length === 1) fs.unlinkSync(path.join(KATALOG_LOGO, x));
   fs.writeFileSync(path.join(KATALOG_LOGO, `${domena.toLowerCase()}.${format}`), bufor);
+  if (domena.includes("~")) {
+    const podstrony = logoPodstron();
+    podstrony[domena] = `${domena}.${format}`;
+    fs.writeFileSync(PLIK_PODSTRON, JSON.stringify(Object.fromEntries(Object.entries(podstrony).sort()), null, 2) + "\n");
+  }
   return { ok: true, ...(await opisLogo(domena.toLowerCase())) };
 }
 
@@ -437,7 +502,7 @@ function git(...argumenty) {
 
 function stanGitLogotypow() {
   const galaz = git("rev-parse", "--abbrev-ref", "HEAD").wyjscie;
-  const zmiany = git("status", "--porcelain", "--", "public/logos", "public/logos-og").wyjscie;
+  const zmiany = git("status", "--porcelain", "--", "public/logos", "public/logos-og", "data/logo-podstrony.json").wyjscie;
   const linie = zmiany ? zmiany.split(/\r?\n/).filter(Boolean) : [];
   return {
     galaz,
@@ -1100,13 +1165,37 @@ const serwer = http.createServer(async (req, res) => {
         const nazwa = url.searchParams.get("partia");
         if (!nazwa || !fs.existsSync(plikPartii(nazwa))) return json(res, { blad: "Nie wybrano partii." });
         const partia = wczytajPartie(plikPartii(nazwa));
-        for (const f of partia.firmy.filter((x) => !x.pomin && x.rekord)) {
-          const domena = domenaZUrl(f.rekord.website_url);
-          pozycje.push({ nazwa: f.rekord.display_name || f.nazwa, firma: f.nazwa, slug: f.rekord.slug, domena, www: f.rekord.website_url, wBazie: f.decyzja === "zaimportowany" });
+        // Firmy odrzucone w przeglądzie nie trafią do bazy, więc logo dla nich nie jest potrzebne.
+        for (const f of partia.firmy.filter((x) => !x.pomin && x.rekord && x.decyzja !== "odrzucony")) {
+          pozycje.push({ nazwa: f.rekord.display_name || f.nazwa, firma: f.nazwa, slug: f.rekord.slug, www: f.rekord.website_url, wBazie: f.decyzja === "zaimportowany" });
         }
+        // Wspólne logo liczymy razem z resztą bazy (partia ma pierwszeństwo: świeższy adres).
+        const wPartii = new Set(pozycje.map((x) => slugUrl(x.slug)));
+        const reszta = indeks.filter((f) => !wPartii.has(slugUrl(f.slug))).map((f) => ({ nazwa: markaFirmy(f), slug: f.slug, www: f.website_url }));
+        kluczeLogo([...pozycje, ...reszta]);
+        for (const x of pozycje) x.domena = x.zapis;
       }
-      for (const x of pozycje) Object.assign(x, x.domena ? await opisLogo(x.domena) : { plik: null, rodzaj: "bez-strony" });
+      for (const x of pozycje) Object.assign(x, x.domena ? await opisLogo(x.odczyt || x.domena) : { plik: null, rodzaj: "bez-strony" });
       return json(res, { pozycje });
+    }
+
+    // Zakładka „Logotypy firm”: wszystkie firmy z bazy z opisem pliku logo. Szukanie, filtr
+    // i stronicowanie robi przeglądarka (lista ma ok. 1000 pozycji). odswiez=1 czyta bazę od nowa.
+    if (req.method === "GET" && p === "/api/panel/logo-baza") {
+      if (url.searchParams.get("odswiez")) await odswiezBaze();
+      if (bazaBlad) return json(res, { blad: `Nie udało się wczytać firm z bazy: ${bazaBlad}` }, 500);
+      const pliki = fs.existsSync(KATALOG_LOGO) ? fs.readdirSync(KATALOG_LOGO) : [];
+      const pozycje = kluczeLogo(indeks.map((f) => ({
+        nazwa: markaFirmy(f), spolka: f.name || "", slug: slugUrl(f.slug), www: f.website_url || "",
+        aliasy: Array.isArray(f.brand_aliases) ? f.brand_aliases.join(" ") : String(f.brand_aliases || ""),
+      })));
+      for (const x of pozycje) x.domena = x.zapis;
+      const zDomena = pozycje.filter((x) => x.domena);
+      for (let i = 0; i < zDomena.length; i += 8) {
+        await Promise.all(zDomena.slice(i, i + 8).map(async (x) => Object.assign(x, await opisLogoZPamieci(x.odczyt, pliki))));
+      }
+      for (const x of pozycje) if (!x.domena) Object.assign(x, { plik: null, rodzaj: "bez-strony" });
+      return json(res, { pozycje, plikow: pliki.length });
     }
 
     // Plik logo do podglądu (tylko z public/logos, bez wychodzenia poza folder).
@@ -1128,31 +1217,37 @@ const serwer = http.createServer(async (req, res) => {
       return json(res, w, w.blad ? 400 : 200);
     }
 
-    // Adres strony dla firmy bez niego (plik logo nazywa się od domeny, a strona serwisu szuka logo
-    // po website_url). Zapis do partii, a gdy firma jest już w bazie, także website_url w bazie,
-    // tylko jeśli tam jest puste (istniejącego adresu nie nadpisujemy).
+    // Adres strony firmy (plik logo nazywa się od domeny, a strona serwisu szuka logo po website_url).
+    // Dwa przypadki: firma bez adresu albo marka zapisana ze stroną firmy-matki, która dzieli logo
+    // z innymi firmami (Cin&Cin z adresem ambra.com.pl). Wołane z kroku 8 ({ partia, firma }) albo
+    // z „Logotypy firm” ({ slug }, tylko baza). Istniejący adres w bazie nadpisujemy tylko
+    // z potwierdzeniem (nadpisz: true); bez niego 409 z pytaniem.
     if (req.method === "POST" && p === "/api/panel/firma-www") {
-      const { partia: nazwa, firma, www } = await cialo();
+      const { partia: nazwa, firma, slug, www, nadpisz } = await cialo();
       const adres = /^https?:\/\//i.test(String(www || "").trim()) ? String(www).trim() : `https://${String(www || "").trim()}`;
       if (!domenaZUrl(adres)) return json(res, { blad: "To nie wygląda na adres strony (np. https://ingridcosmetics.com)." }, 400);
-      const sciezka = plikPartii(nazwa);
-      if (!fs.existsSync(sciezka)) return json(res, { blad: "Nie ma takiej partii." }, 404);
-      const partia = wczytajPartie(sciezka);
-      const f = partia.firmy.find((x) => x.nazwa === firma);
-      if (!f?.rekord) return json(res, { blad: "Nie ma takiej firmy w partii." }, 404);
+      let sciezka = null, partia = null, f = null, slugBazy = slug ? String(slug) : null;
+      if (nazwa) {
+        sciezka = plikPartii(nazwa);
+        if (!fs.existsSync(sciezka)) return json(res, { blad: "Nie ma takiej partii." }, 404);
+        partia = wczytajPartie(sciezka);
+        f = partia.firmy.find((x) => x.nazwa === firma);
+        if (!f?.rekord) return json(res, { blad: "Nie ma takiej firmy w partii." }, 404);
+        slugBazy = f.decyzja === "zaimportowany" ? f.rekord.slug : null;
+      } else if (!slugBazy) return json(res, { blad: "Nie wskazano firmy." }, 400);
       let wBazie = false;
-      if (f.decyzja === "zaimportowany") {
-        const wiersz = await firmaPoSlugu(f.rekord.slug);
-        if (!wiersz) return json(res, { blad: `Nie znalazłem firmy ${f.rekord.slug} w bazie.` }, 404);
-        if (wiersz.website_url && domenaZUrl(wiersz.website_url) !== domenaZUrl(adres)) return json(res, { blad: `W bazie jest już inny adres: ${wiersz.website_url}. Popraw go w bazie ręcznie.` }, 409);
-        if (!wiersz.website_url) {
+      if (slugBazy) {
+        const wiersz = (await firmaPoSlugu(slugBazy)) || indeks.find((r) => slugUrl(r.slug) === slugUrl(slugBazy));
+        if (!wiersz) return json(res, { blad: `Nie znalazłem firmy ${slugBazy} w bazie.` }, 404);
+        const stara = domenaZUrl(wiersz.website_url);
+        if (stara && stara !== domenaZUrl(adres) && !nadpisz) return json(res, { pytanie: `W bazie jest adres ${wiersz.website_url}. Zamienić go na ${adres}?` }, 409);
+        if (stara !== domenaZUrl(adres) || !wiersz.website_url) {
           const w = await aktualizuj("companies", wiersz.id, { website_url: adres });
           if (w.blad) return json(res, { blad: `Zapis w bazie nie powiódł się: ${w.blad}` }, 500);
           wBazie = true;
         }
       }
-      f.rekord.website_url = adres;
-      zapiszPartie(sciezka, partia);
+      if (f) { f.rekord.website_url = adres; zapiszPartie(sciezka, partia); }
       if (wBazie) await odswiezBaze();
       return json(res, { ok: true, domena: domenaZUrl(adres), wBazie });
     }
@@ -1169,7 +1264,7 @@ const serwer = http.createServer(async (req, res) => {
 
     // „Inne źródła”: kandydaci ze strony firmy, Wikipedii i serwisów z ikonkami (lib/logo-zrodla.mjs).
     if (req.method === "GET" && p === "/api/panel/logo-kandydaci") {
-      const domena = String(url.searchParams.get("domena") || "").toLowerCase();
+      const domena = String(url.searchParams.get("domena") || "").toLowerCase().split("~")[0];
       if (!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domena)) return json(res, { blad: "Zła domena." }, 400);
       const lista = await kandydaciLogo({ domena, www: url.searchParams.get("www") || "", nazwa: url.searchParams.get("nazwa") || "" });
       if (kandydaciPamiec.size > 400) kandydaciPamiec.clear();
@@ -1212,7 +1307,7 @@ const serwer = http.createServer(async (req, res) => {
       const z = nowezadanie("git", "Wysyłka logotypów na podgląd", null);
       json(res, { ok: true, zadanie: z.id });
       const kroki = [
-        ["add", "--", "public/logos", "public/logos-og"],
+        ["add", "--", "public/logos", "public/logos-og", "data/logo-podstrony.json"],
         ["commit", "-m", `Logotypy: ${stan.plikow} plikow (panel firm)`],
         ["push", "origin", "develop"],
       ];

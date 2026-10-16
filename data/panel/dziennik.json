@@ -50,6 +50,13 @@
       "autor": "Claude"
     },
     {
+      "id": "2026-10-02-logotypy-firm",
+      "data": "2026-10-02",
+      "tekst": "Panel: nowa zakładka Firmy → Logotypy firm. Wszystkie firmy z bazy (bez partii) z wyszukiwarką i filtrem „do podmiany / do sprawdzenia”; logo podmienia się tak samo jak w kroku 8 (przeciągnięcie ze strony, Inne źródła, Podmień) i wysyła na develop przyciskiem Wyślij.",
+      "proces": "logotypy",
+      "autor": "Claude"
+    },
+    {
       "id": "2026-10-03-mf-zbiorczo",
       "data": "2026-10-03",
       "tekst": "Automat firm: NIP-y podane na wejściu sprawdza w Białej Liście MF zbiorczo (30 na zapytanie, partia 82 firm = 3 zapytania zamiast 82) i ponawia zapytanie przy timeoucie. Firma z „MF: timeout” wraca do sprawdzenia przyciskiem „Sprawdź ponownie” z tym samym NIP-em, bez szukania numeru modelem.",
@@ -64,6 +71,20 @@
       "autor": "Claude"
     },
     {
+      "id": "2026-10-11-wspolne-logo",
+      "data": "2026-10-11",
+      "tekst": "Logotypy: firmy z tym samym adresem strony dzielą jeden plik logo (marki zapisane ze stroną firmy-matki, np. Cin&Cin i Cydr Lubelski z ambra.com.pl). Karta logo ostrzega o tym i pyta przed podmianą, a pole „Zmień adres” zapisuje własną stronę marki w partii i w bazie. Prompty czatów i rozstrzygnięcia każą teraz podawać website_url samej marki, nie firmy-matki.",
+      "proces": "logotypy",
+      "autor": "Claude"
+    },
+    {
+      "id": "2026-10-11-logo-podstrony",
+      "data": "2026-10-11",
+      "tekst": "Logotypy: marka bez własnej domeny (Cin&Cin na stronie Ambry) dostaje własne logo przez adres swojej podstrony u grupy. Panel zapisuje wtedy plik domena~sciezka i wpis w data/logo-podstrony.json, a strona serwisu pokazuje go przed logo domeny. Logo grupy zostaje bez zmian.",
+      "proces": "logotypy",
+      "autor": "Claude"
+    },
+    {
       "id": "2026-10-16-tresc-rytm",
       "data": "2026-10-16",
       "tekst": "Automat treści: paczki w pon, śr i pt zamiast codziennie. Paczki nieruszone przez 14 dni zamyka sam, a ich kandydatów do bazy przenosi do nowej paczki. Kandydaci trafiają do kolejki data/robocze/automat/kandydaci.txt, którą przerabia node tools/firmy/automat.mjs --kandydaci (działa po scaleniu workflow na main).",
@@ -74,6 +95,13 @@
       "id": "2026-10-16-dwa-kraje",
       "data": "2026-10-16",
       "tekst": "Wspólna kontrola 50/50: firma może mieć dwa kraje kapitału (nowa kolumna country_code_2). Strona pokazuje dwie flagi i dopisek „wspólna kontrola 50/50”; werdykt i statystyki liczą się dalej po głównym kraju (przy JV z Polską: kraj zagraniczny, reguła B5). Drugi kraj wpisuje się w przeglądzie partii albo w Supabase (Table Editor).",
+      "proces": "firmy",
+      "autor": "Claude"
+    },
+    {
+      "id": "2026-10-16-pakiet-bez-zrodla",
+      "data": "2026-10-16",
+      "tekst": "Przegląd (krok 6): „pakiet kontrolny bez źródła” nie jest już konfliktem, tylko uwagą. Taka firma dostaje ŚREDNIĄ (bez źródła z rejestru albo IR nigdy WYSOKĄ). Rozstrzygnięcie w Claude też nie oznacza samego braku źródła jako konfliktu.",
       "proces": "firmy",
       "autor": "Claude"
     }

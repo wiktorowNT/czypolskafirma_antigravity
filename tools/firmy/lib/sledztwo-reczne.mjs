@@ -35,7 +35,8 @@ ZASADY PRACY
 5. business_description: 2-3 zdania o tym, czym firma się zajmuje (produkty, usługi, sieć lokali). Zero wątków właścicielskich, zero "lider rynku".
 6. brands: marki konsumenckie tej spółki w Polsce (nazwy z szyldu/półki), domena tylko gdy pewna. Bez marek: [].
 7. category_slug: jedna z: ${kategorie.map((k) => k.slug).join(", ")}.
-8. Zakaz myślników em-dash i en-dash w opisach (używaj przecinka, dwukropka, kropki). Bez frazesów i ocen.
+8. website_url: własna strona TEJ marki (np. dla Cin&Cin https://cincin.pl, nie https://ambra.com.pl). Stronę firmy-matki lub grupy podaj tylko, gdy marka nie ma własnej domeny. Logo w serwisie przypisuje się do domeny, więc wspólny adres daje kilku markom to samo logo.
+9. Zakaz myślników em-dash i en-dash w opisach (używaj przecinka, dwukropka, kropki). Bez frazesów i ocen.
 
 FORMAT ODPOWIEDZI
 Odpowiedz JEDNYM blokiem kodu \`\`\`json z tablicą, jeden obiekt na firmę, w tej samej kolejności. Bez komentarzy w JSON. Wzór jednego obiektu:
@@ -402,7 +403,7 @@ Jesteś głównym analitykiem serwisu CzyPolskaFirma.pl, który pokazuje konsume
 2. Decyduje hierarchia źródeł, nie większość czatów. Trzy czaty powtarzające ten sam agregator to jedno słabe źródło.
 3. Agregatory i serwisy pośrednie są tylko tropem, nigdy źródłem ogniwa: rejestr.io, aleo.com, bizraport.pl, compabase, krs-pobierz, mojepanstwo, owler, gowork, fora, reddit, czaty inwestorów, Wikipedia. Znajdź źródło pierwotne (KRS/CRBR/rejestr zagraniczny, raport spółki, strona IR, komunikat transakcji, renomowane media z datą) albo zostaw zrodlo_url: null i wpisz lukę.
 4. Ogniwa potwierdzone w faktach z rejestrów (polska spółka, jej wspólnicy z KRS): zrodlo_url zostaw null, program sam wstawi odpis KRS.
-5. Nie da się rozstrzygnąć (źródła poziomu 1–2 sobie przeczą, brak źródła pakietu kontrolnego, transakcja w toku): ustaw "konflikt" z krótkim opisem. Właściciel serwisu rozstrzygnie ręcznie.
+5. Nie da się rozstrzygnąć (źródła poziomu 1–2 sobie przeczą, transakcja w toku): ustaw "konflikt" z krótkim opisem. Właściciel serwisu rozstrzygnie ręcznie. Sam brak źródła pakietu kontrolnego to nie konflikt: zostaw zrodlo_url: null i wpisz lukę.
    "transakcja_w_toku" (i reguła B12) tylko dla niezamkniętej transakcji, która może zmienić kontrolującego albo kraj (np. ogłoszone przejęcie pakietu kontrolnego). Zdarzenia bez zmiany kontroli (przymusowy wykup mniejszości, wycofanie akcji z giełdy, reorganizacja holdingów w tej samej grupie, dokupienie udziałów przez obecnego właściciela) wpisz do "historia", a "transakcja_w_toku" zostaw null.
 6. Dane osobowe: imię i nazwisko osoby prywatnej tylko, gdy potwierdza je źródło poziomu 1–3; bez drugich imion. Bez adresów, majątków, wieku.
 ${METODOLOGIA}
@@ -422,6 +423,8 @@ Twarde zakazy w obu opisach:
 - żadnych liczb, których nie ma w łańcuchu, historii albo faktach z rejestrów (przychody, majątek, obroty, liczba lokali tylko ze źródłem);
 - żadnych myślników em-dash i en-dash (używaj przecinka, dwukropka, kropki);
 - nie zgaduj działalności: sprawdź stronę firmy, jeśli czaty piszą różnie.
+
+**website_url**: własna strona TEJ marki (Cin&Cin: https://cincin.pl, nie strona Ambry). Stronę firmy-matki lub grupy podaj tylko, gdy marka nie ma własnej domeny; podstrona na domenie grupy nic nie zmienia. Logo w serwisie przypisuje się do domeny, więc wspólny adres daje kilku markom to samo logo.
 
 ## Format wyniku
 

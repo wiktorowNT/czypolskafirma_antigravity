@@ -33,6 +33,29 @@ obrazek logo prosto na kartę firmy**. Panel bierze adres obrazka (przy `srcset`
 wariant), pobiera plik po swojej stronie i sprawdza go jak przy ręcznej podmianie. Działa też
 przeciągnięcie pliku z dysku i przycisk „Podmień”. Link do strony zamiast obrazka daje komunikat.
 
+**Logo dowolnej firmy z bazy:** zakładka **Firmy → Logotypy firm** w panelu pokazuje wszystkie
+firmy (bez partii) z wyszukiwarką (marka, spółka, slug, domena) i filtrem stanu logo. Karty
+i podmiana działają tak samo jak w kroku 8; wysyłka na develop przyciskiem „Wyślij” w tej zakładce.
+
+**Wspólny adres strony = wspólne logo.** Plik logo nazywa się od domeny (`public/logos/ambra.com.pl.png`),
+a profil szuka logo po `website_url`. Marki zapisane ze stroną firmy-matki (Ambra, Cin&Cin,
+Cydr Lubelski z adresem `ambra.com.pl`) dzielą więc jeden plik i podmiana zmienia logo im wszystkim.
+Karta takiej firmy (krok 8 i „Logotypy firm”) pokazuje ostrzeżenie z listą firm o tym samym adresie,
+a „Podmień”, „Użyj” i przeciągnięcie pytają o zgodę. Właściwa naprawa: wpisz własną stronę marki
+w polu **„Zmień adres”** na karcie (np. `https://cincin.pl`). Panel zapisze adres w partii i w bazie
+(istniejący adres nadpisuje dopiero po potwierdzeniu), a logo wgrasz już pod nową domeną.
+
+**Marka bez własnej domeny** (Cin&Cin ma tylko podstronę na ambra.com.pl): w „Zmień adres” wpisz
+adres jej podstrony u grupy, np. `https://www.ambra.com.pl/marki-i-konsumenci/swiat-naszych-marek/cin-cin/`.
+Gdy domenę ma kilka firm, a adres ma ścieżkę, panel zapisuje logo w osobnym pliku podstrony
+(`public/logos/ambra.com.pl~marki-i-konsumenci-swiat-naszych-marek-cin-cin.png`) i dopisuje go do
+`data/logo-podstrony.json`. Strona serwisu (components/company-logo.tsx) najpierw szuka adresu firmy
+na tej liście, potem bierze logo domeny. Logo grupy zostaje nietknięte. Karta pokazuje wtedy
+„Adres to podstrona marki: nowe logo zapisze się osobno”. „Wyślij” wysyła też `data/logo-podstrony.json`.
+Klucz podstrony liczą dwie funkcje: `kluczPodstrony` (tools/firmy/panel.mjs) i `getSubpageKey`
+(components/company-logo.tsx): zmieniaj obie naraz. Obrazek do udostępniania (OG) takiej marki
+nadal bierze logo domeny.
+
 **Krok 1 — pobierz brakujące logotypy:**
 
 ```bash

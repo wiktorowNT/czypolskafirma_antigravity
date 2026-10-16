@@ -103,12 +103,13 @@ export function ocenPewnosc(firma) {
   if (k.zgadza_sie === false) konflikty.push(`kontrola nie potwierdza klasyfikacji: ${(k.zastrzezenia || []).join("; ") || "bez uzasadnienia"}`);
   for (const z of k.zrodla_zweryfikowane || []) if (z.potwierdza === false) konflikty.push(`źródło nie potwierdza tezy: ${z.url} (${z.uwaga || ""})`);
 
-  // 3. Łańcuch własności: pakiet kontrolny musi mieć źródło
+  // 3. Łańcuch własności. Pakiet kontrolny bez źródła to tylko uwaga (właściciel i tak zatwierdza
+  // bez dociekania), ale bez źródła rejestru/IR firma nie dostanie WYSOKA (poziom 5 niżej).
   const lancuch = sl.lancuch || [];
   const kontrolne = pakietyKontrolne(lancuch);
   if (!lancuch.length) konflikty.push("brak łańcucha własności");
   const bezZrodla = lancuch.filter((o) => !o.zrodlo_url);
-  if (kontrolne.some((o) => !o.zrodlo_url) || (!kontrolne.length && bezZrodla.length)) konflikty.push("pakiet kontrolny bez źródła");
+  if (kontrolne.some((o) => !o.zrodlo_url) || (!kontrolne.length && bezZrodla.length)) uwagi.push("pakiet kontrolny bez źródła");
   // Poziom źródeł liczy się po najsłabszym ogniwie kontrolnym (pakiet kontrolny i ostateczny
   // właściciel), nie po najlepszym w łańcuchu: odpis KRS polskiej spółki nie potwierdza tego,
   // kto stoi nad jej wspólnikami. Samo źródło medialne dla któregoś ogniwa = najwyżej ŚREDNIA.

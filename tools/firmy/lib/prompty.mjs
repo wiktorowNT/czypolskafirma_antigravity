@@ -243,7 +243,8 @@ ${JSON.stringify({ lancuch: sledztwo.lancuch, ostateczny_wlasciciel: sledztwo.os
 2. business_description: 2-3 zdania o tym, czym firma się zajmuje (produkty, usługi, sektor, znane marki produktowe). Zero wątków właścicielskich, zero "lider rynku". Wzór: "Producent leków Rx, OTC i wyrobów medycznych. Działa w obszarach gastroenterologii, hepatologii, neurologii, dermatologii oraz okulistyki (marka Bausch + Lomb)." Możesz pobrać stronę firmy (WebFetch), żeby nie zgadywać oferty.
 3. brands: marki konsumenckie należące OBECNIE do tej firmy w Polsce (nazwy z półki/szyldu), z domeną strony marki tylko, gdy jesteś jej pewien. Nie wpisuj samej nazwy firmy, chyba że jest też marką flagową obok innych. Bez marek: pusta lista.
 4. category_slug: jedna z: ${kategorie.map((k) => k.slug).join(", ")}.
-5. Zakazy stylu: żadnych myślników em-dash/en-dash (używaj przecinka, dwukropka, kropki), żadnych frazesów, żadnych ocen.
+5. website_url: własna strona tej marki (Cin&Cin: https://cincin.pl, nie strona Ambry); stronę firmy-matki tylko, gdy marka nie ma własnej domeny (logo w serwisie przypisuje się do domeny).
+6. Zakazy stylu: żadnych myślników em-dash/en-dash (używaj przecinka, dwukropka, kropki), żadnych frazesów, żadnych ocen.
 Zwróć wyłącznie JSON wg schematu.`;
 }
 
