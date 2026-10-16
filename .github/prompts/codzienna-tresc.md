@@ -112,6 +112,7 @@ Wolno Ci tworzyć i zmieniać **tylko** te ścieżki:
 | `docs/social/newsy/stan-newsow.json` | dopisany temat wraz z `marki` i `tryb` |
 | `docs/social/kolejka-tematow.md` | odhaczony temat, uzupełniona kolejka |
 | `public/images/blog/[slug].png` | okładka wpisu (krok 4b) |
+| `data/robocze/automat/kandydaci.txt` | dopisani kandydaci do bazy (krok 4c) |
 | `.tmp/okladka.json`, `.tmp/pr-body.md` | pliki robocze (kroki 4b i 6) |
 
 Wpis w `stan-newsow.json` ma cztery pola, bo na nich stoją blokady z kroku 2:
@@ -163,6 +164,41 @@ przy czym `imageAlt` sformułuj własnymi słowami, tak żeby mówił, co widać
 Jeżeli render się nie uda, nie blokuj z tego powodu całej paczki: zostaw wpis bez pól
 `image` i `imageAlt` i napisz o tym w opisie pull requesta.
 
+## Krok 4c. Kolejka kandydatów do bazy
+
+`data/robocze/automat/kandydaci.txt` to kolejka marek do dodania na czypolskafirma.pl.
+Czyta ją automat firm (`tools/firmy/automat.mjs --kandydaci`), więc format jest sztywny,
+jedna marka na linię:
+
+```text
+- [ ] Nazwa marki | NIP | # paczka RRRR-MM-DD (slug-wpisu)
+```
+
+- **Nazwa:** marka, którą czytelnik zna z półki, ulicy albo reklamy, tak jak by ją
+  wpisał w wyszukiwarkę. Bez opisu i werdyktu (te zostają w opisie PR-a).
+- **NIP:** tylko gdy podaje go wprost źródło z sekcji Weryfikacja albo rejestr.
+  Nie znasz, zostaw puste: `- [ ] Marka |  | # ...`. Numer KRS to nie NIP.
+- **Po `#`:** skąd pochodzi kandydat. Dla dzisiejszej paczki data i slug wpisu,
+  dla przeniesionych ze starych paczek numer PR-a, np. `# PR #48 (tresc/2026-09-27-64)`.
+
+Dopisujesz na końcu pliku dwa źródła: kandydatów z dzisiejszej paczki i kandydatów
+z zamykanych starych paczek, których workflow podaje w wiadomości uruchomieniowej.
+Pomijasz:
+
+- marki, które już są w pliku (także odhaczone `- [x]`), przy porównaniu bez
+  wielkości liter i cudzysłowów,
+- marki, które już są w bazie. Sprawdzasz każdą przez
+  `https://czypolskafirma.pl/api/companies/search?q=[nazwa]`: pomijasz, gdy pole `brand`
+  któregoś wyniku to ta sama marka. Pomijasz też spółkę, która w bazie występuje już
+  jako `company` przy swoich markach (np. operator albo koncern), chyba że sama jest
+  osobną marką znaną konsumentom,
+- fundusze, holdingi i spółki znane tylko z giełdy, uwagi porządkowe („uzupełnić opis
+  profilu X”) i wpisy typu „brak nowych marek”.
+
+Gdy pliku nie ma, załóż go z dwiema liniami nagłówka zaczynającymi się od `#`
+(co to za plik i jaki ma format). Niczego w pliku nie usuwasz ani nie odhaczasz.
+Brak nowych kandydatów to normalna sytuacja: wtedy plik zostaje bez zmian.
+
 ## Krok 5. Sprawdź się
 
 Uruchom `node tools/lint-tresci.mjs` i popraw **wszystkie błędy**. Ostrzeżenia oceń
@@ -205,6 +241,9 @@ Tryb: news | evergreen. Grafika: [sugestia jednym zdaniem].
 ### Kandydaci do bazy
 
 - [firmy z tematu, których brak na czypolskafirma.pl, z krótkim werdyktem]
+
+Do kolejki `kandydaci.txt` dopisane: [nazwy oddzielone przecinkami, w tym przeniesione
+ze starych paczek, albo „nic nowego”].
 ````
 
 ## Bezpieczeństwo

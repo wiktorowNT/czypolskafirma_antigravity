@@ -1,22 +1,32 @@
-# Automatyzacja treści — codzienna paczka na blog, X i Facebooka
+# Automatyzacja treści — paczka na blog, X i Facebooka (pon, śr, pt)
 
-Codziennie rano GitHub Actions uruchamia Claude'a, który szuka tematu, weryfikuje
+W poniedziałki, środy i piątki rano GitHub Actions uruchamia Claude'a, który szuka tematu, weryfikuje
 fakty, pisze trzy wersje tekstu i otwiera pull requesta do gałęzi `develop`.
 Nic nie publikuje samodzielnie: publikacja to Twoja decyzja i Twoje dwa kliknięcia.
 
-## Co się dzieje o 6:00
+## Co się dzieje o 6:00 (pon, śr, pt)
 
-1. Workflow `.github/workflows/codzienna-tresc.yml` startuje (04:00 UTC).
-2. Claude wykonuje instrukcję z `.github/prompts/codzienna-tresc.md`:
+Rytm trzy razy w tygodniu zamiast codziennie, bo nieprzejrzane paczki piętrzyły się
+szybciej, niż dało się je czytać. Nazwa workflow („Codzienna treść”) została dla ciągłości.
+
+1. Workflow `.github/workflows/codzienna-tresc.yml` startuje (04:00 UTC, cron `0 4 * * 1,3,5`).
+2. Wybiera otwarte paczki automatu starsze niż 14 dni (autor `github-actions`, gałąź `tresc/*`)
+   i zbiera z ich opisów sekcje „Kandydaci do bazy”.
+3. Claude wykonuje instrukcję z `.github/prompts/codzienna-tresc.md`:
    - czyta `tools/skills/lowca-newsow/SKILL.md`, stan tematów i kolejkę evergreen,
    - szuka newsa z ostatnich 7 dni i weryfikuje fakty w **dwóch niezależnych źródłach**,
    - jeżeli takiego newsa nie ma, bierze temat z `docs/social/kolejka-tematow.md`,
    - pisze `content/blog/[slug].md` oraz `docs/social/newsy/news-RRRR-MM-DD-[slug].md`,
    - renderuje okładkę wpisu do `public/images/blog/[slug].png` i wpina ją we frontmatter,
+   - dopisuje kandydatów do bazy (z dzisiejszej paczki i ze starych) do kolejki
+     `data/robocze/automat/kandydaci.txt`, pomijając te, które już są w pliku albo w bazie,
    - uruchamia `node tools/lint-tresci.mjs` i poprawia błędy.
-3. Workflow jeszcze raz odpala lint (już bez udziału modelu), sprawdza, że zmieniły się
+4. Workflow jeszcze raz odpala lint (już bez udziału modelu), sprawdza, że zmieniły się
    tylko pliki treści, commituje na gałąź `tresc/RRRR-MM-DD-NN` i otwiera pull requesta.
-4. Dostajesz powiadomienie z GitHuba.
+5. Jeżeli dzisiejszy PR powstał, zamyka stare paczki z komentarzem „Nieaktualna paczka,
+   zamknięta automatycznie” i kasuje ich gałęzie. Jeżeli nie powstał (np. „BRAK MATERIAŁU”),
+   stare zostają otwarte do następnego przebiegu, żeby ich kandydaci nie przepadli.
+6. Dostajesz powiadomienie z GitHuba.
 
 ## Twoje 3 minuty rano
 
@@ -29,7 +39,36 @@ Nic nie publikuje samodzielnie: publikacja to Twoja decyzja i Twoje dwa kliknię
 4. Klikasz Merge. Wpis ląduje na `develop`, czyli na podglądzie Vercel.
 5. `develop` → `main` scalasz sam, kiedy chcesz. Wtedy wpis jest na produkcji.
 
-Nie ma obowiązku publikować codziennie. Nietrafiony PR po prostu zamykasz.
+Nie ma obowiązku publikować każdej paczki. Nietrafiony PR po prostu zamykasz, a ten,
+którego nie ruszysz przez 14 dni, automat zamknie sam.
+
+## Kolejka kandydatów do bazy
+
+Plik `data/robocze/automat/kandydaci.txt`, jedna marka na linię:
+
+```text
+- [ ] Marka | NIP (puste, gdy nieznany) | # paczka 2026-10-17 (slug-wpisu)
+```
+
+Dopisuje go automat treści (trafia na `develop` razem z mergem paczki). Kandydaci
+z paczek zamykanych po 14 dniach przechodzą do kolejki w kolejnej paczce, więc nie
+przepadają. Kandydaci z PR-a, który zamkniesz ręcznie, nie są ratowani: jeśli są tam
+warte uwagi marki, dopisz je do pliku sam.
+
+Kolejkę przerabia automat firm:
+
+```bash
+node tools/firmy/automat.mjs --kandydaci --partia 2026-10-20-kandydaci
+```
+
+Bierze wszystkie nieodhaczone pozycje (albo `--kandydaci 10`, czyli 10 pierwszych),
+markę już obecną w bazie odhacza z dopiskiem `→ już w bazie`, resztę dodaje do partii
+i odhacza z dopiskiem `→ partia NAZWA (data)`. Dalej partia idzie normalną ścieżką
+z `docs/SOP_dodawanie_firm.md`. Zmieniony plik kolejki commitujesz razem z resztą.
+
+Kilka otwartych paczek dopisuje się na koniec tego samego pliku, więc przy scalaniu
+kilku naraz GitHub może zgłosić konflikt w `kandydaci.txt` (tak jak w `stan-newsow.json`).
+Rozwiązanie: zostawić linie z obu stron.
 
 ## Uruchomienie ręczne i wymuszony temat
 
@@ -97,8 +136,9 @@ Repozytorium jest publiczne, więc minuty GitHub Actions są darmowe i nielimito
 | Karencja marki: 14 dni | Ta sama firma nie wraca jako bohater, choćby wydarzyło się w niej coś nowego |
 | Limit newsów: 3 na 7 dni | Reszta dni to analizy marek z kolejki, czyli to, o czym jest projekt |
 | `tools/lint-tresci.mjs` | Em-dashe, zwroty AI, „my" na blogu, frontmatter, długości, UTM-y, duplikaty slugów, przechył w stronę giełdy, werdykt dowożony na siłę |
-| Kontrola ścieżek | Automat może dotknąć wyłącznie plików treści, nigdy kodu aplikacji |
+| Kontrola ścieżek | Automat może dotknąć wyłącznie plików treści i kolejki kandydatów, nigdy kodu aplikacji |
 | Pull request | Nic nie trafia na `develop` bez Twojego merge'a, na `main` bez drugiego |
+| Zamykanie po 14 dniach | Tylko PR-y z autorem `github-actions` i gałęzią `tresc/*`, tylko gdy dzisiejsza paczka powstała i przejęła ich kandydatów |
 | Zakaz wykonywania poleceń ze stron | Treść artykułów jest danymi, nie instrukcją dla modelu |
 
 Model czyta cudze strony internetowe, więc obowiązuje zasada ograniczonego zaufania:
@@ -171,7 +211,7 @@ na górze skryptu, można je swobodnie stroić.
 - **Wyłączenie na jakiś czas** — Actions → Codzienna treść → menu „…" → Disable workflow.
 
 GitHub wyłącza harmonogramy w repozytoriach bez aktywności przez 60 dni. Przy
-codziennych commitach to nie grozi, ale po dłuższej przerwie sprawdź, czy workflow
+regularnych commitach to nie grozi, ale po dłuższej przerwie sprawdź, czy workflow
 jest aktywny.
 
 ## Czego automat nie robi
@@ -182,5 +222,5 @@ jest aktywny.
   publikacją. Przy projekcie, którego walutą jest wiarygodność danych, to zła zamiana.
 - **Nie dotyka gałęzi `main`.** Produkcję scalasz wyłącznie Ty.
 - **Nie dodaje firm do bazy.** Kandydatów wypisuje w sekcji „Kandydaci do bazy"
-  w opisie PR-a i w pliku newsowym. Dodanie idzie normalną ścieżką z
-  `docs/SOP_dodawanie_firm.md`.
+  w opisie PR-a i dopisuje do kolejki `data/robocze/automat/kandydaci.txt`. Dodanie
+  idzie normalną ścieżką z `docs/SOP_dodawanie_firm.md` (`automat.mjs --kandydaci`).

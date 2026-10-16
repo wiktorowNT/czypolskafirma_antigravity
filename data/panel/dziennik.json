@@ -62,6 +62,13 @@
       "tekst": "Okładki bloga w nowym stylu „Półka” (gałąź redesign): tools/okladka-wpisu.mjs zapisuje teraz dane każdej okładki do public/images/blog/dane/[slug].json, więc po zmianie szablonu wszystkie okładki odświeża się jedną pętlą zamiast przepisywać je z obrazków. Format danych wejściowych bez zmian, automat treści działa jak dotąd.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-16-tresc-rytm",
+      "data": "2026-10-16",
+      "tekst": "Automat treści: paczki w pon, śr i pt zamiast codziennie. Paczki nieruszone przez 14 dni zamyka sam, a ich kandydatów do bazy przenosi do nowej paczki. Kandydaci trafiają do kolejki data/robocze/automat/kandydaci.txt, którą przerabia node tools/firmy/automat.mjs --kandydaci (działa po scaleniu workflow na main).",
+      "proces": "tresc",
+      "autor": "Claude"
     }
   ]
 }

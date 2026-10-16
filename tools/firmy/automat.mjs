@@ -6,6 +6,7 @@
 //   node tools/firmy/automat.mjs --firmy "Mokate, Wedel, Inea"
 //   node tools/firmy/automat.mjs --plik lista.txt                 (jedna nazwa na linię)
 //   node tools/firmy/automat.mjs --kategoria kosmetyki --seed 40  (model proponuje listę)
+//   node tools/firmy/automat.mjs --kandydaci [N]                  (kolejka od automatu treści, opcjonalnie N pierwszych)
 //   node tools/firmy/automat.mjs --partia 2026-09-17-test          (kontynuuje istniejącą partię)
 // Opcje:
 //   --partia NAZWA        nazwa partii (domyślnie data)
@@ -38,7 +39,7 @@ import { SCHEMAT_KONTROLA, SCHEMAT_OPISY, SCHEMAT_SEED, SCHEMAT_SLEDZTWO, SCHEMA
 
 // ---------- argumenty ----------
 const arg = parsujArgs(process.argv.slice(2));
-if (arg.help || (!arg.firmy && !arg.plik && !arg.kategoria && !arg.partia)) {
+if (arg.help || (!arg.firmy && !arg.plik && !arg.kategoria && !arg.kandydaci && !arg.partia)) {
   console.log(fs.readFileSync(new URL(import.meta.url)).toString().split("\n").slice(1, 20).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
   process.exit(0);
 }
@@ -117,6 +118,45 @@ const DZIS = dzisiaj();
 const kategorie = await pobierzKategorie();
 const indeks = await indeksFirm();
 log(`baza: ${indeks.length} firm, ${kategorie.length} kategorii; partia "${NAZWA_PARTII}"`);
+
+// wejście: --kandydaci [N] — kolejka, którą dopisuje automat treści. Linie "- [ ] Marka | NIP | # skąd".
+// Wziętą pozycję odhaczamy od razu po zapisaniu partii (dalej śledzi ją partia),
+// a markę, która jest już w bazie, odhaczamy bez dodawania.
+if (arg.kandydaci) {
+  const plikK = path.join(KATALOG_PARTII, "kandydaci.txt");
+  if (!fs.existsSync(plikK)) {
+    console.error(`Brak kolejki kandydatów: ${plikK}`);
+    process.exit(1);
+  }
+  const limit = Number(arg.kandydaci) > 0 ? Number(arg.kandydaci) : Infinity;
+  const linie = fs.readFileSync(plikK, "utf8").split(/\r?\n/);
+  let wziete = 0, wBazie = 0;
+  for (let i = 0; i < linie.length && wziete < limit; i++) {
+    const m = linie[i].match(/^\s*- \[ \]\s*(.+)$/);
+    if (!m) continue;
+    const [nazwa, nipSurowy] = m[1].split("|").map((x) => x.trim());
+    if (!nazwa || nazwa.startsWith("#")) continue;
+    const nip = normalizujNip(nipSurowy || "");
+    const juz = juzWBazie({ nazwa, nipPodany: czyNip(nip) ? nip : null });
+    let dopisek;
+    if (juz) {
+      dopisek = `→ już w bazie (${juz.slug})`;
+      wBazie++;
+    } else {
+      dodajFirme(nazwa, czyNip(nip) ? { nipPodany: nip } : {});
+      dopisek = `→ partia ${NAZWA_PARTII} (${dzisiaj()})`;
+      wziete++;
+    }
+    linie[i] = `${linie[i].replace("- [ ]", "- [x]").trimEnd()} ${dopisek}`;
+  }
+  zapiszPartie();
+  fs.writeFileSync(plikK, linie.join("\n"), "utf8");
+  log(`kandydaci: ${wziete} do partii, ${wBazie} już w bazie (odhaczone w ${path.relative(process.cwd(), plikK)})`);
+  if (!partia.firmy.length) {
+    log("kolejka kandydatów nie ma nic nowego, kończę");
+    process.exit(0);
+  }
+}
 
 if (NIP_GEMINI && !arg.reczny && !arg["tylko-rejestry"]) {
   const g = stanLogowaniaGemini();

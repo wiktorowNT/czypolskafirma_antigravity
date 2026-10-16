@@ -23,19 +23,21 @@
 
 ## Poranna paczka treści {#tresc}
 
-- **Kiedy:** codziennie rano, ok. 3 minuty
+- **Kiedy:** pon, śr, pt rano, ok. 3 minuty
 - **Gdzie:** GitHub, pull request „Paczka na RRRR-MM-DD” do `develop` (mail albo apka)
 - **Pełny opis:** docs/AUTOMATYZACJA_TRESCI.md
 - **Obszar:** Treści
 - **Prowadzi do:** publikacja (merge PR-a na develop); firmy (kandydaci do bazy); posty (gotowe teksty na X i FB)
 
-1. Automat startuje o 6:00 (GitHub Actions „Codzienna treść”) i otwiera PR z wpisem na blog, postem na X i wersją na FB.
+1. Automat startuje o 6:00 w pon, śr i pt (GitHub Actions „Codzienna treść”) i otwiera PR z wpisem na blog, postem na X i wersją na FB.
 2. Przeczytaj sekcję **Weryfikacja faktów** w opisie PR-a. To moment na wyłapanie bzdury.
 3. Skopiuj z opisu wpis na X, pierwszy komentarz (z linkiem) i wersję na Facebooka, wklej na profile.
 4. Kliknij **Merge**: wpis ląduje na `develop` (podgląd Vercel). Nietrafiony PR po prostu zamknij.
-5. Kandydatów z sekcji „Kandydaci do bazy” dopisz do listy firm na następną partię.
+5. Kandydaci do bazy sami trafiają do kolejki `data/robocze/automat/kandydaci.txt` (z mergem PR-a). Przy partii firm: `node tools/firmy/automat.mjs --kandydaci`.
 
-Kilka paczek naraz? Scal je, rozłóż daty `date` we frontmatterze na kolejne dni i zrób jeden merge na produkcję. Wpisy z przyszłą datą pojawią się same, dzień po dniu.
+Paczki nieruszone przez 14 dni automat zamyka sam, a ich kandydatów przenosi do kolejki w nowej paczce. Kandydatów z PR-a zamkniętego ręcznie dopisz do kolejki sam, jeśli są warci uwagi.
+
+Kilka paczek naraz? Scal je (konflikt w `kandydaci.txt` czy `stan-newsow.json`: zostaw linie z obu stron), rozłóż daty `date` we frontmatterze na kolejne dni i zrób jeden merge na produkcję. Wpisy z przyszłą datą pojawią się same, dzień po dniu.
 
 Automat czerwony w Actions: najczęściej wygasł `CLAUDE_CODE_OAUTH_TOKEN` (sekcja „Kiedy coś nie działa” w pełnym opisie).
 
@@ -105,6 +107,8 @@ Ton: dla przypadkowego czytelnika, bez „my” i bez metodologii. O markach, ni
 6. **Przegląd:** zatwierdzasz albo poprawiasz każdą firmę.
 7. **Import:** najpierw „Pokaż, co się zmieni”, potem „Zapisz do bazy” (robi backup przed zapisem). Nowe firmy widać wtedy tylko na podglądzie, aktualizacje czekają.
 8. **Logotypy i publikacja:** karta niżej. Na czypolskafirma.pl firmy trafiają dopiero po kliknięciu „Opublikuj” na końcu kroku 8.
+
+Skąd brać marki: kolejka `data/robocze/automat/kandydaci.txt`, którą dopisuje automat treści. Z wiersza poleceń: `node tools/firmy/automat.mjs --kandydaci --partia RRRR-MM-DD-kandydaci` (bierze nieodhaczone pozycje i odhacza je w pliku).
 
 Zasada: automat proponuje, Ty zatwierdzasz. Nic nie trafia do bazy bez Twojego kliknięcia.
 

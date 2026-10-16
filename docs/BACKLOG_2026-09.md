@@ -51,6 +51,7 @@ po scaleniu limitu 130 tur na `main`.
 ## Zadania do zlecenia modelom
 
 ### 1. Automat treści: 3 paczki tygodniowo i auto-zamykanie starych PR-ów
+**✅ Zrobione 2026-10-16 (gałąź `claude/tresc-rytm-kandydaci`).** Cron pon/śr/pt; stare paczki (>14 dni, autor `github-actions`, gałąź `tresc/*`) zamykane na końcu joba, tylko gdy dzisiejsza paczka powstała i przejęła ich kandydatów. Działa po scaleniu workflow na `main`.
 **Po co:** 13 nieprzejrzanych paczek z sierpnia pokazało, że codziennie to za dużo.
 **Pliki:** `.github/workflows/codzienna-tresc.yml`, `docs/AUTOMATYZACJA_TRESCI.md`.
 **Co zrobić:** (a) cron `0 4 * * 1,3,5` (pon, śr, pt); (b) nowy krok na początku joba, który
@@ -63,6 +64,7 @@ w podsumowaniu.
 przechodzi; stare PR-y (>14 dni) zamykają się.
 
 ### 2. Kolejka kandydatów: automat treści → automat firm
+**✅ Zrobione 2026-10-16 (gałąź `claude/tresc-rytm-kandydaci`).** Format `- [ ] Marka | NIP | # skąd`, odhaczanie `- [x] … → partia X` albo `→ już w bazie`; `--kandydaci [N]` w `automat.mjs`. Krok 4c promptu działa od razu po trafieniu na `develop`, ścieżka w workflow po scaleniu na `main`.
 **Po co:** automat treści wypisuje „Kandydatów do bazy" w każdym PR-ze, ale nikt ich nie zbiera.
 **Pliki:** `.github/prompts/codzienna-tresc.md` (krok 4: dozwolone ścieżki, krok 6: opis PR-a),
 `.github/workflows/codzienna-tresc.yml` (lista dozwolonych ścieżek w kroku „Sprawdź, czy
