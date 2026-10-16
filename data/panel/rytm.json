@@ -16,6 +16,7 @@
     { "id": "mokate", "nazwa": "Napraw rekord Mokate", "od": "2026-09-17", "opis": "Partia „proba-mokate” już istnieje: przegląd → zatwierdź → import (backlog, zadanie A).", "proces": "firmy" },
     { "id": "poprawki-nip", "nazwa": "Poprawki NIP z przeglądu tożsamości", "od": "2026-09-27", "opis": "docs/POPRAWKI_NIP_2026-09-27.md i tools/sql/2026-09-27-poprawki-nip.sql: przejrzyj i zdecyduj.", "proces": "sql" },
     { "id": "zabka", "nazwa": "Żabka: re-weryfikacja po wezwaniu Couche-Tard", "od": "2026-10-06", "opis": "Wezwanie rozlicza się na przełomie IX/X 2026, potem Żabka to kapitał kanadyjski (CA). Partia re-weryfikacji: Żabka | 5223071241.", "proces": "reweryfikacja" },
-    { "id": "dostrojenie-automatu", "nazwa": "Po 2–3 partiach: uwagi do automatu firm", "od": "2026-10-10", "opis": "Zapisz, co przeszkadzało w partiach, i zleć dostrojenie (backlog, zadanie 9).", "proces": "zlecanie" }
+    { "id": "dostrojenie-automatu", "nazwa": "Po 2–3 partiach: uwagi do automatu firm", "od": "2026-10-10", "opis": "Zapisz, co przeszkadzało w partiach, i zleć dostrojenie (backlog, zadanie 9).", "proces": "zlecanie" },
+    { "id": "sql-pewnosc-pakiet", "nazwa": "SQL: pewność 53 firm po zmianie reguły źródeł", "od": "2026-10-16", "opis": "Uruchom tools/sql/2026-10-16-pewnosc-pakiet-bez-zrodla.sql w Supabase (SQL Editor). Zmienia tylko confidence z KONFLIKT na ŚREDNIA/WYSOKA; kontrola na końcu ma zwrócić 0.", "proces": "sql" }
   ]
 }

@@ -215,7 +215,7 @@ ZADANIE
 2. Pobierz (WebFetch) źródła podane przy ogniwach z rolą "kontrolujacy"/"ostateczny" i przy pakietach ≥25%. Dla każdego: czy strona faktycznie potwierdza podmiot i procent? Jeśli strona nie odpowiada, potwierdza=null.
 3. Sprawdź zgodność z danymi z rejestru: wspólnik 100% z KRS musi być w łańcuchu.
 4. Wypisz zastrzeżenia: brak źródła dla pakietu kontrolnego, procent kapitału zamiast głosów, fundusz pasywny policzony jako kontrolujący, pominięta reguła brzegowa, nieaktualna data (starsza niż 24 miesiące przy spółce giełdowej).
-5. Zaproponuj pewność: WYSOKA (kontrola udokumentowana źródłem poziomu 1-2, bez zastrzeżeń), SREDNIA (tylko media albo drobne luki), KONFLIKT (brak źródła kontroli, sprzeczność, reguła B5/B10/B11/B12).
+5. Zaproponuj pewność: WYSOKA (kontrola udokumentowana źródłem poziomu 1-2, bez zastrzeżeń), SREDNIA (tylko media, drobne luki albo brak źródła pakietu kontrolnego), KONFLIKT (sprzeczność, reguła B5/B10/B11/B12).
 Zwróć wyłącznie JSON wg schematu.`;
 }
 

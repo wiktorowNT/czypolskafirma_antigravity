@@ -101,7 +101,7 @@
     {
       "id": "2026-10-16-pakiet-bez-zrodla",
       "data": "2026-10-16",
-      "tekst": "Przegląd (krok 6): „pakiet kontrolny bez źródła” nie jest już konfliktem, tylko uwagą. Taka firma dostaje ŚREDNIĄ (bez źródła z rejestru albo IR nigdy WYSOKĄ). Rozstrzygnięcie w Claude też nie oznacza samego braku źródła jako konfliktu.",
+      "tekst": "Przegląd (krok 6): „pakiet kontrolny bez źródła” nie jest już konfliktem, tylko uwagą (zwykle ŚREDNIA; WYSOKA tylko, gdy ogniwa kontrolne mają źródło z rejestru albo IR, a źródła brak przy innym ogniwie). Tak samo w rozstrzygnięciu Claude i w samokontroli. Panel przelicza pewność przy każdym wczytaniu partii (firmy jeszcze nie w bazie), więc zmiana reguł działa od razu, bez automatu. Przegląd nie liczy zaimportowanych firm jako wymagających uwagi.",
       "proces": "firmy",
       "autor": "Claude"
     }

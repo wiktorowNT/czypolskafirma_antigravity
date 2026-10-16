@@ -6,10 +6,28 @@ import { dzisiaj } from "./env.mjs";
 import { promptKonsylium } from "./prompty.mjs";
 import { zlozRekord } from "./rekord.mjs";
 import { ROZSTRZYGNIECIE } from "./sledztwo-reczne.mjs";
-import { normalizujKrajOdModelu, ogniwaKontrolne, poziomZrodla, walidujRekord } from "./walidacja.mjs";
+import { normalizujKrajOdModelu, ocenPewnosc, ogniwaKontrolne, poziomZrodla, walidujRekord } from "./walidacja.mjs";
 import { podobienstwoNazw } from "./tekst.mjs";
 
-export const wczytajPartie = (plik) => JSON.parse(fs.readFileSync(plik, "utf8"));
+// Pewność firm, które jeszcze nie są w bazie, liczy się przy każdym wczytaniu od nowa: zmiana reguł
+// w walidacja.mjs działa od razu na otwartą partię, bez przeliczania automatem. Zaimportowanych
+// i odrzuconych nie ruszamy (ich status jest już w bazie albo bez znaczenia).
+export function odswiezPewnosc(f) {
+  if (!f.rekord || ["zaimportowany", "odrzucony"].includes(f.decyzja)) return;
+  const o = ocenPewnosc(f);
+  if (o.status === f.status && o.konflikty.join("|") === (f.konflikty || []).join("|")) return;
+  f.status = o.status;
+  f.konflikty = o.konflikty;
+  f.uwagi = [...new Set([...o.uwagi, ...(f.uwagi || [])])];
+  f.rekord.confidence = o.status;
+  if (f.status === "KONFLIKT" && f.decyzja === "zatwierdzony") f.decyzja = null;
+}
+
+export function wczytajPartie(plik) {
+  const partia = JSON.parse(fs.readFileSync(plik, "utf8"));
+  for (const f of partia.firmy || []) odswiezPewnosc(f);
+  return partia;
+}
 
 export function zapiszPartie(plik, partia) {
   partia.zaktualizowano = new Date().toISOString();

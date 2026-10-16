@@ -110,7 +110,7 @@ function listaPartii() {
       const pelna = path.join(KATALOG_PARTII, p);
       const nazwa = p.replace(/^partia-|\.json$/g, "");
       try {
-        const partia = JSON.parse(fs.readFileSync(pelna, "utf8"));
+        const partia = wczytajPartie(pelna);
         return { nazwa, ...podsumowaniePartii(partia), zmieniono: fs.statSync(pelna).mtimeMs };
       } catch (e) {
         return { nazwa, blad: e.message, zmieniono: fs.statSync(pelna).mtimeMs };
