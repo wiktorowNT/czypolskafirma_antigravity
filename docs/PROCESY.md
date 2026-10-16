@@ -122,7 +122,7 @@ Zasada: automat proponuje, Ty zatwierdzasz. Nic nie trafia do bazy bez Twojego k
 
 1. **Pobierz logotypy** (tylko firmy bez logo).
 2. Obejrzyj podgląd w panelu. Przy złym, małym albo białym logo kliknij **Inne źródła** i wybierz lepsze („Użyj”). Gdy nic nie pasuje: otwórz stronę firmy albo Google Grafika obok panelu i przeciągnij obrazek logo myszką prosto na kartę firmy (panel sam pobierze plik, bez zapisywania na dysk).
-   Karta z ostrzeżeniem „Ten sam adres ma też…” dzieli plik logo z innymi firmami (marka zapisana ze stroną firmy-matki). Nie podmieniaj tam logo: wpisz własną stronę marki w polu **Zmień adres** (np. https://cincin.pl) i dopiero wtedy wgraj logo. Marka bez własnej domeny: wpisz adres jej podstrony na stronie grupy (np. ambra.com.pl/…/cin-cin/), logo zapisze się osobno i nie zmieni logo grupy.
+   Karta z ostrzeżeniem „Ten sam adres ma też…” dzieli plik logo z innymi firmami (marka zapisana ze stroną firmy-matki). Nie podmieniaj tam logo: wpisz własną stronę marki w polu **Zmień adres** (np. https://cincin.pl) i dopiero wtedy wgraj logo. Marka bez własnej domeny: wpisz adres jej podstrony na stronie grupy (np. ambra.com.pl/…/cin-cin/), logo zapisze się osobno i nie zmieni logo grupy. Marka bez własnej strony i bez podstrony: dopisz do adresu grupy `#nazwa-marki` (np. https://www.bat.com.pl/#pall-mall). Link dalej prowadzi na stronę grupy, a logo zapisze się osobno.
 3. **Przygotuj obrazki** (kopie PNG dla kart OG, bez nich karta pokaże monogram).
 4. **Wyślij logotypy na podgląd** (commit i push na `develop`).
 5. Przejrzyj nowe firmy na podglądzie (linki są w karcie publikacji) i kliknij **Opublikuj**: firmy, logotypy i kod trafią na czypolskafirma.pl razem.

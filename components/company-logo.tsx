@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { cn } from "@/lib/utils"
-import logoPodstron from "@/data/logo-podstrony.json"
+import { getSubpageLogoFile } from "@/lib/logo-podstrony"
 
 /**
  * =============================================
@@ -45,22 +45,6 @@ function getDomainFromUrl(url?: string | null): string | null {
     const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
     const urlObj = new URL(urlWithProtocol)
     return urlObj.hostname.replace(/^www\./, '')
-  } catch {
-    return null
-  }
-}
-
-const LOGO_PODSTRON = logoPodstron as Record<string, string>
-
-// Klucz logo podstrony: "domena~sciezka" (ścieżka małymi literami, inne znaki -> "-").
-// Ta sama funkcja jest w tools/firmy/panel.mjs (kluczPodstrony) — zmieniaj obie naraz.
-function getSubpageKey(url?: string | null): string | null {
-  if (!url) return null
-  try {
-    const u = new URL(url.startsWith('http') ? url : `https://${url}`)
-    const host = u.hostname.replace(/^www\./, '').toLowerCase()
-    const sciezka = decodeURIComponent(u.pathname).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
-    return sciezka ? `${host}~${sciezka}` : null
   } catch {
     return null
   }
@@ -112,9 +96,9 @@ export function CompanyLogo({
     const candidates: string[] = []
 
     // Priority 0: własne logo podstrony (marka na stronie grupy), gdy jest na liście
-    const subpageKey = getSubpageKey(websiteUrl)
-    if (subpageKey && LOGO_PODSTRON[subpageKey]) {
-      candidates.push(`/logos/${LOGO_PODSTRON[subpageKey]}`)
+    const subpageFile = getSubpageLogoFile(websiteUrl)
+    if (subpageFile) {
+      candidates.push(`/logos/${subpageFile}`)
     }
 
     // Priority 1: Local logo files (multiple extensions)

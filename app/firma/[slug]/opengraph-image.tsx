@@ -13,6 +13,7 @@ import {
   loadFlagDataUri,
   loadOgFonts,
 } from "@/lib/og-assets"
+import { getSubpageLogoFile } from "@/lib/logo-podstrony"
 
 export const runtime = "edge"
 
@@ -125,7 +126,12 @@ export default async function Image({ params }: { params: { slug: string } }) {
     : null
 
   const [logo, verdictFlag, verdictFlag2] = await Promise.all([
-    domain ? loadLogoDataUri(domain, base) : Promise.resolve(null),
+    // Logo podstrony marki (np. Cin&Cin na stronie Ambry) ma pierwszeństwo przed logo domeny.
+    (async () => {
+      const plikPodstrony = getSubpageLogoFile(company?.website_url)
+      const zPodstrony = plikPodstrony ? await loadLogoDataUri(plikPodstrony.replace(/\.[a-z]+$/i, ""), base) : null
+      return zPodstrony ?? (domain ? await loadLogoDataUri(domain, base) : null)
+    })(),
     flagCode ? loadFlagDataUri(flagCode, base) : Promise.resolve(null),
     flagCode2 ? loadFlagDataUri(flagCode2, base) : Promise.resolve(null),
   ])

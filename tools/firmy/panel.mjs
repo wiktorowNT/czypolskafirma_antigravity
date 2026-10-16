@@ -429,7 +429,8 @@ function kluczPodstrony(url) {
   if (!host) return null;
   try {
     const u = new URL(String(url).startsWith("http") ? url : `https://${url}`);
-    const sciezka = decodeURIComponent(u.pathname).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    // Dopisek po "#" daje własne logo marce bez osobnej strony (bat.com.pl/#pall-mall -> bat.com.pl~pall-mall).
+    const sciezka = decodeURIComponent(u.pathname + u.hash.replace(/^#/, "/")).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     return sciezka ? `${host}~${sciezka}` : null;
   } catch { return null; }
 }

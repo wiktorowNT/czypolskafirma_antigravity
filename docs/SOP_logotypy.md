@@ -52,9 +52,14 @@ Gdy domenę ma kilka firm, a adres ma ścieżkę, panel zapisuje logo w osobnym 
 `data/logo-podstrony.json`. Strona serwisu (components/company-logo.tsx) najpierw szuka adresu firmy
 na tej liście, potem bierze logo domeny. Logo grupy zostaje nietknięte. Karta pokazuje wtedy
 „Adres to podstrona marki: nowe logo zapisze się osobno”. „Wyślij” wysyła też `data/logo-podstrony.json`.
-Klucz podstrony liczą dwie funkcje: `kluczPodstrony` (tools/firmy/panel.mjs) i `getSubpageKey`
-(components/company-logo.tsx): zmieniaj obie naraz. Obrazek do udostępniania (OG) takiej marki
-nadal bierze logo domeny.
+**Marka bez własnej strony i bez podstrony** (Pall Mall, Lucky Strike: BAT nie ma stron marek):
+dopisz do adresu grupy `#nazwa-marki`, np. `https://www.bat.com.pl/#pall-mall`. Link na profilu dalej
+otwiera stronę grupy (przeglądarka pomija dopisek po `#`), a klucz logo to `bat.com.pl~pall-mall`,
+więc marka dostaje własny plik, a logo grupy i innych marek zostaje bez zmian.
+
+Klucz podstrony (ścieżka i dopisek po `#`) liczą dwie funkcje: `kluczPodstrony` (tools/firmy/panel.mjs)
+i `getSubpageKey` (lib/logo-podstrony.ts): zmieniaj obie naraz. Z `lib/logo-podstrony.ts` korzysta
+komponent logo i obrazek do udostępniania (OG), więc karta OG też pokazuje logo podstrony.
 
 **Krok 1 — pobierz brakujące logotypy:**
 

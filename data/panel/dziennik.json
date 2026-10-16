@@ -118,6 +118,13 @@
       "tekst": "Logotypy (krok 8): „Zmień adres” na podstronę w tej samej domenie (np. browarkormoran.pl/…/imperium-prunum/) zapisuje adres także w bazie; wcześniej trafiał tylko do partii i strona pokazywała logo grupy. Poprawione wstecz: Cin&Cin, Dorato, Fresco, Artistry, Anatol.",
       "proces": "logotypy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-16-logo-hash",
+      "data": "2026-10-16",
+      "tekst": "Logotypy: marka bez własnej strony i bez podstrony dostaje własne logo przez dopisek #marka w adresie grupy (np. https://www.bat.com.pl/#pall-mall). Klucz logo liczy ścieżkę i dopisek po #; karta OG też bierze logo podstrony.",
+      "proces": "logotypy",
+      "autor": "Claude"
     }
   ]
 }
