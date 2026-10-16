@@ -899,6 +899,18 @@
 <script>
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// Okienka przeglądarki (confirm/alert) potrafią być zablokowane: po kilku pytaniach pod rząd Edge
+// i Chrome proponują „nie pozwalaj tworzyć kolejnych okien”, a potem confirm od razu zwraca „nie”
+// i przycisk wygląda na martwy. Odpowiedź szybsza niż człowiek = blokada: pokazujemy, co zrobić.
+const blokadaOkienek = () => {
+  $("#oknoTresc").innerHTML = "<h3>Przeglądarka blokuje okienka panelu</h3><p>Panel chciał o coś zapytać, ale przeglądarka nie pokazała okienka (zaznaczone było „nie pozwalaj tej stronie tworzyć kolejnych okien dialogowych”). Nic nie zostało zapisane.</p><p><b>Naciśnij F5</b> (odśwież stronę) i kliknij jeszcze raz.</p>";
+  $("#okno").hidden = false;
+};
+for (const nazwa of ["confirm", "alert"]) {
+  const oryginal = window[nazwa].bind(window);
+  window[nazwa] = (m) => { const t = performance.now(); const w = oryginal(m); if (!w && performance.now() - t < 40) blokadaOkienek(); return w; };
+}
 const pobierz = async (u, o) => { const r = await fetch(u, o); const j = await r.json().catch(() => ({ blad: "zła odpowiedź serwera" })); if (!r.ok && !j.blad) j.blad = "błąd " + r.status; return j; };
 const wyslij = (u, dane) => pobierz(u, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(dane || {}) });
 const kiedy = (ms) => { const d = new Date(ms); const dzis = new Date(); const ten = d.toDateString() === dzis.toDateString(); return (ten ? "dzisiaj" : d.toLocaleDateString("pl-PL")) + ", " + d.toTimeString().slice(0, 5); };
@@ -2053,7 +2065,8 @@ async function zapiszWww(b) {
   if (!www) return alert("Wpisz adres strony, np. https://cincin.pl");
   const zSlugiem = b.dataset.wwwSlug !== undefined;
   if (!zSlugiem && b.dataset.wbazie && !confirm(`Firma jest już w bazie. Zapisać adres ${www} także w bazie (pole website_url)?`)) return;
-  const dane = zSlugiem ? { slug: b.dataset.wwwSlug, www } : { partia: STAN.partia, firma: b.dataset.wwwZapisz, www };
+  // Zgoda na zapis w bazie wystarcza też na zamianę starego adresu: jedno pytanie zamiast dwóch pod rząd.
+  const dane = zSlugiem ? { slug: b.dataset.wwwSlug, www } : { partia: STAN.partia, firma: b.dataset.wwwZapisz, www, ...(b.dataset.wbazie ? { nadpisz: true } : {}) };
   b.disabled = true;
   let j = await wyslij("/api/panel/firma-www", dane);
   if (j.pytanie) j = confirm(j.pytanie) ? await wyslij("/api/panel/firma-www", { ...dane, nadpisz: true }) : { anulowano: true };
