@@ -20,8 +20,8 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 
 - Masową indeksację i tak robi **sitemapa** (naprawiona i przesłana 2026-07-23,
   Google widzi 778 stron). Ręczne zgłoszenia tylko przyspieszają **najważniejsze** marki.
-- Po wyczerpaniu tej priorytetowej listy (~106 marek, ~10 dni po 11/dzień) **reszta
-  z 750 firm zdaje się na sitemapę** — dalsze ręczne klikanie nie ma sensu.
+- Pierwsza priorytetowa lista (~106 marek) wyczerpana 2026-10-16; dopisano partię 2
+  (30 marek). Reszta firm zdaje się na sitemapę.
 - URL profilu: `https://czypolskafirma.pl/firma/<slug>`.
 
 ## Log dzienny
@@ -147,3 +147,39 @@ ma do niej dostępu, więc nie da się tego w pełni zautomatyzować bez Ciebie.
 - [x] `big-star`  — zgłoszone 2026-10-09
 - [x] `wrangler`  — zgłoszone 2026-10-16
 - [x] `zara`  — zgłoszone 2026-09-25
+
+## Kolejka — partia 2 (dopisana 2026-10-16)
+
+> Pierwsza lista wyczerpana 16.10. Kolejne marki wybrane spośród niezgłoszonych profili
+> z `sitemap-firmy.xml` — najpierw te, przy których ludzie najczęściej pytają, czy są polskie.
+
+- [ ] `e-wedel`
+- [ ] `ikea-sklepy`
+- [ ] `mcdonald-s`
+- [ ] `kfc`
+- [ ] `h-m`
+- [ ] `media-markt`
+- [ ] `pzu`
+- [ ] `lot`
+- [ ] `pkp`
+- [ ] `inglot`
+- [ ] `dino-polska`
+- [ ] `grupa-maspex`
+- [ ] `amica`
+- [ ] `olx`
+- [ ] `otomoto`
+- [ ] `eobuwie-pl`
+- [ ] `smyk`
+- [ ] `dr-irena-eris`
+- [ ] `grycan`
+- [ ] `soplica`
+- [ ] `krupnik`
+- [ ] `pudliszki-heinz`
+- [ ] `kujawski`
+- [ ] `lajkonik`
+- [ ] `bakoma`
+- [ ] `kamis`
+- [ ] `cisowianka-naleczow-zdroj`
+- [ ] `lux-med`
+- [ ] `kghm-polska-miedz`
+- [ ] `tvp-telewizja-polska`
