@@ -60,21 +60,37 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
-- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
+- [x] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych (2026-10-14)
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+  - uwaga 2026-10-16: kategoria meblowa była już bohaterem paczki z 2026-09-09 („co zostaje
+    z marki po przejęciu, na przykładzie mebli"). Temat wchodzi do pisania tylko wtedy, gdy
+    właściciel uzna, że zestawienie liczbowe to osobna historia, a nie to samo w innym ujęciu
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
-- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
+- [x] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli (2026-10-15)
 - [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+
+## Dopisane 2026-10-16 (kategorie z /kategorie, których jeszcze nie opisano)
+
+- [ ] Gry wideo: polskie studia, które sprzedały się zagranicznym wydawcom, i te, które zostały
+- [ ] Piwo w Polsce: trzy grupy browarnicze i marki brzmiące regionalnie, które do nich należą
+- [ ] Wódka, nalewki i gin: kto jest właścicielem polskich marek z półki alkoholowej
+- [ ] Zabawki i artykuły dla dzieci: czyj kapitał stoi za markami z listy prezentów
+- [ ] Sport i fitness: właściciele sieci siłowni i polskich marek sportowych
+- [ ] Biura podróży i sieci hotelowe działające w Polsce według pochodzenia kapitału
+- [ ] Fintech i płatności: kto jest właścicielem terminali i bramek, przez które płacimy
+- [ ] Energia: marki sprzedające prąd i gaz gospodarstwom domowym i ich ostateczni właściciele
+- [ ] Dom i ogród: marki narzędzi i wyposażenia z marketów budowlanych
+- [ ] Nabiał i pieczywo: kto jest właścicielem marek z lodówki i z piekarni w markecie
