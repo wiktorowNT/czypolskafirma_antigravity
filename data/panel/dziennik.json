@@ -111,6 +111,13 @@
       "tekst": "Przegląd: zatwierdzenie firmy z konfliktem wymaga potwierdzenia w okienku (przycisk i klawisz z), serwer odrzuca je bez potwierdzenia. Każda decyzja zapisuje się w historii firmy (kiedy, źródło, status) i jest widoczna na karcie. Walidacja: jedyny wspólnik z nazwiskiem ukrytym w KRS, zgodny z CRBR, nie wymaga podanego procentu (wcześniej fałszywy konflikt, np. Bopon, Happs, Microbec).",
       "proces": "firmy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-16-podstrony-w-bazie",
+      "data": "2026-10-16",
+      "tekst": "Logotypy (krok 8): „Zmień adres” na podstronę w tej samej domenie (np. browarkormoran.pl/…/imperium-prunum/) zapisuje adres także w bazie; wcześniej trafiał tylko do partii i strona pokazywała logo grupy. Poprawione wstecz: Cin&Cin, Dorato, Fresco, Artistry, Anatol.",
+      "proces": "logotypy",
+      "autor": "Claude"
     }
   ]
 }
