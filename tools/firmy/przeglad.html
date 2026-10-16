@@ -177,6 +177,7 @@ function karta(f) {
   const kons = (f.konsylium || []).map((k) => `<li>${esc(k.model)}: ${k.zgoda === true ? "zgodny" : k.zgoda === false ? "<span class=zmiana>NIEZGODNY</span>" : "niejasny"} (${esc(k.country_code || "?")}, ${esc(k.ultimate_owner || "?")}) ${esc(k.uwagi || "")} ${k.zrodlo && k.zrodlo !== "brak" ? `<a href="${esc(k.zrodlo)}" target="_blank" rel="noopener">źródło</a>` : ""}</li>`).join("");
   const por = f.porownanie ? `<div class="porownanie"><b>Reweryfikacja rekordu ${esc(f.porownanie.slug)}:</b> kraj ${esc(f.porownanie.country_code.bylo)} → <span class="${f.porownanie.country_code.zmiana ? "zmiana" : ""}">${esc(f.porownanie.country_code.jest)}</span>; właściciel „${esc(f.porownanie.owner_name.bylo)}" → <span class="${f.porownanie.owner_name.zmiana ? "zmiana" : ""}">„${esc(f.porownanie.owner_name.jest)}"</span>; NIP ${esc(f.porownanie.nip.bylo)} → <span class="${f.porownanie.nip.zmiana ? "zmiana" : ""}">${esc(f.porownanie.nip.jest)}</span></div>` : "";
   const dec = f.decyzja ? `<span class="badge ${f.decyzja === "odrzucony" ? "odrz" : "dec"}">${esc(f.decyzja)}</span>` : "";
+  const historia = (f.historiaDecyzji || []).map((h) => `${esc(new Date(h.kiedy).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" }))}: ${esc(h.decyzja || "cofnięto")} (${esc(h.zrodlo)}${h.status ? ", status " + esc(h.status) : ""})`).join(" · ");
   if (!f.rekord) return `<article class="karta"><div class="naglowek"><h2>${esc(f.nazwa)}</h2><span class="badge odrz">bez rekordu</span></div><div class="uwagi">${esc(Object.entries(f.etapy || {}).map(([k, v]) => k + ": " + v).join(" · "))} ${esc((f.bledy || []).join(" · "))} ${f.czeka ? "Czeka na plik: " + esc(f.czeka) : ""}</div></article>`;
   return `<article class="karta ${f.status}${f.nazwa === AKTYWNA && !JEDNA ? " aktywna" : ""}" data-nazwa="${esc(f.nazwa)}">
     <div class="naglowek"><h2>${esc(r.display_name || f.nazwa)}</h2><span class="badge ${f.status}">${f.status}</span>${dec}<span class="stat">${esc(r.country_code || "??")}${r.country_code_2 ? "+" + esc(r.country_code_2) + " (50/50)" : ""} · ${esc(r.owner_name || "?")} · reguła ${esc(f.sledztwo?.regula || "?")} · NIP ${esc(r.nip || "?")} · KRS ${esc(r.krs || "?")}</span></div>
@@ -186,6 +187,7 @@ function karta(f) {
     ${f.konflikty?.length ? `<ul class="konflikty">${f.konflikty.map((k) => `<li>${esc(k)}</li>`).join("")}</ul>` : ""}
     ${f.uwagi?.length ? `<div class="uwagi">${f.uwagi.map(esc).join(" · ")}</div>` : ""}
     ${por}
+    ${historia ? `<div class="uwagi"><b>Historia decyzji:</b> ${historia}</div>` : ""}
     <div class="pola">
       <div><label>Kraj kapitału (ISO2)</label><input name="country_code" value="${esc(r.country_code || "")}" maxlength="2"></div>
       <div><label>Drugi kraj — tylko wspólna kontrola 50/50 (ISO2, zwykle puste)</label><input name="country_code_2" value="${esc(r.country_code_2 || "")}" maxlength="2" placeholder="np. CH"></div>
@@ -219,7 +221,7 @@ function karta(f) {
   </article>`;
 }
 
-async function decyzja(nazwa, akcja, el) {
+async function decyzja(nazwa, akcja, el, zrodlo = "przycisk") {
   const rekord = {};
   for (const inp of el.querySelectorAll("[name]")) if (inp.name !== "notatka") rekord[inp.name] = inp.value.trim();
   rekord.country_code = rekord.country_code.toUpperCase();
@@ -229,7 +231,13 @@ async function decyzja(nazwa, akcja, el) {
   rekord.founded_at = rekord.founded_at || null;
   rekord.brands = rekord.brand_aliases ? rekord.brand_aliases.split(",").map((s) => s.trim()).filter(Boolean).map((name) => { const stare = (DANE.partia.firmy.find((f) => f.nazwa === nazwa)?.rekord?.brands || []).find((b) => b.name === name); return stare || { name }; }) : [];
   const body = { nazwa, rekord, notatka: el.querySelector('[name="notatka"]').value };
-  if (akcja !== "zapisz") body.decyzja = akcja;
+  if (akcja !== "zapisz") { body.decyzja = akcja; body.zrodlo = zrodlo; }
+  // Firma z konfliktem: zatwierdzenie tylko po wyraźnym potwierdzeniu (także przy klawiszu „z”).
+  const firma = DANE.partia.firmy.find((f) => f.nazwa === nazwa);
+  if (akcja === "zatwierdzony" && firma?.status === "KONFLIKT") {
+    if (!confirm(`${nazwa} ma konflikt:\n\n${(firma.konflikty || []).map((k) => "• " + k).join("\n")}\n\nNa pewno zatwierdzić tę firmę do importu?`)) { el.querySelector("[data-info]").textContent = "nie zatwierdzono"; return; }
+    body.potwierdzamKonflikt = true;
+  }
   const r = await fetch("/api/decyzja", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const j = await r.json();
   el.querySelector("[data-info]").textContent = j.ok ? "zapisano" : "błąd: " + j.blad;
@@ -273,7 +281,7 @@ document.addEventListener("keydown", (e) => {
   if (!el) return;
   e.preventDefault();
   ZAPISUJE = true;
-  decyzja(AKTYWNA, akcja, el).finally(() => { ZAPISUJE = false; });
+  decyzja(AKTYWNA, akcja, el, "klawisz").finally(() => { ZAPISUJE = false; });
 });
 $("#btnOdswiez").onclick = wczytaj;
 $("#btnGotowe").onclick = async () => {

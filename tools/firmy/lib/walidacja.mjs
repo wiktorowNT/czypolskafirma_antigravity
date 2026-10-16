@@ -126,10 +126,14 @@ export function ocenPewnosc(firma) {
   if (wsp.length === 1) {
     const w = wsp[0];
     // Osoba z ukrytym w API KRS nazwiskiem: po nazwie się nie połączy, więc wystarczy ogniwo
-    // kontrolne ze 100% i krajem zgodnym z obywatelstwem w CRBR (bez CRBR: PL).
+    // kontrolne z krajem zgodnym z obywatelstwem w CRBR (bez CRBR: PL) i ze 100% albo bez procentu,
+    // jeśli jest jedynym ogniwem kontrolnym (100% i tak wynika z KRS).
     const obyw = obywatelstwaCrbr(firma);
-    const osoba100 = /nazwisko zamaskowane/i.test(w.nazwa || "") && lancuch.some((o) => ["ostateczny", "kontrolujacy"].includes(o.rola)
-      && (o.proc_glosow ?? o.proc_kapitalu) === 100 && (obyw.length ? obyw.includes(o.kraj) : o.kraj === "PL"));
+    const nadSpolka = lancuch.filter((o) => ["ostateczny", "kontrolujacy"].includes(o.rola));
+    const osoba100 = /nazwisko zamaskowane/i.test(w.nazwa || "") && nadSpolka.some((o) => {
+      const proc = o.proc_glosow ?? o.proc_kapitalu;
+      return (proc === 100 || (proc == null && nadSpolka.length === 1)) && (obyw.length ? obyw.includes(o.kraj) : o.kraj === "PL");
+    });
     const jest = osoba100 || lancuch.some((o) => podobienstwoNazw(o.podmiot, w.nazwa) >= 0.5);
     if (!jest) konflikty.push(`KRS: 100% ma "${w.nazwa}", a łańcuch go nie zawiera`);
   }

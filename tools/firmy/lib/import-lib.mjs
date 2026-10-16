@@ -6,6 +6,7 @@ import { KATALOG_PARTII, dzisiaj } from "./env.mjs";
 import { aktualizuj, indeksFirm, kategorie as pobierzKategorie, kolumnaIstnieje, wstaw } from "./supabase.mjs";
 import { normalizujNip, podobienstwoNazw, slugify } from "./tekst.mjs";
 import { walidujRekord } from "./walidacja.mjs";
+import { ustawDecyzje } from "./przeglad-api.mjs";
 
 // Pola, które automat może ustawić przy INSERT i które nadpisuje przy UPDATE.
 export const POLA_INSERT = ["name", "slug", "display_name", "nip", "krs", "country_code", "owner_name", "ownership_description", "business_description", "website_url", "registry_url", "category_id", "adres", "founded_at", "siedziba_pl", "vat_czynny", "ownership_type", "parent_company_name", "brand_aliases", "brands", "verified_at"];
@@ -104,7 +105,7 @@ export async function wykonajPlan(plan, partia, plikPartii, { naWpis } = {}) {
     if (p.odlozona) {
       // Aktualizacja rekordu, który już jest na stronie: zapis dopiero przy publikacji.
       ok++;
-      if (f) { f.import = { akcja: "UPDATE", id: p.id, data: dzisiaj(), czekaNaPublikacje: true, wiersz: p.wiersz }; f.decyzja = "zaimportowany"; }
+      if (f) { f.import = { akcja: "UPDATE", id: p.id, data: dzisiaj(), czekaNaPublikacje: true, wiersz: p.wiersz }; ustawDecyzje(f, "zaimportowany", "import do bazy"); }
       naWpis?.({ nazwa: p.nazwa, akcja: "UPDATE, czeka na publikację", slug: p.slugWBazie });
       continue;
     }
@@ -115,7 +116,7 @@ export async function wykonajPlan(plan, partia, plikPartii, { naWpis } = {}) {
       naWpis?.({ nazwa: p.nazwa, blad: r.blad });
     } else {
       ok++;
-      if (f) { f.import = { akcja: p.akcja, id: r.dane?.id, data: dzisiaj(), ...(p.wiersz.published === false ? { czekaNaPublikacje: true } : {}) }; f.decyzja = "zaimportowany"; }
+      if (f) { f.import = { akcja: p.akcja, id: r.dane?.id, data: dzisiaj(), ...(p.wiersz.published === false ? { czekaNaPublikacje: true } : {}) }; ustawDecyzje(f, "zaimportowany", "import do bazy"); }
       naWpis?.({ nazwa: p.nazwa, akcja: p.akcja, slug: r.dane?.slug });
     }
   }

@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import { dzisiaj } from "./env.mjs";
 import { promptKonsylium } from "./prompty.mjs";
-import { zlozRekord } from "./rekord.mjs";
+import { konfliktyPorownania, zlozRekord } from "./rekord.mjs";
 import { ROZSTRZYGNIECIE } from "./sledztwo-reczne.mjs";
 import { normalizujKrajOdModelu, ocenPewnosc, ogniwaKontrolne, poziomZrodla, walidujRekord } from "./walidacja.mjs";
 import { podobienstwoNazw } from "./tekst.mjs";
@@ -15,12 +15,14 @@ import { podobienstwoNazw } from "./tekst.mjs";
 export function odswiezPewnosc(f) {
   if (!f.rekord || ["zaimportowany", "odrzucony"].includes(f.decyzja)) return;
   const o = ocenPewnosc(f);
-  if (o.status === f.status && o.konflikty.join("|") === (f.konflikty || []).join("|")) return;
-  f.status = o.status;
-  f.konflikty = o.konflikty;
+  const konflikty = [...o.konflikty, ...konfliktyPorownania(f)];
+  const status = konflikty.length ? "KONFLIKT" : o.status;
+  if (status === f.status && konflikty.join("|") === (f.konflikty || []).join("|")) return;
+  f.status = status;
+  f.konflikty = konflikty;
   f.uwagi = [...new Set([...o.uwagi, ...(f.uwagi || [])])];
-  f.rekord.confidence = o.status;
-  if (f.status === "KONFLIKT" && f.decyzja === "zatwierdzony") f.decyzja = null;
+  f.rekord.confidence = status;
+  if (f.status === "KONFLIKT" && f.decyzja === "zatwierdzony") ustawDecyzje(f, null, "program: po przeliczeniu pewności wyszedł konflikt");
 }
 
 export function wczytajPartie(plik) {
@@ -32,6 +34,14 @@ export function wczytajPartie(plik) {
 export function zapiszPartie(plik, partia) {
   partia.zaktualizowano = new Date().toISOString();
   fs.writeFileSync(plik, JSON.stringify(partia, null, 2), "utf8");
+}
+
+// Każda zmiana decyzji trafia do historii firmy: kiedy, skąd (przycisk, klawisz, hurt, program)
+// i z jakim statusem pewności. Dzięki temu da się ustalić, jak firma z konfliktem została zatwierdzona.
+export function ustawDecyzje(f, decyzja, zrodlo) {
+  if ((f.decyzja || null) === (decyzja || null)) return;
+  f.decyzja = decyzja || null;
+  f.historiaDecyzji = [...(f.historiaDecyzji || []), { kiedy: new Date().toISOString(), decyzja: f.decyzja, zrodlo, status: f.status || null }];
 }
 
 // Parsowanie odpowiedzi innego modelu (tabela Markdown:
@@ -68,7 +78,7 @@ export function zastosujKonsylium(partia, model, tekst, kategorie) {
     if (!f.decyzja || f.decyzja === "zatwierdzony") {
       // ponowna ocena: konflikt konsylium może cofnąć hurtowe zatwierdzenie
       zlozRekord(f, { kategorie, dzisiaj: f.rekord.verified_at || dzisiaj() });
-      if (f.status === "KONFLIKT" && f.decyzja === "zatwierdzony") f.decyzja = null;
+      if (f.status === "KONFLIKT" && f.decyzja === "zatwierdzony") ustawDecyzje(f, null, `program: konflikt konsylium (${model})`);
     }
   }
   partia.konsylia = [...(partia.konsylia || []).filter((k) => k.model !== model), { model, data: dzisiaj(), kiedy: new Date().toISOString(), wierszy: wiersze.length, dopasowane, niezgody }];
@@ -154,7 +164,7 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
     return true;
   }
   if (req.method === "POST" && url.pathname === "/api/decyzja") {
-    const { nazwa, decyzja, rekord, notatka } = await cialo();
+    const { nazwa, decyzja, rekord, notatka, zrodlo, potwierdzamKonflikt } = await cialo();
     const sciezka = plik();
     const p = wczytajPartie(sciezka);
     const f = p.firmy.find((x) => x.nazwa === nazwa);
@@ -166,7 +176,13 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
       f.edytowano = new Date().toISOString();
       f.walidacja = walidujRekord(f.rekord, kategorie);
     }
-    if (decyzja !== undefined) f.decyzja = decyzja;
+    // Firma z konfliktem nie zostanie zatwierdzona bez wyraźnego potwierdzenia na stronie
+    // (np. seria klawiszy "z" po kolejnych kartach).
+    if (decyzja === "zatwierdzony" && f.status === "KONFLIKT" && !potwierdzamKonflikt) {
+      json(res, { blad: "firma ma konflikt: zatwierdzenie wymaga potwierdzenia", wymagaPotwierdzenia: true, konflikty: f.konflikty || [] }, 409);
+      return true;
+    }
+    if (decyzja !== undefined) ustawDecyzje(f, decyzja, `${zrodlo === "klawisz" ? "klawisz" : "przycisk"}${potwierdzamKonflikt ? " (potwierdzony konflikt)" : ""}`);
     if (notatka !== undefined) f.notatka = notatka;
     zapiszPartie(sciezka, p);
     json(res, { ok: true, firma: f });
@@ -176,7 +192,7 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
     const sciezka = plik();
     const p = wczytajPartie(sciezka);
     const zatwierdzone = [];
-    for (const f of p.firmy) if (gotowaDoZatwierdzenia(f, kategorie)) { f.decyzja = "zatwierdzony"; zatwierdzone.push(f.nazwa); }
+    for (const f of p.firmy) if (gotowaDoZatwierdzenia(f, kategorie)) { ustawDecyzje(f, "zatwierdzony", "hurt: wszystkie gotowe"); zatwierdzone.push(f.nazwa); }
     zapiszPartie(sciezka, p);
     json(res, { ok: true, zatwierdzono: zatwierdzone.length, firmy: zatwierdzone });
     return true;
@@ -185,7 +201,7 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
     const sciezka = plik();
     const p = wczytajPartie(sciezka);
     let n = 0;
-    for (const f of p.firmy) if (f.rekord && f.status === "WYSOKA" && !f.decyzja && !(f.walidacja?.bledy || []).length) { f.decyzja = "zatwierdzony"; n++; }
+    for (const f of p.firmy) if (f.rekord && f.status === "WYSOKA" && !f.decyzja && !(f.walidacja?.bledy || []).length) { ustawDecyzje(f, "zatwierdzony", "hurt: wszystkie WYSOKA"); n++; }
     zapiszPartie(sciezka, p);
     json(res, { ok: true, zatwierdzono: n });
     return true;
@@ -198,7 +214,7 @@ export async function obsluzApiPrzegladu(req, res, url, ctx) {
     for (const f of p.firmy) {
       const por = f.porownanie;
       if (f.rekord && f.status === "SREDNIA" && !f.decyzja && !(f.konflikty || []).length && por && !por.country_code.zmiana && !por.owner_name.zmiana && !(f.walidacja?.bledy || []).length) {
-        f.decyzja = "zatwierdzony";
+        ustawDecyzje(f, "zatwierdzony", "hurt: ŚREDNIA zgodne z bazą");
         n++;
       }
     }

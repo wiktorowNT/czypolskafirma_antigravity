@@ -40,6 +40,22 @@ export function procentUdzialow(w, rej) {
 
 const ZAMASKOWANA = /nazwisko zamaskowane/i;
 
+// Porównanie z rekordem w bazie (ta sama marka): odświeża "jest"/"zmiana" według bieżącego rekordu
+// (mógł być poprawiony w przeglądzie) i zwraca konflikty. Używane też przy przeliczaniu pewności.
+export function konfliktyPorownania(f) {
+  const por = f.porownanie, r = f.rekord;
+  if (!por || !r) return [];
+  por.country_code = { bylo: por.country_code.bylo, jest: r.country_code, zmiana: por.country_code.bylo !== r.country_code };
+  por.owner_name = { bylo: por.owner_name.bylo, jest: r.owner_name, zmiana: podobienstwoNazw(por.owner_name.bylo, r.owner_name) < 0.5 };
+  por.nip = { bylo: por.nip.bylo, jest: r.nip, zmiana: normalizujNip(por.nip.bylo) !== r.nip };
+  if (por.krs) por.krs = { bylo: por.krs.bylo, jest: r.krs, zmiana: normalizujKrs(por.krs.bylo) !== r.krs };
+  const k = [];
+  if (por.country_code.zmiana) k.push(`baza ma ${por.country_code.bylo}, automat ${r.country_code}`);
+  if (por.owner_name.zmiana) k.push(`baza ma właściciela "${por.owner_name.bylo}", automat "${r.owner_name}"`);
+  if (por.nip.zmiana) k.push(`baza ma NIP ${por.nip.bylo}, automat ${r.nip}`);
+  return k;
+}
+
 export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
   const t = f.tozsamosc || {}, s = f.sledztwo || {}, o = f.opisy || {};
   // Ogniwa potwierdzone w KRS (wspólnik / jedyny akcjonariusz / sama spółka) dostają KRS jako źródło,
@@ -136,16 +152,8 @@ export function zlozRekord(f, { kategorie, dzisiaj: DZIS }) {
     f.uwagi.push(`marka występuje w bazie przy innym rekordzie: "${b.slug}" (${b.country_code || "?"}, ${b.owner_name || "?"}); import doda ją jako osobną firmę, rekord "${b.slug}" zostanie bez zmian`);
   } else if (t.istniejeWBazie) {
     const b = t.istniejeWBazie;
-    f.porownanie = {
-      slug: b.slug,
-      country_code: { bylo: b.country_code, jest: f.rekord.country_code, zmiana: b.country_code !== f.rekord.country_code },
-      owner_name: { bylo: b.owner_name, jest: f.rekord.owner_name, zmiana: podobienstwoNazw(b.owner_name, f.rekord.owner_name) < 0.5 },
-      nip: { bylo: b.nip, jest: f.rekord.nip, zmiana: normalizujNip(b.nip) !== f.rekord.nip },
-      krs: { bylo: b.krs, jest: f.rekord.krs, zmiana: normalizujKrs(b.krs) !== f.rekord.krs },
-    };
-    if (f.porownanie.country_code.zmiana) f.konflikty.push(`baza ma ${b.country_code}, automat ${f.rekord.country_code}`);
-    if (f.porownanie.owner_name.zmiana) f.konflikty.push(`baza ma właściciela "${b.owner_name}", automat "${f.rekord.owner_name}"`);
-    if (f.porownanie.nip.zmiana) f.konflikty.push(`baza ma NIP ${b.nip}, automat ${f.rekord.nip}`);
+    f.porownanie = { slug: b.slug, country_code: { bylo: b.country_code }, owner_name: { bylo: b.owner_name }, nip: { bylo: b.nip }, krs: { bylo: b.krs } };
+    f.konflikty.push(...konfliktyPorownania(f));
     if (f.konflikty.length) f.status = "KONFLIKT";
     f.rekord.confidence = f.status;
   }
