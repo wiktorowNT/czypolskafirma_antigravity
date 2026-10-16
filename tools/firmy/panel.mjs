@@ -1241,8 +1241,12 @@ const serwer = http.createServer(async (req, res) => {
         const wiersz = (await firmaPoSlugu(slugBazy)) || indeks.find((r) => slugUrl(r.slug) === slugUrl(slugBazy));
         if (!wiersz) return json(res, { blad: `Nie znalazłem firmy ${slugBazy} w bazie.` }, 404);
         const stara = domenaZUrl(wiersz.website_url);
-        if (stara && stara !== domenaZUrl(adres) && !nadpisz) return json(res, { pytanie: `W bazie jest adres ${wiersz.website_url}. Zamienić go na ${adres}?` }, 409);
-        if (stara !== domenaZUrl(adres) || !wiersz.website_url) {
+        // Porównujemy cały adres, nie samą domenę: podstrona marki w tej samej domenie (np.
+        // browarkormoran.pl/…/imperium-prunum/) ma własne logo, więc musi trafić do bazy.
+        const bezKonca = (u) => String(u || "").trim().replace(/^https?:\/\/(www\.)?/i, "").replace(/\/+$/, "").toLowerCase();
+        const inny = bezKonca(wiersz.website_url) !== bezKonca(adres);
+        if (stara && inny && !nadpisz) return json(res, { pytanie: `W bazie jest adres ${wiersz.website_url}. Zamienić go na ${adres}?` }, 409);
+        if (inny || !wiersz.website_url) {
           const w = await aktualizuj("companies", wiersz.id, { website_url: adres });
           if (w.blad) return json(res, { blad: `Zapis w bazie nie powiódł się: ${w.blad}` }, 500);
           wBazie = true;
