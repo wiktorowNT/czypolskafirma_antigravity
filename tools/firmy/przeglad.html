@@ -110,8 +110,8 @@ function staty() {
   $("#konsyliaLista").textContent = k.length ? "Wczytane konsylia: " + k.map((x) => `${x.model} (${x.data}, ${x.dopasowane}/${x.wierszy} firm)`).join(", ") : "";
 }
 
-// Wymaga uwagi: konflikt albo braki, przez które import by firmę zablokował (bez już odrzuconych).
-const wymagaUwagi = (f) => !!f.rekord && !f.pomin && f.decyzja !== "odrzucony" && f.decyzja !== "zatwierdzony" && (f.status === "KONFLIKT" || (f.braki || []).length > 0);
+// Wymaga uwagi: konflikt albo braki, przez które import by firmę zablokował (bez już odrzuconych i zaimportowanych).
+const wymagaUwagi = (f) => !!f.rekord && !f.pomin && !["odrzucony", "zatwierdzony", "zaimportowany"].includes(f.decyzja) && (f.status === "KONFLIKT" || (f.braki || []).length > 0);
 const gotowa = (f) => !!f.rekord && !f.pomin && !f.decyzja && f.status !== "KONFLIKT" && !(f.braki || []).length;
 
 function pasuje(f) {
