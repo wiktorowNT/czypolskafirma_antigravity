@@ -373,8 +373,10 @@ let sharpModul;
 async function wymiary(sciezka, format, bufor) {
   if (format === "ico") return { szer: bufor[6] || 256, wys: bufor[7] || 256 };
   try {
-    sharpModul = sharpModul || createRequire(path.join(KATALOG_REPO, "package.json"))("sharp");
-    const m = await sharpModul(sciezka).metadata();
+    if (!sharpModul) { sharpModul = createRequire(path.join(KATALOG_REPO, "package.json"))("sharp"); sharpModul.cache(false); }
+    // Zawartość pliku, nie ścieżka: sharp otwiera plik po ścieżce i na Windowsie trzyma go
+    // otwartego w swojej pamięci podręcznej, przez co podmiana logo kończyła się błędem EBUSY.
+    const m = await sharpModul(fs.readFileSync(sciezka)).metadata();
     return { szer: m.width || null, wys: m.height || null };
   } catch { return { szer: null, wys: null }; }
 }
