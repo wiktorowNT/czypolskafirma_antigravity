@@ -51,12 +51,23 @@ export function getBlogEntries(): SitemapEntry[] {
 export async function getCompanyEntries(): Promise<SitemapEntry[]> {
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase
-      .from("companies")
-      .select("id, slug, verified_at, created_at")
-      .order("name", { ascending: true })
 
-    if (error || !data) return []
+    // Supabase zwraca maks. 1000 wierszy na zapytanie — bez stronicowania sitemapa
+    // ucinała się na 1000 firmach (przy 1555 w bazie). Pobieramy partiami.
+    const PAGE_SIZE = 1000
+    const data: { id: string; slug: string | null; verified_at: string | null; created_at: string | null }[] = []
+    for (let from = 0; ; from += PAGE_SIZE) {
+      const { data: page, error } = await supabase
+        .from("companies")
+        .select("id, slug, verified_at, created_at")
+        .order("name", { ascending: true })
+        .order("id", { ascending: true })
+        .range(from, from + PAGE_SIZE - 1)
+
+      if (error || !page) return []
+      data.push(...page)
+      if (page.length < PAGE_SIZE) break
+    }
 
     // Kanoniczne slugi (slugify) — bez spacji, nawiasów, wielkich liter i polskich znaków.
     return data.map((company) => {
