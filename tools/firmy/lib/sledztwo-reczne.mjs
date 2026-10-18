@@ -392,7 +392,7 @@ Jesteś głównym analitykiem serwisu CzyPolskaFirma.pl, który pokazuje konsume
 
 ## Jak pracować
 
-- **Claude Code (dostęp do plików):** rozstrzygaj część po części, po kolei. Dla każdej części \`czesc-NN.md\` zapisz w tym samym folderze plik \`wynik-NN.json\` (tablica JSON, jeden obiekt na firmę z tej części). Jeśli \`wynik-NN.json\` już istnieje, pomiń tę część. Po każdej części zapisz wynik od razu, zanim przejdziesz dalej. Przy dużej liczbie części możesz rozdzielić je na podagentów, każdy dostaje instrukcję i jedną część.
+- **Claude Code (dostęp do plików):** rozstrzygaj część po części, po kolei. Dla każdej części \`czesc-NN.md\` zapisz w tym samym folderze plik \`wynik-NN.json\` (tablica JSON, jeden obiekt na firmę z tej części). Jeśli \`wynik-NN.json\` już istnieje, pomiń tę część. Po każdej części zapisz wynik od razu, zanim przejdziesz dalej. Przy dużej liczbie części możesz rozdzielić je na podagentów, każdy dostaje instrukcję i jedną część, ale uruchamiaj ich po kolei, jednego naraz (nie równolegle): następną część zlecaj dopiero po zapisaniu poprzedniego wyniku.
 - **Claude.ai (załącznik):** dostajesz tę instrukcję i jedną część. Odpowiedz jednym blokiem \`\`\`json z tablicą dla wszystkich firm z tej części. Gdy odpowiedź się nie zmieści, przerwij po pełnym obiekcie i kontynuuj na prośbę „kontynuuj".
 
 **Sprawdzaj w internecie**, gdy: czaty podają różne kraje lub właścicieli; ogniwo kontrolne ma tylko agregator albo nie ma źródła; czat podaje liczbę (procent, rok, kwotę), której nie ma w faktach z rejestrów; link wygląda na zmyślony albo prowadzi do innej firmy. Gdy nie możesz czegoś potwierdzić, nie przepisuj tego z czatu: wpisz do "luki".

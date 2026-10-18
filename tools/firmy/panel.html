@@ -637,7 +637,7 @@
           <i class="nrb">2</i>
           <div class="tresc-etapu">
             <h2>Daj pliki Claude'owi <i class="pomoc" data-pomoc="rozclaude" title="Wyjaśnienie">?</i></h2><div class="pomoc-tresc" id="pomoc-rozclaude" hidden><p><b>Claude Code</b> (wygodniej przy wielu częściach): kliknij „Kopiuj polecenie”, otwórz nową rozmowę w Claude Code w folderze projektu i wklej. Claude sam przerobi wszystkie części i zapisze pliki wynik-01.json, wynik-02.json… Potem wróć tutaj do punktu 3.</p><p><b>Claude.ai</b>: dla każdej części osobna, nowa rozmowa. Załącz 00-instrukcja.md i jedną część (przycisk „Otwórz folder” pokaże pliki), włącz wyszukiwanie i napisz „Rozstrzygnij tę część”. Odpowiedź wklej w punkcie 3.</p><p>Koszt: ok. 15 tys. tokenów na 10 firm przy 4 czatach, plus wyszukiwania w internecie.</p></div>
-            <p><b>Claude Code</b> (sam przerobi wszystkie części): otwórz nową rozmowę w Claude Code w folderze projektu i wklej polecenie. Każdą część zleci osobnemu podagentowi i zapisze wyniki w tym samym folderze.</p>
+            <p><b>Claude Code</b> (sam przerobi wszystkie części): otwórz nową rozmowę w Claude Code w folderze projektu i wklej polecenie. Każdą część zleci osobnemu podagentowi, po kolei (jeden naraz, żeby oszczędzać limit tokenów), i zapisze wyniki w tym samym folderze.</p>
             <div class="rzad" style="margin-bottom:12px"><button class="glowny" id="btnRozPolecenie">Kopiuj polecenie dla Claude Code</button><span id="rozPolecenieInfo" style="font-size:13px;color:var(--zielony)"></span></div>
             <p><b>Claude.ai</b> (część po części): dla każdej części nowa rozmowa. Załącz 00-instrukcja.md i jedną część, włącz wyszukiwanie w internecie i napisz „Rozstrzygnij tę część”. Wynik wklej niżej albo zapisz w folderze jako wynik-NN.json.</p>
             <div class="rzad"><button id="btnRozFolder">Otwórz folder z plikami</button><button data-model="https://claude.ai/new">Otwórz Claude.ai</button></div>
@@ -1732,7 +1732,7 @@ $("#btnRozPolecenie").onclick = async () => {
   if (!ROZ_STAN?.czesci.length) return alert("Najpierw utwórz pliki (punkt 1).");
   const f = ROZ_STAN.folder;
   const tekst = `Przeczytaj instrukcję ${f}\\00-instrukcja.md i wykonaj rozstrzygnięcie dla wszystkich części czesc-NN.md w tym folderze (${ROZ_STAN.czesci.map((c) => c.plik).join(", ")}).
-Pracuj część po części: każdą część zleć osobnemu podagentowi (dostaje instrukcję i jedną część), żeby nie zapełniać kontekstu. Pomiń części, dla których istnieje już wynik-NN.json.
+Pracuj część po części, ściśle po kolei: każdą część zleć osobnemu podagentowi (dostaje instrukcję i jedną część), żeby nie zapełniać kontekstu. Uruchamiaj tylko jednego podagenta naraz, nigdy kilku równolegle: następną część zlecaj dopiero, gdy poprzedni podagent skończy i zapisze swój wynik-NN.json (oszczędzamy limit tokenów, czas nie gra roli). Pomiń części, dla których istnieje już wynik-NN.json. Jeśli praca zostanie przerwana przez limit, po wznowieniu kontynuuj przerwanego podagenta (wiadomością do niego), zamiast uruchamiać nowego od zera.
 Wynik każdej części zapisz w tym samym folderze jako wynik-NN.json (tablica JSON wg instrukcji). Sprawdzaj sporne rzeczy w internecie, tak jak mówi instrukcja.
 Nie zmieniaj żadnych innych plików. Na koniec napisz krótko, ile firm rozstrzygnięto i które mają konflikt.`;
   await navigator.clipboard.writeText(tekst);

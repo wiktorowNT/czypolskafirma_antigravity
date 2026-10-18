@@ -125,6 +125,13 @@
       "tekst": "Logotypy: marka bez własnej strony i bez podstrony dostaje własne logo przez dopisek #marka w adresie grupy (np. https://www.bat.com.pl/#pall-mall). Klucz logo liczy ścieżkę i dopisek po #; karta OG też bierze logo podstrony.",
       "proces": "logotypy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-18-rozstrzygniecie-po-kolei",
+      "data": "2026-10-18",
+      "tekst": "Rozstrzygnięcie w Claude Code: polecenie z panelu i instrukcja każą zlecać części podagentom po kolei, jednego naraz, zamiast wszystkich równolegle. Wolniej, ale przerwa przez limit 5 h trafia najwyżej jednego podagenta, a po wznowieniu Claude kontynuuje przerwanego zamiast zaczynać od zera.",
+      "proces": "firmy",
+      "autor": "Claude"
     }
   ]
 }

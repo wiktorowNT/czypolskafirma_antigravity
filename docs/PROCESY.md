@@ -103,7 +103,7 @@ Ton: dla przypadkowego czytelnika, bez „my” i bez metodologii. O markach, ni
 2. **Sprawdzenie NIP-ów:** przy każdej firmie „Numer dobry”, „Numer do wymiany” albo „Pomiń”.
 3. **Rejestry:** panel sam pobiera KRS, historię wspólników i CRBR.
 4. **Śledztwo w czatach:** jeden prompt do kilku czatów (Gemini, ChatGPT, Claude.ai) z wyszukiwaniem, odpowiedzi wklejasz z powrotem.
-5. **Rozstrzygnięcie w Claude:** panel robi pliki, Claude Code rozstrzyga z internetem, wyniki wczytują się same.
+5. **Rozstrzygnięcie w Claude:** panel robi pliki, Claude Code rozstrzyga z internetem (części po kolei, jeden podagent naraz, żeby nie wyczerpać limitu tokenów), wyniki wczytują się same. Po przerwie przez limit wklej „Spróbuj ponownie” w tej samej rozmowie: Claude wznawia przerwanego podagenta.
 6. **Przegląd:** zatwierdzasz albo poprawiasz każdą firmę. Firmę z konfliktem zatwierdzisz tylko po potwierdzeniu w okienku (także klawiszem `z`); na karcie widać historię decyzji (kiedy, przycisk/klawisz/hurt). Wspólna kontrola 50/50: wpisz drugi kraj w polu „Drugi kraj” (JV z Polską: kraj kapitału = zagraniczny, drugi kraj = PL).
 7. **Import:** najpierw „Pokaż, co się zmieni”, potem „Zapisz do bazy” (robi backup przed zapisem). Nowe firmy widać wtedy tylko na podglądzie, aktualizacje czekają.
 8. **Logotypy i publikacja:** karta niżej. Na czypolskafirma.pl firmy trafiają dopiero po kliknięciu „Opublikuj” na końcu kroku 8.

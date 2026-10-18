@@ -66,7 +66,9 @@ sprawdzać sporne rzeczy w internecie, traktować agregatory tylko jako trop i p
 według twardych zasad stylu.
 
 - **Claude Code:** przycisk „Kopiuj polecenie dla Claude Code”, wklejasz w nowej rozmowie. Claude
-  zleca każdą część osobnemu podagentowi i zapisuje `wynik-NN.json` w tym samym folderze.
+  zleca każdą część osobnemu podagentowi, po kolei (jeden naraz, nie równolegle, żeby nie
+  wyczerpywać limitu tokenów naraz), i zapisuje `wynik-NN.json` w tym samym folderze. Po przerwie
+  przez limit wznawia przerwanego podagenta zamiast zaczynać od zera.
 - **Claude.ai:** do każdej części nowa rozmowa z załączoną instrukcją i jedną częścią; wynik
   wklejasz do panelu albo zapisujesz jako `wynik-NN.json`.
 - Koszt: ok. 15 tys. tokenów na 10 firm przy 4 czatach, plus wyszukiwania w internecie.
