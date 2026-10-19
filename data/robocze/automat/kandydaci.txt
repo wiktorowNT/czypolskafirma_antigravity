@@ -1,2 +1,11 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Carolina Medical Center | 5213095056 | # paczka 2026-10-19 (kto-jest-wlascicielem-prywatnych-przychodni)
+- [ ] Uzdrowisko Ustroń |  | # paczka 2026-10-19 (kto-jest-wlascicielem-prywatnych-przychodni)
+- [ ] Link4 |  | # PR #50 (tresc/2026-09-29-66)
+- [ ] Wiener TU |  | # PR #50 (tresc/2026-09-29-66)
+- [ ] Vienna Life |  | # PR #50 (tresc/2026-09-29-66)
+- [ ] Le Grand |  | # PR #48 (tresc/2026-09-27-64)
+- [ ] Multicycle |  | # PR #48 (tresc/2026-09-27-64)
+- [ ] Zipp |  | # PR #48 (tresc/2026-09-27-64)
+- [ ] Global Cosmed |  | # PR #52 (tresc/2026-10-01-68)
