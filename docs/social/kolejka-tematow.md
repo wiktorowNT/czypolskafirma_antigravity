@@ -60,21 +60,39 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
-- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
-- [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
+- [x] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych (2026-10-14)
+- [x] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową (2026-09-09, zużyty paczką o tym, co zostaje z marki po przejęciu, pisaną na przykładzie branży meblowej)
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
-- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
-- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
+- [x] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli (2026-10-15)
+- [x] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną (2026-10-19)
+
+## Dopisane 2026-10-21
+
+Stan kolejki odhaczono 21.10.2026 według listy zrealizowanych paczek: pull requesty
+z treścią nie zostały scalone do `develop`, więc plik przez miesiąc pokazywał jako wolne
+tematy, które już poszły. Pozycje niżej są nowe i dobrane pod kategorie z żywej strony,
+które nie mają jeszcze własnej paczki.
+
+- [x] Kto jest właścicielem Rossmanna: niemiecka rodzina, holenderskie piętro pośrednie i 40 proc. u grupy z Hongkongu (2026-10-21)
+- [ ] Gry wideo: kto jest właścicielem polskich studiów, od CD Projektu po Techland
+- [ ] Dzieci i zabawki: czyj kapitał stoi za markami z działu zabawkowego
+- [ ] Turystyka: do kogo należą biura podróży, z którymi Polacy jeżdżą na wakacje
+- [ ] Fintech i płatności: kto jest właścicielem systemów, którymi płacimy w sklepie i w sieci
+- [ ] Sport i fitness: właściciele sieci klubów i marek sprzętowych z kategorii
+- [ ] Kurierzy i transport: kto jest właścicielem firm, które przywożą paczki pod drzwi
+- [ ] Energia i paliwa: czyj kapitał sprzedaje Polakom prąd, gaz i benzynę
+- [ ] Dom i ogród: osiem marek z najmniejszej kategorii w bazie i ich ostateczni właściciele
+- [ ] Polskie portale internetowe: kto jest właścicielem serwisów, w których czytamy wiadomości

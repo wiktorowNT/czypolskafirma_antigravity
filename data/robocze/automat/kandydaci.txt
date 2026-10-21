@@ -1,2 +1,4 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Alterra |  | # paczka 2026-10-21 (kto-jest-wlascicielem-rossmanna)
+- [ ] Alouette |  | # paczka 2026-10-21 (kto-jest-wlascicielem-rossmanna)
