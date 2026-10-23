@@ -1,2 +1,9 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Livio |  | # paczka 2026-10-23 (kto-jest-wlascicielem-drogerii-natura)
+- [ ] Rabat Detal |  | # paczka 2026-10-23 (kto-jest-wlascicielem-drogerii-natura)
+- [ ] Blue Orca Coffee | 7133147645 | # PR #56 (tresc/2026-10-07-74)
+- [ ] OSM Siedlce |  | # PR #57 (tresc/2026-10-08-75)
+- [ ] Ciechanowska Spółdzielnia Mleczarska |  | # PR #57 (tresc/2026-10-08-75)
+- [ ] MSM Mońki |  | # PR #57 (tresc/2026-10-08-75)
+- [ ] Agrocoop |  | # PR #57 (tresc/2026-10-08-75)
