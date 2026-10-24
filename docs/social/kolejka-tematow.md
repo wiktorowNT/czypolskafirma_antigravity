@@ -63,7 +63,7 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
 - [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
 - [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
-- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [x] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych (2026-10-14)
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
 - [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
 - [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
@@ -78,3 +78,25 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 - [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
 - [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
 - [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+
+## Dopisane 2026-10-14
+
+Uwaga do pogodzenia przez właściciela: część pozycji wyżej jest formalnie nieodhaczona,
+ale tematy zostały już opisane paczkami, których pull requesty nie trafiły do `develop`
+(Kross i Romet 2026-09-27, Polpharma/Adamed/Aflofarm 2026-09-28, Ubezpieczenia 2026-09-29,
+Sieci gastronomiczne 2026-09-30, Chemia domowa 2026-10-01, Motoryzacja 2026-10-05,
+Elektronika i AGD 2026-10-06, Marki własne dyskontów 2026-10-08, Fundusz w strukturze
+2026-10-09, Producenci materiałów budowlanych 2026-10-10, Polskie firmy IT 2026-10-11).
+Dlatego dopisane jest 10 nowych tematów, mimo że licznik nieodhaczonych pozycji w pliku
+pokazuje więcej niż 5.
+
+- [ ] Kto jest właścicielem Rossmanna, Hebe i Super-Pharmu, czyli drogerii z polskich miast
+- [ ] Kto jest właścicielem Castoramy, Leroy Merlin i Obi: markety budowlane i ich kapitał
+- [ ] Gry wideo: które polskie studia wciąż mają polskich właścicieli, a które nie
+- [ ] Kto jest właścicielem Przelewy24, PayU i Blika, czyli czyj jest polski przelew
+- [ ] Kto jest właścicielem Pyszne.pl, Glovo i Boltu Food: kto zarabia na dowozie jedzenia
+- [ ] Kurierzy w Polsce: czyj kapitał dowozi paczki poza paczkomatami
+- [ ] Kto jest właścicielem Żywca, Tyskiego i Okocimia: polskie browary i ich zagraniczni właściciele
+- [ ] Prąd i gaz: kto jest właścicielem sprzedawców energii dla domu
+- [ ] Kto jest właścicielem Decathlonu, Martesu i Go Sport, czyli sklepów sportowych
+- [ ] Hotele i biura podróży: czyj kapitał organizuje polskie wakacje

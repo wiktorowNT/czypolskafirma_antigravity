@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-orange-play-t-mobile-plus",
+  "tytul": "Kto jest właścicielem czterech sieci komórkowych",
+  "akcent": "czterech sieci komórkowych",
+  "podtytul": "Trzy prowadzą do Paryża i Bonn, jedna zostaje w kraju",
+  "staty": [
+    {
+      "wartosc": "50,67%",
+      "opis": "Orange S.A. w Orange Polska"
+    },
+    {
+      "wartosc": "28,59%",
+      "opis": "państwo niemieckie w DT"
+    },
+    {
+      "wartosc": "69,13%",
+      "opis": "głosów fundacji TiVi w Plusie"
+    }
+  ]
+}
