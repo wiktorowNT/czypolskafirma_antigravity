@@ -132,6 +132,13 @@
       "tekst": "Rozstrzygnięcie w Claude Code: polecenie z panelu i instrukcja każą zlecać części podagentom po kolei, jednego naraz, zamiast wszystkich równolegle. Wolniej, ale przerwa przez limit 5 h trafia najwyżej jednego podagenta, a po wznowieniu Claude kontynuuje przerwanego zamiast zaczynać od zera.",
       "proces": "firmy",
       "autor": "Claude"
+    },
+    {
+      "id": "2026-10-25-wdrozenia-seo",
+      "data": "2026-10-25",
+      "tekst": "Wdrożenia produkcji a SEO: 20 stron w GSC jako „Duplikat” sklejony z obcym serwisem, bo Google renderował HTML po kolejnym wdrożeniu (stare pliki JS = 404, ogólny ekran błędu Next.js bez canonicala). Od teraz: merge develop → main najwyżej raz dziennie, commity tylko z docs/tools/data/robocze/data/panel nie budują wdrożenia (vercel.json), app/global-error.tsx przeładowuje stronę raz i pokazuje własny komunikat z canonicalem; Skew Protection w Vercelu. Szczegóły: docs/DEVELOPMENT_WORKFLOW.md.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }

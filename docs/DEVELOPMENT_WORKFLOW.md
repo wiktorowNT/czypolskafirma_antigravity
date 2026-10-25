@@ -17,6 +17,18 @@ Każda zmiana na gałęzi `develop` jest automatycznie wdrażana na podgląd:
 2. Zmiany są weryfikowane na powyższym linku testowym.
 3. Po wyraźnym zatwierdzeniu przez Właściciela, zmiany są scalane (merge) do gałęzi `main`.
 
+### 4. Rytm wdrożeń produkcji (SEO)
+- **Merge `develop` → `main` najwyżej raz dziennie, paczką** — nie po każdej zmianie.
+  Każde wdrożenie zmienia nazwy plików JS, a Google renderuje pobrany HTML z opóźnieniem;
+  jeśli w międzyczasie weszło nowe wdrożenie, widzi pustą stronę błędu i oznacza profil
+  jako „Duplikat” (październik 2026: 20 stron sklejonych z obcym serwisem).
+- `vercel.json` → `tools/vercel-ignore-build.sh` pomija build, gdy od ostatniego wdrożenia
+  zmieniły się tylko `docs/`, `tools/`, `data/robocze/`, `data/panel/`, `scratch/` lub pliki
+  README/CLAUDE.md. Nowy katalog, którego strona nie czyta, dopisz do listy w skrypcie.
+- W Vercelu włączone **Skew Protection** (stare pliki JS dostępne po wdrożeniu).
+- `app/global-error.tsx`: przy brakującym pliku JS strona przeładowuje się raz, a potem
+  pokazuje własny komunikat z canonicalem zamiast ogólnego ekranu Next.js.
+
 ## Zasady dla AI
 - **ZAKAZ** bezpośrednich zmian na `main`.
 - **ZAKAZ** wprowadzania zmian bez wcześniejszego przedstawienia planu i uzyskania akceptacji.
