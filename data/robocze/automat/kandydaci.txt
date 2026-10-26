@@ -1,2 +1,6 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Dying Light | 6222468959 | # paczka 2026-10-26 (kto-jest-wlascicielem-polskich-studiow-gier)
+- [ ] Cyberpunk 2077 | 7342867148 | # paczka 2026-10-26 (kto-jest-wlascicielem-polskich-studiow-gier)
+- [ ] Wiedźmin | 7342867148 | # paczka 2026-10-26 (kto-jest-wlascicielem-polskich-studiow-gier)
+- [ ] Holcim |  | # PR #59 (tresc/2026-10-10-77)
