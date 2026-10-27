@@ -38,13 +38,12 @@ export const OG_BOTTOM_SAFE_AREA = 118
 
 /**
  * Origin, spod którego karta pobiera statyczne zasoby (logotypy, flagi).
- * Kolejność: produkcja → host bieżącego żądania → deployment Vercela → produkcja.
- * Na produkcji NIE czytamy headers(): to przełączyłoby kartę w tryb dynamiczny
- * i wyłączyło jej cache ISR (każde pobranie = render = CPU z limitu Vercela).
- * Host żądania zostaje dla `npm run dev` i podglądu.
+ * Poza `npm run dev` zawsze produkcja: karty mają cache ISR, a headers() w takiej
+ * trasie kończy się błędem 500 („invalid Cache-Control duration”). Podgląd Vercela
+ * i tak jest za logowaniem, więc nie dałby się z niego pobrać logotypów.
  */
 export function getOgBaseUrl(): string {
-  if (process.env.VERCEL_ENV === "production") return "https://czypolskafirma.pl"
+  if (process.env.NODE_ENV !== "development") return "https://czypolskafirma.pl"
   try {
     const h = headers()
     const host = h.get("x-forwarded-host") || h.get("host")
