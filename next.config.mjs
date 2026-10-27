@@ -52,6 +52,9 @@ const nextConfig = {
       '/sitemap-blog.xml': ['./content/blog/**/*'],
       '/blog': ['./content/blog/**/*'],
       '/blog/[slug]': ['./content/blog/**/*'],
+      // Fonty kart OG czytane przez fs (lib/og-assets.ts).
+      '/opengraph-image': ['./assets/og/**/*'],
+      '/firma/[slug]/opengraph-image': ['./assets/og/**/*'],
     },
   },
 }

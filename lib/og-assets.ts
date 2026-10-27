@@ -7,6 +7,8 @@
 // Dlatego `tools/generate-og-assets.mjs` wystawia dla nich kopie PNG w
 // public/logos-og/, a poniższy loader sięga tam, gdy oryginał jest nieczytelny.
 
+import { readFile } from "node:fs/promises"
+import path from "node:path"
 import { headers } from "next/headers"
 
 export const OG_SIZE = { width: 1200, height: 630 }
@@ -36,10 +38,13 @@ export const OG_BOTTOM_SAFE_AREA = 118
 
 /**
  * Origin, spod którego karta pobiera statyczne zasoby (logotypy, flagi).
- * Kolejność: host bieżącego żądania → deployment Vercela → produkcja.
- * Dzięki pierwszemu wariantowi karta działa też na `npm run dev`.
+ * Kolejność: produkcja → host bieżącego żądania → deployment Vercela → produkcja.
+ * Na produkcji NIE czytamy headers(): to przełączyłoby kartę w tryb dynamiczny
+ * i wyłączyło jej cache ISR (każde pobranie = render = CPU z limitu Vercela).
+ * Host żądania zostaje dla `npm run dev` i podglądu.
  */
 export function getOgBaseUrl(): string {
+  if (process.env.VERCEL_ENV === "production") return "https://czypolskafirma.pl"
   try {
     const h = headers()
     const host = h.get("x-forwarded-host") || h.get("host")
@@ -114,12 +119,14 @@ export async function loadFlagDataUri(code: string, base: string): Promise<strin
 /**
  * Inter w wagach 500 i 800 — ten sam krój co na stronie. Pliki to podzbiory
  * (ASCII + Latin-1 + Latin Extended-A) generowane przez tools/generate-og-assets.mjs,
- * po ~58 kB, żeby nie rozdmuchać bundle'a funkcji edge.
+ * po ~58 kB. Karty działają w runtime Node (żeby działał cache ISR), więc czytamy
+ * je z dysku; do bundla funkcji trafiają przez outputFileTracingIncludes w next.config.mjs.
  */
 export async function loadOgFonts() {
+  const dir = path.join(process.cwd(), "assets", "og")
   const [regular, bold] = await Promise.all([
-    fetch(new URL("../assets/og/inter-500.ttf", import.meta.url)).then((res) => res.arrayBuffer()),
-    fetch(new URL("../assets/og/inter-800.ttf", import.meta.url)).then((res) => res.arrayBuffer()),
+    readFile(path.join(dir, "inter-500.ttf")),
+    readFile(path.join(dir, "inter-800.ttf")),
   ])
   return [
     { name: "Inter", data: regular, weight: 500 as const, style: "normal" as const },

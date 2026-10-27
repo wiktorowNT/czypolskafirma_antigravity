@@ -13,8 +13,8 @@ import { getAllPosts } from "@/lib/blog"
 export const BASE_URL = "https://czypolskafirma.pl"
 
 // Stabilna data `lastmod` dla stron statycznych i kategorii. NIE używać tu new Date():
-// mapy regenerują się co godzinę (revalidate), więc new Date() sprawiałby, że każda
-// strona co godzinę wygląda na "zmienioną przed chwilą" — Google traci zaufanie do lastmod
+// mapy regenerują się okresowo (revalidate), więc new Date() sprawiałby, że każda
+// strona przy każdej regeneracji wygląda na "zmienioną przed chwilą" — Google traci zaufanie do lastmod
 // i przestaje go używać do planowania re-crawlu. Bumpuj ręcznie przy istotnych zmianach treści.
 export const STATIC_LASTMOD = new Date("2026-07-23T00:00:00Z")
 

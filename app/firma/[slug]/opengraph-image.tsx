@@ -15,7 +15,16 @@ import {
 } from "@/lib/og-assets"
 import { getSubpageLogoFile } from "@/lib/logo-podstrony"
 
-export const runtime = "edge"
+// Runtime Node + ISR: karta renderuje się raz na dobę na firmę i leży w cache.
+// Na edge każde pobranie poza lokalnym cache CDN było nowym renderem (~0,5 s CPU),
+// a to zjadało limit Fluid Active CPU na darmowym planie Vercela.
+export const runtime = "nodejs"
+export const revalidate = 86400
+
+// Pusta lista = karty generują się na żądanie i trafiają do cache (jak sam profil firmy).
+export function generateStaticParams(): { slug: string }[] {
+  return []
+}
 
 export const alt = "Sprawdź pochodzenie kapitału firmy — CzyPolskaFirma.pl"
 export const size = OG_SIZE
@@ -45,7 +54,7 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
   // Bez tego Next 14 cache'uje odpowiedź Supabase bezterminowo (domyślne
   // force-cache dla fetch) i karta serwuje nieaktualne dane firmy — łącznie
   // z werdyktem — długo po zmianie w bazie.
-  const revalidate = { next: { revalidate: 3600 } }
+  const revalidate = { next: { revalidate: 86400 } }
 
   try {
     // 1) Dopasowanie bezpośrednie (exact / znormalizowany / case-insensitive).

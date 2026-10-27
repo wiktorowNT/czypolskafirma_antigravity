@@ -4,7 +4,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 import type { CompanyGridItem } from "@/components/CompanyGrid"
 
-export const revalidate = 3600 // ISR: odśwież listę co godzinę
+export const revalidate = 86400 // ISR: odśwież listę raz na dobę (limit CPU Vercela)
 
 export const metadata: Metadata = {
   // Sufiks "| CzyPolskaFirma.pl" dodaje title.template z layoutu — bez ręcznego dopisywania.

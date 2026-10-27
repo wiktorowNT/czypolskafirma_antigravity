@@ -6,7 +6,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { getAllCategoriesFromSupabase } from "@/lib/supabase/category-cache"
 import { serializeJsonLd } from "@/lib/json-ld"
 
-export const revalidate = 3600 // ISR: odśwież co godzinę
+export const revalidate = 86400 // ISR: odśwież raz na dobę (limit CPU Vercela)
 
 const BASE_URL = "https://czypolskafirma.pl"
 

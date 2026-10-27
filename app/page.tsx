@@ -13,7 +13,7 @@ import { getHomeData } from "@/lib/home-data"
 
 export type { HeroCategory, HeroPopularTag } from "@/lib/home-data"
 
-export const revalidate = 3600 // ISR: odśwież dane strony głównej co godzinę
+export const revalidate = 86400 // ISR: odśwież dane strony głównej raz na dobę (limit CPU Vercela)
 
 export const metadata: Metadata = {
   alternates: {

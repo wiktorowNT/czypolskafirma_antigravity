@@ -8,7 +8,8 @@ import {
   loadOgFonts,
 } from "@/lib/og-assets"
 
-export const runtime = "edge"
+export const runtime = "nodejs"
+export const revalidate = 86400
 
 export const alt = "CzyPolskaFirma — sprawdź, z jakiego kraju jest firma"
 export const size = OG_SIZE

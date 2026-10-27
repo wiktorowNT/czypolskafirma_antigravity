@@ -6,12 +6,12 @@ import { slugify, resolveDisplayName, cleanAddress } from "@/lib/slug-utils"
 import { buildCompanyFaqItems, getCountryLabel } from "@/lib/company-faq"
 import { serializeJsonLd } from "@/lib/json-ld"
 
-export const revalidate = 3600 // ISR: revalidate every hour
+export const revalidate = 86400 // ISR: doba (limit CPU Vercela; deploy i tak czyści cache)
 
 // Bez generateStaticParams Next 14 renderuje trasę dynamiczną przy KAŻDYM
 // wejściu (revalidate było ignorowane — produkcja zwracała no-store i
 // X-Vercel-Cache: MISS, TTFB ~1,6 s). Pusta lista = profile generują się
-// na żądanie przy pierwszym wejściu i są serwowane z cache przez godzinę.
+// na żądanie przy pierwszym wejściu i są serwowane z cache przez dobę.
 export function generateStaticParams(): { slug: string }[] {
   return []
 }
