@@ -1,2 +1,8 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Łaciate | 7190000425 | # paczka 2026-10-28 (kto-jest-wlascicielem-marek-nabialowych)
+- [ ] Wypasione | 7220002329 | # paczka 2026-10-28 (kto-jest-wlascicielem-marek-nabialowych)
+- [ ] Serenada | 5380002604 | # paczka 2026-10-28 (kto-jest-wlascicielem-marek-nabialowych)
+- [ ] Monte | 8990204006 | # paczka 2026-10-28 (kto-jest-wlascicielem-marek-nabialowych)
+- [ ] Jogobella | 8990204006 | # paczka 2026-10-28 (kto-jest-wlascicielem-marek-nabialowych)
+- [ ] Président | 5211002843 | # paczka 2026-10-28 (kto-jest-wlascicielem-marek-nabialowych)
