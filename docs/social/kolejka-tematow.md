@@ -60,21 +60,40 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
-- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
+- [x] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych (2026-10-14)
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
-- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
-- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
+- [x] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli (2026-10-15)
+- [x] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną (2026-10-19)
+
+## Dopisane 2026-10-30
+
+Po odhaczeniu tematów zrealizowanych między 27.09 a 19.10 zostały trzy wolne pozycje,
+czyli mniej niż pięć. Nowe tematy wzięte z kategorii, które nie doczekały się jeszcze
+własnego zestawienia: Energia, Fintech i płatności, Sport i fitness, Transport,
+Turystyka i podróże, Dzieci i zabawki, Media i Rozrywka, Dom i ogród, Napoje i alkohole,
+Żywność.
+
+- [ ] Piwo i wódka z polskiej półki: kto jest właścicielem marek z kategorii napojów alkoholowych
+- [ ] Sprzedawcy prądu i gazu: czyj kapitał stoi za rachunkami, które płacą gospodarstwa domowe
+- [ ] Firmy kurierskie i automaty paczkowe: do kogo należą marki, które dowożą polskie przesyłki
+- [ ] Biura podróży i linie lotnicze, z których korzystają Polacy: ostateczni właściciele
+- [ ] Blik, portfele i terminale płatnicze: właściciele marek z kategorii fintech
+- [ ] Sklepy i marki sportowe: gdzie w kategorii sport i fitness jest polski kapitał
+- [ ] Zabawki i artykuły dla dzieci: kto jest właścicielem marek z półki dla najmłodszych
+- [ ] Kina i platformy streamingowe w Polsce: kto zarabia na biletach i abonamentach
+- [ ] Markety z narzędziami i ogrodem: właściciele sieci, w których remontujemy dom
+- [ ] Wędliny i mięso: kto jest właścicielem największych zakładów działających w Polsce
