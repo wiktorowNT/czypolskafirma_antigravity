@@ -1,2 +1,8 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Czas na Herbatę |  | # paczka 2026-10-30 (kto-jest-wlascicielem-czasu-na-herbate)
+- [ ] Żubrówka |  | # PR #64 (tresc/2026-10-15-82)
+- [ ] Absolwent |  | # PR #64 (tresc/2026-10-15-82)
+- [ ] Bols |  | # PR #64 (tresc/2026-10-15-82)
+- [ ] Royal |  | # PR #64 (tresc/2026-10-15-82)
+- [ ] theprotocol.it |  | # PR #64 (tresc/2026-10-15-82)
