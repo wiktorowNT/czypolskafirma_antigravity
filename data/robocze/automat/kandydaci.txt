@@ -1,2 +1,16 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] CityFit |  | # paczka 2026-11-02 (kto-jest-wlascicielem-klubow-fitness-w-polsce)
+- [ ] Well Fitness |  | # paczka 2026-11-02 (kto-jest-wlascicielem-klubow-fitness-w-polsce)
+- [ ] Fitness Platinium |  | # paczka 2026-11-02 (kto-jest-wlascicielem-klubow-fitness-w-polsce)
+- [ ] Xtreme Fitness Gyms |  | # paczka 2026-11-02 (kto-jest-wlascicielem-klubow-fitness-w-polsce)
+- [ ] Fabryka Formy |  | # paczka 2026-11-02 (kto-jest-wlascicielem-klubow-fitness-w-polsce)
+- [ ] Carolina Medical Center | 5213095056 | # PR #66 (tresc/2026-10-19-85)
+- [ ] Uzdrowisko Ustroń |  | # PR #66 (tresc/2026-10-19-85)
+- [ ] Link4 |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
+- [ ] Wiener TU |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
+- [ ] Vienna Life |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
+- [ ] Le Grand |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
+- [ ] Multicycle |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
+- [ ] Zipp |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
+- [ ] Global Cosmed |  | # PR #66 (tresc/2026-10-19-85), wcześniej PR #48/#50/#52
