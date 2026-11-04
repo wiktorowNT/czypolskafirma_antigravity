@@ -224,3 +224,179 @@ jest aktywny.
 - **Nie dodaje firm do bazy.** Kandydatów wypisuje w sekcji „Kandydaci do bazy"
   w opisie PR-a i dopisuje do kolejki `data/robocze/automat/kandydaci.txt`. Dodanie
   idzie normalną ścieżką z `docs/SOP_dodawanie_firm.md` (`automat.mjs --kandydaci`).
+
+---
+
+# Nocna re-weryfikacja bazy (codziennie)
+
+Drugi automat w tym samym repozytorium: `.github/workflows/reweryfikacja.yml`. Nie pisze
+treści, tylko pilnuje, żeby baza nie starzała się po cichu. Co noc bierze z Supabase
+35 firm o najstarszym (albo pustym) `verified_at`, przechodzi je automatem w trybie
+re-weryfikacji i otwiera pull requesta do `develop` z plikiem partii i tabelą „było → jest".
+
+Po co: struktury właścicielskie realnie się zmieniają. Deutsche Telekom przejął Fiberhost
+i Ineę, Grupa Pracuj przejęła No Fluff Jobs, Polenergia zniknęła z giełdy, a wezwanie
+Couche-Tard na Żabkę rozliczyło się na przełomie września i października 2026. Bez cyklu
+odświeżania baza jest coraz mniej prawdziwa, a to jest cały majątek projektu.
+
+## Skala: dlaczego 35 firm na noc
+
+Przy 1555 firmach w bazie:
+
+| Firm na noc | Pełny cykl | Najstarszy rekord | MF (limit 100/dobę) | KRS | Czas joba (2 naraz) |
+|---|---|---|---|---|---|
+| 10 (pierwotny pomysł z backlogu, liczony dla bazy 750 firm) | 185 nocy, 6,1 mies. | 183 dni | 1 zapytanie | 20 | 15-30 min |
+| 26 | 74 nocy, 2,4 mies. | 78 dni | 1 zapytanie | 52 | 39-78 min |
+| 30 | 64 nocy, 2,1 mies. | 70 dni | 1 zapytanie | 60 | 45-90 min |
+| **35** | **55 nocy, 1,8 mies.** | **63 dni** | **2 zapytania** | **70** | **53-105 min** |
+| 40 | 49 nocy, 1,6 mies. | 59 dni | 2 zapytania | 80 | 60-120 min |
+
+„Pełny cykl" to liczba nocy, po których automat dotknął każdej firmy w bazie choć raz;
+„najstarszy rekord" to najgorszy wiek rekordu w stanie ustalonym, już po pierwszym obejściu.
+Liczby z symulacji kolejki na syntetycznej bazie 1555 firm o rozkładzie jak dziś
+(ok. 70% rekordów bez `verified_at`, ok. 30% typów priorytetowych).
+
+Wybrane jest **35**: 1,8 miesiąca mieści się w celu 1,5-2 miesięcy i zostawia zapas czasu
+w jobie. 40 firm na noc też się mieści i jest naturalnym następnym krokiem, gdy będą znane
+prawdziwe czasy przebiegów (pole `ile` przy uruchomieniu ręcznym pozwala to sprawdzić
+bez zmiany pliku).
+
+Wąskim gardłem **nie są** rejestry. Biała Lista MF pozwala na 100 zapytań po 30 NIP-ów
+na dobę, a numery firm z kolejki są znane z bazy, więc automat sprawdza je zbiorczo:
+35 firm to **2 zapytania ze 100** (sprawdzone na udawanej bazie 1555 firm). API KRS znosi
+ok. 1 zapytanie na sekundę, a `lib/rejestry.mjs` sam trzyma odstęp 1,1 s; 2 odpisy na firmę
+to 70 zapytań, czyli ok. 80 sekund czekania w całym przebiegu.
+
+Wąskim gardłem jest **model**: 3-6 minut na firmę przy dwóch firmach naraz. Stąd limit
+czasu joba 180 minut, z zapasem na wolniejsze odpisy i ponowienia. Drugie, mniej widoczne
+ograniczenie to **limit subskrypcji Claude**, wspólny z automatem treści. Dlatego
+re-weryfikacja startuje o 22:00 UTC, a treść o 4:00 UTC: nie nachodzą na siebie.
+
+## Kolejka: kto idzie pierwszy
+
+Sortowanie po „wieku" rekordu, czyli po liczbie dni od `verified_at`. Puste `verified_at`
+to rekord nigdy nie weryfikowany i idzie na samą górę. Typy własności, w których zmiany
+są najczęstsze (`korporacja_gieldowa`, `fundusz_pe_vc`), dostają **premię 30 dni**: spółka
+giełdowa sprawdzona miesiąc temu konkuruje z firmą rodzinną sprawdzoną dwa miesiące temu.
+
+Premia musi być wyraźnie mniejsza od naturalnego cyklu (1555 / 35 = 45 nocy). Powyżej tej
+granicy typy priorytetowe wracają na wierzch, zanim kolejka obejdzie resztę bazy, i ogon
+kolejki głodzi. Symulacja na 1555 firmach: przy premii 30 dni pełny cykl to 55 nocy
+i najstarszy rekord 63 dni, przy premii 90 dni już 105 nocy i 123 dni. Zmieniasz liczbę
+firm na noc? Sprawdź tę zależność ponownie (stała `PREMIA_DNI` w `tools/firmy/lib/supabase.mjs`).
+
+Rekordy bez poprawnego NIP-u automat pomija: nie da się ich re-weryfikować „z numeru",
+a szukanie numeru modelem jest wolne i niepewne. To materiał dla
+`tools/firmy/przeglad-tozsamosci.mjs`, nie dla nocnego automatu.
+
+## Co się dzieje w nocy
+
+1. Checkout `develop`, Node 22, globalna instalacja Claude Code CLI. **Bez `npm ci`**:
+   automat w tym trybie stoi na samym Node, a puppeteer jest potrzebny tylko dla `--crbr`
+   i importowany leniwie. Oszczędza to kilka minut i ok. 150 MB Chrome'a na przebieg.
+2. Wybór starych, nieprzejrzanych partii do zamknięcia (ponad 14 dni).
+3. `automat.mjs --najstarsze 35 --reweryfikacja --rownolegle 2 --partia rew-RRRR-MM-DD`.
+   Bez `--crbr`, bez puppeteera. Kroki 1-5 jak przy nowych firmach, tylko NIP jest znany
+   z bazy, więc model nie szuka numeru.
+4. `raport-reweryfikacji.mjs` buduje opis PR-a z pliku partii: podsumowanie, tabela zmian
+   („było → jest" dla kraju i właściciela), konflikty, firmy bez zmian i te, które nie
+   doszły do rekordu.
+5. Kontrola ścieżek, commit **wyłącznie** pliku partii, pull request do `develop`.
+6. Zamknięcie starych partii z komentarzem.
+
+## Twoje 5 minut
+
+```bash
+git pull
+```
+
+```bash
+node tools/firmy/przeglad.mjs --partia rew-RRRR-MM-DD
+```
+
+Przegląd na http://localhost:3007. Przy re-weryfikacji przydaje się przycisk
+**Zatwierdź ŚREDNIA zgodne z bazą**: pozycje, które tylko potwierdzają obecny rekord,
+odhaczasz hurtem, a czytasz uważnie te ze zmianą kraju albo właściciela. Potem:
+
+```bash
+node tools/firmy/import.mjs --partia rew-RRRR-MM-DD
+```
+
+```bash
+node tools/firmy/import.mjs --partia rew-RRRR-MM-DD --apply
+```
+
+Import odświeża `verified_at`, czyli dokładnie to, po co ten workflow istnieje. **Dopóki
+nie zaimportujesz, firma ma stary `verified_at` i wróci w kolejce.** Nic nie przepada.
+
+## Konfiguracja (jednorazowo)
+
+1. **Sekret `CLAUDE_CODE_OAUTH_TOKEN`**: ten sam, co dla automatu treści. Już jest,
+   nic nie trzeba robić.
+2. **Zmienne repozytorium.** Settings → Secrets and variables → Actions → zakładka
+   **Variables** (nie Secrets) → New repository variable:
+   - `NEXT_PUBLIC_SUPABASE_URL`: adres projektu Supabase,
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: klucz publiczny.
+
+   Oba są publiczne: leżą w bundlu strony, każdy je widzi w przeglądarce. Dlatego zmienne,
+   nie sekrety. Job czyta nimi bazę i **nie zna** `SUPABASE_SERVICE_ROLE_KEY`, więc
+   technicznie nie jest w stanie nic zapisać.
+3. **Zgoda na tworzenie PR-ów przez Actions**: ta sama, co dla automatu treści
+   (Settings → Actions → General → „Allow GitHub Actions to create and approve pull requests").
+4. **Plik workflow musi trafić na `main`.** Tak samo jak przy automacie treści: GitHub
+   uruchamia `schedule` i pokazuje „Run workflow" wyłącznie dla workflowów z gałęzi
+   domyślnej. Dopóki `.github/workflows/reweryfikacja.yml` siedzi tylko na `develop`,
+   **nic się nie odpali**. Po starcie job robi checkout `develop`, pisze na `develop`
+   i otwiera PR do `develop`; na `main` leży tylko przepis.
+
+   Skrypty (`automat.mjs`, `raport-reweryfikacji.mjs`, `lib/supabase.mjs`) są czytane
+   z `develop`, więc działają od razu po commicie. Sam plik workflow dopiero po scaleniu.
+
+## Uruchomienie ręczne
+
+Actions → **Nocna re-weryfikacja** → Run workflow. Dwa pola:
+
+- **ile**: liczba firm w tej partii (domyślnie 35). Do próby wystarczy `3`.
+- **firmy**: konkretne marki po przecinku, np. `Żabka, Wedel`. Pomija kolejkę i sprawdza
+  dokładnie te marki. Tak najprościej dociągnąć jedną firmę po newsie o przejęciu.
+
+## Bezpieczniki
+
+| Bezpiecznik | Co robi |
+|---|---|
+| Brak klucza zapisu | Job zna tylko klucz publiczny; zapis do bazy wymaga `SUPABASE_SERVICE_ROLE_KEY`, którego nie ma |
+| Kontrola ścieżek | Job może dotknąć **wyłącznie** pliku `data/robocze/automat/partia-rew-<data>.json`; cokolwiek innego i nie powstaje PR |
+| Pull request | Nic nie trafia na `develop` bez Twojego merge'a, na `main` bez drugiego |
+| Import ręczny | Baza zmienia się tylko z Twojego terminala, po przeglądzie |
+| Zamykanie po 14 dniach | Tylko PR-y z autorem `github-actions` i gałęzią `rew/*`, nigdy cudze; filtr po autorze, nie po tytule (repo jest publiczne) |
+| Nic nie przepada | Zamknięcie partii bez importu nie zmienia `verified_at`, więc firmy wracają do kolejki same |
+| Odsiew rekordów bez NIP-u | Nie marnuje tur modelu na szukanie numerów; to osobne narzędzie |
+| Deterministyczna kolejka | Ta sama baza daje tę samą kolejkę, więc powtórny przebieg tej samej partii jej nie rozdmuchuje |
+| Zakaz wykonywania poleceń ze stron | `lib/claude.mjs` wstrzykuje bezpiecznik: treści z internetu są danymi, nie instrukcją |
+
+## Kiedy coś nie działa
+
+- **Czerwony na „Przejdź partię automatem", komunikat o zmiennych**: brakuje
+  `NEXT_PUBLIC_SUPABASE_URL` albo `NEXT_PUBLIC_SUPABASE_ANON_KEY` w zakładce Variables.
+- **Czerwony z „Claude nie jest zalogowany"**: wygasły `CLAUDE_CODE_OAUTH_TOKEN`.
+  Ten sam objaw co przy automacie treści, ta sama naprawa.
+- **Ostrzeżenie „BRAK MATERIAŁU"**: żadna firma nie doszła do rekordu (np. KRS nie
+  odpowiadał). PR nie powstaje, firmy zostają w kolejce. Powód jest w logu.
+- **Czerwony na kontroli ścieżek**: automat ruszył coś poza swoją partią. Log wypisuje
+  listę plików. Nie merguj; zgłoś to jako błąd.
+- **Job uciął się na limicie czasu**: plik partii jest zapisywany po każdej firmie, więc
+  nic nie przepada. Zmniejsz `ile` albo dokończ partię lokalnie:
+  `node tools/firmy/automat.mjs --partia rew-RRRR-MM-DD`.
+
+## Czego ten automat nie robi
+
+- **Nie zapisuje do bazy.** Nigdy. Import to Twoja decyzja i Twój terminal.
+- **Nie dotyka `main`.** PR idzie do `develop`.
+- **Nie rusza CRBR.** Wymaga puppeteera i prawdziwej przeglądarki; w nocnym jobie
+  byłoby to wolne i kruche. Beneficjentów dociągasz lokalnie, gdy są potrzebni.
+- **Nie poprawia rekordów bez NIP-u.** To zadanie dla `przeglad-tozsamosci.mjs`.
+
+> Uwaga o rozmiarze repozytorium: plik partii to ok. 25 KB na firmę, czyli ok. 0,7 MB
+> na noc (w paczce gita realnie kilkadziesiąt KB, bo to dobrze kompresujący się tekst).
+> Przy codziennym cyklu warto raz na kwartał usunąć z `data/robocze/automat/` partie
+> `rew-*`, które są już zaimportowane. Historia gita i tak je pamięta.

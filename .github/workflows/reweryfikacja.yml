@@ -1,0 +1,192 @@
+name: Nocna re-weryfikacja
+
+# Co noc bierze z bazy 35 firm o najstarszym (albo pustym) verified_at, przechodzi je
+# automatem w trybie re-weryfikacji i otwiera pull requesta do gałęzi develop z plikiem
+# partii i tabelą „było → jest". Nic nie zapisuje do Supabase: import zostaje ręczny.
+# Przy 1555 firmach w bazie i 35 na noc pełny cykl zamyka się w ok. 55 nocy (1,8 miesiąca).
+# Szczegóły i instrukcja obsługi: docs/AUTOMATYZACJA_TRESCI.md, sekcja „Nocna re-weryfikacja".
+
+on:
+  schedule:
+    # 22:00 UTC = 00:00 czasu polskiego latem, 23:00 zimą. Celowo kilka godzin przed
+    # automatem treści (04:00 UTC): oba zużywają ten sam limit subskrypcji Claude,
+    # a ten job może pracować do trzech godzin.
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+    inputs:
+      ile:
+        description: "Ile firm w tej partii (domyślnie 35)"
+        required: false
+        default: "35"
+      firmy:
+        description: "Konkretne marki zamiast kolejki, po przecinku (np. Żabka, Wedel)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: reweryfikacja
+  cancel-in-progress: false
+
+jobs:
+  partia:
+    runs-on: ubuntu-latest
+    # 35 firm po 2 naraz to 3-6 minut na firmę, czyli ok. 55-105 minut. Limit z zapasem
+    # na wolniejsze odpisy KRS, ponowienia MF i nierówne opróżnianie kolejki.
+    timeout-minutes: 180
+
+    steps:
+      - name: Pobierz repozytorium
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Celowo bez `npm ci`: automat w tym trybie stoi na samym Node (fetch, fs) i bibliotekach
+      # z tools/firmy/lib. Puppeteer jest potrzebny tylko dla --crbr, którego tu nie używamy,
+      # i jest importowany leniwie. Oszczędza to kilka minut i ok. 150 MB Chrome'a na przebieg.
+      - name: Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Ustal dzisiejszą datę
+        id: dzien
+        run: echo "data=$(TZ=Europe/Warsaw date +%F)" >> "$GITHUB_OUTPUT"
+
+      # Nieprzejrzane partie starsze niż 14 dni są nieaktualne (baza i rejestry zdążyły się
+      # zmienić). Tu tylko je wybieramy, zamknięcie jest na końcu joba. Filtr po autorze
+      # i gałęzi, nie po tytule: repozytorium jest publiczne, tytuł może podrobić każdy.
+      - name: Znajdź stare partie (ponad 14 dni)
+        id: stare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          granica=$(date -u -d '14 days ago' +%FT%TZ)
+          numery=$(gh pr list --state open --limit 100 --json number,headRefName,createdAt,author \
+            --jq "[.[] | select(.author.login == \"app/github-actions\" and (.headRefName | startswith(\"rew/\")) and .createdAt < \"$granica\") | .number | tostring] | join(\" \")")
+          echo "Stare partie do zamknięcia: ${numery:-(brak)}"
+          echo "numery=$numery" >> "$GITHUB_OUTPUT"
+
+      - name: Przejdź partię automatem
+        env:
+          # Token subskrypcji Claude. Automat woła przez niego `claude -p` (lib/claude.mjs).
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Klucz publiczny, ten sam, który leży w bundlu strony. Tylko odczyt; zapis do bazy
+          # wymaga SUPABASE_SERVICE_ROLE_KEY, którego ten job celowo nie zna.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          PARTIA: rew-${{ steps.dzien.outputs.data }}
+          ILE: ${{ inputs.ile || '35' }}
+          FIRMY: ${{ inputs.firmy }}
+        run: |
+          set -e
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "Brak zmiennych repozytorium NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY."
+            echo "Settings → Secrets and variables → Actions → Variables. To klucz publiczny, nie sekret."
+            exit 1
+          fi
+          # Ręczne uruchomienie z listą marek pomija kolejkę (np. żeby sprawdzić jedną firmę).
+          if [ -n "$FIRMY" ]; then
+            echo "Tryb ręczny: $FIRMY"
+            node tools/firmy/automat.mjs --firmy "$FIRMY" --reweryfikacja --rownolegle 2 --partia "$PARTIA"
+          else
+            node tools/firmy/automat.mjs --najstarsze "$ILE" --reweryfikacja --rownolegle 2 --partia "$PARTIA"
+          fi
+
+      - name: Zbuduj opis pull requesta
+        id: material
+        env:
+          PARTIA: rew-${{ steps.dzien.outputs.data }}
+        run: |
+          set -e
+          node tools/firmy/raport-reweryfikacji.mjs --partia "$PARTIA"
+          if [ ! -f .tmp/pr-body.md ]; then
+            echo "Raport nie powstał. Sprawdź log kroku „Przejdź partię automatem”."
+            exit 1
+          fi
+          if head -n 1 .tmp/pr-body.md | grep -q "BRAK MATERIAŁU"; then
+            echo "powod=$(head -n 1 .tmp/pr-body.md)" >> "$GITHUB_OUTPUT"
+            echo "jest=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "jest=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Brak materiału na dziś
+        if: steps.material.outputs.jest == 'false'
+        run: |
+          echo "::warning::${{ steps.material.outputs.powod }}"
+          echo "Kończę bez pull requesta. Firmy zostają w kolejce: ich verified_at się nie zmienił."
+
+      # Job ma dostęp tylko do pliku swojej partii. Gdyby ruszył cokolwiek innego (kod aplikacji,
+      # treści, cudzą partię), nie powstaje żaden PR.
+      - name: Sprawdź, czy automat nie ruszył cudzych plików
+        if: steps.material.outputs.jest == 'true'
+        env:
+          PARTIA: rew-${{ steps.dzien.outputs.data }}
+        run: |
+          set -e
+          dozwolony="data/robocze/automat/partia-${PARTIA}.json"
+          # -uall jest tu istotne: bez niego git zwija nieśledzone katalogi do samej nazwy
+          # katalogu ("data/" zamiast pełnej ścieżki pliku) i sprawdzenie odrzucałoby
+          # każdą nową partię.
+          niedozwolone=$(git status --porcelain -uall | cut -c4- | grep -v -F -x "$dozwolony" || true)
+          if [ -n "$niedozwolone" ]; then
+            echo "Automat zmienił pliki spoza dozwolonej ścieżki ($dozwolony):"
+            echo "$niedozwolone"
+            exit 1
+          fi
+          if [ ! -s "$dozwolony" ]; then
+            echo "Brak pliku partii $dozwolony."
+            exit 1
+          fi
+
+      - name: Otwórz pull requesta
+        id: pr
+        if: steps.material.outputs.jest == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PARTIA: rew-${{ steps.dzien.outputs.data }}
+        run: |
+          set -e
+          galaz="rew/${{ steps.dzien.outputs.data }}-${{ github.run_number }}"
+          tytul=$(head -n 1 .tmp/pr-body.md | sed 's/^#* *//')
+
+          git config user.name "czypolskafirma-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$galaz"
+          git add "data/robocze/automat/partia-${PARTIA}.json"
+          git commit -m "Re-weryfikacja: partia $PARTIA"
+          git push --force-with-lease origin "$galaz"
+
+          adres=$(gh pr create \
+            --base develop \
+            --head "$galaz" \
+            --title "$tytul" \
+            --body-file .tmp/pr-body.md)
+          echo "$adres"
+          echo "adres=$adres" >> "$GITHUB_OUTPUT"
+
+      # Zamykamy niezależnie od tego, czy dzisiejsza partia powstała: nic się przez to nie gubi.
+      # Firma, której nie zaimportowano, ma wciąż stary verified_at, więc sama wraca na wierzch
+      # kolejki. To jedyna różnica wobec automatu treści, gdzie zamknięcie PR-a gubiłoby
+      # kandydatów do bazy i dlatego czeka na nową paczkę.
+      - name: Zamknij stare partie
+        if: always() && steps.stare.outputs.numery != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMERY: ${{ steps.stare.outputs.numery }}
+          NOWY_PR: ${{ steps.pr.outputs.adres }}
+        run: |
+          for n in $NUMERY; do
+            gh pr close "$n" --delete-branch \
+              --comment "Nieaktualna partia re-weryfikacji, zamknięta automatycznie (otwarta dłużej niż 14 dni). Nic nie przepadło: te firmy mają w bazie niezmieniony \`verified_at\`, więc wracają na wierzch kolejki w kolejnych przebiegach.${NOWY_PR:+ Najnowsza partia: $NOWY_PR}" \
+              || echo "::warning::Nie udało się zamknąć PR #$n."
+          done

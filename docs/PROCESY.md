@@ -81,13 +81,22 @@ Ton: dla przypadkowego czytelnika, bez „my” i bez metodologii. O markach, ni
 
 ## Re-weryfikacja firmy w bazie {#reweryfikacja}
 
-- **Kiedy:** po newsie o przejęciu; co 12 miesięcy zwykłe firmy, co 6 giełdowe i fundusze PE
-- **Gdzie:** Panel projektu, krok 1
-- **Pełny opis:** docs/SOP_dodawanie_firm.md, sekcja 4
+- **Kiedy:** cała baza idzie nocnym automatem (35 firm na noc, pełne obejście w ok. 1,8 miesiąca); ręcznie tylko po newsie o przejęciu
+- **Gdzie:** PR od automatu „Nocna re-weryfikacja”; ręcznie Panel projektu, krok 1
+- **Pełny opis:** docs/AUTOMATYZACJA_TRESCI.md, sekcja „Nocna re-weryfikacja bazy”; ręczna ścieżka docs/SOP_dodawanie_firm.md, sekcja 4
 - **Obszar:** Firmy i dane
 - **Prowadzi do:** firmy (ta sama ścieżka w panelu)
 
-1. W kroku 1 zaznacz **„To firmy, które już są w bazie”** i wklej `Nazwa | NIP`.
+Ścieżka nocna (domyślna, Twoje 5 minut):
+
+1. Rano jest PR „Re-weryfikacja RRRR-MM-DD” do `develop` z tabelą „było → jest”. Czytasz uważnie wiersze ze zmianą kraju albo właściciela, resztę hurtem.
+2. `git pull`, potem `node tools/firmy/przeglad.mjs --partia rew-RRRR-MM-DD`. Przycisk **Zatwierdź ŚREDNIA zgodne z bazą** odhacza potwierdzenia obecnego rekordu.
+3. `node tools/firmy/import.mjs --partia rew-RRRR-MM-DD` (próbnie), potem `--apply`.
+4. Nie zdążyłeś? PR może poczekać, po 14 dniach zamyka się sam, a firmy wracają do kolejki (bez importu `verified_at` się nie zmienia).
+
+Ścieżka ręczna (jedna firma, od razu po newsie):
+
+1. W kroku 1 panelu zaznacz **„To firmy, które już są w bazie”** i wklej `Nazwa | NIP`. Z Actions ten sam efekt daje „Nocna re-weryfikacja” → Run workflow → pole **firmy**.
 2. Przejdź partię jak zwykle. W przeglądzie każda różnica (kraj, właściciel, NIP) to KONFLIKT do Twojej decyzji.
 3. Import robi UPDATE tylko pól właścicielskich i ustawia `verified_at` na dziś.
 
