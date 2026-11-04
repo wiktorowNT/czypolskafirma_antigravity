@@ -4,6 +4,7 @@
 
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 
 export interface BlogCompany {
   id: string
@@ -22,11 +23,17 @@ export async function getCompaniesBySlugs(companySlugs: string[]): Promise<BlogC
   if (companySlugs.length === 0) return []
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase
-      .from("companies")
-      .select("id, slug, name, display_name, website_url, country_code, country_code_2")
 
-    if (error || !data) return []
+    // Dopasowanie idzie po slugify() w JS, więc nie da się zawęzić zapytania po slugu
+    // i trzeba przejrzeć całą tabelę — stronicowano, bo PostgREST oddaje maks. 1000
+    // wierszy i firmy poza pierwszym tysiącem nigdy się nie dopasowywały.
+    const { rows: data } = await pobierzWszystkieFirmy<any>(
+      supabase,
+      "id, slug, name, display_name, website_url, country_code, country_code_2",
+      { etykieta: "blog", dostrojZapytanie: (q) => q.order("id", { ascending: true }) },
+    )
+
+    if (data.length === 0) return []
 
     const wanted = new Map(companySlugs.map((s, index) => [s, index]))
     return data

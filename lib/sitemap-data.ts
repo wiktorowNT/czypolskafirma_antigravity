@@ -9,6 +9,7 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify } from "@/lib/slug-utils"
 import { getAllPosts } from "@/lib/blog"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 
 export const BASE_URL = "https://czypolskafirma.pl"
 
@@ -53,21 +54,20 @@ export async function getCompanyEntries(): Promise<SitemapEntry[]> {
     const supabase = await getSupabaseServerClient()
 
     // Supabase zwraca maks. 1000 wierszy na zapytanie — bez stronicowania sitemapa
-    // ucinała się na 1000 firmach (przy 1555 w bazie). Pobieramy partiami.
-    const PAGE_SIZE = 1000
-    const data: { id: string; slug: string | null; verified_at: string | null; created_at: string | null }[] = []
-    for (let from = 0; ; from += PAGE_SIZE) {
-      const { data: page, error } = await supabase
-        .from("companies")
-        .select("id, slug, verified_at, created_at")
-        .order("name", { ascending: true })
-        .order("id", { ascending: true })
-        .range(from, from + PAGE_SIZE - 1)
+    // ucinała się na 1000 firmach (przy 1555 w bazie). Wspólny helper: lib/companies-paged.ts.
+    const { rows: data, complete } = await pobierzWszystkieFirmy<{
+      id: string
+      slug: string | null
+      verified_at: string | null
+      created_at: string | null
+    }>(supabase, "id, slug, verified_at, created_at", {
+      etykieta: "sitemap",
+      dostrojZapytanie: (q) => q.order("name", { ascending: true }).order("id", { ascending: true }),
+    })
 
-      if (error || !page) return []
-      data.push(...page)
-      if (page.length < PAGE_SIZE) break
-    }
+    // Niepełna lista = sitemapa, w której brakuje części firm; Google odczytałby to
+    // jako usunięte URL-e. Lepiej oddać pustą mapę (jak dotychczas przy błędzie).
+    if (!complete) return []
 
     // Kanoniczne slugi (slugify) — bez spacji, nawiasów, wielkich liter i polskich znaków.
     return data.map((company) => {

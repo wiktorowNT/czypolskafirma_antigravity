@@ -1,24 +1,26 @@
 import { getSupabaseServerClient } from "./server"
 import { getCachedCategoryData } from "./category-cache"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 
 export async function getCompanySlugsFromSupabase(): Promise<Set<string>> {
   try {
     const supabase = await getSupabaseServerClient()
 
-    const { data, error } = await supabase.from("companies").select("slug")
+    // Zbiór slugów wszystkich firm — stronicowano, bo PostgREST oddaje maks. 1000
+    // wierszy i zbiór gubił firmy poza pierwszym tysiącem (lib/companies-paged.ts).
+    const { rows: data } = await pobierzWszystkieFirmy<{ slug: string | null }>(supabase, "slug", {
+      etykieta: "get-companies",
+      dostrojZapytanie: (q) => q.order("id", { ascending: true }),
+    })
 
-    if (error) {
-      console.error("[v0] Error fetching company slugs from Supabase:", error)
-      return new Set()
-    }
-
-    if (!data) {
+    if (data.length === 0) {
       console.log("[v0] No companies found in Supabase")
       return new Set()
     }
 
-    const slugs = new Set(data.map((company) => company.slug?.toLowerCase()).filter(Boolean))
-    console.log(`[v0] Found ${slugs.size} companies in Supabase:`, Array.from(slugs))
+    const slugs = new Set(data.map((company) => company.slug?.toLowerCase()).filter(Boolean) as string[])
+    // Sama liczba, bez listy: przy 1555 firmach wypisywanie całego zbioru zasypywało logi.
+    console.log(`[v0] Found ${slugs.size} companies in Supabase`)
 
     return slugs
   } catch (err) {
