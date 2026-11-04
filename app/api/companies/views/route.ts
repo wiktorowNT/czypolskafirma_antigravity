@@ -1,12 +1,51 @@
 import { NextResponse } from "next/server"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
+import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
+import {
+    czyDuplikatOdslony,
+    czyIdPotwierdzone,
+    jestPoprawnyUuid,
+    zapamietajId,
+} from "@/lib/view-guard"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// POST — record a company page view
+/**
+ * Sprawdza w bazie, czy firma o danym id istnieje (i jest widoczna w tym
+ * środowisku). Wynik pozytywny zapamiętujemy na godzinę, żeby nie wysyłać
+ * zapytania do Supabase przy każdej odsłonie.
+ */
+async function czyFirmaIstnieje(idFirmy: string): Promise<boolean> {
+    if (czyIdPotwierdzone(idFirmy)) return true
+
+    const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id&id=eq.${idFirmy}&limit=1`
+    const res = await fetch(url, {
+        headers: {
+            apikey: SUPABASE_ANON_KEY as string,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Accept: "application/json",
+        },
+    })
+
+    if (!res.ok) {
+        const text = await res.text()
+        console.error("[views] Nie udalo sie zweryfikowac firmy:", text)
+        return false
+    }
+
+    const data = await res.json()
+    const istnieje = Array.isArray(data) && data.length === 1
+
+    if (istnieje) zapamietajId(idFirmy)
+    return istnieje
+}
+
+// POST — zapis odsłony profilu firmy
 export async function POST(request: Request) {
-    // Rate limit: 30 view recordings per minute per IP
+    // Limit: 30 zapisów odsłon na minutę na IP.
+    // UWAGA: limiter jest in-memory, na Vercel nie jest współdzielony między
+    // instancjami funkcji (szczegóły w `lib/rate-limit.ts`).
     const ip = getClientIp(request)
     const { allowed } = checkRateLimit(ip, "views-post", { maxRequests: 30, windowSeconds: 60 })
     if (!allowed) {
@@ -21,8 +60,21 @@ export async function POST(request: Request) {
         const body = await request.json()
         const { companyId } = body
 
-        if (!companyId) {
-            return NextResponse.json({ error: "Missing companyId" }, { status: 400 })
+        // Odrzucamy wszystko, co nie jest UUID, zanim ruszymy bazę.
+        if (!jestPoprawnyUuid(companyId)) {
+            return NextResponse.json({ error: "Invalid companyId" }, { status: 400 })
+        }
+
+        // Licznik popularności zasila ranking „najpopularniejsze", więc nie
+        // zliczamy odsłon firm, których nie ma w bazie.
+        if (!(await czyFirmaIstnieje(companyId))) {
+            return NextResponse.json({ error: "Unknown company" }, { status: 404 })
+        }
+
+        // Jedna odsłona na dobę z tego samego IP na tę samą firmę.
+        // Deduplikacja jest in-memory i per instancja, patrz `lib/view-guard.ts`.
+        if (czyDuplikatOdslony(ip, companyId)) {
+            return NextResponse.json({ success: true, deduplicated: true })
         }
 
         // Insert a view record
@@ -52,14 +104,25 @@ export async function POST(request: Request) {
 
 // GET — retrieve top viewed companies
 export async function GET(request: Request) {
+    // Limit: 60 odczytów na minutę na IP (limiter in-memory, patrz `lib/rate-limit.ts`).
+    const ipOdczytu = getClientIp(request)
+    const { allowed } = checkRateLimit(ipOdczytu, "views-get", { maxRequests: 60, windowSeconds: 60 })
+    if (!allowed) {
+        return NextResponse.json([], { status: 429 })
+    }
+
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
         return NextResponse.json({ error: "Missing env vars" }, { status: 500 })
     }
 
     try {
         const { searchParams } = new URL(request.url)
-        const top = parseInt(searchParams.get("top") || "6", 10)
-        const days = parseInt(searchParams.get("days") || "30", 10)
+        // Parametry z URL-a trafiają do ciała zapytania RPC, więc trzymamy je
+        // w rozsądnych granicach (i odrzucamy NaN).
+        const topRaw = parseInt(searchParams.get("top") || "6", 10)
+        const daysRaw = parseInt(searchParams.get("days") || "30", 10)
+        const top = Number.isFinite(topRaw) ? Math.min(Math.max(topRaw, 1), 50) : 6
+        const days = Number.isFinite(daysRaw) ? Math.min(Math.max(daysRaw, 1), 365) : 30
 
         // Calculate the date threshold
         const since = new Date()
