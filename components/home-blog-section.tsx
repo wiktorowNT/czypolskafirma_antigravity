@@ -24,7 +24,7 @@ export function HomeBlogSection() {
           <div>
             <h2 className="text-[26px] sm:text-[28px] font-extrabold tracking-tight text-ink">Z bloga</h2>
             <p className="text-[15px] text-ink-2 mt-1">
-              Przejęcia, pochodzenie kapitału i sukcesy polskiego biznesu — na twardych danych
+              Przejęcia, pochodzenie kapitału i sukcesy polskiego biznesu na twardych danych
             </p>
           </div>
           <Link href="/blog" className="text-sm font-bold text-brand-ink hover:underline underline-offset-4 whitespace-nowrap">

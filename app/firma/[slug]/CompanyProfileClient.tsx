@@ -14,6 +14,8 @@ import OwnershipDiagram from "@/components/OwnershipDiagram"
 import PolishAlternatives from "@/components/PolishAlternatives"
 import CompanyFAQ from "@/components/CompanyFAQ"
 import CompanyArticle from "@/components/CompanyArticle"
+import CompanyFamily from "@/components/CompanyFamily"
+import CompanyBlogPosts from "@/components/CompanyBlogPosts"
 import Link from "next/link"
 import { useBookmarks } from "@/hooks/use-bookmarks"
 
@@ -56,9 +58,18 @@ interface RelatedCompany {
     country_code?: string
 }
 
+interface FamilyCompany {
+    id: string
+    slug: string
+    brand: string
+    website_url?: string
+}
+
 interface CompanyProfileClientProps {
     company: CompanyDetail
     relatedCompanies?: RelatedCompany[]
+    family?: { sameCompany: FamilyCompany[]; sameOwner: FamilyCompany[]; ownerName?: string }
+    blogPosts?: { slug: string; title: string; date: string; description: string }[]
 }
 
 // Format slug as display name: "polkomtel-plus" -> "Polkomtel Plus"
@@ -69,7 +80,7 @@ function formatSlugAsName(slug: string): string {
         .join(' ')
 }
 
-export default function CompanyProfileClient({ company, relatedCompanies }: CompanyProfileClientProps) {
+export default function CompanyProfileClient({ company, relatedCompanies, family, blogPosts }: CompanyProfileClientProps) {
     const { isBookmarked, toggleBookmark } = useBookmarks()
     const bookmarked = isBookmarked(company.id)
 
@@ -102,7 +113,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                             href={`/kategoria/${company.categorySlug}`}
                             className="hover:text-ink flex-shrink-0"
                         >
-                            {formatSlugAsName(company.categorySlug)}
+                            {company.categoryName || formatSlugAsName(company.categorySlug)}
                         </Link>
                         <ChevronRight className="w-3.5 h-3.5 text-ink-3 flex-shrink-0" />
                         <span className="text-ink truncate max-w-[120px] sm:max-w-[260px]">
@@ -167,6 +178,16 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     brandLinks={company.brandLinks}
                 />
 
+                {/* Inne marki tej samej spółki i tego samego właściciela */}
+                {family && (
+                    <CompanyFamily
+                        brandName={company.brandName}
+                        sameCompany={family.sameCompany}
+                        sameOwner={family.sameOwner}
+                        ownerName={family.ownerName}
+                    />
+                )}
+
                 {/* Company Meta Details - Address, Registry, Links */}
                 <CompanyMetaDetails
                     adres={company.adres}
@@ -175,6 +196,9 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                     website_url={company.website_url}
                     registry_url={company.registry_url}
                 />
+
+                {/* Wpisy blogowe o tej firmie */}
+                {blogPosts && <CompanyBlogPosts posts={blogPosts} />}
 
                 {/* Polish Alternatives + Share */}
                 <PolishAlternatives
@@ -189,7 +213,7 @@ export default function CompanyProfileClient({ company, relatedCompanies }: Comp
                 <div className="bg-warm rounded-3xl px-5 py-5 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <p className="text-[15.5px] font-bold text-ink">Widzisz błąd lub masz więcej informacji?</p>
-                        <p className="text-sm text-ink-2 mt-0.5">Pomóż nam poprawić dane o tej firmie.</p>
+                        <p className="text-sm text-ink-2 mt-0.5">Zgłoś poprawkę albo dodatkowe źródło dotyczące tej firmy.</p>
                     </div>
                     <ReportDialog defaultBrandName={company.brandName || formatSlugAsName(company.slug)}>
                         <button className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-card border-[1.5px] border-line text-[15px] font-bold text-ink hover:border-ink transition-colors">

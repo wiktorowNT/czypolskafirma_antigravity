@@ -12,6 +12,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://czypolskafirma.pl/blog",
   },
+  // Własny openGraph: bez niego strona dziedziczy og:url strony głównej z layoutu.
+  openGraph: {
+    title: "Blog CzyPolskaFirma",
+    description:
+      "Przejęcia firm, pochodzenie kapitału znanych marek i sukcesy polskiego biznesu.",
+    url: "https://czypolskafirma.pl/blog",
+    type: "website",
+    locale: "pl_PL",
+    siteName: "CzyPolskaFirma",
+    images: [{ url: "/og-image.png", width: 1200, height: 510, alt: "CzyPolskaFirma" }],
+  },
 }
 
 // ISR: odśwież logotypy/dane firm na kartach co godzinę.
@@ -89,8 +100,8 @@ export default async function BlogPage() {
             Blog CzyPolskaFirma
           </h1>
           <p className="text-[17px] sm:text-lg text-ink-2">
-            Przejęcia, pochodzenie kapitału znanych marek i sukcesy polskiego biznesu —
-            opisane na twardych danych z naszej bazy firm.
+            Przejęcia, pochodzenie kapitału znanych marek i sukcesy polskiego biznesu,
+            opisane na twardych danych z rejestrów i raportów spółek.
           </p>
         </div>
 

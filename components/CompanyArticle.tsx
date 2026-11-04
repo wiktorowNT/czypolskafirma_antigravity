@@ -125,7 +125,7 @@ export default function CompanyArticle({
     return (
         <section>
             <h2 className="text-xl font-extrabold tracking-tight text-ink mb-2.5">
-                {name} — podsumowanie
+                {name}: podsumowanie
             </h2>
             <div className="text-[15px] text-ink-2 leading-relaxed space-y-2.5">
                 {paragraphs.map((para, index) => (

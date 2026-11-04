@@ -139,8 +139,8 @@ export default function CompanyHero({
                 {isJoint && (
                     <p className="mt-1.5 text-[14.5px] text-ink-2">
                         {jointWithPoland
-                            ? "Wspólna kontrola 50/50: polski kapitał ma połowę udziałów, ale nie kontroluje firmy samodzielnie — dlatego nie liczymy jej jako polskiej."
-                            : "Wspólna kontrola 50/50: żaden z dwóch krajów nie ma przewagi, więc pokazujemy oba."}
+                            ? "Wspólna kontrola 50/50: polski kapitał ma połowę udziałów, ale nie kontroluje firmy samodzielnie, więc firma nie jest uznana za polską."
+                            : "Wspólna kontrola 50/50: żaden z dwóch krajów nie ma przewagi, dlatego widać tu oba."}
                     </p>
                 )}
             </section>
