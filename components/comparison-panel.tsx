@@ -208,13 +208,9 @@ export default function ComparisonPanel({
                       <th key={company.id} className="text-center py-4 px-6 min-w-56">
                         <div className="flex flex-col items-center gap-3">
                           <CompanyLogo
-                            id={company.id}
-                            brandName={company.brand}
+                            name={company.brand}
                             logoUrl={company.logoUrl}
-                            logoDarkUrl={company.logoDarkUrl}
-                            brandColor={company.brandColor}
                             size={48}
-                            rounded={12}
                             priority={false}
                           />
                           <div className="text-center">

@@ -19,7 +19,7 @@ interface CategoryTabsProps {
 }
 
 export function CategoryTabs({ categories, className }: CategoryTabsProps) {
-  const getIconComponent = (iconName: string | null) => getCategoryIcon(iconName)
+  const getIconComponent = (iconName?: string | null) => getCategoryIcon(iconName)
 
   return (
     <div className={cn("w-full", className)}>
