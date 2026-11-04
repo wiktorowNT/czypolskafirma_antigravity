@@ -1,2 +1,7 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] CleanHands |  | # paczka 2026-11-04 (grupa-swit-fabryka-po-henklu-raciborz)
+- [ ] Pucek |  | # paczka 2026-11-04 (grupa-swit-fabryka-po-henklu-raciborz)
+- [ ] Perwoll |  | # paczka 2026-11-04 (grupa-swit-fabryka-po-henklu-raciborz)
+- [ ] Alterra |  | # PR #67 (tresc/2026-10-21-86)
+- [ ] Alouette |  | # PR #67 (tresc/2026-10-21-86)
