@@ -114,8 +114,9 @@ function getMonogram(brand: string): string {
   return first ? first.toUpperCase() : "?"
 }
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const [company, fonts] = await Promise.all([fetchCompany(params.slug), loadOgFonts()])
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const [company, fonts] = await Promise.all([fetchCompany(slug), loadOgFonts()])
 
   // Gdy nie uda się pobrać danych firmy — neutralny layout bez werdyktu
   // (nie twierdzimy "zagraniczna" dla nieznanej firmy). Gdy firma istnieje,
@@ -126,7 +127,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const isPolish = code?.toUpperCase() === "PL"
   const countryName = getCountryLabel(code, company?.country_code_2)
 
-  const base = getOgBaseUrl()
+  const base = await getOgBaseUrl()
   const domain = getDomainFromUrl(company?.website_url)
   const flagCode = found ? getFlagCode(code) : null
   // Wspólna kontrola 50/50: druga flaga w metce werdyktu.

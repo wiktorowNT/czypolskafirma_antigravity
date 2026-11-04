@@ -393,8 +393,8 @@ async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompa
   }
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { slug } = params
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
   const company = await getCompanyData(slug)
 
   if (!company) {
@@ -474,8 +474,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function CompanyProfilePage({ params }: { params: { slug: string } }) {
-  const { slug } = params
+export default async function CompanyProfilePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const company = await getCompanyData(slug)
 
   if (!company) {

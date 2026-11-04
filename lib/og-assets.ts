@@ -41,11 +41,15 @@ export const OG_BOTTOM_SAFE_AREA = 118
  * Poza `npm run dev` zawsze produkcja: karty mają cache ISR, a headers() w takiej
  * trasie kończy się błędem 500 („invalid Cache-Control duration”). Podgląd Vercela
  * i tak jest za logowaniem, więc nie dałby się z niego pobrać logotypów.
+ *
+ * Next 15: headers() jest asynchroniczne, więc funkcja jest async. Wyjście dla
+ * produkcji zostaje PRZED await headers() — inaczej karty straciłyby cache ISR
+ * i wróciłby błąd 500 naprawiony w commicie „Karty OG: bez headers() poza npm run dev”.
  */
-export function getOgBaseUrl(): string {
+export async function getOgBaseUrl(): Promise<string> {
   if (process.env.NODE_ENV !== "development") return "https://czypolskafirma.pl"
   try {
-    const h = headers()
+    const h = await headers()
     const host = h.get("x-forwarded-host") || h.get("host")
     if (host) {
       const proto = h.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https")

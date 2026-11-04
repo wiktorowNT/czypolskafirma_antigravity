@@ -52,12 +52,17 @@ export async function GET(request: Request) {
             Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
             Accept: "application/json",
         }
+        // Next 15: fetch nie jest już domyślnie cache'owany (Next 14 dawał
+        // force-cache). Wyszukiwarka to najczęściej wołany endpoint serwisu,
+        // więc jawnie zostawiamy stare zachowanie — bez tego każde wpisanie
+        // frazy to osobne zapytanie do Supabase.
+        const opcjeFetcha = { headers, cache: "force-cache" as const }
 
         let data: any[]
         if (countryCode) {
             // If it's a country search, filter by country_code
             const url = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,country_code_2,categories(name,slug)&country_code=eq.${countryCode}&limit=50`
-            const res = await fetch(url, { headers })
+            const res = await fetch(url, opcjeFetcha)
             if (!res.ok) return NextResponse.json([])
             data = await res.json()
         } else {
@@ -71,9 +76,9 @@ export async function GET(request: Request) {
             const urlWithAliases = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,country_code_2,brand_aliases,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*,brand_aliases.ilike.*${q}*)&limit=50`
             const urlLegacy = `${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=id,name,slug,display_name,website_url,country_code,country_code_2,categories(name,slug)&or=(name.ilike.*${q}*,slug.ilike.*${q}*,nip.ilike.*${q}*,krs.ilike.*${q}*)&limit=50`
 
-            let res = await fetch(urlWithAliases, { headers })
+            let res = await fetch(urlWithAliases, opcjeFetcha)
             if (!res.ok) {
-                res = await fetch(urlLegacy, { headers })
+                res = await fetch(urlLegacy, opcjeFetcha)
                 if (!res.ok) return NextResponse.json([])
             }
             data = await res.json()

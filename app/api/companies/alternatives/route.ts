@@ -40,6 +40,9 @@ export async function GET(request: Request) {
                 Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
                 Accept: "application/json",
             },
+            // Next 15: fetch nie jest już domyślnie cache'owany — jawne
+            // force-cache zachowuje zachowanie z Next 14.
+            cache: "force-cache",
         })
 
         if (!catRes.ok) return NextResponse.json([])
@@ -60,6 +63,7 @@ export async function GET(request: Request) {
                 Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
                 Accept: "application/json",
             },
+            cache: "force-cache",
         })
 
         if (!res.ok) return NextResponse.json([])

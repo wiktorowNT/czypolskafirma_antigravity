@@ -146,6 +146,13 @@
       "tekst": "Statystyki serwisu były liczone na 1000 z 1555 firm: instancja Supabase ma db-max-rows = 1000, a /api/stats pobierało firmy jednym zapytaniem bez stronicowania. Publikowane liczby były przesunięte (total 1000 zamiast 1555, 48% polskiego kapitału zamiast 45%, „najbardziej polska kategoria” wskazywała Gry wideo zamiast Mebli). Ten sam limit ucinał liczniki firm na /kategorie (.limit(20000) nic nie dawał, bo serwer bierze min(limit, db-max-rows)), listę /api/companies, firmy w kartach bloga i zbiór slugów. Od teraz każdy pełny odczyt tabeli companies idzie przez lib/companies-paged.ts i musi sprawdzać flagę `complete` — przy niepełnym odczycie nie publikujemy liczb. Statystyki liczy docelowo RPC get_company_stats w bazie (tools/sql/2026-11-04-statystyki-rpc.sql do wklejenia w Supabase), z fallbackiem w kodzie do tego czasu. Szczegóły: docs/ODCZYT_FIRM_limit_1000.md.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-11-04-next15",
+      "data": "2026-11-04",
+      "tekst": "Projekt stoi na Next.js 15 (było 14.2.25) — typy Reacta wreszcie zgadzają się z React 19. Zmiana dla pracy na co dzień: `npm run lint` woła teraz ESLint wprost (`eslint .`), bo `next lint` jest w Next 15 wycofywane; konfiguracja siedzi w eslint.config.mjs. Lint przechodzi, ale zostawia 52 ostrzeżenia sprzed migracji (głównie <img> zamiast next/image) — to osobne zadanie, nie regresja.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }

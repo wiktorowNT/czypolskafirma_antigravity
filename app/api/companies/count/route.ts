@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 
+// Next 15: trasy GET nie są już domyślnie statyczne (w Next 14 były).
+// Jawne revalidate przywraca cache trasy z okresem fetcha poniżej (godzina).
+export const revalidate = 3600
+
 // SWIADOMIE BEZ checkRateLimit. Jak /api/categories: GET bez argumentu
 // `request` jest prerenderowany w czasie builda (w .next powstaje
 // api/companies/count.body) i serwowany z CDN, a fetch ma revalidate 3600.
