@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
               <h3 className="text-xl font-bold text-ink mb-3">1. Informacje ogólne</h3>
               <p>
                 Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych przekazanych przez Użytkowników 
-                w związku z korzystaniem przez nich z serwisu internetowego CzyPolskaFirma.pl (dalej: "Serwis").
+                w związku z korzystaniem przez nich z serwisu internetowego CzyPolskaFirma.pl (dalej: &quot;Serwis&quot;).
               </p>
             </section>
 
