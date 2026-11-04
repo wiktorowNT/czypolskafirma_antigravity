@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { przygotujFiltrSzukania } from "@/lib/search-query"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -21,10 +22,22 @@ export async function GET(request: Request) {
         return NextResponse.json([])
     }
 
-    // Jeśli ktoś wklei cały link (np. https://czypolskafirma.pl/firma/biedronka), wyciągnij sam slug
+    // Jeśli ktoś wklei cały link (np. https://czypolskafirma.pl/firma/biedronka), wyciągnij sam slug.
+    // Musi być PRZED sanityzacją, bo sanityzacja usuwa ukośniki i dwukropki.
     if (query.includes('czypolskafirma.pl/firma/')) {
         query = query.split('/firma/').pop()?.split('?')[0] || query
     }
+
+    // Biała lista znaków: bez niej przecinek, kropka albo nawias w zapytaniu
+    // rozwalał filtr PostgREST (patrz `lib/search-query.ts`).
+    const filtr = przygotujFiltrSzukania(query)
+    if (!filtr) {
+        return NextResponse.json([])
+    }
+    // Surowe zapytanie zostaje tylko do dopasowania marki w podpowiedziach
+    // (poniżej); do bazy idzie wyłącznie wersja oczyszczona.
+    const querySurowe = query
+    query = filtr.oczyszczone
 
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
         return NextResponse.json({ error: "Missing env vars" }, { status: 500 })
@@ -49,8 +62,9 @@ export async function GET(request: Request) {
             data = await res.json()
         } else {
             // Standard search by name, slug, NIP, KRS or brand alias (marki firmy).
-            const formattedQuery = query.trim().replace(/\s+/g, "*")
-            const q = encodeURIComponent(formattedQuery)
+            // `q` zawiera już tylko znaki z białej listy, zamienione na wzorzec
+            // `ilike` (spacje jako wildcard `*`) i zakodowane do URL-a.
+            const q = filtr.zakodowane
             // Wariant z brand_aliases; jeśli kolumny jeszcze nie ma w bazie
             // (przed migracją tools/sql/2026-07-18-brand-aliases.sql),
             // PostgREST zwróci błąd i przechodzimy na wariant bez aliasów.
@@ -66,7 +80,7 @@ export async function GET(request: Request) {
         }
 
         // Map to search result format
-        const queryLower = query.trim().toLowerCase()
+        const queryLower = querySurowe.trim().toLowerCase()
         const results = data.map((company: any) => {
             // Handle categories as either object or array (PostgREST can return either depending on relationship)
             const categoryData = Array.isArray(company.categories) ? company.categories[0] : company.categories
