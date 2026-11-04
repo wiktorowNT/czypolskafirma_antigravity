@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 
 /**
  * Dane strony głównej liczone po stronie serwera (ISR co godzinę, app/page.tsx).
@@ -79,17 +80,13 @@ export async function getHomeData(): Promise<HomeData> {
     since.setDate(since.getDate() - 30)
 
     // Wszystkie firmy (tylko kraj i kategoria) — paginacja po 1000, limit PostgREST.
+    // Wspólny helper: lib/companies-paged.ts.
     async function fetchAllForStats() {
-      const rows: { country_code: string | null; category_id: string | null }[] = []
-      for (let from = 0; from < 20000; from += 1000) {
-        const { data, error } = await supabase
-          .from("companies")
-          .select("country_code, category_id")
-          .range(from, from + 999)
-        if (error || !data) break
-        rows.push(...(data as any[]))
-        if (data.length < 1000) break
-      }
+      const { rows } = await pobierzWszystkieFirmy<{ country_code: string | null; category_id: string | null }>(
+        supabase,
+        "country_code, category_id",
+        { etykieta: "home", dostrojZapytanie: (q) => q.order("id", { ascending: true }) },
+      )
       return rows
     }
 

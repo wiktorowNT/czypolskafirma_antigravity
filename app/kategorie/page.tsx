@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react"
 import { getCategoryIcon } from "@/components/category-icon"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { getAllCategoriesFromSupabase } from "@/lib/supabase/category-cache"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 import { serializeJsonLd } from "@/lib/json-ld"
 
 export const revalidate = 86400 // ISR: odśwież raz na dobę (limit CPU Vercela)
@@ -45,12 +46,18 @@ interface CategoryEntry {
 // Ikona Lucide po nazwie (spójne z components/category-tabs.tsx); fallback: Tag.
 const getIconComponent = (iconName: string | null) => getCategoryIcon(iconName)
 
-// Liczba firm per category_id — jedno lekkie zapytanie; przy błędzie pomijamy liczby.
+// Liczba firm per category_id — lekkie zapytanie; przy błędzie pomijamy liczby.
+// `.limit(20000)` nie działało: PostgREST bierze min(limit, db-max-rows), czyli 1000,
+// więc liczniki przy kategoriach sumowały się do 1000 zamiast 1555. Stąd stronicowanie.
 async function getCategoryCounts(): Promise<Record<string, number>> {
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase.from("companies").select("category_id").limit(20000)
-    if (error || !data) return {}
+    const { rows: data, complete } = await pobierzWszystkieFirmy<{ category_id: string | null }>(
+      supabase,
+      "category_id",
+      { etykieta: "kategorie", dostrojZapytanie: (q) => q.order("id", { ascending: true }) },
+    )
+    if (!complete) return {}
     const counts: Record<string, number> = {}
     for (const row of data as { category_id: string | null }[]) {
       if (row.category_id) counts[row.category_id] = (counts[row.category_id] || 0) + 1

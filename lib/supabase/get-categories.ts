@@ -1,4 +1,5 @@
 import { getSupabaseServerClient } from "./server"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 
 interface CompanyData {
   id: string
@@ -17,9 +18,11 @@ export async function getCategoriesFromSupabase(): Promise<Record<string, { name
   try {
     const supabase = await getSupabaseServerClient()
 
-    const { data, error } = await supabase
-      .from("companies")
-      .select(`
+    // Grupowanie po kategoriach wymaga wszystkich firm — stronicowano, bo PostgREST
+    // oddaje maks. 1000 wierszy (lib/companies-paged.ts).
+    const { rows: data } = await pobierzWszystkieFirmy<CompanyData>(
+      supabase,
+      `
         id,
         name,
         slug,
@@ -30,15 +33,14 @@ export async function getCategoriesFromSupabase(): Promise<Record<string, { name
           name,
           slug
         )
-      `)
-      .order("categories(slug)")
+      `,
+      {
+        etykieta: "get-categories",
+        dostrojZapytanie: (q) => q.order("categories(slug)").order("id", { ascending: true }),
+      },
+    )
 
-    if (error) {
-      console.error("[v0] Error fetching categories from Supabase:", error)
-      return {}
-    }
-
-    if (!data || data.length === 0) {
+    if (data.length === 0) {
       console.log("[v0] No companies found in Supabase")
       return {}
     }

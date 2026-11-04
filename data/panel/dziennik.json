@@ -139,6 +139,13 @@
       "tekst": "Wdrożenia produkcji a SEO: 20 stron w GSC jako „Duplikat” sklejony z obcym serwisem, bo Google renderował HTML po kolejnym wdrożeniu (stare pliki JS = 404, ogólny ekran błędu Next.js bez canonicala). Od teraz: merge develop → main najwyżej raz dziennie, commity tylko z docs/tools/data/robocze/data/panel nie budują wdrożenia (vercel.json), app/global-error.tsx przeładowuje stronę raz i pokazuje własny komunikat z canonicalem; Skew Protection w Vercelu. Szczegóły: docs/DEVELOPMENT_WORKFLOW.md.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-11-04-limit-1000-odczyt-firm",
+      "data": "2026-11-04",
+      "tekst": "Statystyki serwisu były liczone na 1000 z 1555 firm: instancja Supabase ma db-max-rows = 1000, a /api/stats pobierało firmy jednym zapytaniem bez stronicowania. Publikowane liczby były przesunięte (total 1000 zamiast 1555, 48% polskiego kapitału zamiast 45%, „najbardziej polska kategoria” wskazywała Gry wideo zamiast Mebli). Ten sam limit ucinał liczniki firm na /kategorie (.limit(20000) nic nie dawał, bo serwer bierze min(limit, db-max-rows)), listę /api/companies, firmy w kartach bloga i zbiór slugów. Od teraz każdy pełny odczyt tabeli companies idzie przez lib/companies-paged.ts i musi sprawdzać flagę `complete` — przy niepełnym odczycie nie publikujemy liczb. Statystyki liczy docelowo RPC get_company_stats w bazie (tools/sql/2026-11-04-statystyki-rpc.sql do wklejenia w Supabase), z fallbackiem w kodzie do tego czasu. Szczegóły: docs/ODCZYT_FIRM_limit_1000.md.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }
