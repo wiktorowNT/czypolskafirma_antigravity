@@ -38,16 +38,10 @@ jobs:
       - name: Instalacja zaleznosci
         run: npm ci
 
-      # `next lint` wymaga konfiguracji ESLint, a w repo nie ma ani pliku
-      # .eslintrc*, ani pakietow eslint / eslint-config-next w devDependencies.
-      # Bez nich `npm run lint` wchodzi w tryb interaktywnego kreatora i konczy
-      # sie kodem 1 niezaleznie od jakosci kodu. Dodanie tych pakietow rusza
-      # sekcje zaleznosci w package.json, ktora nalezy do sesji migracji do
-      # Next 15, dlatego krok na razie nie blokuje CI. Po scaleniu Next 15
-      # trzeba dodac eslint + eslint-config-next i usunac continue-on-error.
-      # Kroki: docs/BACKLOG_BEZPIECZENSTWO.md
-      - name: Lint (na razie nieblokujacy, brak konfiguracji ESLint)
-        continue-on-error: true
+      # Od migracji do Next 15 `npm run lint` to `eslint .` z konfiguracja
+      # w eslint.config.mjs (preset next/core-web-vitals). Blad lintu blokuje
+      # scalenie; ostrzezenia (ok. 50, sprzed migracji) nie.
+      - name: Lint
         run: npm run lint
 
       # Build prerenderuje strony i czesc route handlerow (m.in. /api/categories

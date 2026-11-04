@@ -103,22 +103,14 @@ instancji (`lib/view-guard.ts`), więc:
 
 ## 4. ESLint i `npm run lint` w CI
 
-**Dlaczego pominięte:** wymaga nowych devDependencies.
+**✅ Zrobione 2026-11-04** przy scalaniu migracji do Next 15 (PR #77):
+`eslint`, `eslint-config-next@15` i `eslint.config.mjs` (preset
+`next/core-web-vitals`) są w repo, `npm run lint` to `eslint .`, a krok
+„Lint" w `ci.yml` blokuje scalenie przy błędzie. Zostało ok. 50 ostrzeżeń
+sprzed migracji (głównie `<img>` zamiast `next/image`).
 
-**Stan dzisiaj:** w repo nie ma pliku `.eslintrc*` ani pakietów `eslint`
-i `eslint-config-next`. `npm run lint` (`next lint`) wchodzi więc w tryb
-interaktywnego kreatora konfiguracji i kończy się kodem 1 niezależnie od
-jakości kodu. Dlatego krok „Lint" w `.github/workflows/ci.yml` ma na razie
-`continue-on-error: true`.
-
-**Co trzeba zrobić po scaleniu Next 15:**
-
-1. `npm i -D eslint eslint-config-next` (wersja `eslint-config-next`
-   musi odpowiadać wersji Next).
-2. Dodać `.eslintrc.json` z `{ "extends": "next/core-web-vitals" }`.
-3. Usunąć `continue-on-error: true` z kroku „Lint" w `ci.yml`.
-4. Rozważyć zdjęcie `eslint.ignoreDuringBuilds` z `next.config.mjs` —
-   dziś build przepuszcza wszystko.
+Do rozważenia osobno: zdjęcie `eslint.ignoreDuringBuilds` z `next.config.mjs`,
+żeby build też patrzył na lint.
 
 Przy okazji: `next.config.mjs` ma też `typescript.ignoreBuildErrors: true`,
 a `npx tsc --noEmit` pokazuje na `develop` kilkanaście błędów typów
@@ -138,15 +130,17 @@ eksporcie `/api/categories` (dzieje się tak również na czystym
 `origin/develop`, to nie regresja).
 
 Żeby job „Lint i build" w CI przechodził, trzeba dodać w
-**Settings → Secrets and variables → Actions → New repository secret**:
+**Settings → Secrets and variables → Actions → zakładka Variables → New repository variable**:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-Oba są publiczne (prefiks `NEXT_PUBLIC_`, i tak trafiają do bundla
-przeglądarki), więc nie jest to ujawnienie tajemnicy. Dopóki ich nie ma,
-CI zatrzymuje się na kroku „Sprawdz, czy sekrety Supabase sa ustawione"
-z komunikatem, co dodać.
+To te same dwie zmienne, których potrzebuje nocna re-weryfikacja
+(`reweryfikacja.yml`), więc wpisujesz je raz, dla obu workflow. Oba klucze są
+publiczne (prefiks `NEXT_PUBLIC_`, i tak trafiają do bundla przeglądarki),
+więc nie jest to ujawnienie tajemnicy. Sekrety o tych nazwach też zadziałają
+w `ci.yml` jako zapas. Dopóki zmiennych nie ma, CI zatrzymuje się na kroku
+„Sprawdz, czy zmienne Supabase sa ustawione" z komunikatem, co dodać.
 
 ---
 
