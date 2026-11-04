@@ -65,9 +65,13 @@ w obu wariantach, RPC jest tańszy w CPU. Metodologia jest w obu identyczna (pol
 - `/api/stats` (fallback), `/api/companies`, `/kategorie`, `lib/home-data.ts`,
   `lib/sitemap-data.ts`, `lib/blog-companies.ts`, `lib/supabase/get-categories.ts`,
   `lib/supabase/get-companies.ts` (PR #74).
-- `/companies`: HTML listy wszystkich firm, czyli to, co widzi Google. Wcześniej 1000 z 1555;
-  resztę dociągała dopiero przeglądarka. Przy `complete: false` strona pokazuje to, co
-  udało się pobrać, zamiast pustej listy na dobę ISR (lista to nie statystyka).
+- `/companies` (`app/companies/dane.ts`): lista wszystkich firm, od 2026-11-04 cięta na strony
+  po 100 (`/companies`, `/companies/strona/2`, ...) plus pełna lista do filtra kraju
+  w `/companies/lista.json`. Wszystkie trzy biorą dane z jednego stronicowanego odczytu,
+  bo kolejność to nazwa marki (nie kolumna), więc trzeba mieć całą bazę, żeby pociąć ją na
+  strony. Wcześniej 1000 z 1555. Przy `complete: false` strona pokazuje to, co udało się
+  pobrać (lista to nie statystyka), ale strona spoza zakresu i `lista.json` rzucają błąd,
+  żeby ISR zostawił poprzednią, dobrą wersję zamiast zapisać na dobę 404 albo uciętą listę.
 - Fallback po `slugify` w profilu firmy (`app/firma/[slug]/page.tsx`) i w karcie OG
   (`app/firma/[slug]/opengraph-image.tsx`). Wcześniej firma spoza pierwszego tysiąca pod
   niekanonicznym URL-em (wielkie litery, nawiasy, polskie znaki w slugu z bazy) dostawała 404,
@@ -75,5 +79,5 @@ w obu wariantach, RPC jest tańszy w CPU. Metodologia jest w obu identyczna (pol
 
 Sprawdzone na atrapie PostgREST z 2500 firmami i twardym limitem 1000 wierszy na odpowiedź:
 `/api/stats` daje `total: 2500`, `/kategorie` liczniki sumujące się do 2500, `/companies`
-2500 linków w HTML, a profil i karta OG firmy nr 2100 z surowym slugiem renderują się z jej
+z kolejnymi stronami 2500 różnych linków do profili w HTML (25 stron po 100) i `lista.json` 2500 firm, a profil i karta OG firmy nr 2100 z surowym slugiem renderują się z jej
 danymi.
