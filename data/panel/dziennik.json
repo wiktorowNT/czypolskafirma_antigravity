@@ -160,6 +160,13 @@
       "tekst": "Właściciel zrezygnował z dodawania zmiennych NEXT_PUBLIC_SUPABASE_URL i NEXT_PUBLIC_SUPABASE_ANON_KEY do GitHub Actions. Skutek: usunięty .github/workflows/ci.yml (bez nich build w CI zawsze padał, a build i tak sprawdza Vercel przed każdym podglądem) i zakomentowany nocny harmonogram w .github/workflows/reweryfikacja.yml (padałby co noc na odczycie bazy). Skrypty re-weryfikacji (automat.mjs --najstarsze, firmy-w-toku.mjs, raport-reweryfikacji.mjs) zostają i działają lokalnie. Żeby włączyć: dodać obie zmienne w Settings → Secrets and variables → Actions → Variables i odkomentować schedule. Lint uruchamiać lokalnie: npm run lint.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-11-04-testy-vitest",
+      "data": "2026-11-04",
+      "tekst": "Projekt ma testy jednostkowe (vitest): `npm test` przed scaleniem zmian w lib/ albo app/companies/. Testy leżą w tests/, nie łączą się z bazą (Supabase i fetch to atrapy) i nie potrzebują .env.local. Pilnują m.in. stronicowania odczytu firm (limit 1000 wierszy), sanityzacji wyszukiwarki, slugów, FAQ firmy i powiązań wpisów bloga z firmami. Znany, jeszcze niepoprawiony błąd oznacza się it.fails. Szczegóły: docs/DEVELOPMENT_WORKFLOW.md, sekcja 5.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }

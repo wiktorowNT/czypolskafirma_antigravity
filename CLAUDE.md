@@ -67,6 +67,7 @@ npm run dev     # serwer deweloperski
 npm run build   # build produkcyjny (sprawdza typy i lint; błąd przerywa build)
 npm run lint    # ESLint (eslint.config.mjs), pełniejszy niż lint w buildzie
 npm run start   # serwer produkcyjny (po build)
+npm test        # testy jednostkowe (vitest, tests/), bez bazy; uruchamiaj przed scaleniem
 ```
 
 > `npm run save` robi `git add . && git commit -m "auto-save" && git push`.
@@ -100,6 +101,7 @@ docs/                      # dokumentacja projektu (workflow, SOP, backup)
 tools/                     # narzędzia pomocnicze (logotypy, lint treści, okładki)
 ├─ firmy/                  # automat dodawania firm (automat, przeglad, import, backup)
 public/                    # zasoby statyczne
+tests/                     # testy vitest (`npm test`), atrapy Supabase/fetch, fixtures bloga
 ```
 
 > **Uwaga na routing:** profile firm są pod `app/firma/[slug]` (slug, nie UUID).
