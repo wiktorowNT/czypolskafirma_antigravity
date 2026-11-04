@@ -55,24 +55,24 @@ jobs:
       # Bez dzialajacych zmiennych build pada na eksporcie /api/categories.
       # Oba klucze sa publiczne (NEXT_PUBLIC_*, i tak ida do przegladarki),
       # ale do Actions trzeba je dodac osobno:
-      #   Settings > Secrets and variables > Actions > New repository secret
+      #   Settings > Secrets and variables > Actions > Variables (te same, co dla reweryfikacja.yml; sekrety o tej nazwie tez dzialaja)
       #   NEXT_PUBLIC_SUPABASE_URL
       #   NEXT_PUBLIC_SUPABASE_ANON_KEY
-      - name: Sprawdz, czy sekrety Supabase sa ustawione
+      - name: Sprawdz, czy zmienne Supabase sa ustawione
         env:
-          URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           if [ -z "$URL" ] || [ -z "$KEY" ]; then
-            echo "::error::Brak sekretow NEXT_PUBLIC_SUPABASE_URL lub NEXT_PUBLIC_SUPABASE_ANON_KEY."
-            echo "Dodaj je w Settings > Secrets and variables > Actions."
+            echo "::error::Brak zmiennych repo NEXT_PUBLIC_SUPABASE_URL lub NEXT_PUBLIC_SUPABASE_ANON_KEY."
+            echo "Dodaj je w Settings > Secrets and variables > Actions > Variables."
             echo "Bez nich 'npm run build' pada na eksporcie /api/categories."
             exit 1
           fi
-          echo "Sekrety obecne."
+          echo "Zmienne Supabase obecne."
 
       - name: Build produkcyjny
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: npm run build
