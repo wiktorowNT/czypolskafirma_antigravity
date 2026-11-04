@@ -34,10 +34,6 @@ const eslintConfig = [
       "next-env.d.ts",
       "logos_bundle.js",
       "generate_logos_bundle.js",
-      // Pliki robocze z czasów v0, poza katalogami aplikacji
-      // (temp_stripped.js nie jest nawet poprawnym składniowo plikiem).
-      "temp.js",
-      "temp_stripped.js",
     ],
   },
 ]
