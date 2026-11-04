@@ -51,10 +51,10 @@ Szczegóły: `docs/DEVELOPMENT_WORKFLOW.md`.
 
 | Warstwa       | Technologia                                                        |
 |---------------|--------------------------------------------------------------------|
-| Framework     | Next.js **14.2.25** (App Router)                                   |
+| Framework     | Next.js **15.5** (App Router)                                      |
 | Frontend      | React 19, Tailwind CSS **v4**, komponenty na bazie Radix UI       |
 | Ikony         | lucide-react                                                       |
-| Baza / backend| Supabase (`@supabase/ssr`, `@supabase/supabase-js`) — tabela `companies` |
+| Baza / backend| Supabase (`@supabase/supabase-js`) — tabela `companies`             |
 | Hosting       | Vercel                                                             |
 | Skrypty       | Node.js (ESM `.mjs`) — czyszczenie danych, aktualizacja URL-i, loga |
 
@@ -64,8 +64,8 @@ Runtime: Node 22. Menedżer pakietów: npm.
 
 ```bash
 npm run dev     # serwer deweloperski
-npm run build   # build produkcyjny
-npm run lint    # linter Next.js
+npm run build   # build produkcyjny (sprawdza typy i lint; błąd przerywa build)
+npm run lint    # ESLint (eslint.config.mjs), pełniejszy niż lint w buildzie
 npm run start   # serwer produkcyjny (po build)
 ```
 
