@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 
+// SWIADOMIE BEZ checkRateLimit. Jak /api/categories: GET bez argumentu
+// `request` jest prerenderowany w czasie builda (w .next powstaje
+// api/companies/count.body) i serwowany z CDN, a fetch ma revalidate 3600.
+// Dodanie limitera wymaga odczytu IP z naglowkow, co zamienia route'a
+// w dynamiczny i kosztuje wywolanie funkcji na kazde wejscie na strone.
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 

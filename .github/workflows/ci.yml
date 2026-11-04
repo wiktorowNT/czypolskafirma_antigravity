@@ -1,0 +1,78 @@
+name: CI
+
+# Sprawdza, czy projekt sie w ogole kompiluje, zanim cokolwiek zostanie scalone.
+# Do tej pory nikt tego nie sprawdzal: jedynym workflow byl automat tresci.
+#
+# Uruchamia sie na pull requestach do develop i do main oraz na reczne zadanie.
+# Nie dotyka produkcji, nic nie publikuje i niczego nie pushuje.
+
+on:
+  pull_request:
+    branches: [develop, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Nowy push do tej samej galezi anuluje poprzedni, jeszcze trwajacy przebieg.
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sprawdzenie:
+    name: Lint i build (Node 22)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Pobierz kod
+        uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Instalacja zaleznosci
+        run: npm ci
+
+      # `next lint` wymaga konfiguracji ESLint, a w repo nie ma ani pliku
+      # .eslintrc*, ani pakietow eslint / eslint-config-next w devDependencies.
+      # Bez nich `npm run lint` wchodzi w tryb interaktywnego kreatora i konczy
+      # sie kodem 1 niezaleznie od jakosci kodu. Dodanie tych pakietow rusza
+      # sekcje zaleznosci w package.json, ktora nalezy do sesji migracji do
+      # Next 15, dlatego krok na razie nie blokuje CI. Po scaleniu Next 15
+      # trzeba dodac eslint + eslint-config-next i usunac continue-on-error.
+      # Kroki: docs/BACKLOG_BEZPIECZENSTWO.md
+      - name: Lint (na razie nieblokujacy, brak konfiguracji ESLint)
+        continue-on-error: true
+        run: npm run lint
+
+      # Build prerenderuje strony i czesc route handlerow (m.in. /api/categories
+      # i /api/companies/count), wiec SIEGA do Supabase w czasie kompilacji.
+      # Bez dzialajacych zmiennych build pada na eksporcie /api/categories.
+      # Oba klucze sa publiczne (NEXT_PUBLIC_*, i tak ida do przegladarki),
+      # ale do Actions trzeba je dodac osobno:
+      #   Settings > Secrets and variables > Actions > New repository secret
+      #   NEXT_PUBLIC_SUPABASE_URL
+      #   NEXT_PUBLIC_SUPABASE_ANON_KEY
+      - name: Sprawdz, czy sekrety Supabase sa ustawione
+        env:
+          URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "::error::Brak sekretow NEXT_PUBLIC_SUPABASE_URL lub NEXT_PUBLIC_SUPABASE_ANON_KEY."
+            echo "Dodaj je w Settings > Secrets and variables > Actions."
+            echo "Bez nich 'npm run build' pada na eksporcie /api/categories."
+            exit 1
+          fi
+          echo "Sekrety obecne."
+
+      - name: Build produkcyjny
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run build

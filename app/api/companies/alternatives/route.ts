@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export async function GET(request: Request) {
+    // Limit: 60 odczytow na minute na IP.
+    // UWAGA: `checkRateLimit` jest limiterem in-memory. Na Vercel kazda instancja
+    // funkcji ma wlasna mape, wiec limit NIE jest wspoldzielony miedzy instancjami
+    // i przy wiekszym ruchu da sie go obejsc. Docelowo wspolny magazyn
+    // (Redis/Upstash), patrz `docs/BACKLOG_BEZPIECZENSTWO.md`.
+    const ip = getClientIp(request)
+    const { allowed } = checkRateLimit(ip, "alternatives", { maxRequests: 60, windowSeconds: 60 })
+    if (!allowed) {
+        return NextResponse.json([], { status: 429 })
+    }
+
     const { searchParams } = new URL(request.url)
     const categorySlug = searchParams.get("category")
     const excludeId = searchParams.get("exclude")

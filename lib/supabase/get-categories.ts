@@ -41,7 +41,6 @@ export async function getCategoriesFromSupabase(): Promise<Record<string, { name
     )
 
     if (data.length === 0) {
-      console.log("[v0] No companies found in Supabase")
       return {}
     }
 
@@ -53,8 +52,6 @@ export async function getCategoriesFromSupabase(): Promise<Record<string, { name
       }
       categoriesMap[categorySlug].push(company)
     })
-
-    console.log("[v0] Categories from Supabase:", Object.keys(categoriesMap))
 
     const result: Record<string, { name: string; companies: CompanyData[] }> = {}
     Object.entries(categoriesMap).forEach(([slug, companies]) => {

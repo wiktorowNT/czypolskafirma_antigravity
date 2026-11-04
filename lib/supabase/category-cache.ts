@@ -58,7 +58,6 @@ export async function getCachedCategoryData(categorySlug: string) {
   const cached = cache[categorySlug]
 
   if (cached && now - cached.timestamp < CACHE_DURATION) {
-    console.log(`[v0] Returning cached data for category: ${categorySlug}`)
     return cached.data
   }
 
@@ -123,7 +122,6 @@ export async function getCachedCategoryData(categorySlug: string) {
       timestamp: now,
     }
 
-    console.log(`[v0] Fetched and cached ${mappedCompanies.length} companies for category: ${categorySlug}`)
     return result
   } catch (err) {
     console.error(`[v0] Exception in getCachedCategoryData:`, err)

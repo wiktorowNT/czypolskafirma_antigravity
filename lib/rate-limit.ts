@@ -1,11 +1,18 @@
 /**
  * Simple in-memory rate limiter for API routes.
  * Works per-IP with a sliding window approach.
- * 
- * Note: On Vercel serverless, each function instance has its own memory,
- * so this provides per-instance rate limiting. For a small site this is
- * more than enough. For high-traffic sites, use Redis-based solutions
- * like @upstash/ratelimit.
+ *
+ * UWAGA (ograniczenie, nie szczegol implementacyjny): stan trzymany jest
+ * w pamieci instancji. Na Vercel kazda instancja funkcji ma wlasna mape, wiec:
+ *   - limit NIE jest wspoldzielony miedzy instancjami: realny prog to
+ *     maxRequests * liczba aktywnych instancji,
+ *   - zimny start zeruje licznik,
+ *   - wystarczy wiec rozlozyc ruch w czasie albo trafic na nowa instancje,
+ *     zeby limit obejsc.
+ * Limiter traktujemy jako hamulec na przypadkowe petle i proste boty, a nie
+ * jako zabezpieczenie przed celowym naduzyciem. Docelowo wspolny magazyn
+ * (np. Redis/Upstash) - kroki i decyzje wlasciciela w
+ * `docs/BACKLOG_BEZPIECZENSTWO.md`.
  */
 
 interface RateLimitEntry {
