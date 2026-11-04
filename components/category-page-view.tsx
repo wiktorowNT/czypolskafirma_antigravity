@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
 import {
   ChevronRight,
   Search,
@@ -131,15 +130,16 @@ function getCountryFlag(countryCode?: string) {
 }
 
 export default function CategoryPageView({ category }: CategoryPageViewProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "")
+  // Filtry startują z wartości domyślnych, a parametry adresu (?q=, ?sort=, ...) czytamy po
+  // zamontowaniu. `useSearchParams` wymusza przy prerenderze ISR granicę Suspense, poza którą
+  // lista firm znika z HTML-a (render tylko w przeglądarce), a Google musi ją widzieć.
+  const [parametryWczytane, setParametryWczytane] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
   const [countryQuery, setCountryQuery] = useState("")
-  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "name-asc")
+  const [sortBy, setSortBy] = useState("name-asc")
   const [capitalFilter, setCapitalFilter] = useState<{ polish: boolean; foreign: boolean }>({
-    polish: searchParams.get("capital") === "polish" || searchParams.get("capital") === "all" || false,
-    foreign: searchParams.get("capital") === "foreign" || searchParams.get("capital") === "all" || false,
+    polish: false,
+    foreign: false,
   })
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [showToast, setShowToast] = useState<{ message: string; type: "success" | "error" } | null>(null)
@@ -148,12 +148,33 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
   const [viewCountsLoading, setViewCountsLoading] = useState(false)
 
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>({
-    headquarters: (searchParams.get("hq") as FilterState) || "any",
-    vatStatus: (searchParams.get("vat") as FilterState) || "any",
-    bankAccount: (searchParams.get("bank") as FilterState) || "any",
-    ageMin: Number.parseInt(searchParams.get("ageMin") || "0"),
-    ageMax: Number.parseInt(searchParams.get("ageMax") || "100"),
+    headquarters: "any",
+    vatStatus: "any",
+    bankAccount: "any",
+    ageMin: 0,
+    ageMax: 100,
   })
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const capital = searchParams.get("capital")
+    if (searchParams.get("q")) setSearchTerm(searchParams.get("q") || "")
+    if (searchParams.get("sort")) setSortBy(searchParams.get("sort") || "name-asc")
+    if (capital) {
+      setCapitalFilter({
+        polish: capital === "polish" || capital === "all",
+        foreign: capital === "foreign" || capital === "all",
+      })
+    }
+    setAdvancedFilters({
+      headquarters: (searchParams.get("hq") as FilterState) || "any",
+      vatStatus: (searchParams.get("vat") as FilterState) || "any",
+      bankAccount: (searchParams.get("bank") as FilterState) || "any",
+      ageMin: Number.parseInt(searchParams.get("ageMin") || "0"),
+      ageMax: Number.parseInt(searchParams.get("ageMax") || "100"),
+    })
+    setParametryWczytane(true)
+  }, [])
 
   const [sidebarCategories, setSidebarCategories] = useState<{ id: string, name: string, slug: string, icon?: string }[]>([])
 
@@ -206,6 +227,8 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
   } = useComparison()
 
   useEffect(() => {
+    // Dopóki nie wczytaliśmy parametrów z adresu, nie nadpisujemy go wartościami domyślnymi.
+    if (!parametryWczytane) return
     const params = new URLSearchParams()
     if (searchTerm) params.set("q", searchTerm)
     if (sortBy !== "name-asc") params.set("sort", sortBy)
@@ -222,9 +245,12 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
 
     const newUrl = params.toString() ? `?${params.toString()}` : ""
     if (newUrl !== window.location.search) {
-      router.replace(`${window.location.pathname}${newUrl}`, { scroll: false })
+      // Sam adres, bez zapytania do serwera. `router.replace` przy każdym znaku w wyszukiwarce
+      // pobierał z Vercela nowy ładunek RSC strony (przy trasie dynamicznej: pełny render).
+      // Next synchronizuje swój router z history.replaceState, więc Wstecz działa jak dotąd.
+      window.history.replaceState(null, "", `${window.location.pathname}${newUrl}`)
     }
-  }, [searchTerm, sortBy, capitalFilter, advancedFilters, router])
+  }, [parametryWczytane, searchTerm, sortBy, capitalFilter, advancedFilters])
 
   const showToastMessage = (message: string, type: "success" | "error" = "success") => {
     setShowToast({ message, type })

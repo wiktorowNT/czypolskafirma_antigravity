@@ -1,13 +1,10 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
 
 export function useComparison() {
   const [comparedCompanies, setComparedCompanies] = useState<string[]>([])
   const [showComparisonPanel, setShowComparisonPanel] = useState(false)
-  const searchParams = useSearchParams()
-  const router = useRouter()
   const hasProcessedUrl = useRef(false)
 
   useEffect(() => {
@@ -15,6 +12,9 @@ export function useComparison() {
     if (hasProcessedUrl.current) return
 
     const saved = localStorage.getItem("comparedCompanies")
+    // Adres czytany po zamontowaniu, nie przez useSearchParams: hook działa na stronie
+    // kategorii, która jest ISR, a useSearchParams przy prerenderze wycina listę firm z HTML-a.
+    const searchParams = new URLSearchParams(window.location.search)
     const urlCompare = searchParams.get("compare")
     const showComparison = searchParams.get("showComparison") === "true"
 
@@ -26,7 +26,7 @@ export function useComparison() {
         // Clean URL after opening panel
         const newUrl = new URL(window.location.href)
         newUrl.searchParams.delete("showComparison")
-        router.replace(newUrl.pathname + newUrl.search, { scroll: false })
+        window.history.replaceState(null, "", newUrl.pathname + newUrl.search)
       }
     } else if (saved) {
       try {

@@ -1,10 +1,21 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import CategoryPageView from "@/components/category-page-view"
-import { getCachedCategoryData } from "@/lib/supabase/category-cache"
+import { getCachedCategoryData, getAllCategoriesFromSupabase } from "@/lib/supabase/category-cache"
 import { serializeJsonLd } from "@/lib/json-ld"
 
-export const revalidate = 3600 // ISR: revalidate every hour
+export const revalidate = 86400 // ISR: doba, jak profile firm i /companies (deploy i tak czyści cache)
+
+// Bez generateStaticParams trasa była dynamiczna (ƒ w tabeli builda): każde wejście to pełny
+// render na Vercelu z `Cache-Control: no-store`, a `revalidate` było ignorowane.
+// W przeciwieństwie do profili (1555, pusta lista) kategorii jest 27 i to one zbierają ruch
+// z Google, więc prerenderujemy wszystkie w buildzie: pierwsze wejście po deployu nie czeka
+// na render. Kategoria dodana w bazie po buildzie wyrenderuje się przy pierwszym wejściu
+// (dynamicParams zostaje domyślne), a nieznany slug kończy się 404 jak dotąd.
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const kategorie = await getAllCategoriesFromSupabase()
+  return Object.keys(kategorie).map((slug) => ({ slug }))
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params

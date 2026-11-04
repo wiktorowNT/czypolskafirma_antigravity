@@ -1,14 +1,11 @@
+import { cache } from "react"
 import { getSupabaseServerClient } from "./server"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
 
-const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 godzin
-
-interface CacheEntry {
-  data: any
-  timestamp: number
-}
-
-const cache: Record<string, CacheEntry> = {}
+// Bez pamięci podręcznej w module: strona /kategoria/[slug] jest ISR (raz na dobę), więc to
+// Next trzyma wyrenderowany HTML. Stary cache w pamięci instancji (24 h) dokładał drugą dobę
+// nieświeżości: odświeżenie ISR na „ciepłej" instancji dostawało dane sprzed doby.
+// `cache` z Reacta łączy tylko dwa wywołania w jednym renderze (generateMetadata + strona).
 
 function calculatePolishScore(company: any): number {
   let score = 0
@@ -31,6 +28,9 @@ function mapCompanyToItem(company: any) {
   if (company.siedziba_pl) badges.push("HQ_PL")
   if (company.vat_czynny) badges.push("CIT_PL")
 
+  // Tylko pola, które czyta widok kategorii (lista, porównywarka, filtry). Te dane idą do
+  // przeglądarki w ładunku RSC przy każdej karcie, więc NIP, KRS, daty i surowe flagi
+  // (z nich liczy się wyżej `score` i `badges`) tylko zwiększały HTML.
   return {
     id: company.id,
     brand: resolveDisplayName(company.display_name, company.slug, company.name),
@@ -39,27 +39,15 @@ function mapCompanyToItem(company: any) {
     badges: badges,
     // Kanoniczny slug URL — używany w linkach i JSON-LD na stronach kategorii
     slug: company.slug ? slugify(company.slug) : company.slug,
-    category_slug: company.categories?.slug,
-    nip: company.nip,
-    krs: company.krs,
-    siedziba_pl: company.siedziba_pl,
-    vat_czynny: company.vat_czynny,
-    founded_at: company.founded_at,
     country_code: company.country_code,
     country_code_2: company.country_code_2,
     website_url: company.website_url,
   }
 }
 
-export async function getCachedCategoryData(categorySlug: string) {
+export const getCachedCategoryData = cache(async function getCachedCategoryData(categorySlug: string) {
   // Decode URL-encoded slugs (e.g. %C5%BCywno%C5%9B%C4%87 → żywność)
   categorySlug = decodeURIComponent(categorySlug)
-  const now = Date.now()
-  const cached = cache[categorySlug]
-
-  if (cached && now - cached.timestamp < CACHE_DURATION) {
-    return cached.data
-  }
 
   try {
     const supabase = await getSupabaseServerClient()
@@ -85,19 +73,12 @@ export async function getCachedCategoryData(categorySlug: string) {
         name,
         slug,
         display_name,
-        nip,
-        krs,
         founded_at,
         siedziba_pl,
         vat_czynny,
-
         country_code,
         country_code_2,
-        website_url,
-        categories (
-          name,
-          slug
-        )
+        website_url
       `)
       .eq("category_id", categoryId)
       .order("name", { ascending: true })
@@ -117,17 +98,12 @@ export async function getCachedCategoryData(categorySlug: string) {
       categoryShort: "",
     }
 
-    cache[categorySlug] = {
-      data: result,
-      timestamp: now,
-    }
-
     return result
   } catch (err) {
     console.error(`[v0] Exception in getCachedCategoryData:`, err)
     return { companies: [], categorySlug, categoryName: "", categoryShort: "" }
   }
-}
+})
 
 export async function getAllCategoriesFromSupabase() {
   try {
