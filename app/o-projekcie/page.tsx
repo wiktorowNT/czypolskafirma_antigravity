@@ -1,9 +1,13 @@
 import { Metadata } from "next"
 import { Search, TrendingUp, Globe2 } from "lucide-react"
+import { kartySpolecznosciowe } from "@/lib/meta-strony"
+
+const OPIS = "Dlaczego powstał projekt CzyPolskaFirma i jak pomaga konsumentom sprawdzać, kto naprawdę stoi za markami działającymi w Polsce."
 
 export const metadata: Metadata = {
   title: "O projekcie",
-  description: "Dowiedz się, dlaczego stworzyliśmy projekt CzyPolskaFirma i jak wspieramy świadomość konsumencką oraz polską gospodarkę.",
+  description: OPIS,
+  ...kartySpolecznosciowe({ tytul: "O projekcie | CzyPolskaFirma.pl", opis: OPIS, sciezka: "/o-projekcie" }),
   alternates: {
     canonical: "https://czypolskafirma.pl/o-projekcie",
   },

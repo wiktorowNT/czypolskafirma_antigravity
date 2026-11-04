@@ -7,6 +7,9 @@ export const metadata = {
     alternates: {
         canonical: "https://czypolskafirma.pl/ulubione",
     },
+    // Lista żyje w localStorage, więc crawler widzi pustą stronę. Poza indeksem i sitemapą,
+    // ale linki z nagłówka i stopki dalej są śledzone.
+    robots: { index: false, follow: true },
 }
 
 export default function BookmarksPage() {

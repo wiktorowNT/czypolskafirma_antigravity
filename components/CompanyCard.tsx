@@ -45,11 +45,13 @@ export function CompanyCard({
 
     return (
         <div className="group relative flex items-center gap-3 rounded-2xl border-[1.5px] border-line bg-card pl-2.5 pr-2 py-2.5 hover:border-ink transition-colors">
-            <Link href={profileUrl} className="flex-shrink-0" tabIndex={-1} aria-hidden="true">
+            {/* prefetch={false}: lista kategorii przy przewijaniu pobierała w tle ładunki ~180 profili
+                (CPU i transfer na Vercelu). Profil i tak ładuje się szybko z ISR po kliknięciu. */}
+            <Link href={profileUrl} prefetch={false} className="flex-shrink-0" tabIndex={-1} aria-hidden="true">
                 <CompanyLogo websiteUrl={websiteUrl} logoUrl={logoUrl} name={brand} size={44} />
             </Link>
 
-            <Link href={profileUrl} className="flex-1 min-w-0 after:absolute after:inset-0 after:rounded-2xl">
+            <Link href={profileUrl} prefetch={false} className="flex-1 min-w-0 after:absolute after:inset-0 after:rounded-2xl">
                 <h3 className="text-[15.5px] font-bold text-ink truncate">{brand}</h3>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
                     <span className={`inline-flex items-center gap-1.5 text-[12.5px] font-bold ${isPolish ? "text-brand-ink" : "text-ink-2"}`}>

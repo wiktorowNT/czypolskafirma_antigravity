@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, type ReactNode } from "react"
 import Link from "next/link"
 import {
   ChevronRight,
@@ -54,8 +54,18 @@ interface Category {
   items: CategoryItem[]
 }
 
+export interface InnaKategoria {
+  slug: string
+  name: string
+  icon?: string | null
+}
+
 interface CategoryPageViewProps {
   category: Category
+  /** Pozostałe kategorie z serwera: linki są w wyjściowym HTML, bez zapytania z przeglądarki. */
+  inneKategorie?: InnaKategoria[]
+  /** Sekcje renderowane na serwerze pod listą firm (wpisy z bloga, inne kategorie). */
+  ponizejListy?: ReactNode
 }
 
 type FilterState = "any" | "yes" | "no"
@@ -129,7 +139,7 @@ function getCountryFlag(countryCode?: string) {
   return String.fromCodePoint(...codePoints)
 }
 
-export default function CategoryPageView({ category }: CategoryPageViewProps) {
+export default function CategoryPageView({ category, inneKategorie = [], ponizejListy }: CategoryPageViewProps) {
   // Filtry startują z wartości domyślnych, a parametry adresu (?q=, ?sort=, ...) czytamy po
   // zamontowaniu. `useSearchParams` wymusza przy prerenderze ISR granicę Suspense, poza którą
   // lista firm znika z HTML-a (render tylko w przeglądarce), a Google musi ją widzieć.
@@ -176,7 +186,8 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
     setParametryWczytane(true)
   }, [])
 
-  const [sidebarCategories, setSidebarCategories] = useState<{ id: string, name: string, slug: string, icon?: string }[]>([])
+  // Dawniej pobierane w przeglądarce z /api/categories, więc linków nie było w HTML-u.
+  const sidebarCategories = inneKategorie
 
   // Fetch view counts for popularity sorting
   useEffect(() => {
@@ -200,21 +211,6 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
     }
     fetchViewCounts()
   }, [sortBy, category.items, viewCounts])
-
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await fetch("/api/categories")
-        if (res.ok) {
-          const data = await res.json()
-          setSidebarCategories(data.filter((cat: any) => cat.slug !== category.slug))
-        }
-      } catch (err) {
-        console.error("Błąd ładowania kategorii:", err)
-      }
-    }
-    fetchCategories()
-  }, [category.slug])
 
   const {
     comparedCompanies,
@@ -619,7 +615,7 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
                                     <h3 className="font-semibold text-ink text-sm">Nie widzisz firmy?</h3>
                 </div>
                 <p className="text-sm text-ink-2 mb-4 leading-relaxed">
-                  Zgłoś brakującą markę — sprawdzimy ją i dodamy do bazy.
+                  Zgłoś brakującą markę: po weryfikacji trafi do bazy.
                 </p>
                 <ReportDialog>
                   <button
@@ -726,6 +722,8 @@ export default function CategoryPageView({ category }: CategoryPageViewProps) {
               searchTerm={searchTerm}
               onClearFilters={clearAllFilters}
             />
+
+            {ponizejListy}
           </div>
         </div>
 

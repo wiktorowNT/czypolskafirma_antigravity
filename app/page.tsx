@@ -10,12 +10,19 @@ import { GlobalStats } from "@/components/global-stats"
 import { SupportSection } from "@/components/support-section"
 import { WhyPolish } from "@/components/WhyPolish"
 import { getHomeData } from "@/lib/home-data"
+import { kartySpolecznosciowe } from "@/lib/meta-strony"
 
 export type { HeroCategory, HeroPopularTag } from "@/lib/home-data"
 
 export const revalidate = 86400 // ISR: odśwież dane strony głównej raz na dobę (limit CPU Vercela)
 
+// Tytuł i opis z layoutu (title.default, description); tu tylko jawny og:url strony głównej.
 export const metadata: Metadata = {
+  ...kartySpolecznosciowe({
+    tytul: "CzyPolskaFirma: sprawdź pochodzenie kapitału firmy",
+    opis: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
+    sciezka: "/",
+  }),
   alternates: {
     canonical: "https://czypolskafirma.pl",
   },

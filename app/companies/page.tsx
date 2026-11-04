@@ -1,12 +1,17 @@
 import type { Metadata } from "next"
 import { StronaListy } from "./StronaListy"
+import { kartySpolecznosciowe } from "@/lib/meta-strony"
+
+const TYTUL = "Wszystkie firmy: sprawdź pochodzenie kapitału"
+const OPIS = "Przeglądaj pełną bazę firm i marek dostępnych w serwisie CzyPolskaFirma. Sprawdź pochodzenie kapitału."
 
 export const revalidate = 86400 // ISR: odśwież listę raz na dobę (limit CPU Vercela)
 
 export const metadata: Metadata = {
   // Sufiks "| CzyPolskaFirma.pl" dodaje title.template z layoutu — bez ręcznego dopisywania.
-  title: "Wszystkie firmy — sprawdź pochodzenie kapitału",
-  description: "Przeglądaj pełną bazę firm i marek dostępnych w serwisie CzyPolskaFirma. Sprawdź pochodzenie kapitału.",
+  title: TYTUL,
+  description: OPIS,
+  ...kartySpolecznosciowe({ tytul: `${TYTUL} | CzyPolskaFirma.pl`, opis: OPIS, sciezka: "/companies" }),
   alternates: {
     canonical: "https://czypolskafirma.pl/companies",
   },

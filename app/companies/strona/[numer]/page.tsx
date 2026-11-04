@@ -3,6 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation"
 import { StronaListy } from "../../StronaListy"
 import { pobierzListeFirm, liczbaStron, FIRM_NA_STRONE, BAZOWY_URL } from "../../dane"
 import { sciezkaStrony } from "../../wspolne"
+import { kartySpolecznosciowe } from "@/lib/meta-strony"
 
 export const revalidate = 86400 // ISR: doba, jak strona 1 (/companies)
 
@@ -33,10 +34,14 @@ export async function generateMetadata({ params }: { params: Promise<{ numer: st
   const od = kawalek[0]?.brand
   const do_ = kawalek[kawalek.length - 1]?.brand
 
+  // Tytuł i opis różne na każdej stronie, żeby Google nie traktował ich jak duplikatów.
+  const title = `Wszystkie firmy, strona ${numer} z ${stron}`
+  const description = `Lista firm i marek w bazie CzyPolskaFirma, strona ${numer} z ${stron}${od && do_ ? `: od ${od} do ${do_}` : ""}. Sprawdź pochodzenie kapitału.`
+
   return {
-    // Tytuł i opis różne na każdej stronie, żeby Google nie traktował ich jak duplikatów.
-    title: `Wszystkie firmy, strona ${numer} z ${stron}`,
-    description: `Lista firm i marek w bazie CzyPolskaFirma, strona ${numer} z ${stron}${od && do_ ? `: od ${od} do ${do_}` : ""}. Sprawdź pochodzenie kapitału.`,
+    title,
+    description,
+    ...kartySpolecznosciowe({ tytul: `${title} | CzyPolskaFirma.pl`, opis: description, sciezka: sciezkaStrony(numer) }),
     alternates: {
       // Każda strona wskazuje samą siebie (nie stronę 1): inaczej Google pominąłby firmy z dalszych stron.
       canonical: `${BAZOWY_URL}${sciezkaStrony(numer)}`,
