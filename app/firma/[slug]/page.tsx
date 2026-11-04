@@ -3,6 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation"
 import CompanyProfileClient from "./CompanyProfileClient"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName, cleanAddress } from "@/lib/slug-utils"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 import { buildCompanyFaqItems, getCountryLabel } from "@/lib/company-faq"
 import { serializeJsonLd } from "@/lib/json-ld"
 
@@ -218,12 +219,16 @@ async function getCompanyData(slugOrId: string): Promise<CompanyDetail | null> {
     if (!isUuid) {
       const wanted = slugify(decoded)
       if (wanted) {
-        const { data: allSlugs, error: slugsError } = await supabase
-          .from("companies")
-          .select("id, slug")
+        // Cała tabela slugów, stronicowano: PostgREST oddaje maks. 1000 wierszy, więc firmy
+        // poza pierwszym tysiącem pod niekanonicznym URL-em dostawały 404 (lib/companies-paged.ts).
+        const { rows: allSlugs } = await pobierzWszystkieFirmy<{ id: string; slug: string | null }>(
+          supabase,
+          "id, slug",
+          { etykieta: "firma-slug", dostrojZapytanie: (q) => q.order("id", { ascending: true }) },
+        )
 
-        if (!slugsError && allSlugs) {
-          const match = allSlugs.find((c: { id: string; slug: string | null }) => c.slug && slugify(c.slug) === wanted)
+        if (allSlugs.length > 0) {
+          const match = allSlugs.find((c) => c.slug && slugify(c.slug) === wanted)
           if (match) {
             const { data: full, error: fullError } = await supabase
               .from("companies")

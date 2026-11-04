@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { pobierzWszystkieFirmyRest } from "@/lib/companies-paged"
 import { getCountryLabel } from "@/lib/company-faq"
 import {
   OG_SIZE,
@@ -71,17 +72,19 @@ async function fetchCompany(slugOrId: string): Promise<OgCompany | null> {
     }
 
     // 2) Fallback: kanoniczne dopasowanie po slugify (dla niekanonicznych slugów w bazie).
+    //    Dopasowanie idzie w JS, więc trzeba przejrzeć całą tabelę. Stronicowano, bo PostgREST
+    //    oddaje maks. 1000 wierszy i firmy poza pierwszym tysiącem nie dostawały karty OG
+    //    (lib/companies-paged.ts).
     const wanted = slugify(decoded)
     if (wanted) {
-      const allRes = await fetch(`${SUPABASE_URL}/rest/v1/companies?${FILTR_PUBLIKACJI}select=${select}`, {
-        headers,
-        ...revalidate,
+      const { rows: all } = await pobierzWszystkieFirmyRest<any>(select, {
+        supabaseUrl: SUPABASE_URL,
+        supabaseKey: SUPABASE_ANON_KEY,
+        etykieta: "og-firma",
+        init: revalidate,
       })
-      if (allRes.ok) {
-        const all = await allRes.json()
-        const match = all.find((c: any) => c.slug && slugify(c.slug) === wanted)
-        if (match) return mapRow(match)
-      }
+      const match = all.find((c: any) => c.slug && slugify(c.slug) === wanted)
+      if (match) return mapRow(match)
     }
   } catch {
     return null

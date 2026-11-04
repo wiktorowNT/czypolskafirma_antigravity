@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { CompaniesList } from "./CompaniesList"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
+import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 import type { CompanyGridItem } from "@/components/CompanyGrid"
 
 export const revalidate = 86400 // ISR: odśwież listę raz na dobę (limit CPU Vercela)
@@ -19,15 +20,21 @@ export const metadata: Metadata = {
 async function getCompanies(): Promise<CompanyGridItem[]> {
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase
-      .from("companies")
-      .select("id, name, slug, display_name, country_code, siedziba_pl, vat_czynny, website_url")
-      .order("name", { ascending: true })
+    // Stronicowano: PostgREST oddaje maks. 1000 wierszy, więc HTML tej strony (to, co widzi
+    // Google) miał 1000 z 1555 firm, a reszta pojawiała się dopiero po dociągnięciu w przeglądarce.
+    const { rows: data, complete } = await pobierzWszystkieFirmy<any>(
+      supabase,
+      "id, name, slug, display_name, country_code, siedziba_pl, vat_czynny, website_url",
+      {
+        etykieta: "companies-page",
+        // `id` jako tiebreaker: przy równych nazwach utrzymuje stabilny podział na strony.
+        dostrojZapytanie: (q) => q.order("name", { ascending: true }).order("id", { ascending: true }),
+      },
+    )
 
-    if (error || !data) {
-      console.error("[companies] Błąd pobierania firm:", error)
-      return []
-    }
+    // Niepełny odczyt: lepiej pokazać to, co jest (CompaniesList i tak dociąga pełną listę
+    // z /api/companies w przeglądarce), niż pustą stronę na dobę ISR.
+    if (!complete) console.error(`[companies] Odczyt niepełny: ${data.length} firm`)
 
     return data.map((c: any) => ({
       id: c.id,

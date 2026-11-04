@@ -59,3 +59,21 @@ zero sumowania 1555 wierszy JSON na Vercelu przy każdym odświeżeniu. Dopóki 
 wklei SQL-a w Supabase, trasa schodzi na stronicowany fallback w Node: liczby są poprawne
 w obu wariantach, RPC jest tańszy w CPU. Metodologia jest w obu identyczna (polska firma =
 `country_code = 'PL'`, kategorie od 3 firm, firmy bez kategorii w kubełku „Inne").
+
+## Gdzie helper jest użyty (stan 2026-11-04)
+
+- `/api/stats` (fallback), `/api/companies`, `/kategorie`, `lib/home-data.ts`,
+  `lib/sitemap-data.ts`, `lib/blog-companies.ts`, `lib/supabase/get-categories.ts`,
+  `lib/supabase/get-companies.ts` (PR #74).
+- `/companies`: HTML listy wszystkich firm, czyli to, co widzi Google. Wcześniej 1000 z 1555;
+  resztę dociągała dopiero przeglądarka. Przy `complete: false` strona pokazuje to, co
+  udało się pobrać, zamiast pustej listy na dobę ISR (lista to nie statystyka).
+- Fallback po `slugify` w profilu firmy (`app/firma/[slug]/page.tsx`) i w karcie OG
+  (`app/firma/[slug]/opengraph-image.tsx`). Wcześniej firma spoza pierwszego tysiąca pod
+  niekanonicznym URL-em (wielkie litery, nawiasy, polskie znaki w slugu z bazy) dostawała 404,
+  a jej karta OG grafikę zastępczą. Dołożone po scaleniu migracji do Next 15.
+
+Sprawdzone na atrapie PostgREST z 2500 firmami i twardym limitem 1000 wierszy na odpowiedź:
+`/api/stats` daje `total: 2500`, `/kategorie` liczniki sumujące się do 2500, `/companies`
+2500 linków w HTML, a profil i karta OG firmy nr 2100 z surowym slugiem renderują się z jej
+danymi.
