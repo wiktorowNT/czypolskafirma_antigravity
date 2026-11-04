@@ -1,9 +1,13 @@
 import { Metadata } from "next"
 import { ShieldCheck, PieChart, History, CheckCircle2 } from "lucide-react"
+import { kartySpolecznosciowe } from "@/lib/meta-strony"
+
+const OPIS = "Zasady weryfikacji kapitału i struktury właścicielskiej firm w bazie CzyPolskaFirma.pl"
 
 export const metadata: Metadata = {
   title: "Metodologia",
-  description: "Zasady weryfikacji kapitału i struktury właścicielskiej firm w bazie CzyPolskaFirma.pl",
+  description: OPIS,
+  ...kartySpolecznosciowe({ tytul: "Metodologia | CzyPolskaFirma.pl", opis: OPIS, sciezka: "/metodologia" }),
   alternates: {
     canonical: "https://czypolskafirma.pl/metodologia",
   },
