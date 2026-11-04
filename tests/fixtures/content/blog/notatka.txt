@@ -1,0 +1,1 @@
+Plik bez rozszerzenia .md: lib/blog.ts go pomija.

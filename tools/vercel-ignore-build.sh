@@ -22,6 +22,8 @@ fi
 if git diff --quiet "$BASE" HEAD -- . \
   ':(exclude)docs' \
   ':(exclude)tools' \
+  ':(exclude)tests' \
+  ':(exclude)vitest.config.mts' \
   ':(exclude)data/robocze' \
   ':(exclude)data/panel' \
   ':(exclude)scratch' \
