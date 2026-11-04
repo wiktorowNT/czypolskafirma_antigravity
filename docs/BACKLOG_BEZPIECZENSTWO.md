@@ -105,9 +105,9 @@ instancji (`lib/view-guard.ts`), więc:
 
 **✅ Zrobione 2026-11-04** przy scalaniu migracji do Next 15 (PR #77):
 `eslint`, `eslint-config-next@15` i `eslint.config.mjs` (preset
-`next/core-web-vitals`) są w repo, `npm run lint` to `eslint .`, a krok
-„Lint" w `ci.yml` blokuje scalenie przy błędzie. Zostało ok. 50 ostrzeżeń
-sprzed migracji (głównie `<img>` zamiast `next/image`).
+`next/core-web-vitals`) są w repo i `npm run lint` (`eslint .`) przechodzi.
+Zostało ok. 50 ostrzeżeń sprzed migracji (głównie `<img>` zamiast `next/image`).
+Lint uruchamia się lokalnie; CI w GitHub Actions zostało usunięte (punkt 5).
 
 Do rozważenia osobno: zdjęcie `eslint.ignoreDuringBuilds` z `next.config.mjs`,
 żeby build też patrzył na lint.
@@ -122,7 +122,11 @@ osobne zadanie i nie na jeden PR.
 
 ## 5. Sekrety Supabase dla GitHub Actions
 
-**Zadanie dla właściciela, jednorazowe.**
+**❌ Odrzucone 2026-11-04 decyzją właściciela.** Zmienne nie zostały dodane, więc
+`.github/workflows/ci.yml` usunięto (bez nich świeciłby na czerwono przy każdym PR-ze,
+a build i tak sprawdza Vercel przed każdym podglądem), a nocny harmonogram
+`reweryfikacja.yml` jest zakomentowany. Opis poniżej zostaje na wypadek powrotu do tematu:
+żeby przywrócić CI, trzeba odtworzyć plik z historii gita (`git log -- .github/workflows/ci.yml`).
 
 `npm run build` prerenderuje `/api/categories` i `/api/companies/count`,
 czyli **sięga do Supabase w czasie kompilacji**. Bez zmiennych build pada na
@@ -204,5 +208,4 @@ Dla porządku, żeby nie szukać dwa razy:
   slugów firm przy każdym wywołaniu. `console.error` zostały.
 - **Bezpiecznik `npm run save`** — `tools/save.mjs`, odmawia pracy poza
   `develop` i nie robi `git add .` bez potwierdzenia.
-- **CI** — `.github/workflows/ci.yml` (patrz punkty 4 i 5 wyżej co do
-  tego, czego mu jeszcze brakuje).
+- **CI** — `.github/workflows/ci.yml`; usunięte 2026-11-04, patrz punkt 5.

@@ -6,12 +6,16 @@ name: Nocna re-weryfikacja
 # Przy 1555 firmach w bazie i 35 na noc pełny cykl zamyka się w ok. 55 nocy (1,8 miesiąca).
 # Szczegóły i instrukcja obsługi: docs/AUTOMATYZACJA_TRESCI.md, sekcja „Nocna re-weryfikacja".
 
+# WYŁĄCZONE 2026-11-04 decyzją właściciela: w repo nie ma zmiennych
+# NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY (Settings → Secrets and
+# variables → Actions → Variables), więc nocny przebieg padałby co noc na pierwszym kroku.
+# Żeby włączyć: dodaj obie zmienne i odkomentuj trzy linie `schedule` poniżej.
 on:
-  schedule:
-    # 22:00 UTC = 00:00 czasu polskiego latem, 23:00 zimą. Celowo kilka godzin przed
-    # automatem treści (04:00 UTC): oba zużywają ten sam limit subskrypcji Claude,
-    # a ten job może pracować do trzech godzin.
-    - cron: "0 22 * * *"
+  # schedule:
+  #   # 22:00 UTC = 00:00 czasu polskiego latem, 23:00 zimą. Celowo kilka godzin przed
+  #   # automatem treści (04:00 UTC): oba zużywają ten sam limit subskrypcji Claude,
+  #   # a ten job może pracować do trzech godzin.
+  #   - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
       ile:

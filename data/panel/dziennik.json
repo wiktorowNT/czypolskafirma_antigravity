@@ -153,6 +153,13 @@
       "tekst": "Projekt stoi na Next.js 15 (było 14.2.25) — typy Reacta wreszcie zgadzają się z React 19. Zmiana dla pracy na co dzień: `npm run lint` woła teraz ESLint wprost (`eslint .`), bo `next lint` jest w Next 15 wycofywane; konfiguracja siedzi w eslint.config.mjs. Lint przechodzi, ale zostawia 52 ostrzeżenia sprzed migracji (głównie <img> zamiast next/image) — to osobne zadanie, nie regresja.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-11-04-bez-ci-i-nocnej-reweryfikacji",
+      "data": "2026-11-04",
+      "tekst": "Właściciel zrezygnował z dodawania zmiennych NEXT_PUBLIC_SUPABASE_URL i NEXT_PUBLIC_SUPABASE_ANON_KEY do GitHub Actions. Skutek: usunięty .github/workflows/ci.yml (bez nich build w CI zawsze padał, a build i tak sprawdza Vercel przed każdym podglądem) i zakomentowany nocny harmonogram w .github/workflows/reweryfikacja.yml (padałby co noc na odczycie bazy). Skrypty re-weryfikacji (automat.mjs --najstarsze, firmy-w-toku.mjs, raport-reweryfikacji.mjs) zostają i działają lokalnie. Żeby włączyć: dodać obie zmienne w Settings → Secrets and variables → Actions → Variables i odkomentować schedule. Lint uruchamiać lokalnie: npm run lint.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }

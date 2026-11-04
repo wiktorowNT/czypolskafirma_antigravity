@@ -229,6 +229,12 @@ jest aktywny.
 
 # Nocna re-weryfikacja bazy (codziennie)
 
+> **Wyłączona 2026-11-04 decyzją właściciela.** W repo nie ma zmiennych
+> `NEXT_PUBLIC_SUPABASE_URL` i `NEXT_PUBLIC_SUPABASE_ANON_KEY` (sekcja „Konfiguracja"
+> niżej), więc harmonogram `schedule` w `reweryfikacja.yml` jest zakomentowany. Skrypty
+> działają, opis poniżej jest aktualny. Żeby włączyć: dodaj obie zmienne, odkomentuj
+> `schedule` i scal na `main`.
+
 Drugi automat w tym samym repozytorium: `.github/workflows/reweryfikacja.yml`. Nie pisze
 treści, tylko pilnuje, żeby baza nie starzała się po cichu. Co noc bierze z Supabase
 35 firm o najstarszym (albo pustym) `verified_at`, przechodzi je automatem w trybie
