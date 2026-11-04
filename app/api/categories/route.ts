@@ -1,6 +1,11 @@
 // app/api/categories/route.ts
 import { NextResponse } from "next/server"
 
+// Next 15: trasy GET nie są już domyślnie statyczne (w Next 14 były).
+// Bez tego /api/categories renderowałoby się przy każdym żądaniu — jawne
+// revalidate przywraca cache trasy z tym samym okresem co fetch poniżej.
+export const revalidate = 60
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 

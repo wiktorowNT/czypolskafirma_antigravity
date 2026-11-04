@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 
+// Next 15: trasy GET nie są już domyślnie statyczne (w Next 14 były).
+// Jawne revalidate przywraca cache trasy z okresem fetcha poniżej (godzina).
+export const revalidate = 3600
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 

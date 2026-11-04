@@ -16,7 +16,8 @@ export const size = OG_SIZE
 export const contentType = "image/png"
 
 export default async function Image() {
-  const [fonts, flag] = await Promise.all([loadOgFonts(), loadFlagDataUri("pl", getOgBaseUrl())])
+  const base = await getOgBaseUrl()
+  const [fonts, flag] = await Promise.all([loadOgFonts(), loadFlagDataUri("pl", base)])
 
   return new ImageResponse(
     (
