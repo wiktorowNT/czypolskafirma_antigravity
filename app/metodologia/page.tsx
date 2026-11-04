@@ -71,7 +71,7 @@ export default function MethodologyPage() {
               <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
                 <History className="w-6 h-6 text-amber-600" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-ink">3. Zasada "Złotej Klatki"</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-ink">3. Zasada &quot;Złotej Klatki&quot;</h2>
             </div>
             <p className="text-ink-2 leading-relaxed text-sm sm:text-base">
               Historyczne pochodzenie marki nie ma znaczenia przy ustalaniu jej bieżącego statusu.
@@ -90,7 +90,7 @@ export default function MethodologyPage() {
               <h2 className="text-xl sm:text-2xl font-bold text-ink">4. Klasyfikacja Binarna</h2>
             </div>
             <p className="text-ink-2 leading-relaxed text-sm sm:text-base">
-              Firma otrzymuje oficjalny status <strong>"Polska Firma"</strong> tylko wtedy,
+              Firma otrzymuje oficjalny status <strong>&quot;Polska Firma&quot;</strong> tylko wtedy,
               gdy ostateczny właściciel sprawujący efektywną kontrolę jest podmiotem polskim.
               Wszelkie przypadki mieszane i niuanse (np. mniejszościowe pakiety udziałów w rękach polskich)
               opisujemy szczegółowo w profilu firmy, jednak nie uprawniają one do uzyskania statusu polskiej firmy.

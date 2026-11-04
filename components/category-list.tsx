@@ -79,9 +79,9 @@ export default function CategoryList({ category, items }: CategoryListProps) {
           <nav className="flex mb-6" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
               <li className="inline-flex items-center">
-                <a href="/" className="text-ink-2 hover:text-brand-ink transition-colors">
+                <Link href="/" className="text-ink-2 hover:text-brand-ink transition-colors">
                   Strona główna
-                </a>
+                </Link>
               </li>
               <li>
                 <div className="flex items-center">
@@ -203,7 +203,7 @@ export default function CategoryList({ category, items }: CategoryListProps) {
       {/* No results */}
       {filteredAndSortedItems.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-ink-3">Nie znaleziono firm pasujących do wyszukiwania "{searchTerm}"</p>
+          <p className="text-ink-3">Nie znaleziono firm pasujących do wyszukiwania &quot;{searchTerm}&quot;</p>
         </div>
       )}
     </div>

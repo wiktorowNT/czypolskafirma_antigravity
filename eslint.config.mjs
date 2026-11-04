@@ -17,18 +17,6 @@ const eslintConfig = [
   // Sprzątanie typów to osobne zadanie, nie część podbicia Nexta.
   ...compat.extends("next/core-web-vitals"),
   {
-    // Naruszenia sprzed migracji. `npm run lint` nigdy wcześniej nie dawał się
-    // uruchomić (repo nie miało ani konfiguracji, ani pakietu eslint), więc te
-    // dwie reguły od pierwszego przebiegu wywalały 17 błędów w plikach, których
-    // podbicie Nexta nie dotyczy — m.in. w regulaminie i polityce prywatności.
-    // Zostają jako OSTRZEŻENIA: są widoczne na liście, ale nie blokują lintu.
-    // Poprawka to zmiana treści JSX i nawigacji, czyli osobne zadanie.
-    rules: {
-      "react/no-unescaped-entities": "warn",
-      "@next/next/no-html-link-for-pages": "warn",
-    },
-  },
-  {
     // `next lint` sprawdzał domyślnie tylko katalogi aplikacji. Zostawiamy ten
     // sam zakres, żeby migracja nie wciągnęła do lintowania skryptów z tools/,
     // treści bloga ani wygenerowanych paczek (logos_bundle.js to ~19 MB).
@@ -46,10 +34,6 @@ const eslintConfig = [
       "next-env.d.ts",
       "logos_bundle.js",
       "generate_logos_bundle.js",
-      // Pliki robocze z czasów v0, poza katalogami aplikacji
-      // (temp_stripped.js nie jest nawet poprawnym składniowo plikiem).
-      "temp.js",
-      "temp_stripped.js",
     ],
   },
 ]

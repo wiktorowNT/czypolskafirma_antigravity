@@ -137,7 +137,7 @@ export default function SearchResultsClient() {
                 <div className="mb-8">
                     <h1 className="text-2xl md:text-3xl font-bold text-ink mb-2">
                         {query ? (
-                            <>Wyniki wyszukiwania dla: "<span className="text-brand-ink">{query}</span>"</>
+                            <>Wyniki wyszukiwania dla: &quot;<span className="text-brand-ink">{query}</span>&quot;</>
                         ) : (
                             "Wpisz nazwę firmy"
                         )}

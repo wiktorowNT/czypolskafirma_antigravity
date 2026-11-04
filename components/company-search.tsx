@@ -29,6 +29,8 @@ interface CompanySearchProps {
   showSearchResult?: boolean
   variant?: "default" | "minimal" | "hero"
   onSelect?: (company: Company) => void
+  /** Zamiast przejścia do /szukaj wywołuje podaną funkcję (tryb demo). */
+  onDemoSearch?: () => void
 }
 
 export function CompanySearch({
