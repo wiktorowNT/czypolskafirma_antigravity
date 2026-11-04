@@ -7,12 +7,16 @@
 //   node tools/firmy/automat.mjs --plik lista.txt                 (jedna nazwa na linię)
 //   node tools/firmy/automat.mjs --kategoria kosmetyki --seed 40  (model proponuje listę)
 //   node tools/firmy/automat.mjs --kandydaci [N]                  (kolejka od automatu treści, opcjonalnie N pierwszych)
+//   node tools/firmy/automat.mjs --najstarsze 35 --reweryfikacja  (N firm z bazy o najstarszym verified_at)
 //   node tools/firmy/automat.mjs --partia 2026-09-17-test          (kontynuuje istniejącą partię)
 // Opcje:
 //   --partia NAZWA        nazwa partii (domyślnie data)
 //   --rownolegle N        ile firm naraz (domyślnie 2)
 //   --model-sledztwo M    sonnet|opus|haiku (domyślnie sonnet); --model-kontrola, --model-opisy analogicznie
 //   --reweryfikacja       firmy już w bazie: porównaj nowe ustalenia z obecnym rekordem
+//   --najstarsze N        weź z bazy N firm o najstarszym (albo pustym) verified_at; typy własności
+//                         korporacja_gieldowa i fundusz_pe_vc mają premię w kolejce. Włącza
+//                         re-weryfikację. Używa tego .github/workflows/reweryfikacja.yml
 //   --reczny              zamiast wołać claude, zapisz prompty do plików i czytaj odpowiedzi z plików
 //   --bez-gieldy          pomiń pobieranie akcjonariatu z bankier.pl
 //   --crbr                dołącz beneficjentów rzeczywistych z CRBR (puppeteer, wolniejsze; tylko dane zagregowane)
@@ -31,7 +35,7 @@ import { MODELE, sprawdzLogowanie, zapytajModel } from "./lib/claude.mjs";
 import { stanLogowaniaGemini, zapytajGemini } from "./lib/gemini.mjs";
 import { bankierAkcjonariat, czyBladPolaczeniaMf, krsHistoriaWlascicieli, krsOdpisAktualny, mfPoNipach } from "./lib/rejestry.mjs";
 import { crbrBeneficjenci } from "./lib/crbr.mjs";
-import { indeksFirm, kategorie as pobierzKategorie } from "./lib/supabase.mjs";
+import { PREMIA_DNI, TYPY_PRIORYTETOWE, firmyDoReweryfikacji, indeksFirm, kategorie as pobierzKategorie } from "./lib/supabase.mjs";
 import { czyNip, normalizujKrs, normalizujNip, podobienstwoNazw, slugify } from "./lib/tekst.mjs";
 import { normalizujKrajOdModelu } from "./lib/walidacja.mjs";
 import { zlozRekord } from "./lib/rekord.mjs";
@@ -39,13 +43,24 @@ import { SCHEMAT_KONTROLA, SCHEMAT_OPISY, SCHEMAT_SEED, SCHEMAT_SLEDZTWO, SCHEMA
 
 // ---------- argumenty ----------
 const arg = parsujArgs(process.argv.slice(2));
-if (arg.help || (!arg.firmy && !arg.plik && !arg.kategoria && !arg.kandydaci && !arg.partia)) {
-  console.log(fs.readFileSync(new URL(import.meta.url)).toString().split("\n").slice(1, 20).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
+if (arg.help || (!arg.firmy && !arg.plik && !arg.kategoria && !arg.kandydaci && !arg.najstarsze && !arg.partia)) {
+  // Cały blok komentarza nad importami, bez sztywnego numeru linii (dopisanie opcji go nie ucina).
+  const linie = fs.readFileSync(new URL(import.meta.url), "utf8").split("\n").slice(1);
+  console.log(linie.slice(0, linie.findIndex((l) => !l.startsWith("//"))).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
   process.exit(0);
 }
 const NAZWA_PARTII = arg.partia || `${dzisiaj()}${arg.kategoria ? "-" + slugify(arg.kategoria) : ""}`;
 const PLIK_PARTII = path.join(KATALOG_PARTII, `partia-${NAZWA_PARTII}.json`);
 const ROWNOLEGLE = Math.max(1, Number(arg.rownolegle) || 2);
+// Sprawdzane tu, przed pierwszym zapytaniem do bazy, żeby literówka w liczbie nie kosztowała
+// odczytu całej tabeli i nie wywalała się dopiero na braku zmiennych środowiskowych.
+// `=== true` to flaga podana bez wartości (--najstarsze bez liczby); Number(true) dałoby 1,
+// czyli cichą partię jednej firmy zamiast błędu.
+const ILE_NAJSTARSZE = arg.najstarsze === undefined ? null : arg.najstarsze === true ? NaN : Number(arg.najstarsze);
+if (ILE_NAJSTARSZE !== null && (!Number.isInteger(ILE_NAJSTARSZE) || ILE_NAJSTARSZE < 1)) {
+  console.error(`--najstarsze wymaga liczby całkowitej większej od zera (podano ${arg.najstarsze === true ? "flagę bez liczby" : `"${arg.najstarsze}"`}).`);
+  process.exit(1);
+}
 const OPCJE_MODELU = { reczny: !!arg.reczny, katalogPartii: KATALOG_PARTII, partia: NAZWA_PARTII };
 const MODEL = {
   seed: MODELE[arg["model-seed"]] || arg["model-seed"] || MODELE.tani,
@@ -78,7 +93,7 @@ fs.mkdirSync(KATALOG_PARTII, { recursive: true });
 let partia = fs.existsSync(PLIK_PARTII)
   ? JSON.parse(fs.readFileSync(PLIK_PARTII, "utf8"))
   : { nazwa: NAZWA_PARTII, utworzono: new Date().toISOString(), tryb: arg.reweryfikacja ? "reweryfikacja" : "nowe", firmy: [], statystyki: { wywolan: 0, sekundy: 0, tokenyWe: 0, tokenyWy: 0, wyszukiwan: 0 } };
-if (arg.reweryfikacja) partia.tryb = "reweryfikacja";
+if (arg.reweryfikacja || arg.najstarsze) partia.tryb = "reweryfikacja";
 if (arg.sciezka === "reczna") partia.sciezka = "reczna";
 // Ścieżka ręczna: dopóki numery nie są potwierdzone w panelu, każda firma kończy na przystanku NIP.
 const PRZYSTANEK_RECZNY = partia.sciezka === "reczna" && !partia.nipPotwierdzone;
@@ -154,6 +169,31 @@ if (arg.kandydaci) {
   log(`kandydaci: ${wziete} do partii, ${wBazie} już w bazie (odhaczone w ${path.relative(process.cwd(), plikK)})`);
   if (!partia.firmy.length) {
     log("kolejka kandydatów nie ma nic nowego, kończę");
+    process.exit(0);
+  }
+}
+
+// wejście: --najstarsze N, czyli N firm z bazy o najstarszym (albo pustym) verified_at.
+// Używa tego nocna re-weryfikacja w Actions (.github/workflows/reweryfikacja.yml).
+// Marka i NIP idą z bazy, więc krok 1 nie pyta modelu o numer, a MF sprawdza numery zbiorczo
+// (30 na zapytanie). Powtórne uruchomienie z tą samą --partia nie rozdmucha jej: kolejka jest
+// deterministyczna, a dodajFirme pomija marki już obecne w partii.
+if (arg.najstarsze) {
+  const kolejka = await firmyDoReweryfikacji();
+  // Rekord bez poprawnego NIP-u nie nadaje się do re-weryfikacji „z numeru": krok 1 musiałby
+  // szukać go modelem, co jest wolne i niepewne. To materiał dla przegladu-tozsamosci.mjs
+  // (backlog, zadanie 7), nie dla nocnego automatu.
+  const bezNipu = kolejka.filter((f) => !czyNip(normalizujNip(f.nip)));
+  const wybrane = kolejka.filter((f) => czyNip(normalizujNip(f.nip))).slice(0, ILE_NAJSTARSZE);
+  for (const f of wybrane) dodajFirme(f.display_name || f.slug.replace(/-/g, " "), { nipPodany: normalizujNip(f.nip), zKolejki: { slug: f.slug, wiekDni: f.wiekDni, verified_at: f.verified_at || null, ownership_type: f.ownership_type || null } });
+  zapiszPartie();
+  const prio = wybrane.filter((f) => TYPY_PRIORYTETOWE.includes(f.ownership_type)).length;
+  const bezDaty = wybrane.filter((f) => !f.verified_at).length;
+  log(`najstarsze: ${wybrane.length} firm z kolejki ${kolejka.length - bezNipu.length} (bez daty weryfikacji ${bezDaty}, typy priorytetowe ${prio} z premią ${PREMIA_DNI} dni)`);
+  if (wybrane.length) log(`najstarszy wybrany rekord: ${wybrane[0].slug} (${wybrane[0].verified_at || "nigdy nie weryfikowany"}), najnowszy: ${wybrane.at(-1).slug} (${wybrane.at(-1).verified_at || "nigdy nie weryfikowany"})`);
+  if (bezNipu.length) log(`pominięto ${bezNipu.length} rekordów bez poprawnego NIP-u (materiał dla przeglad-tozsamosci.mjs)`);
+  if (!partia.firmy.length) {
+    log("kolejka re-weryfikacji jest pusta, kończę");
     process.exit(0);
   }
 }

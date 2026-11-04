@@ -103,18 +103,40 @@ z prefiksem `^`. Nie aktualizuj wersji, tylko przypnij.
 **Odbiór:** `npm run lint` i `npm run build` przechodzą; upload bez nagłówka dostaje 401.
 
 ### 5. Nocna re-weryfikacja w GitHub Actions
+**✅ Zrobione 2026-11-04 (gałąź `claude/focused-feynman-wtq5oc`).** `.github/workflows/reweryfikacja.yml`,
+flaga `--najstarsze N` w `automat.mjs`, kolejka w `lib/supabase.mjs`, opis PR-a z `raport-reweryfikacji.mjs`.
+Działa po scaleniu workflow na `main`.
+
+**Skala przeliczona na 1555 firm** (w backlogu było 10 firm na noc, policzone dla bazy 750):
+**35 firm na noc**, pełny cykl **55 nocy (1,8 miesiąca)**, najstarszy rekord w stanie
+ustalonym 63 dni. Przy 10 firmach na noc cykl to dziś 185 nocy, czyli ponad pół roku.
+Limity: Biała Lista MF **2 zapytania ze 100** na dobę (NIP-y znane z bazy, więc sprawdzane
+zbiorczo po 30), KRS **70 zapytań** (ok. 80 s czekania przy odstępie 1,1 s), czas joba
+**53-105 min** przy limicie 180. Wąskim gardłem nie są rejestry, tylko model (3-6 min na
+firmę) i wspólny z automatem treści limit subskrypcji Claude; dlatego re-weryfikacja
+startuje o 22:00 UTC, a treść o 4:00 UTC.
+
+Premia w kolejce dla `korporacja_gieldowa` i `fundusz_pe_vc` to **30 dni**, nie więcej:
+musi być wyraźnie mniejsza od naturalnego cyklu (1555/35 = 45 nocy), bo powyżej tej granicy
+typy priorytetowe wracają na wierzch, zanim kolejka obejdzie resztę bazy. Przy premii 90 dni
+symulacja dawała cykl 105 nocy zamiast 55 i najstarszy rekord 123 dni zamiast 63.
+
 **Po co:** struktury się zmieniają, `verified_at` jest puste dla większości rekordów.
 **Pliki:** nowy `.github/workflows/reweryfikacja.yml` na wzór `codzienna-tresc.yml`,
 `tools/firmy/automat.mjs` (flaga `--najstarsze N`: wybiera N firm z bazy o najstarszym lub
 pustym `verified_at`, priorytet: spółki giełdowe i portfelowe PE, czyli `ownership_type`
 `korporacja_gieldowa`/`fundusz_pe_vc`), `tools/firmy/lib/claude.mjs` (w Actions używa
 `CLAUDE_CODE_OAUTH_TOKEN` z sekretu, już obsługiwane).
-**Co zrobić:** workflow co noc uruchamia `automat.mjs --najstarsze 10 --reweryfikacja
+**Co zrobić** (opis pierwotny; wykonane z `--najstarsze 35` i limitem joba 180 min, patrz
+przeliczenie wyżej)**:** workflow co noc uruchamia `automat.mjs --najstarsze 10 --reweryfikacja
 --partia rew-RRRR-MM-DD` (bez `--crbr`, bez puppeteera), a potem otwiera PR do `develop`
 z plikiem partii i tabelą w opisie: firma, było → jest, status, konflikty. Import nadal
 lokalny, przez właściciela. Sekrety w Actions: tylko `CLAUDE_CODE_OAUTH_TOKEN` (już jest);
 odczyt bazy kluczem publicznym `NEXT_PUBLIC_SUPABASE_ANON_KEY` jako zmienna repo (to klucz
 publiczny, jest w bundlu strony). Timeout joba 60 min, `--rownolegle 2`.
+Uwaga z wykonania: poza `NEXT_PUBLIC_SUPABASE_ANON_KEY` potrzebny jest też
+`NEXT_PUBLIC_SUPABASE_URL` jako druga zmienna repo. Bez adresu projektu nie ma czego pytać,
+a `lib/supabase.mjs` i tak go wymaga; to również wartość publiczna z bundla strony.
 **Odbiór:** ręczne uruchomienie tworzy PR z partią; `node tools/firmy/przeglad.mjs --partia
 rew-...` otwiera ją lokalnie po `git pull`.
 

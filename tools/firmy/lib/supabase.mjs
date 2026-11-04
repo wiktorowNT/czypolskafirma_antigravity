@@ -100,3 +100,56 @@ export async function kolumnaIstnieje(tabela, kolumna) {
   const r = await fetch(`${bazaUrl()}/rest/v1/${tabela}?select=${kolumna}&limit=1`, { headers: naglowki(klucz) });
   return r.ok;
 }
+
+// ---- kolejka re-weryfikacji (.github/workflows/reweryfikacja.yml) ----
+
+// Typy własności, w których struktura zmienia się najczęściej: przejęcia spółek giełdowych
+// i wyjścia funduszy z portfela. Dostają premię do wieku, więc wracają na początek
+// kolejki szybciej niż firma rodzinna czy spółdzielnia.
+export const TYPY_PRIORYTETOWE = ["korporacja_gieldowa", "fundusz_pe_vc"];
+
+// Premia w dniach dla typów priorytetowych: spółka giełdowa sprawdzona miesiąc temu
+// konkuruje z firmą rodzinną sprawdzoną dwa miesiące temu.
+//
+// WAŻNE: premia musi być wyraźnie mniejsza od naturalnego cyklu (liczba firm w bazie
+// podzielona przez liczbę firm na noc, dziś 1555/35 = 45 nocy). Powyżej tej granicy
+// typy priorytetowe wracają na wierzch, zanim kolejka obejdzie resztę bazy, i ogon
+// kolejki głodzi: symulacja na 1555 firmach dawała przy premii 90 dni pełny cykl
+// 105 nocy zamiast 55 i najstarszy rekord 123 dni zamiast 63.
+// Zmieniasz liczbę firm na noc? Sprawdź tę zależność ponownie.
+export const PREMIA_DNI = 30;
+
+// Wiek rekordu bez daty weryfikacji. Dowolnie duży, ale skończony, żeby premia dalej
+// porządkowała rekordy wewnątrz tej grupy. Żadna prawdziwa data nie da takiego wyniku.
+const WIEK_BEZ_DATY = 100000;
+
+const KOLUMNY_REWERYFIKACJI = "id,slug,name,display_name,nip,krs,country_code,owner_name,ownership_type,verified_at";
+
+// Wiek rekordu w dniach, z premią dla typów priorytetowych.
+export function wiekRekordu(firma, opcje = {}) {
+  const premiaDni = opcje.premiaDni ?? PREMIA_DNI;
+  const teraz = opcje.dzien instanceof Date ? opcje.dzien : new Date();
+  const premia = TYPY_PRIORYTETOWE.includes(firma.ownership_type) ? premiaDni : 0;
+  const t = firma.verified_at ? Date.parse(firma.verified_at) : NaN;
+  if (Number.isNaN(t)) return WIEK_BEZ_DATY + premia;
+  return Math.floor((teraz.getTime() - t) / 86400000) + premia;
+}
+
+// Kolejność: najstarsze (albo nigdy nie weryfikowane) na wierzchu. Slug rozstrzyga remisy,
+// żeby ta sama baza zawsze dawała tę samą kolejkę.
+export function kolejkaReweryfikacji(firmy, opcje = {}) {
+  return firmy
+    .map((f) => ({ ...f, wiekDni: wiekRekordu(f, opcje) }))
+    .sort((a, b) => b.wiekDni - a.wiekDni || String(a.slug).localeCompare(String(b.slug), "pl"));
+}
+
+// Cała baza w widoku potrzebnym do kolejki, już uszeregowana. Tylko odczyt kluczem anon.
+export async function firmyDoReweryfikacji(opcje = {}) {
+  const wszystkie = [];
+  for (let od = 0; ; od += 1000) {
+    const { dane } = await odczyt(`companies?select=${KOLUMNY_REWERYFIKACJI}&order=slug`, { headers: { Range: `${od}-${od + 999}` } });
+    wszystkie.push(...dane);
+    if (dane.length < 1000) break;
+  }
+  return kolejkaReweryfikacji(wszystkie, opcje);
+}
