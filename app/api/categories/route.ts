@@ -1,4 +1,13 @@
 // app/api/categories/route.ts
+//
+// SWIADOMIE BEZ checkRateLimit. To statycznie eksportowany route handler
+// (GET bez argumentu `request`): Next piecze odpowiedz w czasie builda
+// i serwuje ja z CDN, z ISR co 60 s. Zadne zapytanie nie dociera tu do
+// Supabase, wiec nie ma czego limitowac, a samo siegniecie po IP
+// (`request.headers`) wypchnelo by route'a w tryb dynamiczny i dodalo
+// wywolanie funkcji do KAZDEGO wejscia na strone (naglowek, hero,
+// wyszukiwarka i strony kategorii pytaja o kategorie). Byloby to odwrocenie
+// oszczednosci CPU z commita 831eb08f.
 import { NextResponse } from "next/server"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL

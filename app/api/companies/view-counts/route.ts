@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -6,6 +7,17 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 // GET — retrieve view counts for a list of company IDs
 // Query params: ids=uuid1,uuid2,uuid3&days=30
 export async function GET(request: Request) {
+    // Limit: 60 odczytow na minute na IP.
+    // UWAGA: `checkRateLimit` jest limiterem in-memory. Na Vercel kazda instancja
+    // funkcji ma wlasna mape, wiec limit NIE jest wspoldzielony miedzy instancjami
+    // i przy wiekszym ruchu da sie go obejsc. Docelowo wspolny magazyn
+    // (Redis/Upstash), patrz `docs/BACKLOG_BEZPIECZENSTWO.md`.
+    const ip = getClientIp(request)
+    const { allowed } = checkRateLimit(ip, "view-counts", { maxRequests: 60, windowSeconds: 60 })
+    if (!allowed) {
+        return NextResponse.json({}, { status: 429 })
+    }
+
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
         return NextResponse.json({ error: "Missing env vars" }, { status: 500 })
     }
