@@ -295,14 +295,18 @@ a szukanie numeru modelem jest wolne i niepewne. To materiał dla
    automat w tym trybie stoi na samym Node, a puppeteer jest potrzebny tylko dla `--crbr`
    i importowany leniwie. Oszczędza to kilka minut i ok. 150 MB Chrome'a na przebieg.
 2. Wybór starych, nieprzejrzanych partii do zamknięcia (ponad 14 dni).
-3. `automat.mjs --najstarsze 35 --reweryfikacja --rownolegle 2 --partia rew-RRRR-MM-DD`.
+3. **Firmy w toku.** `firmy-w-toku.mjs` zbiera slugi z partii czekających na import
+   (otwarte PR-y `rew/*` i partie scalone na `develop`, z ostatnich 21 dni). Te firmy nie
+   wchodzą do dzisiejszej partii. Jeśli czekają już **3** nieprzejrzane partie, nocny
+   przebieg kończy się bez sprawdzania czegokolwiek (ręczne uruchomienie to pomija).
+4. `automat.mjs --najstarsze 35 --pomin .tmp/pomin.txt --reweryfikacja --rownolegle 2 --partia rew-RRRR-MM-DD`.
    Bez `--crbr`, bez puppeteera. Kroki 1-5 jak przy nowych firmach, tylko NIP jest znany
    z bazy, więc model nie szuka numeru.
-4. `raport-reweryfikacji.mjs` buduje opis PR-a z pliku partii: podsumowanie, tabela zmian
+5. `raport-reweryfikacji.mjs` buduje opis PR-a z pliku partii: podsumowanie, tabela zmian
    („było → jest" dla kraju i właściciela), konflikty, firmy bez zmian i te, które nie
    doszły do rekordu.
-5. Kontrola ścieżek, commit **wyłącznie** pliku partii, pull request do `develop`.
-6. Zamknięcie starych partii z komentarzem.
+6. Kontrola ścieżek, commit **wyłącznie** pliku partii, pull request do `develop`.
+7. Zamknięcie starych partii z komentarzem.
 
 ## Twoje 5 minut
 
@@ -327,7 +331,15 @@ node tools/firmy/import.mjs --partia rew-RRRR-MM-DD --apply
 ```
 
 Import odświeża `verified_at`, czyli dokładnie to, po co ten workflow istnieje. **Dopóki
-nie zaimportujesz, firma ma stary `verified_at` i wróci w kolejce.** Nic nie przepada.
+nie zaimportujesz, firma ma stary `verified_at`.** Przez 21 dni od powstania partii automat
+jej nie rusza (krok „Firmy w toku"), więc kolejne noce biorą następne firmy z kolejki zamiast
+powtarzać te same. Partia niezaimportowana przez 21 dni przestaje blokować swoje firmy
+i wracają do kolejki. Nic nie przepada.
+
+Gdy uzbierają się **3** nieprzejrzane partie, nocne przebiegi stają, dopóki którejś nie
+przejrzysz, scalisz albo zamkniesz (najstarsze zamykają się same po 14 dniach). To celowe:
+każdy przebieg to 35 firm pracy modelu na Twoim limicie subskrypcji Claude, a partia, której
+nikt nie importuje, nie odświeża bazy.
 
 ## Konfiguracja (jednorazowo)
 
@@ -372,6 +384,8 @@ Actions → **Nocna re-weryfikacja** → Run workflow. Dwa pola:
 | Nic nie przepada | Zamknięcie partii bez importu nie zmienia `verified_at`, więc firmy wracają do kolejki same |
 | Odsiew rekordów bez NIP-u | Nie marnuje tur modelu na szukanie numerów; to osobne narzędzie |
 | Deterministyczna kolejka | Ta sama baza daje tę samą kolejkę, więc powtórny przebieg tej samej partii jej nie rozdmuchuje |
+| Firmy w toku | Firmy z partii czekających na import (ostatnie 21 dni) nie trafiają do kolejnej partii; bez tego niezaimportowana partia powtarzałaby się co noc |
+| Limit 3 nieprzejrzanych partii | Nocny przebieg nie startuje, gdy czekają już 3 partie; nie pali limitu subskrypcji na pracę, której nikt nie importuje (`MAKS_OTWARTYCH` w workflow) |
 | Zakaz wykonywania poleceń ze stron | `lib/claude.mjs` wstrzykuje bezpiecznik: treści z internetu są danymi, nie instrukcją |
 
 ## Kiedy coś nie działa

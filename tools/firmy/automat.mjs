@@ -17,6 +17,8 @@
 //   --najstarsze N        weź z bazy N firm o najstarszym (albo pustym) verified_at; typy własności
 //                         korporacja_gieldowa i fundusz_pe_vc mają premię w kolejce. Włącza
 //                         re-weryfikację. Używa tego .github/workflows/reweryfikacja.yml
+//   --pomin PLIK          (z --najstarsze) slugi firm do pominięcia, po jednym w linii: firmy z partii
+//                         czekających na import, żeby kolejna noc nie brała ich drugi raz
 //   --reczny              zamiast wołać claude, zapisz prompty do plików i czytaj odpowiedzi z plików
 //   --bez-gieldy          pomiń pobieranie akcjonariatu z bankier.pl
 //   --crbr                dołącz beneficjentów rzeczywistych z CRBR (puppeteer, wolniejsze; tylko dane zagregowane)
@@ -184,7 +186,18 @@ if (arg.najstarsze) {
   // szukać go modelem, co jest wolne i niepewne. To materiał dla przegladu-tozsamosci.mjs
   // (backlog, zadanie 7), nie dla nocnego automatu.
   const bezNipu = kolejka.filter((f) => !czyNip(normalizujNip(f.nip)));
-  const wybrane = kolejka.filter((f) => czyNip(normalizujNip(f.nip))).slice(0, ILE_NAJSTARSZE);
+  // --pomin: firmy, które już siedzą w partiach czekających na przegląd i import (otwarte PR-y
+  // automatu albo partie scalone na develop). verified_at zmienia się dopiero przy ręcznym
+  // imporcie, więc bez tego filtra kolejka jest co noc identyczna i automat sprawdzałby te same
+  // firmy, aż właściciel zaimportuje partię. Listę buduje krok „Firmy w toku” w reweryfikacja.yml.
+  const pominSlugi = new Set(
+    typeof arg.pomin === "string" && fs.existsSync(arg.pomin)
+      ? fs.readFileSync(arg.pomin, "utf8").split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
+      : [],
+  );
+  const wybrane = kolejka
+    .filter((f) => czyNip(normalizujNip(f.nip)) && !pominSlugi.has(f.slug))
+    .slice(0, ILE_NAJSTARSZE);
   for (const f of wybrane) dodajFirme(f.display_name || f.slug.replace(/-/g, " "), { nipPodany: normalizujNip(f.nip), zKolejki: { slug: f.slug, wiekDni: f.wiekDni, verified_at: f.verified_at || null, ownership_type: f.ownership_type || null } });
   zapiszPartie();
   const prio = wybrane.filter((f) => TYPY_PRIORYTETOWE.includes(f.ownership_type)).length;
@@ -192,6 +205,7 @@ if (arg.najstarsze) {
   log(`najstarsze: ${wybrane.length} firm z kolejki ${kolejka.length - bezNipu.length} (bez daty weryfikacji ${bezDaty}, typy priorytetowe ${prio} z premią ${PREMIA_DNI} dni)`);
   if (wybrane.length) log(`najstarszy wybrany rekord: ${wybrane[0].slug} (${wybrane[0].verified_at || "nigdy nie weryfikowany"}), najnowszy: ${wybrane.at(-1).slug} (${wybrane.at(-1).verified_at || "nigdy nie weryfikowany"})`);
   if (bezNipu.length) log(`pominięto ${bezNipu.length} rekordów bez poprawnego NIP-u (materiał dla przeglad-tozsamosci.mjs)`);
+  if (pominSlugi.size) log(`pominięto ${kolejka.filter((f) => pominSlugi.has(f.slug)).length} firm z partii czekających na import (--pomin)`);
   if (!partia.firmy.length) {
     log("kolejka re-weryfikacji jest pusta, kończę");
     process.exit(0);

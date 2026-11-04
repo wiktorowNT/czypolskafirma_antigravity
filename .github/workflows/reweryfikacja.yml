@@ -74,7 +74,43 @@ jobs:
           echo "Stare partie do zamknięcia: ${numery:-(brak)}"
           echo "numery=$numery" >> "$GITHUB_OUTPUT"
 
+      # verified_at zmienia się dopiero przy ręcznym imporcie partii, więc dopóki właściciel
+      # jej nie zaimportuje, kolejka jest co noc identyczna. Bez tego kroku automat brałby
+      # w kółko te same firmy i palił limit subskrypcji Claude na powtórki. Dlatego:
+      #   1) firmy z partii czekających na import (otwarte PR-y automatu i partie już scalone
+      #      na develop, z ostatnich 21 dni) nie wchodzą do dzisiejszej partii,
+      #   2) gdy czeka już MAKS_OTWARTYCH nieprzejrzanych partii, nocny przebieg nic nie robi.
+      #      Ręczne uruchomienie (workflow_dispatch) ten bezpiecznik pomija.
+      # Zamykanie partii starszych niż 14 dni (krok na końcu joba) zwalnia miejsce samo.
+      - name: Firmy w toku (nie bierz ich drugi raz)
+        id: wtoku
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MAKS_OTWARTYCH: "3"
+          ZDARZENIE: ${{ github.event_name }}
+        run: |
+          set -e
+          mkdir -p .tmp/w-toku
+          galezie=$(gh pr list --state open --limit 100 --json headRefName,author \
+            --jq '.[] | select(.author.login == "app/github-actions" and (.headRefName | startswith("rew/"))) | .headRefName')
+          otwarte=0
+          for g in $galezie; do
+            otwarte=$((otwarte + 1))
+            git fetch -q --depth=1 origin "$g"
+            for p in $(git ls-tree --name-only FETCH_HEAD data/robocze/automat/ | grep '/partia-rew-' || true); do
+              git show "FETCH_HEAD:$p" > ".tmp/w-toku/$(basename "$p")"
+            done
+          done
+          cp data/robocze/automat/partia-rew-*.json .tmp/w-toku/ 2>/dev/null || true
+          node tools/firmy/firmy-w-toku.mjs .tmp/w-toku --dni 21 > .tmp/pomin.txt
+          echo "Otwarte, nieprzejrzane partie: $otwarte (limit nocny: $MAKS_OTWARTYCH)"
+          if [ "$ZDARZENIE" = "schedule" ] && [ "$otwarte" -ge "$MAKS_OTWARTYCH" ]; then
+            echo "::warning::Czeka już $otwarte nieprzejrzanych partii re-weryfikacji. Dziś nic nie sprawdzam: przejrzyj i zaimportuj albo zamknij którąś z nich."
+            echo "stop=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Przejdź partię automatem
+        if: steps.wtoku.outputs.stop != 'true'
         env:
           # Token subskrypcji Claude. Automat woła przez niego `claude -p` (lib/claude.mjs).
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -97,11 +133,12 @@ jobs:
             echo "Tryb ręczny: $FIRMY"
             node tools/firmy/automat.mjs --firmy "$FIRMY" --reweryfikacja --rownolegle 2 --partia "$PARTIA"
           else
-            node tools/firmy/automat.mjs --najstarsze "$ILE" --reweryfikacja --rownolegle 2 --partia "$PARTIA"
+            node tools/firmy/automat.mjs --najstarsze "$ILE" --pomin .tmp/pomin.txt --reweryfikacja --rownolegle 2 --partia "$PARTIA"
           fi
 
       - name: Zbuduj opis pull requesta
         id: material
+        if: steps.wtoku.outputs.stop != 'true'
         env:
           PARTIA: rew-${{ steps.dzien.outputs.data }}
         run: |
