@@ -66,7 +66,9 @@ export function resolveDisplayName(
 ): string {
   const dn = displayName?.trim()
   if (dn) return dn
-  if (rawSlug) return displayNameFromSlug(rawSlug)
+  // Slug z samych spacji albo dywizów daje pusty wynik: wtedy dalej nazwa spółki.
+  const zeSluga = rawSlug ? displayNameFromSlug(rawSlug) : ""
+  if (zeSluga) return zeSluga
   return fallbackName?.trim() || ""
 }
 

@@ -7,6 +7,7 @@ import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 import { buildCompanyFaqItems, getCountryLabel } from "@/lib/company-faq"
 import { serializeJsonLd } from "@/lib/json-ld"
 import { getPostsForCompany } from "@/lib/blog"
+import { czyOgolnyWlasciciel } from "@/lib/wlasciciele"
 
 export const revalidate = 86400 // ISR: doba (limit CPU Vercela; deploy i tak czyści cache)
 
@@ -447,41 +448,42 @@ async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompa
   }
 }
 
-// Właściciele, którzy nie wskazują jednego podmiotu: lista „innych firm tego właściciela”
-// byłaby przypadkową zbieraniną spółek, więc dla nich jej nie pokazujemy.
-const OGOLNI_WLASCICIELE =
-  /^(brak|nieznan|rozproszon|akcjonariusz|akcjonariat|inwestorzy|free float|wielu|osoby fizyczne|osoba fizyczna|inni)/i
-
 const FAMILY_LIMIT = 12
 
 /**
  * Inne profile tej samej spółki (identyczne `name`, np. wszystkie marki „'AMBRA' SPÓŁKA
- * AKCYJNA”) i tego samego ostatecznego właściciela (identyczne `owner_name`). Jedno
- * zapytanie z OR, zawężone równością, więc bez stronicowania.
+ * AKCYJNA”) i tego samego ostatecznego właściciela (identyczne `owner_name`). Dwa zapytania
+ * z `.eq()`, zawężone równością, więc bez stronicowania. `.eq()` koduje wartość sam, więc
+ * działa też dla nazw z cudzysłowem (192 profile wg audytu danych 2026-11), których filtr
+ * `or=(…)` składany z tekstu nie przepuszczał.
  */
 async function getCompanyFamily(company: CompanyDetail): Promise<CompanyFamilyData> {
   const empty: CompanyFamilyData = { sameCompany: [], sameOwner: [] }
   const legalName = company.name?.trim() || ""
   const owner = company.owner_name?.trim() || ""
-  // Cudzysłów i backslash psułyby składnię filtra PostgREST (jak w getBrandLinks).
-  const legalOk = legalName.length > 0 && !/["\\]/.test(legalName)
-  const ownerOk = owner.length >= 3 && !OGOLNI_WLASCICIELE.test(owner) && !/["\\]/.test(owner)
-
-  const conditions: string[] = []
-  if (legalOk) conditions.push(`name.eq."${legalName}"`)
-  if (ownerOk) conditions.push(`owner_name.eq."${owner}"`)
-  if (conditions.length === 0) return empty
+  const legalOk = legalName.length > 0
+  // Ogólnik („Polscy właściciele”) połączyłby niepowiązane firmy: lib/wlasciciele.ts.
+  const ownerOk = !czyOgolnyWlasciciel(owner)
+  if (!legalOk && !ownerOk) return empty
 
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase
-      .from("companies")
-      .select("id, slug, name, display_name, website_url, owner_name")
-      .or(conditions.join(","))
-      .neq("id", company.id)
-      .order("slug", { ascending: true })
-      .limit(100)
-    if (error || !data) return empty
+    const zapytanie = (kolumna: "name" | "owner_name", wartosc: string) =>
+      supabase
+        .from("companies")
+        .select("id, slug, name, display_name, website_url, owner_name")
+        .eq(kolumna, wartosc)
+        .neq("id", company.id)
+        .order("slug", { ascending: true })
+        .limit(100)
+    const brak = { data: [] as any[], error: null }
+    // Wartość z bazy bez trim(): `.eq()` porównuje dokładnie z tym, co jest w kolumnie.
+    const [poSpolce, poWlascicielu] = await Promise.all([
+      legalOk ? zapytanie("name", company.name!) : brak,
+      ownerOk ? zapytanie("owner_name", company.owner_name!) : brak,
+    ])
+    if (poSpolce.error || poWlascicielu.error) return empty
+    const data = [...(poSpolce.data || []), ...(poWlascicielu.data || [])]
 
     const seen = new Set<string>([company.canonicalSlug])
     const sameCompany: FamilyCompany[] = []

@@ -96,11 +96,11 @@ describe("resolveDisplayName", () => {
     expect(resolveDisplayName(undefined, undefined)).toBe("")
   })
 
-  // BŁĄD: slug złożony z samych spacji jest „prawdziwy”, więc funkcja nie sięga po nazwę
+  // Był błąd: slug złożony z samych spacji jest „prawdziwy”, więc funkcja nie sięga po nazwę
   // spółki, a displayNameFromSlug("   ") zwraca "". Firma dostałaby pusty H1 i tytuł.
   // Komentarz obiecuje kolejność display_name -> slug -> name, czyli tu "Jeronimo Martins".
-  // Zgłoszone w PR, kod produkcyjny bez zmian.
-  it.fails("slug z samych spacji: powinna wrócić nazwa spółki (dziś pusty łańcuch)", () => {
+  // Naprawione w lib/slug-utils.ts (2026-11-05).
+  it("slug z samych spacji: wraca nazwa spółki", () => {
     expect(resolveDisplayName(null, "   ", "Jeronimo Martins")).toBe("Jeronimo Martins")
   })
 })
