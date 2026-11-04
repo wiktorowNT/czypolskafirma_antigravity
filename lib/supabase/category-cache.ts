@@ -49,17 +49,23 @@ export const getCachedCategoryData = cache(async function getCachedCategoryData(
   // Decode URL-encoded slugs (e.g. %C5%BCywno%C5%9B%C4%87 → żywność)
   categorySlug = decodeURIComponent(categorySlug)
 
-  try {
-    const supabase = await getSupabaseServerClient()
+  // Strona kategorii jest ISR na dobę. Błąd bazy (timeout, 5xx) rzucamy dalej, zamiast
+  // oddawać pustą kategorię: wtedy Next zostawia poprzednią dobrą wersję strony. Pusty wynik
+  // zapisałby się na dobę jako 404 (brak nazwy) albo kategoria bez firm.
+  // 404 dostaje tylko slug, którego naprawdę nie ma w tabeli categories.
+  const supabase = await getSupabaseServerClient()
 
+  {
     const { data: categoryData, error: categoryError } = await supabase
       .from("categories")
       .select("id, name")
       .eq("slug", categorySlug)
-      .single()
+      .maybeSingle()
 
-    if (categoryError || !categoryData) {
-      console.error(`[v0] Error fetching category by slug "${categorySlug}":`, categoryError)
+    if (categoryError) {
+      throw new Error(`[kategoria] Błąd odczytu kategorii "${categorySlug}": ${categoryError.message}`)
+    }
+    if (!categoryData) {
       return { companies: [], categorySlug, categoryName: "", categoryShort: "" }
     }
 
@@ -85,8 +91,7 @@ export const getCachedCategoryData = cache(async function getCachedCategoryData(
       .limit(1000)
 
     if (error) {
-      console.error(`[v0] Error fetching category data from Supabase:`, error)
-      return { companies: [], categorySlug, categoryName: categoryData.name, categoryShort: "" }
+      throw new Error(`[kategoria] Błąd odczytu firm kategorii "${categorySlug}": ${error.message}`)
     }
 
     const mappedCompanies = (data || []).map(mapCompanyToItem)
@@ -99,9 +104,6 @@ export const getCachedCategoryData = cache(async function getCachedCategoryData(
     }
 
     return result
-  } catch (err) {
-    console.error(`[v0] Exception in getCachedCategoryData:`, err)
-    return { companies: [], categorySlug, categoryName: "", categoryShort: "" }
   }
 })
 
