@@ -59,3 +59,49 @@ export function przygotujFiltrSzukania(
     zakodowane: encodeURIComponent(wzorzecIlike(oczyszczone)),
   }
 }
+
+/**
+ * Klucz porównania nazw: bez akcentów, wielkości liter i znaków spoza liter i cyfr.
+ * „L'Oréal" → „loreal", „Procter & Gamble" → „proctergamble", „Żabka" → „zabka".
+ */
+export function kluczPorownania(tekst: string): string {
+  return (tekst || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/ł/g, "l")
+    .replace(/[^a-z0-9]+/g, "")
+}
+
+/**
+ * Układa wyniki wyszukiwarki według trafności marki, bo PostgREST oddaje je
+ * w kolejności z bazy. Ma to znaczenie przy szerokich wzorcach: znaki spoza białej
+ * listy stają się wildcardem (`L'Oréal` → `L*Or*al`), więc obok szukanej marki
+ * wpadają przypadkowe trafienia i „L'Oréal" lądował na 9. miejscu z 31.
+ *
+ * Kolejność: marka równa zapytaniu, alias marki równy zapytaniu, marka zaczynająca
+ * się od zapytania, marka albo alias zawierające zapytanie, reszta. W obrębie grupy
+ * zostaje kolejność z bazy (sort w JS jest stabilny).
+ */
+export function posortujWedlugTrafnosci<T extends { brand?: string; matchedBrand?: string }>(
+  wyniki: T[],
+  surowe: string
+): T[] {
+  const szukane = kluczPorownania(surowe)
+  if (!szukane) return wyniki
+
+  const ranga = (w: T): number => {
+    const marka = kluczPorownania(w.brand || "")
+    const alias = kluczPorownania(w.matchedBrand || "")
+    if (marka === szukane) return 0
+    if (alias && alias === szukane) return 1
+    if (marka.startsWith(szukane)) return 2
+    if (marka.includes(szukane) || (alias && alias.includes(szukane))) return 3
+    return 4
+  }
+
+  return wyniki
+    .map((w, i) => ({ w, r: ranga(w), i }))
+    .sort((a, b) => a.r - b.r || a.i - b.i)
+    .map((x) => x.w)
+}

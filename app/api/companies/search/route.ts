@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { FILTR_PUBLIKACJI } from "@/lib/publikacja"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 import { slugify, resolveDisplayName } from "@/lib/slug-utils"
-import { przygotujFiltrSzukania } from "@/lib/search-query"
+import { przygotujFiltrSzukania, posortujWedlugTrafnosci } from "@/lib/search-query"
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -113,7 +113,8 @@ export async function GET(request: Request) {
             }
         })
 
-        return NextResponse.json(results)
+        // Najtrafniejsze marki na górę: PostgREST oddaje wyniki w kolejności z bazy.
+        return NextResponse.json(posortujWedlugTrafnosci(results, querySurowe))
     } catch (err) {
         console.error("[v0] Exception in company search:", err)
         return NextResponse.json([])
