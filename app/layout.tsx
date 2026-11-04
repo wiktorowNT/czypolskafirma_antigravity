@@ -20,16 +20,18 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL("https://czypolskafirma.pl"),
   title: {
-    default: "CzyPolskaFirma — sprawdź, czy firma jest polska",
+    default: "CzyPolskaFirma: sprawdź, czy firma jest polska",
     template: "%s | CzyPolskaFirma.pl",
   },
-  description: "Wybieraj świadomie polskie produkty. Sprawdź pochodzenie kapitału, strukturę właścicielską i podatki ponad 500 firm w Polsce. Twoje pieniądze mają moc!",
+  description: "Sprawdź, czy marka jest polska. Pochodzenie kapitału i ostateczny właściciel ponad 1500 firm i marek działających w Polsce, od sklepów po banki.",
   // Uwaga: bez globalnego `alternates.canonical` — każda strona ustawia canonical na samą siebie.
   // Uwaga: bez `keywords` — Google ignoruje meta keywords, to tylko szum.
+  // Bez `url`: og:url z layoutu dziedziczyły wszystkie strony bez własnego openGraph
+  // (/blog, /metodologia, /o-projekcie, /companies), więc udostępnienie ich na Facebooku
+  // wskazywało stronę główną. Bez og:url platformy biorą adres strony albo canonical.
   openGraph: {
-    title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
+    title: "CzyPolskaFirma: sprawdź pochodzenie kapitału firmy",
     description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
-    url: "https://czypolskafirma.pl",
     type: "website",
     locale: "pl_PL",
     siteName: "CzyPolskaFirma",
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CzyPolskaFirma — sprawdź pochodzenie kapitału firmy",
+    title: "CzyPolskaFirma: sprawdź pochodzenie kapitału firmy",
     description: "Wybieraj świadomie. Sprawdź, czy firma jest polska oraz jaka jest jej struktura właścicielska.",
     creator: "@CzyPolskaFirma",
     images: ["/og-image.png"],
@@ -76,6 +78,7 @@ export default function RootLayout({
     "@graph": [
       {
         "@type": "WebSite",
+        "@id": "https://czypolskafirma.pl/#website",
         "name": "CzyPolskaFirma",
         "url": "https://czypolskafirma.pl",
         "description": "Niezależna baza danych polskiego kapitału i struktury właścicielskiej firm.",
@@ -87,6 +90,7 @@ export default function RootLayout({
       },
       {
         "@type": "Organization",
+        "@id": "https://czypolskafirma.pl/#organization",
         "name": "CzyPolskaFirma",
         "url": "https://czypolskafirma.pl",
         "logo": "https://czypolskafirma.pl/logo.png",

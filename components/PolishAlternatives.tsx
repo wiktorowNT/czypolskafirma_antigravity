@@ -122,7 +122,7 @@ export default function PolishAlternatives({
                             </h3>
                             {!isCurrentCompanyPolish && (
                                 <p className="text-[15px] text-ink-2 mt-1">
-                                    Wesprzyj polską gospodarkę — sprawdź rodzime marki w tej samej kategorii.
+                                    Wesprzyj polską gospodarkę i sprawdź rodzime marki w tej samej kategorii.
                                 </p>
                             )}
                         </div>

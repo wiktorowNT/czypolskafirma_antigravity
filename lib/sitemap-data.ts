@@ -36,7 +36,8 @@ export function getStaticEntries(): SitemapEntry[] {
     { url: `${BASE_URL}/metodologia`, lastModified: STATIC_LASTMOD, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/polityka-prywatnosci`, lastModified: STATIC_LASTMOD, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/regulamin`, lastModified: STATIC_LASTMOD, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/ulubione`, lastModified: STATIC_LASTMOD, changeFrequency: "weekly", priority: 0.4 },
+    // Bez /ulubione: lista ulubionych żyje w localStorage przeglądarki, więc crawler widzi
+    // pustą stronę bez treści. Zgłaszanie jej w mapie to cienka treść w indeksie.
   ]
 }
 

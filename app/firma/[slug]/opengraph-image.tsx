@@ -27,7 +27,7 @@ export function generateStaticParams(): { slug: string }[] {
   return []
 }
 
-export const alt = "Sprawdź pochodzenie kapitału firmy — CzyPolskaFirma.pl"
+export const alt = "Czy to polska firma? Werdykt i właściciel na CzyPolskaFirma.pl"
 export const size = OG_SIZE
 export const contentType = "image/png"
 

@@ -112,7 +112,7 @@ export function buildCompanyFaqItems({
   // Q4: Czym zajmuje się firma?
   if (business_description || categoryName) {
     const bizText = business_description
-      ? `${name} — ${business_description}`
+      ? business_description
       : `${name} działa w kategorii ${categoryName}.`
     const catSuffix =
       business_description && categoryName

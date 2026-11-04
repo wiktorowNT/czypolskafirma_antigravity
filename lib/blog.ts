@@ -132,6 +132,37 @@ export function getAllPosts(): BlogPostMeta[] {
   return posts.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
 }
 
+/**
+ * Wpisy, które wymieniają firmę we frontmatterze `relatedCompanies` (odwrotność sekcji
+ * „Firmy z tego wpisu”). Czyta te same pliki co lista bloga, bez zapytania do bazy.
+ * Na Vercelu działa, bo śledzenie plików (nft) dołącza content/blog do każdej trasy,
+ * która importuje ten moduł; sprawdzisz to w .next/server/app/<trasa>/page.js.nft.json.
+ */
+export function getPostsForCompany(companySlug: string, limit = 4): BlogPostMeta[] {
+  const wanted = slugify(companySlug)
+  if (!wanted) return []
+  return getAllPosts()
+    .filter((post) => post.relatedCompanies.includes(wanted))
+    .slice(0, limit)
+}
+
+/**
+ * Wpisy do sekcji „Czytaj też”: najpierw te, które piszą o tych samych firmach
+ * (więcej wspólnych firm = wyżej), potem najnowsze. Dzięki temu starsze wpisy
+ * dostają linki z wpisów o tej samej marce, a nie tylko z listy /blog.
+ */
+export function getRelatedPosts(post: BlogPostMeta, limit = 2): BlogPostMeta[] {
+  const own = new Set(post.relatedCompanies)
+  const others = getAllPosts().filter((p) => p.slug !== post.slug)
+  const scored = others.map((p, index) => ({
+    post: p,
+    shared: p.relatedCompanies.filter((s) => own.has(s)).length,
+    index,
+  }))
+  scored.sort((a, b) => b.shared - a.shared || a.index - b.index)
+  return scored.slice(0, limit).map((s) => s.post)
+}
+
 /** Pojedynczy wpis (metadane + wyrenderowany HTML) albo null, gdy nie istnieje. */
 export function getPostBySlug(slug: string): BlogPost | null {
   const wanted = slugify(slug)

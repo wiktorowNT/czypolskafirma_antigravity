@@ -9,7 +9,7 @@ export function WhyPolish() {
   const points = [
     {
       title: "Podatki zostają w Polsce",
-      content: "Wybierając firmy z polskim kapitałem, masz pewność, że wypracowany zysk oraz podatki (w tym CIT) trafiają do polskiego budżetu. Te środki finansują naszą infrastrukturę, służbę zdrowia oraz edukację. Patriotyzm gospodarczy to prosty sposób na realne wsparcie rozwoju Polski."
+      content: "Wybierając firmy z polskim kapitałem, masz pewność, że wypracowany zysk oraz podatki (w tym CIT) trafiają do polskiego budżetu. Te środki finansują drogi, służbę zdrowia oraz edukację. Patriotyzm gospodarczy to prosty sposób na realne wsparcie rozwoju Polski."
     },
     {
       title: "Stabilne miejsca pracy",
@@ -21,7 +21,7 @@ export function WhyPolish() {
     },
     {
       title: "Bezpieczeństwo łańcucha dostaw",
-      content: "Korzystanie z usług lokalnych dostawców skraca łańcuchy dostaw, co jest kluczowe w dobie globalnych kryzysów. Polskie firmy produkujące na miejscu są bardziej odporne na zawirowania geopolityczne, co gwarantuje nam wszystkim większe bezpieczeństwo konsumenckie."
+      content: "Korzystanie z usług lokalnych dostawców skraca łańcuchy dostaw, co ma znaczenie przy globalnych kryzysach. Polskie firmy produkujące na miejscu są bardziej odporne na zawirowania geopolityczne, a to daje konsumentom większe bezpieczeństwo."
     }
   ]
 

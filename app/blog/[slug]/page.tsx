@@ -2,13 +2,22 @@ import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowRight, CalendarDays, Clock, Search } from "lucide-react"
-import { getAllPosts, getPostBySlug } from "@/lib/blog"
+import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/lib/blog"
 import { getCompaniesBySlugs } from "@/lib/blog-companies"
 import { serializeJsonLd } from "@/lib/json-ld"
 import { CompanyCard } from "@/components/CompanyCard"
 import { BlogShare } from "@/components/blog-share"
 
 const BASE_URL = "https://czypolskafirma.pl"
+
+// Obrazek zastępczy dla wpisów bez własnego zdjęcia. Bez niego wpis nie miał og:image,
+// a karta na X dziedziczyła z layoutu tytuł i opis strony głównej.
+const FALLBACK_IMAGE = { url: "/og-image.png", width: 1200, height: 510 }
+
+// Szablon tytułu dokleja „ | CzyPolskaFirma.pl” (20 znaków). Tytuły wpisów mają zwykle
+// 60–75 znaków, więc z sufiksem Google i tak ucina je w wynikach w połowie słowa.
+// Długi tytuł idzie bez sufiksu; krótki dalej dostaje nazwę serwisu.
+const TITLE_SUFFIX_MAX = 60
 
 // ISR: odśwież dane firm (sekcja "Firmy z tego wpisu") co godzinę.
 export const revalidate = 3600
@@ -26,8 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const url = `${BASE_URL}/blog/${post.slug}`
   const imageAlt = post.imageAlt || post.title
+  const image = post.image ? { url: post.image, alt: imageAlt } : { ...FALLBACK_IMAGE, alt: post.title }
   return {
-    title: post.title,
+    title: post.title.length > TITLE_SUFFIX_MAX ? { absolute: post.title } : post.title,
     description: post.description,
     alternates: {
       canonical: url,
@@ -40,18 +50,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       locale: "pl_PL",
       siteName: "CzyPolskaFirma",
       publishedTime: post.date,
-      ...(post.image ? { images: [{ url: post.image, alt: imageAlt }] } : {}),
+      images: [image],
     },
-    ...(post.image
-      ? {
-          twitter: {
-            card: "summary_large_image" as const,
-            title: post.title,
-            description: post.description,
-            images: [post.image],
-          },
-        }
-      : {}),
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      creator: "@CzyPolskaFirma",
+      images: [image.url],
+    },
   }
 }
 
@@ -75,22 +82,33 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const url = `${BASE_URL}/blog/${post.slug}`
   const relatedCompanies = await getCompaniesBySlugs(post.relatedCompanies)
-  const otherPosts = getAllPosts()
-    .filter((p) => p.slug !== post.slug)
-    .slice(0, 2)
+  // Najpierw wpisy o tych samych firmach, potem najnowsze (lib/blog.ts).
+  const otherPosts = getRelatedPosts(post, 2)
 
   const articleJsonLd = {
-    "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${url}#artykul`,
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    dateModified: post.date,
     inLanguage: "pl-PL",
-    ...(post.image ? { image: [absoluteImageUrl(post.image)] } : {}),
+    image: [absoluteImageUrl(post.image || FALLBACK_IMAGE.url)],
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": url,
     },
+    isPartOf: { "@id": `${BASE_URL}/#website` },
+    // Firmy, o których jest wpis: te same profile co w sekcji „Firmy z tego wpisu”.
+    ...(relatedCompanies.length > 0
+      ? {
+          about: relatedCompanies.map((c) => ({
+            "@type": "Organization",
+            "@id": `${BASE_URL}/firma/${c.slug}#organizacja`,
+            name: c.brand,
+          })),
+        }
+      : {}),
     author: {
       "@type": "Organization",
       name: "CzyPolskaFirma",
@@ -107,11 +125,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     },
   }
 
+  const breadcrumbJsonLd = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Start", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${BASE_URL}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: url },
+    ],
+  }
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [articleJsonLd, breadcrumbJsonLd],
+  }
+
   return (
     <main className="min-h-screen bg-warm py-12 sm:py-20">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -239,8 +271,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             Sprawdź, czy Twoja marka jest polska
           </h2>
           <p className="text-[#d6d0c6] text-[15px] sm:text-base max-w-xl mb-6">
-            Werdykt, ostateczny właściciel i struktura kapitału — dla setek zweryfikowanych
-            firm działających w Polsce.
+            Werdykt, ostateczny właściciel i struktura kapitału ponad 1500 firm i marek
+            działających w Polsce.
           </p>
           <Link
             href="/szukaj"

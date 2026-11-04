@@ -6,6 +6,7 @@ import { slugify, resolveDisplayName, cleanAddress } from "@/lib/slug-utils"
 import { pobierzWszystkieFirmy } from "@/lib/companies-paged"
 import { buildCompanyFaqItems, getCountryLabel } from "@/lib/company-faq"
 import { serializeJsonLd } from "@/lib/json-ld"
+import { getPostsForCompany } from "@/lib/blog"
 
 export const revalidate = 86400 // ISR: doba (limit CPU Vercela; deploy i tak czyści cache)
 
@@ -65,6 +66,28 @@ export interface RelatedCompany {
   brand: string
   website_url?: string
   country_code?: string
+}
+
+export interface FamilyCompany {
+  id: string
+  slug: string
+  brand: string
+  website_url?: string
+}
+
+/** Inne profile tej samej spółki (po `name`) i tego samego właściciela (po `owner_name`). */
+export interface CompanyFamilyData {
+  sameCompany: FamilyCompany[]
+  sameOwner: FamilyCompany[]
+  ownerName?: string
+}
+
+/** Wpis blogowy, który wymienia firmę w `relatedCompanies`. */
+export interface CompanyBlogPost {
+  slug: string
+  title: string
+  date: string
+  description: string
 }
 
 interface SupabaseCompany {
@@ -366,21 +389,46 @@ async function getBrandLinks(
   }
 }
 
+// Stabilny hash (FNV-1a) id firmy: wyznacza, od którego miejsca listy kategorii zaczynają
+// się alternatywy. Wcześniej każdy profil w kategorii linkował do tych samych 8 firm
+// (pierwszych alfabetycznie), a reszta kategorii nie dostawała linków z profili wcale.
+function hashId(id: string): number {
+  let h = 0x811c9dc5
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i)
+    h = Math.imul(h, 0x01000193)
+  }
+  return h >>> 0
+}
+
+function rotate<T>(items: T[], start: number): T[] {
+  if (items.length === 0) return items
+  const k = start % items.length
+  return [...items.slice(k), ...items.slice(0, k)]
+}
+
+/**
+ * Kandydaci do sekcji alternatyw: polskie firmy z kategorii, potem pozostałe, każda grupa
+ * obrócona o stały dla profilu offset. Zwraca pełną listę; przycięcie do 8 robi strona,
+ * po odfiltrowaniu marek pokazanych już w sekcji tej samej spółki.
+ */
 async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompany[]> {
   if (!company.categoryId) return []
   try {
     const supabase = await getSupabaseServerClient()
+    // Jedna kategoria mieści się w jednym zapytaniu (największe mają ~100 firm, limit 500
+    // jest poniżej db-max-rows), więc bez stronicowania.
     const { data, error } = await supabase
       .from("companies")
       .select("id, slug, name, display_name, website_url, country_code")
       .eq("category_id", company.categoryId)
       .neq("id", company.id)
       .order("name", { ascending: true })
-      .limit(24)
+      .order("id", { ascending: true })
+      .limit(500)
 
     if (error || !data) return []
 
-    // Polskie firmy najpierw, potem pozostałe z tej samej kategorii — max 8 linków
     const mapped: RelatedCompany[] = data.map((c: any) => ({
       id: c.id,
       slug: slugify(c.slug || "") || c.id,
@@ -389,12 +437,78 @@ async function getRelatedCompanies(company: CompanyDetail): Promise<RelatedCompa
       country_code: c.country_code || undefined,
     }))
 
+    const start = hashId(company.id)
     const polish = mapped.filter((c) => c.country_code?.toUpperCase() === "PL")
     const foreign = mapped.filter((c) => c.country_code?.toUpperCase() !== "PL")
-    return [...polish, ...foreign].slice(0, 8)
+    return [...rotate(polish, start), ...rotate(foreign, start)]
   } catch (err) {
     console.error("[firma] Error in getRelatedCompanies:", err)
     return []
+  }
+}
+
+// Właściciele, którzy nie wskazują jednego podmiotu: lista „innych firm tego właściciela”
+// byłaby przypadkową zbieraniną spółek, więc dla nich jej nie pokazujemy.
+const OGOLNI_WLASCICIELE =
+  /^(brak|nieznan|rozproszon|akcjonariusz|akcjonariat|inwestorzy|free float|wielu|osoby fizyczne|osoba fizyczna|inni)/i
+
+const FAMILY_LIMIT = 12
+
+/**
+ * Inne profile tej samej spółki (identyczne `name`, np. wszystkie marki „'AMBRA' SPÓŁKA
+ * AKCYJNA”) i tego samego ostatecznego właściciela (identyczne `owner_name`). Jedno
+ * zapytanie z OR, zawężone równością, więc bez stronicowania.
+ */
+async function getCompanyFamily(company: CompanyDetail): Promise<CompanyFamilyData> {
+  const empty: CompanyFamilyData = { sameCompany: [], sameOwner: [] }
+  const legalName = company.name?.trim() || ""
+  const owner = company.owner_name?.trim() || ""
+  // Cudzysłów i backslash psułyby składnię filtra PostgREST (jak w getBrandLinks).
+  const legalOk = legalName.length > 0 && !/["\\]/.test(legalName)
+  const ownerOk = owner.length >= 3 && !OGOLNI_WLASCICIELE.test(owner) && !/["\\]/.test(owner)
+
+  const conditions: string[] = []
+  if (legalOk) conditions.push(`name.eq."${legalName}"`)
+  if (ownerOk) conditions.push(`owner_name.eq."${owner}"`)
+  if (conditions.length === 0) return empty
+
+  try {
+    const supabase = await getSupabaseServerClient()
+    const { data, error } = await supabase
+      .from("companies")
+      .select("id, slug, name, display_name, website_url, owner_name")
+      .or(conditions.join(","))
+      .neq("id", company.id)
+      .order("slug", { ascending: true })
+      .limit(100)
+    if (error || !data) return empty
+
+    const seen = new Set<string>([company.canonicalSlug])
+    const sameCompany: FamilyCompany[] = []
+    const sameOwner: FamilyCompany[] = []
+    for (const c of data as any[]) {
+      const slug = slugify(c.slug || "") || c.id
+      if (seen.has(slug)) continue
+      seen.add(slug)
+      const item: FamilyCompany = {
+        id: c.id,
+        slug,
+        brand: resolveDisplayName(c.display_name, c.slug, c.name),
+        website_url: c.website_url || undefined,
+      }
+      if (legalOk && (c.name || "").trim() === legalName) sameCompany.push(item)
+      else if (ownerOk && (c.owner_name || "").trim() === owner) sameOwner.push(item)
+    }
+
+    const byBrand = (a: FamilyCompany, b: FamilyCompany) => a.brand.localeCompare(b.brand, "pl")
+    return {
+      sameCompany: sameCompany.sort(byBrand).slice(0, FAMILY_LIMIT),
+      sameOwner: sameOwner.sort(byBrand).slice(0, FAMILY_LIMIT),
+      ownerName: ownerOk ? owner : undefined,
+    }
+  } catch (err) {
+    console.error("[firma] Error in getCompanyFamily:", err)
+    return empty
   }
 }
 
@@ -434,10 +548,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const title = verdictTitle.length > 60 ? `Czy ${brand} to polska firma?` : verdictTitle
 
   // Opis też zaczyna się od odpowiedzi, a nie od "Sprawdź, czy...".
+  // Bez myślników (em-dash) w widocznym tekście: snippet Google to też treść serwisu.
   const verdictSentence = isPolish
     ? `${brand} to firma z polskim kapitałem.`
     : hasCountry
-      ? `${brand} to firma z kapitałem zagranicznym — ${company.country_code_2 ? "kraje pochodzenia (wspólna kontrola 50/50)" : "kraj pochodzenia"}: ${countryName}.`
+      ? `${brand} to firma z kapitałem zagranicznym (${countryName}${company.country_code_2 ? ", wspólna kontrola 50/50" : ""}).`
       : `${brand} to firma z kapitałem zagranicznym.`
   const ownerPart = owner ? ` Właściciel: ${owner}.` : ""
   const description = `${verdictSentence}${ownerPart} Struktura kapitału, siedziba i dane rejestrowe.`
@@ -446,10 +561,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   // plakietkę na dolną krawędź obrazka OG, więc długie zdanie z sufiksem
   // "| CzyPolskaFirma.pl" zasłaniało pół karty.
   const socialTitle = isPolish
-    ? `${brand} — polska firma`
+    ? `${brand}: polska firma`
     : hasCountry
-      ? `${brand} — firma zagraniczna (${countryName})`
-      : `${brand} — firma zagraniczna`
+      ? `${brand}: firma zagraniczna (${countryName})`
+      : `${brand}: firma zagraniczna`
 
   const canonicalUrl = `${BASE_URL}/firma/${company.canonicalSlug}`
 
@@ -494,9 +609,10 @@ export default async function CompanyProfilePage({ params }: { params: Promise<{
     permanentRedirect(`/firma/${company.canonicalSlug}`)
   }
 
-  const [relatedCompanies, brandData] = await Promise.all([
+  const [relatedCandidates, brandData, family] = await Promise.all([
     getRelatedCompanies(company),
     getBrandData(company.id),
+    getCompanyFamily(company),
   ])
   company.brandAliases = brandData.aliases
   company.brands = brandData.brands
@@ -504,6 +620,21 @@ export default async function CompanyProfilePage({ params }: { params: Promise<{
     brandData.brands.length > 0 ? brandData.brands.map((b) => b.name) : brandData.aliases,
     { id: company.id, canonicalSlug: company.canonicalSlug },
   )
+
+  // Marki klikalne już w diagramie własności nie powtarzają się w sekcji tej samej spółki.
+  const linkedInDiagram = new Set(Object.values(company.brandLinks))
+  family.sameCompany = family.sameCompany.filter((c) => !linkedInDiagram.has(c.slug))
+  // Alternatywy nie marnują miejsc na marki, które profil już linkuje wyżej.
+  const familyIds = new Set([...family.sameCompany, ...family.sameOwner].map((c) => c.id))
+  const relatedCompanies = relatedCandidates.filter((c) => !familyIds.has(c.id)).slice(0, 8)
+
+  // Wpisy blogowe o tej firmie (odwrotność relatedCompanies), czytane z plików, bez bazy.
+  const blogPosts: CompanyBlogPost[] = getPostsForCompany(company.canonicalSlug).map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    date: p.date,
+    description: p.description,
+  }))
 
   const isPolish = company.country_code?.toUpperCase() === "PL"
   const brand = company.brandName
@@ -525,11 +656,18 @@ export default async function CompanyProfilePage({ params }: { params: Promise<{
     age: company.age,
   })
 
+  const organizationId = `${canonicalUrl}#organizacja`
+  const breadcrumbId = `${canonicalUrl}#okruszki`
+
+  // Organization opisuje markę (url = jej oficjalna strona), a WebPage opisuje profil
+  // w serwisie i wskazuje markę przez `about`. Wcześniej url Organization był adresem
+  // profilu, czyli schema mówiła, że stroną firmy jest czypolskafirma.pl.
   const organizationJsonLd: Record<string, unknown> = {
     "@type": "Organization",
+    "@id": organizationId,
     name: brand,
-    legalName: company.name,
-    url: canonicalUrl,
+    legalName: company.name || undefined,
+    url: company.website_url || canonicalUrl,
     description: company.business_description,
   }
   if (company.adres) {
@@ -548,10 +686,31 @@ export default async function CompanyProfilePage({ params }: { params: Promise<{
       name: company.parent_company_name || company.owner_name,
     }
   }
+  if (blogPosts.length > 0) {
+    organizationJsonLd.subjectOf = blogPosts.map((p) => ({
+      "@type": "Article",
+      headline: p.title,
+      url: `${BASE_URL}/blog/${p.slug}`,
+      datePublished: p.date,
+    }))
+  }
+
+  const webPageJsonLd = {
+    "@type": "WebPage",
+    "@id": canonicalUrl,
+    url: canonicalUrl,
+    name: `Czy ${brand} to polska firma?`,
+    inLanguage: "pl-PL",
+    isPartOf: { "@id": `${BASE_URL}/#website` },
+    about: { "@id": organizationId },
+    breadcrumb: { "@id": breadcrumbId },
+    dateModified: company.lastVerified,
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      webPageJsonLd,
       organizationJsonLd,
       {
         "@type": "FAQPage",
@@ -566,6 +725,7 @@ export default async function CompanyProfilePage({ params }: { params: Promise<{
       },
       {
         "@type": "BreadcrumbList",
+        "@id": breadcrumbId,
         itemListElement: [
           {
             "@type": "ListItem",
@@ -596,7 +756,12 @@ export default async function CompanyProfilePage({ params }: { params: Promise<{
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
-      <CompanyProfileClient company={company} relatedCompanies={relatedCompanies} />
+      <CompanyProfileClient
+        company={company}
+        relatedCompanies={relatedCompanies}
+        family={family}
+        blogPosts={blogPosts}
+      />
     </>
   )
 }
