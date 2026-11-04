@@ -19,7 +19,7 @@ Operatorem jest dziś Grupa OLX sp. z o.o. z siedzibą przy ulicy Królowej Jadw
 
 ## Trzy piętra nad poznańskim biurem
 
-Udziały poznańskiej spółki należą w całości do OLX Global B.V. z Amsterdamu. Ta z kolei jest częścią grupy Prosus N.V., również z Amsterdamu, a Prosus kontroluje Naspers Limited z Republiki Południowej Afryki.
+Udziały poznańskiej spółki należą w całości do OLX Global B.V. z Amsterdamu. Ta z kolei jest częścią grupy Prosus N.V., również z Amsterdamu, a kontrolę nad Prosusem sprawuje Naspers Limited z Republiki Południowej Afryki.
 
 Holenderski adres bywa mylący, więc ten układ opłaca się rozłożyć na części. Prosus jest spółką publiczną i po rozdzieleniu wzajemnych powiązań z Naspersem, przeprowadzonym we wrześniu 2023 roku, drobni inwestorzy trzymają łącznie 57 procent jego zwykłych udziałów, a Naspers bezpośrednio 43 procent. Mimo to Naspers zachował około 72 procent głosów, bo przysługuje mu nienotowana klasa udziałów o wielokrotnie większej sile głosu.
 
