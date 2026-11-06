@@ -1,2 +1,11 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Castrol |  | # paczka 2026-11-06 (kto-jest-wlascicielem-castrola)
+- [ ] Orlen Oil |  | # paczka 2026-11-06 (kto-jest-wlascicielem-castrola)
+- [ ] Livio |  | # PR #68 (tresc/2026-10-23-87)
+- [ ] Rabat Detal |  | # PR #68 (tresc/2026-10-23-87)
+- [ ] Blue Orca Coffee |  | # PR #56
+- [ ] OSM Siedlce |  | # PR #57
+- [ ] Ciechanowska Spółdzielnia Mleczarska |  | # PR #57
+- [ ] MSM Mońki |  | # PR #57
+- [ ] Agrocoop |  | # PR #57
