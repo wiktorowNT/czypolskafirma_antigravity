@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-castrola",
+  "tytul": "Kto jest właścicielem Castrola",
+  "akcent": "Castrola",
+  "podtytul": "bp sprzedało 65 proc. udziałów funduszowi z Nowego Jorku",
+  "staty": [
+    {
+      "wartosc": "10,1 mld $",
+      "opis": "wycena całego Castrola"
+    },
+    {
+      "wartosc": "65 proc.",
+      "opis": "udziałów u Stonepeak"
+    },
+    {
+      "wartosc": "540",
+      "opis": "stacji MOYA u tego funduszu"
+    }
+  ]
+}
