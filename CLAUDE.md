@@ -152,6 +152,7 @@ zatwierdzenia właściciela. Pełna procedura: `docs/SOP_dodawanie_firm.md`.
   robi (proces, workflow, narzędzie), dopisz notatkę: `{ id, data, tekst, proces, autor: "Claude" }`
   (id w formacie `RRRR-MM-DD-cokolwiek`, `proces` = id karty z `PROCESY.md` albo null).
 - `data/panel/metryki.json` — metryki miesięczne wpisywane przez właściciela w panelu.
+- `docs/PLAN_ROZWOJU_2026-11.md` — plan rozwoju XI 2026 – II 2027 (sezon → pomiar → decyzja); na pytanie „co dalej z projektem?” zacznij od niego
 - `docs/DEVELOPMENT_WORKFLOW.md` — workflow git i proces akceptacji
 - `docs/SOP_dodawanie_firm.md` — automat dodawania firm i przegląd partii
 - `docs/METODOLOGIA_V2_przypadki_brzegowe.md` — drzewo decyzyjne i reguły brzegowe (wersja obowiązująca)

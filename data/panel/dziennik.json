@@ -167,6 +167,13 @@
       "tekst": "Projekt ma testy jednostkowe (vitest): `npm test` przed scaleniem zmian w lib/ albo app/companies/. Testy leżą w tests/, nie łączą się z bazą (Supabase i fetch to atrapy) i nie potrzebują .env.local. Pilnują m.in. stronicowania odczytu firm (limit 1000 wierszy), sanityzacji wyszukiwarki, slugów, FAQ firmy i powiązań wpisów bloga z firmami. Znany, jeszcze niepoprawiony błąd oznacza się it.fails. Szczegóły: docs/DEVELOPMENT_WORKFLOW.md, sekcja 5.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-11-08-plan-rozwoju",
+      "data": "2026-11-08",
+      "tekst": "Plan rozwoju do lutego 2027 (docs/PLAN_ROZWOJU_2026-11.md): do świąt treści sezonowe (11.11, przewodnik prezentowy, raport o kapitale marek), w styczniu metryki co miesiąc i zamrożenie nowych narzędzi (partie firm co ~2 tygodnie, tylko marki, które ludzie wyszukują), w lutym decyzja: rozwój czy tryb utrzymania. Monetyzacja nie jest celem. Przypomnienia w Centrum projektu.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }
