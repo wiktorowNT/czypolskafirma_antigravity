@@ -1,2 +1,13 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Barbie | 1132521989 | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Hot Wheels | 1132521989 | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Fisher-Price | 1132521989 | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Playmobil |  | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Pampers |  | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Smily Play |  | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Portal Games |  | # paczka 2026-11-09 (kto-jest-wlascicielem-marek-z-polki-z-zabawkami)
+- [ ] Dying Light | 6222468959 | # PR #69 (tresc/2026-10-26-88)
+- [ ] Cyberpunk 2077 | 7342867148 | # PR #69 (tresc/2026-10-26-88)
+- [ ] Wiedźmin | 7342867148 | # PR #69 (tresc/2026-10-26-88)
+- [ ] Holcim |  | # PR #59, przeniesiony przez PR #69 (tresc/2026-10-26-88)

@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-marek-z-polki-z-zabawkami",
+  "tytul": "Kto jest właścicielem półki z zabawkami",
+  "akcent": "półki z zabawkami",
+  "podtytul": "W katalogu zabawek polski kapitał ma 14 z 29 marek",
+  "staty": [
+    {
+      "wartosc": "14 z 29",
+      "opis": "marek z polskim kapitałem"
+    },
+    {
+      "wartosc": "7 z 15",
+      "opis": "zagranicznych to Hasbro"
+    },
+    {
+      "wartosc": "Poznań → Praga",
+      "opis": "Kinderkraft i Kiddy w 2025"
+    }
+  ]
+}
