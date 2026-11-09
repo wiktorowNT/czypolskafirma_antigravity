@@ -60,21 +60,40 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
-- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
+- [x] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych (2026-10-14)
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+  - pominięty 2026-10-26: paczka z 2026-09-09 o tym, co się dzieje z marką po przejęciu,
+    opisała tę branżę na tych samych markach. Do decyzji właściciela, czy temat wraca
+    w innym ujęciu, czy wypada z kolejki
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
-- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
-- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
+- [x] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli (2026-10-15)
+- [x] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną (2026-10-19)
+
+## Dopisane 2026-10-26 (kategorie z serwisu bez własnej paczki)
+
+Lista powstała po przejrzeniu `czypolskafirma.pl/kategorie`: kategorie, o których nie było
+jeszcze żadnej paczki, w kolejności od największego potencjału wyszukiwarkowego.
+
+- [x] Gry wideo: kto jest właścicielem polskich studiów i najgłośniejszych tytułów (2026-10-26)
+- [x] Sport i fitness: czyj kapitał stoi za siłowniami, klubami i sprzętem (2026-11-02)
+- [x] Dzieci i zabawki: kto jest właścicielem marek z półki z zabawkami (2026-11-09)
+- [ ] Turystyka i podróże: właściciele biur podróży i sieci hoteli znanych z reklam
+- [ ] Fintech i płatności: kto stoi za terminalami, portfelami i ratami przy kasie
+- [ ] Transport: firmy kurierskie, przewoźnicy i marki, które widać na drogach
+- [ ] Media i rozrywka: stacje, portale i serwisy streamingowe według kapitału
+- [ ] Energia: dostawcy prądu i gazu, których nazwy są na rachunkach Polaków
+- [ ] Dom i ogród: marki z marketów budowlanych i ogrodniczych
+- [ ] Żywność: największa kategoria w bazie i jej podział na kapitał polski i obcy
