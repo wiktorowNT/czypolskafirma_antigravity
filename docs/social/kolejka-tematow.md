@@ -60,21 +60,41 @@ Wpis blogowy „Kto jest właścicielem X" łapie ten ruch 20× skuteczniej niż
 
 - [x] Ursus: co się stało z marką traktorów po upadłości fabryki i kto ją dzisiaj ma (2026-09-24)
 - [x] Solaris Bus & Coach: poznańska firma autobusowa pod hiszpańskim właścicielem (2026-09-25)
-- [ ] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału
-- [ ] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych
-- [ ] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki
-- [ ] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych
+- [x] Kross i Romet: dwie polskie marki rowerowe w kategorii pełnej zagranicznego kapitału (2026-09-27)
+- [x] Motoryzacja w bazie: trzy polskie marki na pięćdziesiąt skatalogowanych (2026-10-05)
+- [x] Polpharma, Adamed, Aflofarm: kto jest właścicielem polskich leków z apteki (2026-09-28)
+- [x] Telekomunikacja w Polsce: ostateczni właściciele największych sieci komórkowych (2026-10-14)
 - [ ] Meble: kategoria, w której polski kapitał wciąż ma przewagę liczbową
-- [ ] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału
-- [ ] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście
-- [ ] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek
+  - pominięty 2026-10-28: pokrywa się z paczką z 2026-09-09 o tym, co zostaje z marki
+    meblowej po przejęciu. Do decyzji właściciela, czy zostaje w kolejce w innym ujęciu
+- [x] Ubezpieczenia w Polsce: jedenaście marek z bazy i kraje ich kapitału (2026-09-29)
+- [x] Sieci gastronomiczne z galerii handlowych: kto zarabia na jedzeniu na mieście (2026-09-30)
+- [x] Elektronika i AGD z gazetek promocyjnych: właściciele najczęściej kupowanych marek (2026-10-06)
 
 ## Dopisane 2026-08-31 i 2026-09-09 (scalone 2026-09-16, bez tematów powtórzonych wyżej)
 
-- [ ] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci
-- [ ] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko
-- [ ] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie
-- [ ] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów
-- [ ] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom
-- [ ] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli
-- [ ] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną
+- [x] Marki własne dyskontów: kto naprawdę produkuje to, co ma logo sieci (2026-10-08)
+- [x] Chemia domowa na polskiej półce: proszki, płyny i marki, które tylko brzmią swojsko (2026-10-01)
+- [x] Fundusz w strukturze właścicielskiej: kiedy zmienia narodowość marki, a kiedy nie (2026-10-09)
+- [x] Producenci materiałów budowlanych: kto jest właścicielem marek z hurtowni i marketów (2026-10-10)
+- [x] Polskie firmy IT, które nie sprzedały się zagranicznym inwestorom (2026-10-11)
+- [x] Marki, które wróciły pod polską kontrolę: odkupienia z rąk zagranicznych właścicieli (2026-10-15)
+- [x] Sieci przychodni i diagnostyki: czyj kapitał stoi za prywatną opieką zdrowotną (2026-10-19)
+
+## Dopisane 2026-11-11
+
+Odhaczenia powyżej odtworzono z tytułów paczek z wiadomości uruchomieniowej, bo plik nie
+był aktualizowany od 2026-09-26. Po nich zostały w kolejce tylko pozycje wstrzymane, więc
+poniżej dziesięć nowych tematów z kategorii, których dotąd żadna paczka nie opisała
+(stan `czypolskafirma.pl/kategorie` na 2026-11-11).
+
+- [ ] Kto jest właścicielem marek z półki ze słodyczami i przekąskami
+- [ ] Kto jest właścicielem marek wędlin i mięsa z lady
+- [ ] Kto jest właścicielem polskich browarów i marek piwa
+- [ ] Kto jest właścicielem firm kurierskich dowożących paczki w Polsce
+- [ ] Kto jest właścicielem marek płatności: BLIK, Przelewy24, PayU i karty
+- [ ] Kto jest właścicielem biur podróży i sieci hotelowych działających w Polsce
+- [ ] Kto jest właścicielem sieci odzieżowych z galerii handlowych
+- [ ] Kto jest właścicielem największych portali internetowych w Polsce
+- [ ] Kto jest właścicielem marek sprzętu i odzieży sportowej z polskich sklepów
+- [ ] Kto jest właścicielem marek mrożonek i lodów
