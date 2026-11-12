@@ -51,6 +51,45 @@ npm run test:watch  # tryb obserwacji podczas pracy
 - Pliki testów są objęte `npx tsc --noEmit` i `next build` (sprawdzanie typów), więc błąd
   typów w teście zatrzyma build. Przed pushem: `npm test`, `npx tsc --noEmit`, `npm run lint`.
 
+### 6. Hosting tymczasowy: Cloudflare (XI–XII 2026)
+12.11.2026 Vercel wyłączył wdrożenia po wyczerpaniu limitu (402 `DEPLOYMENT_DISABLED`).
+Produkcja stoi tymczasowo na Cloudflare Workers (darmowy plan, 10 ms procesora na żądanie).
+Plan: **powrót na Vercel ok. 13.12.2026**, kiedy odnowi się limit.
+
+**Jak to jest złożone**
+- `main` i `develop` zostają czystym Next.js pod Vercel. Kod Cloudflare (vinext,
+  `cloudflare.config.ts`, `vite.config.ts`, `worker/index.ts`, `tools/cloudflare/build.mjs`,
+  usunięte statystyki Vercela) jest **tylko na gałęzi `cloudflare`**. Nie scalamy jej do
+  `develop` ani `main`.
+- `.github/workflows/wdrozenie-cloudflare.yml` bierze `main`, dokłada w maszynie CI gałąź
+  `cloudflare`, buduje (profile firm, kategorie, karty OG, sitemapy i pierwsza strona
+  `/companies` jako gotowe pliki) i wdraża na `czypolskafirma.pl`. Uruchamia się:
+  - po pushu do `main` (scalenie `develop` → `main`, przycisk „Opublikuj” w panelu),
+    z pominięciem zmian tylko w `docs/`, `tools/`, `data/robocze/`, `data/panel/` itd.;
+  - codziennie o 23:20 UTC, żeby wpisy z datą w przyszłości pojawiały się w swoim dniu;
+  - ręcznie: GitHub → Actions → „Wdrożenie na Cloudflare” → Run workflow.
+- Strona jest zbudowana z góry: nowa firma w bazie pojawi się na stronie po najbliższym
+  wdrożeniu (najpóźniej w nocy), a nie po dobie ISR.
+- GitHub → Settings → Secrets and variables → Actions: sekrety `CLOUDFLARE_API_TOKEN`
+  i `CLOUDFLARE_ACCOUNT_ID` oraz `NEXT_PUBLIC_SUPABASE_URL` i `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  (jako sekrety albo zmienne, te dwie są i tak jawne w kodzie strony). Bez nich build nie
+  odczyta bazy i wdrożenie się przerwie. Sekret Workera (Cloudflare →
+  Workers → czypolskafirma → Settings → Variables and Secrets): `DISCORD_WEBHOOK_URL`.
+- Konflikt przy dokładaniu gałęzi `cloudflare` przerywa wdrożenie (produkcja zostaje bez
+  zmian). Naprawa: w worktree `cloudflare` scal `main`, rozwiąż konflikt, wypchnij `cloudflare`.
+- Ręczne wdrożenie z komputera (Node 22.18+): w worktree `cloudflare`
+  `node tools/cloudflare/build.mjs --deploy`. Lokalny Node 22.14 jest za stary
+  (`cloudflare.config.ts` wymaga 22.18+): trzeba nowszego Node.
+
+**Powrót na Vercel**
+1. Upewnić się, że limit Vercela się odnowił i projekt jest jedynym dużym na koncie.
+2. W Vercelu przywrócić domenę `czypolskafirma.pl` (i `www`), a w DNS ustawić rekordy Vercela
+   zamiast Workera; w Cloudflare zdjąć domenę z Workera `czypolskafirma`.
+3. Usunąć `.github/workflows/wdrozenie-cloudflare.yml` (na `develop`, potem `main`).
+4. Gałąź `cloudflare` zostawić jako archiwum albo usunąć. Na `main` niczego nie trzeba
+   cofać — statystyki Vercela i ISR są tam nadal.
+5. Zaktualizować ten rozdział, `CLAUDE.md` i dziennik w panelu.
+
 ## Zasady dla AI
 - **ZAKAZ** bezpośrednich zmian na `main`.
 - **ZAKAZ** wprowadzania zmian bez wcześniejszego przedstawienia planu i uzyskania akceptacji.

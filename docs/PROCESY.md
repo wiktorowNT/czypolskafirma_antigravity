@@ -176,6 +176,11 @@ Nie kompresuj i nie zmniejszaj plików w `public/logos/`: jakość ponad wagę.
 3. Kliknij **„Opublikuj”** w Panelu projektu (Firmy → Logotypy, na dole): wypuszcza firmy zapisane w kroku 7 i robi merge `develop` → `main`. Albo poproś Claude'a wprost: „zmerguj develop do main” (wtedy firmy z kroku 7 dalej czekają na przycisk). Przycisk działa tylko, gdy build podglądu na Vercelu przeszedł.
 4. Po 1–2 minutach sprawdź https://czypolskafirma.pl
 
+> **Do ok. 13.12.2026 (hosting na Cloudflare):** podgląd Vercela może nie działać,
+> a przycisk „Opublikuj” może odmawiać z powodu nieudanego buildu podglądu — wtedy poproś
+> Claude'a „zmerguj develop do main”. Po scaleniu stronę buduje i wdraża GitHub Action
+> „Wdrożenie na Cloudflare” (ok. 10 minut; GitHub → Actions). Szczegóły: docs/DEVELOPMENT_WORKFLOW.md, sekcja 6.
+
 `main` to produkcja. Nikt poza Tobą nie merguje na `main` bez Twojej wyraźnej prośby.
 
 ## Partia indeksacji w Google {#seo}

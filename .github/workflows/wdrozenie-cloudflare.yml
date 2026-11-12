@@ -1,0 +1,77 @@
+name: Wdrożenie na Cloudflare
+
+# TYMCZASOWE (od listopada 2026, na czas hostingu na Cloudflare Workers; plan: powrót
+# na Vercel ok. 13.12.2026 — wtedy usuń ten plik).
+#
+# Buduje produkcję z gałęzi main z dołożoną gałęzią `cloudflare` (vinext, worker/,
+# tools/cloudflare/build.mjs) i wdraża na czypolskafirma.pl. Sama gałąź main zostaje
+# czystym Next.js pod Vercel — łączenie z `cloudflare` dzieje się tylko w tej maszynie.
+# Szczegóły: docs/DEVELOPMENT_WORKFLOW.md, sekcja „Hosting tymczasowy: Cloudflare”.
+
+on:
+  push:
+    branches: [main]
+    # Jak dawniej tools/vercel-ignore-build.sh: zmiany, których strona nie czyta, nie wdrażają.
+    paths-ignore:
+      - "docs/**"
+      - "tools/**"
+      - "data/robocze/**"
+      - "data/panel/**"
+      - "scratch/**"
+      - "README*.md"
+      - "CLAUDE.md"
+  schedule:
+    # Codziennie 23:20 UTC (00:20 zimą, 01:20 latem czasu polskiego): wpisy blogowe z datą
+    # w przyszłości pojawiają się w swoim dniu. Na Vercelu robiło to ISR, tu strona jest
+    # zbudowana z góry, więc trzeba ją przebudować.
+    - cron: "20 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wdrozenie-cloudflare
+  cancel-in-progress: false
+
+jobs:
+  wdrozenie:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Pobierz main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Dołóż gałąź cloudflare
+        run: |
+          git config user.name "czypolskafirma-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin cloudflare
+          if ! git merge --no-edit origin/cloudflare; then
+            echo "::error::Konflikt main z gałęzią cloudflare. Scal main do cloudflare lokalnie, rozwiąż konflikt i wypchnij cloudflare."
+            git diff --name-only --diff-filter=U
+            exit 1
+          fi
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Zależności
+        run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "1"
+
+      - name: Build i wdrożenie
+        run: node tools/cloudflare/build.mjs --deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}

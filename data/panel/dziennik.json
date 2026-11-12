@@ -174,6 +174,13 @@
       "tekst": "Plan rozwoju do lutego 2027 (docs/PLAN_ROZWOJU_2026-11.md): do świąt treści sezonowe (11.11, przewodnik prezentowy, raport o kapitale marek), w styczniu metryki co miesiąc i zamrożenie nowych narzędzi (partie firm co ~2 tygodnie, tylko marki, które ludzie wyszukują), w lutym decyzja: rozwój czy tryb utrzymania. Monetyzacja nie jest celem. Przypomnienia w Centrum projektu.",
       "proces": null,
       "autor": "Claude"
+    },
+    {
+      "id": "2026-11-13-cloudflare",
+      "data": "2026-11-13",
+      "tekst": "Hosting tymczasowo na Cloudflare (do ok. 13.12, potem powrót na Vercel). Publikacja jak dotąd: scalenie develop → main uruchamia GitHub Action „Wdrożenie na Cloudflare” (main + gałąź cloudflare → build → czypolskafirma.pl). Dodatkowo codzienny build ok. północy, żeby wpisy z datą w przyszłości i nowe firmy pojawiały się same. Kod Cloudflare tylko na gałęzi cloudflare, main zostaje pod Vercel. Szczegóły: docs/DEVELOPMENT_WORKFLOW.md, sekcja 6.",
+      "proces": null,
+      "autor": "Claude"
     }
   ]
 }

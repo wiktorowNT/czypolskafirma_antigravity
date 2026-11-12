@@ -45,6 +45,17 @@ https://czypolskafirmalive-git-develop-wiktorow123-3833s-projects.vercel.app/
 
 Szczegóły: `docs/DEVELOPMENT_WORKFLOW.md`.
 
+> **⚠️ Hosting tymczasowy (od 12.11.2026): Cloudflare Workers.** Vercel wyłączył wdrożenia
+> po wyczerpaniu limitu, więc produkcja `czypolskafirma.pl` stoi na Cloudflare. Plan:
+> **powrót na Vercel ok. 13.12.2026** (wtedy odnawia się limit). Do tego czasu:
+> - `main` zostaje czystym Next.js pod Vercel. Wszystko, co dotyczy Cloudflare (vinext,
+>   `worker/`, `cloudflare.config.ts`, `vite.config.ts`, `tools/cloudflare/`), jest **tylko
+>   na gałęzi `cloudflare`** — nie scalaj jej do `develop` ani `main`.
+> - Wdrożenie robi `.github/workflows/wdrozenie-cloudflare.yml`: push do `main` (oraz
+>   codziennie ok. północy i ręcznie) → `main` + gałąź `cloudflare` → build → Cloudflare.
+> - Podgląd Vercela może nie działać, dopóki limit się nie odnowi.
+> - Opis i lista kroków powrotu: `docs/DEVELOPMENT_WORKFLOW.md`, sekcja 6.
+
 ---
 
 ## 3. Stack technologiczny
@@ -55,7 +66,7 @@ Szczegóły: `docs/DEVELOPMENT_WORKFLOW.md`.
 | Frontend      | React 19, Tailwind CSS **v4**, komponenty na bazie Radix UI       |
 | Ikony         | lucide-react                                                       |
 | Baza / backend| Supabase (`@supabase/supabase-js`) — tabela `companies`             |
-| Hosting       | Vercel                                                             |
+| Hosting       | Vercel (tymczasowo do ok. 13.12.2026: Cloudflare Workers, gałąź `cloudflare`) |
 | Skrypty       | Node.js (ESM `.mjs`) — czyszczenie danych, aktualizacja URL-i, loga |
 
 Runtime: Node 22. Menedżer pakietów: npm.
