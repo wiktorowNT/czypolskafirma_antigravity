@@ -8,6 +8,7 @@ import { buildCompanyFaqItems, getCountryLabel } from "@/lib/company-faq"
 import { serializeJsonLd } from "@/lib/json-ld"
 import { getPostsForCompany } from "@/lib/blog"
 import { czyOgolnyWlasciciel } from "@/lib/wlasciciele"
+import { getCompanyEntries } from "@/lib/sitemap-data"
 
 export const revalidate = 86400 // ISR: doba (limit CPU Vercela; deploy i tak czyści cache)
 
@@ -15,8 +16,14 @@ export const revalidate = 86400 // ISR: doba (limit CPU Vercela; deploy i tak cz
 // wejściu (revalidate było ignorowane — produkcja zwracała no-store i
 // X-Vercel-Cache: MISS, TTFB ~1,6 s). Pusta lista = profile generują się
 // na żądanie przy pierwszym wejściu i są serwowane z cache przez dobę.
-export function generateStaticParams(): { slug: string }[] {
-  return []
+//
+// Cloudflare Workers (build przez vinext, PRERENDER_FIRMY=1): wszystkie profile powstają
+// przy buildzie i są serwowane jako gotowe pliki — render na żądanie nie mieści się
+// w darmowym limicie 10 ms procesora.
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  if (process.env.PRERENDER_FIRMY !== "1") return []
+  const entries = await getCompanyEntries()
+  return entries.map((entry) => ({ slug: entry.url.split("/firma/")[1] })).filter((p) => p.slug)
 }
 
 const BASE_URL = "https://czypolskafirma.pl"

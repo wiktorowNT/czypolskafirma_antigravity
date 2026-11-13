@@ -7,8 +7,8 @@
 // Dlatego `tools/generate-og-assets.mjs` wystawia dla nich kopie PNG w
 // public/logos-og/, a poniższy loader sięga tam, gdy oryginał jest nieczytelny.
 
-import { readFile } from "node:fs/promises"
-import path from "node:path"
+import fs from "node:fs"
+import { fileURLToPath } from "node:url"
 import { headers } from "next/headers"
 
 export const OG_SIZE = { width: 1200, height: 630 }
@@ -47,6 +47,10 @@ export const OG_BOTTOM_SAFE_AREA = 118
  * i wróciłby błąd 500 naprawiony w commicie „Karty OG: bez headers() poza npm run dev”.
  */
 export async function getOgBaseUrl(): Promise<string> {
+  // Build pod Cloudflare (tools/cloudflare/build.mjs): karty powstają z lokalnego podglądu
+  // Workera i stamtąd biorą logotypy i flagi (te same pliki z public/), bez setek zapytań
+  // do produkcji. Na produkcji te adresy omijają Workera, więc ta wartość tam nie działa.
+  if (process.env.NEXT_PUBLIC_OG_BASE_URL) return process.env.NEXT_PUBLIC_OG_BASE_URL
   if (process.env.NODE_ENV !== "development") return "https://czypolskafirma.pl"
   try {
     const h = await headers()
@@ -126,11 +130,10 @@ export async function loadFlagDataUri(code: string, base: string): Promise<strin
  * je z dysku; do bundla funkcji trafiają przez outputFileTracingIncludes w next.config.mjs.
  */
 export async function loadOgFonts() {
-  const dir = path.join(process.cwd(), "assets", "og")
-  const [regular, bold] = await Promise.all([
-    readFile(path.join(dir, "inter-500.ttf")),
-    readFile(path.join(dir, "inter-800.ttf")),
-  ])
+  // Ścieżki przez new URL(..., import.meta.url): vinext wkleja te pliki do bundla
+  // (Workers nie ma dysku projektu), a Node czyta je zwyczajnie z dysku.
+  const regular = fs.readFileSync(fileURLToPath(new URL("../assets/og/inter-500.ttf", import.meta.url)))
+  const bold = fs.readFileSync(fileURLToPath(new URL("../assets/og/inter-800.ttf", import.meta.url)))
   return [
     { name: "Inter", data: regular, weight: 500 as const, style: "normal" as const },
     { name: "Inter", data: bold, weight: 800 as const, style: "normal" as const },

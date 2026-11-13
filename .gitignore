@@ -56,3 +56,6 @@ Generator.html
 /data/robocze/automat/gemini-cwd/
 /data/robocze/automat/gemini-blokada.json
 /data/robocze/rozstrzygniecie/
+/dist/
+.vinext/
+.cloudflare/

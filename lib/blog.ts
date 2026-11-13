@@ -11,6 +11,27 @@ import { slugify } from "@/lib/slug-utils"
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog")
 
+interface RawPost {
+  /** Nazwa pliku, np. "zabka-czyja-to-firma.md". */
+  name: string
+  raw: string
+}
+
+// Cloudflare Workers nie ma dysku projektu, więc przy buildzie przez Vite (vinext)
+// treść wpisów trafia do bundla przez import.meta.glob. Pod `next dev` / `next build`
+// import.meta.glob nie istnieje — wtedy czytamy pliki z dysku jak dotąd.
+let BUNDLED_POSTS: Record<string, string> | null = null
+try {
+  // @ts-ignore — import.meta.glob to API Vite, nieznane typom Next.js
+  BUNDLED_POSTS = import.meta.glob("../content/blog/*.md", {
+    query: "?raw",
+    import: "default",
+    eager: true,
+  }) as Record<string, string>
+} catch {
+  BUNDLED_POSTS = null
+}
+
 export interface BlogPostMeta {
   slug: string
   title: string
@@ -51,16 +72,15 @@ function toIsoDate(value: unknown): string {
   return ""
 }
 
-function parsePostFile(filePath: string): { meta: BlogPostMeta; content: string } | null {
+function parsePostFile(file: RawPost): { meta: BlogPostMeta; content: string } | null {
   try {
-    const raw = fs.readFileSync(filePath, "utf8")
-    const { data, content } = matter(raw)
+    const { data, content } = matter(file.raw)
 
     const title = typeof data.title === "string" ? data.title.trim() : ""
     const date = toIsoDate(data.date)
     if (!title || !date) return null
 
-    const fileSlug = path.basename(filePath).replace(/\.md$/i, "")
+    const fileSlug = file.name.replace(/\.md$/i, "")
     const slug = slugify(typeof data.slug === "string" && data.slug.trim() ? data.slug : fileSlug)
     if (!slug) return null
 
@@ -88,17 +108,26 @@ function parsePostFile(filePath: string): { meta: BlogPostMeta; content: string 
       content,
     }
   } catch (err) {
-    console.error(`[blog] Błąd parsowania pliku ${filePath}:`, err)
+    console.error(`[blog] Błąd parsowania pliku ${file.name}:`, err)
     return null
   }
 }
 
-function listPostFiles(): string[] {
+function isPostFileName(name: string): boolean {
+  return name.toLowerCase().endsWith(".md") && !name.startsWith("_")
+}
+
+function listPostFiles(): RawPost[] {
+  if (BUNDLED_POSTS) {
+    return Object.entries(BUNDLED_POSTS)
+      .map(([file, raw]) => ({ name: file.split("/").pop() || file, raw }))
+      .filter((post) => isPostFileName(post.name))
+  }
   try {
     return fs
       .readdirSync(BLOG_DIR)
-      .filter((f) => f.toLowerCase().endsWith(".md") && !f.startsWith("_"))
-      .map((f) => path.join(BLOG_DIR, f))
+      .filter(isPostFileName)
+      .map((name) => ({ name, raw: fs.readFileSync(path.join(BLOG_DIR, name), "utf8") }))
   } catch (err) {
     // Brak katalogu content/blog — traktujemy jak brak wpisów, ale GŁOŚNO.
     // Cichy [] kosztował nas wszystkie wpisy blogowe w sitemapie (patrz

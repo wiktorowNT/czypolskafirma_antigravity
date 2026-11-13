@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server"
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit"
 
-const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
-
 export async function POST(request: Request) {
     // Rate limit: 5 submissions per minute per IP
     const ip = getClientIp(request)
@@ -17,6 +15,9 @@ export async function POST(request: Request) {
         )
     }
 
+    // Odczyt w obsłudze żądania, nie przy starcie modułu: na Cloudflare sekret trafia do
+    // process.env dopiero w Workerze (worker/index.ts), przed pierwszym żądaniem go nie ma.
+    const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
     if (!DISCORD_WEBHOOK_URL) {
         console.error("[zglos-firme] Missing DISCORD_WEBHOOK_URL env var")
         return NextResponse.json(

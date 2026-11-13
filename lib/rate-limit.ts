@@ -22,15 +22,18 @@ interface RateLimitEntry {
 
 const rateLimitMap = new Map<string, RateLimitEntry>()
 
-// Clean up expired entries every 60 seconds
-setInterval(() => {
-  const now = Date.now()
+// Clean up expired entries at most once every 60 seconds. Done lazily inside
+// checkRateLimit: Cloudflare Workers forbids timers (setInterval) in global scope.
+let lastCleanup = 0
+function cleanupExpired(now: number) {
+  if (now - lastCleanup < 60_000) return
+  lastCleanup = now
   for (const [key, entry] of rateLimitMap.entries()) {
     if (now > entry.resetTime) {
       rateLimitMap.delete(key)
     }
   }
-}, 60_000)
+}
 
 interface RateLimitConfig {
   /** Maximum number of requests allowed in the window */
@@ -61,6 +64,7 @@ export function checkRateLimit(
   const key = `${endpoint}:${ip}`
   const now = Date.now()
   const windowMs = config.windowSeconds * 1000
+  cleanupExpired(now)
 
   const existing = rateLimitMap.get(key)
 
@@ -101,6 +105,9 @@ export function checkRateLimit(
  * On Vercel, the real IP is in x-forwarded-for or x-real-ip.
  */
 export function getClientIp(request: Request): string {
+  // Cloudflare podaje prawdziwy adres klienta w cf-connecting-ip.
+  const cfIp = request.headers.get('cf-connecting-ip')
+  if (cfIp) return cfIp.trim()
   const forwarded = request.headers.get('x-forwarded-for')
   if (forwarded) {
     return forwarded.split(',')[0].trim()
