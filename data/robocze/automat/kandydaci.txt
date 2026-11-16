@@ -1,2 +1,18 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Apteka Melissa |  | # paczka 2026-11-16 (kto-jest-wlascicielem-aptek-i-drogerii-w-polsce)
+- [ ] Ziko Dermo |  | # paczka 2026-11-16 (kto-jest-wlascicielem-aptek-i-drogerii-w-polsce)
+- [ ] CityFit |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Well Fitness |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Fitness Platinium |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Xtreme Fitness Gyms |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Fabryka Formy |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Carolina Medical Center |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Uzdrowisko Ustroń |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Link4 |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Wiener TU |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Vienna Life |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Le Grand |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Multicycle |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Zipp |  | # PR #72 (tresc/2026-11-02-91)
+- [ ] Global Cosmed |  | # PR #72 (tresc/2026-11-02-91)
