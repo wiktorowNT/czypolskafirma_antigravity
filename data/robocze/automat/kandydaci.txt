@@ -1,2 +1,11 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Redd's | 6460325155 | # paczka 2026-11-18 (kto-jest-wlascicielem-piwa-i-wodki)
+- [ ] Dębowe Mocne | 6460325155 | # paczka 2026-11-18 (kto-jest-wlascicielem-piwa-i-wodki)
+- [ ] Grimbergen | 8691637482 | # paczka 2026-11-18 (kto-jest-wlascicielem-piwa-i-wodki)
+- [ ] Komes | 7891271358 | # paczka 2026-11-18 (kto-jest-wlascicielem-piwa-i-wodki)
+- [ ] CleanHands |  | # PR #73 (tresc/2026-11-04-92)
+- [ ] Pucek |  | # PR #73 (tresc/2026-11-04-92)
+- [ ] Perwoll |  | # PR #73 (tresc/2026-11-04-92)
+- [ ] Alterra |  | # PR #73 (tresc/2026-11-04-92)
+- [ ] Alouette |  | # PR #73 (tresc/2026-11-04-92)

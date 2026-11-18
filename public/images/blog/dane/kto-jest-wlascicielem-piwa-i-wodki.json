@@ -1,0 +1,20 @@
+{
+  "slug": "kto-jest-wlascicielem-piwa-i-wodki",
+  "tytul": "Kto jest właścicielem piwa i wódki",
+  "akcent": "piwa i wódki",
+  "podtytul": "Trzy koncerny, jeden Cypr i resztka polskiego kapitału",
+  "staty": [
+    {
+      "wartosc": "15 z 45",
+      "opis": "polskich marek alkoholi"
+    },
+    {
+      "wartosc": "Tychy → Tokio",
+      "opis": "właściciel marki Tyskie"
+    },
+    {
+      "wartosc": "50,7%",
+      "opis": "głosów w Perle przez Cypr"
+    }
+  ]
+}
