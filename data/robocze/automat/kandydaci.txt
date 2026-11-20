@@ -1,2 +1,14 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] Tygryski | 6612372405 | # paczka 2026-11-20 (kto-kupuje-tygryski-europe-snacks-tbm)
+- [ ] Łapsy | 6612372405 | # paczka 2026-11-20 (kto-kupuje-tygryski-europe-snacks-tbm)
+- [ ] Crunlight | 6612372405 | # paczka 2026-11-20 (kto-kupuje-tygryski-europe-snacks-tbm)
+- [ ] Castrol |  | # PR #85 (tresc/2026-11-06-93)
+- [ ] Orlen Oil |  | # PR #85 (tresc/2026-11-06-93)
+- [ ] Livio |  | # PR #56
+- [ ] Rabat Detal |  | # PR #56
+- [ ] Blue Orca Coffee |  | # PR #56
+- [ ] OSM Siedlce |  | # PR #57
+- [ ] Ciechanowska Spółdzielnia Mleczarska |  | # PR #57
+- [ ] MSM Mońki |  | # PR #57
+- [ ] Agrocoop |  | # PR #57
