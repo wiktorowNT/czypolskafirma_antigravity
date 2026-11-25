@@ -1,2 +1,9 @@
 # Kolejka kandydatów do bazy. Dopisuje automat treści, czyta: node tools/firmy/automat.mjs --kandydaci
 # Format: "- [ ] Marka | NIP (puste, gdy nieznany) | # skąd". Po przetworzeniu "- [x] ... → partia X".
+- [ ] MR.DIY |  | # paczka 2026-11-25 (kto-jest-wlascicielem-mr-diy)
+- [ ] Łaciate | 7190000425 | # PR #87 (tresc/2026-11-11-95), wcześniej PR #70
+- [ ] Wypasione | 7220002329 | # PR #87 (tresc/2026-11-11-95), wcześniej PR #70
+- [ ] Serenada | 5380002604 | # PR #87 (tresc/2026-11-11-95), wcześniej PR #70
+- [ ] Monte | 8990204006 | # PR #87 (tresc/2026-11-11-95), wcześniej PR #70
+- [ ] Jogobella | 8990204006 | # PR #87 (tresc/2026-11-11-95), wcześniej PR #70
+- [ ] Président | 5211002843 | # PR #87 (tresc/2026-11-11-95), wcześniej PR #70
