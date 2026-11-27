@@ -29,6 +29,20 @@
     { "temat": "Evergreen: kto jest właścicielem Kauflandu; droga od pierwszego sklepu w Stargardzie (21.11.2001) do 261 marketów, przejęcia lokalizacji po Tesco w 2020 i struktura Schwarz Gruppe, w której kapitał leży w fundacjach Dietera Schwarza, a prawa głosu w spółce powierniczej Schwarz Unternehmenstreuhand KG", "data": "2026-09-23", "marki": ["Kaufland"], "tryb": "evergreen" },
     { "temat": "Evergreen: kto jest właścicielem Ursusa; znaki towarowe sprzedane w 2011 przez Bumar spółce POL-MOT Warfama za 8,1 mln zł, a cały majątek w trzecim przetargu syndyka w październiku 2024 spółce M.I. Crow (Oleh Krot, kapitał ukraiński) za 74 mln zł; produkcja wznowiona w Lublinie i Dobrym Mieście", "data": "2026-09-24", "marki": ["Ursus"], "tryb": "evergreen" },
     { "temat": "Evergreen: kto jest właścicielem Solarisa, czyli autobusów z zielonym jamnikiem; firma Solange i Krzysztofa Olszewskich z Bolechowa sprzedana hiszpańskiej grupie CAF 4 września 2018 za ok. 300 mln euro, nieudane wejście PFR z pakietem 35 proc.", "data": "2026-09-25", "marki": ["Solaris"], "tryb": "evergreen" },
-    { "temat": "Evergreen: jak samodzielnie sprawdzić właściciela firmy w jawnych rejestrach (baza REGON, odpis z KRS i próg 10 proc. kapitału, CRBR i próg 25 proc., sprawozdania finansowe przy tropie za granicą) na przykładzie Grupy Żywiec i Amiki", "data": "2026-09-26", "marki": ["Grupa Żywiec", "Amica"], "tryb": "evergreen" }
+    { "temat": "Evergreen: jak samodzielnie sprawdzić właściciela firmy w jawnych rejestrach (baza REGON, odpis z KRS i próg 10 proc. kapitału, CRBR i próg 25 proc., sprawozdania finansowe przy tropie za granicą) na przykładzie Grupy Żywiec i Amiki", "data": "2026-09-26", "marki": ["Grupa Żywiec", "Amica"], "tryb": "evergreen" },
+    { "temat": "Evergreen: kto jest właścicielem biur podróży w Polsce (ITAKA, Rainbow Tours, Grecos, Ecco Holiday, eSky, Wakacje.pl, TUI Poland, Coral Travel)", "data": "2026-11-13",
+      "marki": [], "tryb": "evergreen" },
+    { "temat": "Evergreen: kto jest właścicielem aptek i drogerii w Polsce", "data": "2026-11-16",
+      "marki": [], "tryb": "evergreen" },
+    { "temat": "Evergreen: kto jest właścicielem marek piwa i wódki na polskiej półce", "data": "2026-11-18",
+      "marki": [], "tryb": "evergreen" },
+    { "temat": "Francuski Europe Snacks chce przejąć TBM z Kunowa, producenta chrupek Tygryski; wniosek do UOKiK z 16 listopada, sprzedającym fundusz One Rock Capital Partners", "data": "2026-11-20",
+      "marki": ["Tygryski", "TBM", "Europe Snacks"], "tryb": "news" },
+    { "temat": "Evergreen: kto jest właścicielem BLIK-a, PayU i Przelewy24", "data": "2026-11-23",
+      "marki": ["BLIK", "PayU", "Przelewy24"], "tryb": "evergreen" },
+    { "temat": "MR.DIY otwiera pięćdziesiąty sklep w Polsce", "data": "2026-11-25",
+      "marki": ["MR.DIY"], "tryb": "news" },
+    { "temat": "Evergreen: kto jest właścicielem sieciówek z galerii handlowej; 99 marek w kategorii moda, 56 z polskim kapitałem, a 32 szyldy w rękach sześciu grup (Inditex, H&M Group, CCC, LPP, Oniverse, VRG)", "data": "2026-11-27",
+      "marki": ["Reserved", "Sinsay", "CCC", "Zara", "H&M", "Vistula"], "tryb": "evergreen" }
   ]
 }
